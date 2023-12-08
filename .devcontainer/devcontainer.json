@@ -1,0 +1,19 @@
+{
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+  "customizations": {
+    "vscode": {
+	    "extensions": [ "ms-dotnettools.csharp", "ryanluker.vscode-coverage-gutters" ]
+	  }
+	},
+  "containerEnv": { "DATA_PROTECTION_KEY": "HFm8fYbLyEarjjlGBj5r9Q==" },
+  "mounts": [
+		"source=dotnet,target=/home/vscode/.dotnet",
+		"source=nuget,target=/home/vscode/.nuget"
+  ],
+	"runArgs": [
+		"--name=backend-security",
+		"--hostname=security"
+	]
+}

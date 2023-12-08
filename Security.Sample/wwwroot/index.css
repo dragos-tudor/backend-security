@@ -1,0 +1,21 @@
+:root {
+  /* --ff-serif: Platfair Dispaly, serif; */
+  /* --ff-sans-serif: Poppins, sans-serif; */
+  --ff-serif: Georgia, 'Times New Roman', Times, serif;
+  --ff-sans-serif: Arial, Helvetica, sans-serif;
+}
+
+html {
+  font-size: 62.5%;
+  font-family: var(--ff-sans-serif);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+

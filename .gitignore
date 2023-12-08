@@ -1,0 +1,26 @@
+# IDE specific files
+.ionide/
+.vscode/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Code coverage results
+**/lcov.info
+
+# .Net local packages
+.packages
+
+# Test databases
+**/*.db
+
+# C# scripts
+playground.csx
+
+# API secrets
+google.api.json
+**/prod.json
+**/secrets.json
+
+

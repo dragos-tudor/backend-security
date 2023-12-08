@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/appsettings",
+  "Kestrel": {
+    "Endpoints": {
+      "Https": {
+        "Url": "https://*:5000",
+        "Certificate": {
+          "Path": "../.certificates/localhost.pem",
+          "KeyPath": "../.certificates/localhost-key.pem"
+        }
+      },
+      "Http": {
+        "Url": "http://*:5001"
+      }
+    }
+  }
+}
