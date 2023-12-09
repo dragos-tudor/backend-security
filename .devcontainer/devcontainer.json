@@ -1,12 +1,15 @@
 {
-	"build": {
-		"dockerfile": "Dockerfile"
-	},
+	"image": "ubuntu:22.04",
   "customizations": {
     "vscode": {
 	    "extensions": [ "ms-dotnettools.csharp", "ryanluker.vscode-coverage-gutters" ]
 	  }
 	},
+  "features": {
+    "ghcr.io/dragos-tudor/devcontainer-features/debian-packages": "",
+    "ghcr.io/dragos-tudor/devcontainer-features/debian-user-group": "",
+    "ghcr.io/dragos-tudor/devcontainer-features/debian-dotnet-sdk": ""
+  },
   "containerEnv": { "DATA_PROTECTION_KEY": "HFm8fYbLyEarjjlGBj5r9Q==" },
   "mounts": [
 		"source=dotnet,target=/home/vscode/.dotnet",
@@ -15,5 +18,6 @@
 	"runArgs": [
 		"--name=backend-security",
 		"--hostname=security"
-	]
+	],
+  "remoteUser": "vscode"
 }
