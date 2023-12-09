@@ -19,8 +19,10 @@
 playground.csx
 
 # API secrets
-google.api.json
 **/prod.json
 **/secrets.json
+
+# Certificates
+.certificates
 
 
