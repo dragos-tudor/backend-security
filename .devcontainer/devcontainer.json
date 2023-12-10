@@ -2,7 +2,7 @@
 	"image": "ubuntu:22.04",
   "customizations": {
     "vscode": {
-	    "extensions": [ "ms-dotnettools.csharp", "ryanluker.vscode-coverage-gutters" ]
+	    "extensions": [ "ms-dotnettools.csharp", "ryanluker.vscode-coverage-gutters", "denoland.vscode-deno" ]
 	  }
 	},
   "features": {
