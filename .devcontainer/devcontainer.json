@@ -8,12 +8,14 @@
   "features": {
     "ghcr.io/dragos-tudor/devcontainer-features/debian-packages": "",
     "ghcr.io/dragos-tudor/devcontainer-features/debian-user-group": "",
-    "ghcr.io/dragos-tudor/devcontainer-features/debian-dotnet-sdk": ""
+    "ghcr.io/dragos-tudor/devcontainer-features/debian-dotnet-sdk": "",
+    "ghcr.io/dragos-tudor/devcontainer-features/debian-deno": ""
   },
   "containerEnv": { "DATA_PROTECTION_KEY": "HFm8fYbLyEarjjlGBj5r9Q==" },
   "mounts": [
 		"source=dotnet,target=/home/vscode/.dotnet",
-		"source=nuget,target=/home/vscode/.nuget"
+		"source=nuget,target=/home/vscode/.nuget",
+		"source=deno,target=/home/vscode/.deno"		
   ],
 	"runArgs": [
 		"--name=backend-security",
