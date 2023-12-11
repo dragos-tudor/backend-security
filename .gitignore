@@ -25,4 +25,6 @@ playground.csx
 # Certificates
 .certificates
 
+# Deno
+deno.lock
 
