@@ -1,5 +1,5 @@
 
-using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Cookies;
@@ -8,15 +8,15 @@ partial class Funcs {
 
   static void SetResponseCookieHeader (
     HttpContext context,
-    AuthenticationTicket ticket,
-    CookieAuthenticationOptions authOptions,
+    string protectedTicket,
+    ICookieManager cookieManager,
     CookieOptions cookieOptions,
     string cookieName) =>
       AppendAuthenticationCookie(
         context,
-        authOptions.CookieManager,
+        cookieManager,
         cookieName,
-        ProtectAuthenticationTicket(ticket, authOptions.TicketDataFormat),
+        protectedTicket,
         cookieOptions
       );
 

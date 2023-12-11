@@ -10,11 +10,11 @@ partial class Funcs {
 
   public static IServiceCollection AddCookies(
     this IServiceCollection services,
-    SetFunc<CookieAuthenticationOptions>? configOptionsFunc = default,
+    SetFunc<CookieAuthenticationOptions>? setOptions = default,
     SetFunc<CookieBuilder>? setBuilder = default,
     string schemeName = CookieAuthenticationDefaults.AuthenticationScheme) =>
       services
-        .AddSingleton((services) => (configOptionsFunc ?? Identity)(
+        .AddSingleton((services) => (setOptions ?? Identity)(
           CreateCookieAuthenticationOptions(ResolveService<ICookieManager>(services), ResolveService<IDataProtectionProvider>(services), schemeName)))
         .AddSingleton((services) => (setBuilder ?? Identity)(CreateCookieBuilder()))
         .TryAddSingleton<ICookieManager, ChunkingCookieManager>()

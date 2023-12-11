@@ -23,7 +23,8 @@ partial class Funcs {
     SetCookieOptionsSecure(cookieOptions, IsSecuredCookie(context, cookieBuilder.SecurePolicy));
 
     var ticket = CreateAuthenticationTicket(principal, authProperties, authOptions.SchemeName);
-    SetResponseCookieHeader(context, ticket, authOptions, cookieOptions, cookieName);
+    var protectedTicket = ProtectAuthenticationTicket(ticket, authOptions.TicketDataFormat);
+    SetResponseCookieHeader(context, protectedTicket, authOptions.CookieManager, cookieOptions, cookieName);
     ResetResponseCacheHeaders(context.Response);
     if (IsRequestLoginPath(context.Request, authOptions))
     if (GetPropertiesRedirectUriOrQueryReturnUrl(context, authProperties, authOptions.ReturnUrlParameter) is string redirectUrl)
