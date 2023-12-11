@@ -13,9 +13,8 @@
   },
   "containerEnv": { "DATA_PROTECTION_KEY": "HFm8fYbLyEarjjlGBj5r9Q==" },
   "mounts": [
-		"source=dotnet,target=/home/vscode/.dotnet",
 		"source=nuget,target=/home/vscode/.nuget",
-		"source=deno,target=/home/vscode/.deno"		
+		"source=deno-cache,target=/home/vscode/.deno-cache"		
   ],
 	"runArgs": [
 		"--name=backend-security",
