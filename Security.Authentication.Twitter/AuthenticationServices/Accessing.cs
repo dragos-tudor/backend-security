@@ -11,7 +11,7 @@ partial class Funcs {
   public static async Task<UserInfoResult> AccessTwitterUserInfoAsync (
     TwitterOptions twitterOptions,
     string accessToken,
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
   {
     var requestUri = AddQueryString(twitterOptions.UserInformationEndpoint, BuildSpecificUserInfoParams(twitterOptions));
     var request = BuildUserInfoRequest(requestUri, accessToken);

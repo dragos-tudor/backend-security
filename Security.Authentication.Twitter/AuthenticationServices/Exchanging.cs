@@ -14,7 +14,7 @@ partial class Funcs {
     TwitterOptions twitterOptions,
     AuthenticationProperties authProperties,
     string authCode,
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
   {
     var request = BuildTokenRequest(twitterOptions, authProperties, authCode);
     SetAuthorizationHeader(request, BasicSchema, GetTwitterCredentials(twitterOptions.ClientId, twitterOptions.ClientSecret));

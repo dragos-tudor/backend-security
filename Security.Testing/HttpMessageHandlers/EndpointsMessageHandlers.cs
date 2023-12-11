@@ -12,7 +12,7 @@ public class EndpointsMessageHandler : HttpMessageHandler {
   public EndpointsMessageHandler(IDictionary<string, Func<HttpRequestMessage, HttpResponseMessage>> endpoints) =>
     Endpoints = endpoints;
 
-  protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) =>
+  protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default) =>
     Endpoints.ContainsKey(GetRequestPath(request)) ?
       Task.FromResult(Endpoints[GetRequestPath(request)](request)) :
       throw new Exception($"Endpoint route '{GetRequestPath(request)}' not found.");

@@ -3,7 +3,7 @@ namespace Security.Samples;
 
 partial class Funcs {
 
-  static readonly ConfigFunc<CookieAuthenticationOptions> ConfigureCookieOptions = options => options with
+  static readonly SetFunc<CookieAuthenticationOptions> SetCookieOptions = options => options with
   {
     LoginPath = "/login",
     LogoutPath = "/logout",

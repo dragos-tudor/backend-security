@@ -10,7 +10,7 @@ partial class Funcs {
   public static async Task<UserInfoResult> HandleUserInfoResponseAsync (
     HttpResponseMessage response,
     OAuthOptions authOptions,
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
   {
     var responseContent = await ReadUserInfoResponseContentAsync(response, cancellationToken);
     using var responseJson = Parse(responseContent);

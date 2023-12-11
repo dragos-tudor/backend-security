@@ -9,10 +9,10 @@ partial class Funcs {
 
   public static IServiceCollection AddFacebook(
     this IServiceCollection services,
-    ConfigFunc<FacebookOptions>? configOptionsFunc = default,
+    SetFunc<FacebookOptions>? setOptions = default,
     string? schemeName = FacebookDefaults.AuthenticationScheme) =>
       services
-        .AddSingleton((services) => (configOptionsFunc ?? Identity)(
+        .AddSingleton((services) => (setOptions ?? Identity)(
           CreateFacebookOptions(ResolveService<IDataProtectionProvider>(services), schemeName)))
         .TryAddSingleton(TimeProvider.System);
 

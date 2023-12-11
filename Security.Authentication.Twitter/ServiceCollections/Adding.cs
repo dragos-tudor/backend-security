@@ -1,5 +1,4 @@
 
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 using static Security.Authentication.Funcs;
@@ -10,10 +9,10 @@ partial class Funcs {
 
   public static IServiceCollection AddTwitter(
     this IServiceCollection services,
-    ConfigFunc<TwitterOptions>? configOptionsFunc = default,
+    SetFunc<TwitterOptions>? setOptions = default,
     string? schemeName = TwitterDefaults.AuthenticationScheme) =>
       services
-        .AddSingleton((services) => (configOptionsFunc ?? Identity)(
+        .AddSingleton((services) => (setOptions ?? Identity)(
           CreateTwitterOptions(ResolveService<IDataProtectionProvider>(services), schemeName)))
         .TryAddSingleton(TimeProvider.System);
 

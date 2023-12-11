@@ -11,7 +11,7 @@ partial class Funcs {
   public static async Task<UserInfoResult> AccessFacebookUserInfoAsync (
     FacebookOptions facebookOptions,
     string accessToken,
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
   {
     var requestUri = AddQueryString(facebookOptions.UserInformationEndpoint, BuildSpecificUserInfoParams(facebookOptions, accessToken));
     var request = BuildUserInfoRequest(requestUri, accessToken);

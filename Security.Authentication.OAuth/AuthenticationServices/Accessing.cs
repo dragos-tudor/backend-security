@@ -8,7 +8,7 @@ partial class Funcs {
   public static async Task<UserInfoResult> AccessUserInfoAsync<TOptions> (
     TOptions authOptions,
     string accessToken,
-    CancellationToken cancellationToken) where TOptions: OAuthOptions
+    CancellationToken cancellationToken = default) where TOptions: OAuthOptions
   {
     var request = BuildUserInfoRequest(authOptions.UserInformationEndpoint, accessToken);
     using var response = await SendUserInfoRequestAsync(request, authOptions.RemoteClient, cancellationToken);

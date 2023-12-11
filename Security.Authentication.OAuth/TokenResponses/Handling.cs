@@ -9,7 +9,7 @@ partial class Funcs {
 
   public static async Task<TokenResult> HandleTokenResponseAsync (
     HttpResponseMessage response,
-    CancellationToken cancellationToken)
+    CancellationToken cancellationToken = default)
   {
     var responseContent = await ReadTokenResponseContentAsync(response, cancellationToken);
     using var responseJson = Parse(responseContent);

@@ -9,7 +9,7 @@ partial class Funcs {
   public static Task<HttpResponseMessage> SendTokenRequestAsync (
     HttpRequestMessage request,
     HttpClient remoteClient,
-    CancellationToken cancellationToken) =>
+    CancellationToken cancellationToken = default) =>
       remoteClient.SendAsync(request, cancellationToken);
 
 }

@@ -3,7 +3,7 @@ namespace Security.Samples;
 
 partial class Funcs {
 
-  static ConfigFunc<FacebookOptions> ConfigureFacebookOptions(WebApplicationBuilder app) => options => options with
+  static SetFunc<FacebookOptions> SetFacebookOptions(WebApplicationBuilder app) => options => options with
   {
     ClientId = app.Configuration["facebook:appid"]!,
     ClientSecret = app.Configuration["facebook:appsecret"]!,

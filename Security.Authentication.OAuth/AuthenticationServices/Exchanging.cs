@@ -10,7 +10,7 @@ partial class Funcs {
     TOptions authOptions,
     AuthenticationProperties authProperties,
     string authCode,
-    CancellationToken cancellationToken) where TOptions: OAuthOptions
+    CancellationToken cancellationToken = default) where TOptions: OAuthOptions
   {
     var request = BuildTokenRequest(authOptions, authProperties, authCode);
     using var response = await SendTokenRequestAsync(request, authOptions.RemoteClient, cancellationToken);

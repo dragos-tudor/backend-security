@@ -3,7 +3,7 @@ namespace Security.Samples;
 
 partial class Funcs {
 
-  static ConfigFunc<TwitterOptions> ConfigureTwitterOptions(WebApplicationBuilder app) => options => options with
+  static SetFunc<TwitterOptions> SetTwitterOptions(WebApplicationBuilder app) => options => options with
   {
     ClientId = app.Configuration["twitter:consumerkey"]!,
     ClientSecret = app.Configuration["twitter:consumersecret"]!,

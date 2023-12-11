@@ -8,5 +8,5 @@ public delegate Task<TokenResult> ExchangeCodeForTokensFunc<Options> (
   Options authOptions,
   AuthenticationProperties authProperties,
   string authCode,
-  CancellationToken cancellationToken
+  CancellationToken cancellationToken = default
 ) where Options: OAuthOptions;
