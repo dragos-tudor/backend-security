@@ -1,7 +1,7 @@
 
 namespace Security.Authentication;
 
-partial class Funcs {
+partial class AuthenticationFuncs {
 
   const char BackSlash = '\\';
   const char Slash = '/';

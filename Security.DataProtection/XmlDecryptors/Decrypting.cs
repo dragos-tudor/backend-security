@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace Security.DataProtection;
 
-partial class Funcs {
+partial class DataProtectionFuncs {
 
   static string DecryptXmlKeyValue (XElement encryptedXmlKey, SymmetricAlgorithm algorithm, SymmetricEncryptionType encryptionType) {
     var iv = GetAlgorithmIV(encryptedXmlKey);

@@ -1,10 +1,10 @@
 
 namespace Security.Authentication;
 
-partial class Funcs {
+partial class AuthenticationFuncs {
 
-  public static Claim CreateNameClaim (string userName) =>
-    new(ClaimTypes.Name, userName);
+  public static Claim CreateNameClaim (string? userName) =>
+    new(ClaimTypes.Name, userName ?? string.Empty);
 
   public static Claim CreateNameIdClaim (string id) =>
     new (ClaimTypes.NameIdentifier, id);

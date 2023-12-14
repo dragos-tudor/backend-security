@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.DataProtection;
 
 namespace Security.DataProtection;
 
-partial class Tests {
+partial class DataProtectionTests {
 
   static readonly string keysPath = $"{Environment.CurrentDirectory}/keys";
   static readonly DirectoryInfo keysDirectory = new(keysPath);
 
-  static Tests () {
+  static DataProtectionTests () {
     if(!keysDirectory.Exists) keysDirectory.Create();
   }
 

@@ -3,9 +3,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Security.Authentication.Cookies;
 
-partial class Funcs {
+partial class CookiesFuncs {
 
-  static readonly string LoggerCategory = typeof(Funcs).Namespace!;
+  static readonly string LoggerCategory = typeof(CookiesFuncs).Namespace!;
   const string LoggerFactory = nameof(ILoggerFactory);
 
   static ILogger Logger {

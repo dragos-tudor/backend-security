@@ -3,7 +3,7 @@ using System.Security.Principal;
 
 namespace Security.Authentication;
 
-partial class Funcs {
+partial class AuthenticationFuncs {
 
   public static IIdentity? GetPrincipalIdentity (ClaimsPrincipal? principal) =>
     principal?.Identity;

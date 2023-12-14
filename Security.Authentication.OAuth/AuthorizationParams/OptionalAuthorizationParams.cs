@@ -1,7 +1,7 @@
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   public const string AccessType = "access_type";
   public const string ApprovalPrompt = "approval_prompt";

@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Security.Authorization;
 
-partial class Tests {
+partial class AuthorizationTests {
 
   static readonly AuthenticateSchemeFunc policyAuthenticateFunc = (context, schemeName) => AuthenticateResult.Success(new AuthenticationTicket(context.User, schemeName!));
   static readonly ChallengeSchemeFunc challegeFunc = (context, schemeName) => (context.Response.StatusCode = StatusCodes.Status401Unauthorized).ToString();
@@ -19,7 +19,7 @@ partial class Tests {
   public async Task Authenticated_user__access_private_resource__user_authorized()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization().AddAuthentication().AddCookie() );
-    server.UseAuthentication().UseSchemeAuthorization(policyAuthenticateFunc, challegeFunc, forbidFunc);
+    server.UseAuthentication().UseAuthorization(policyAuthenticateFunc, challegeFunc, forbidFunc);
     server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreateClaimsPrincipal("user")));
     server.MapGet("/resource", (HttpContext context) => "private" ).RequireAuthorization();
     await server.StartAsync();
@@ -36,7 +36,7 @@ partial class Tests {
   public async Task Unauthenticated_user__access_public_resource__user_authorized()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization() );
-    server.UseSchemeAuthorization(policyAuthenticateFunc, challegeFunc, forbidFunc);
+    server.UseAuthorization(policyAuthenticateFunc, challegeFunc, forbidFunc);
     server.MapGet("/resource", (HttpContext context) => "public" ).AllowAnonymous();
     await server.StartAsync();
 
@@ -51,7 +51,7 @@ partial class Tests {
   public async Task Unauthenticated_user__access_private_resource__unauthenticated_access()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization() );
-    server.UseSchemeAuthorization(policyAuthenticateFunc, challegeFunc, forbidFunc);
+    server.UseAuthorization(policyAuthenticateFunc, challegeFunc, forbidFunc);
     server.MapGet("/resource", (HttpContext context) => "not accesible" ).RequireAuthorization();
     await server.StartAsync();
 
@@ -66,7 +66,7 @@ partial class Tests {
   public async Task Authenticated_user_without_role__access_role_policy_private_resource__unauthorized_access()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization(options => options.AddPolicy("role policy", policy => policy.RequireRole("admin"))).AddAuthentication().AddCookie());
-    server.UseAuthentication().UseSchemeAuthorization(policyAuthenticateFunc, challegeFunc, forbidFunc);
+    server.UseAuthentication().UseAuthorization(policyAuthenticateFunc, challegeFunc, forbidFunc);
     server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreateClaimsPrincipal("user")) );
     server.MapGet("/resource", (HttpContext context) => "not accesible").RequireAuthorization("role policy");
     await server.StartAsync();
@@ -83,7 +83,7 @@ partial class Tests {
   public async Task Authenticated_user_with_role__access_role_policy_private_resource__authorized_access()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization(options => options.AddPolicy("role policy", policy => policy.RequireRole("admin"))).AddAuthentication().AddCookie());
-    server.UseAuthentication().UseSchemeAuthorization(policyAuthenticateFunc, challegeFunc, forbidFunc);
+    server.UseAuthentication().UseAuthorization(policyAuthenticateFunc, challegeFunc, forbidFunc);
     server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreateClaimsPrincipal("user", "admin")) );
     server.MapGet("/resource", (HttpContext context) => "private").RequireAuthorization("role policy");
     await server.StartAsync();
@@ -108,7 +108,7 @@ partial class MicrosoftTests {
   {
     using var server = CreateHttpServer(services => services.AddAuthorization().AddAuthentication().AddCookie());
     server.UseAuthentication().UseAuthorization();
-    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(Tests.CreateClaimsPrincipal("user", "admin")));
+    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(AuthorizationTests.CreateClaimsPrincipal("user", "admin")));
     server.MapGet("/resource", (HttpContext context) => "private").RequireAuthorization();
     await server.StartAsync();
 

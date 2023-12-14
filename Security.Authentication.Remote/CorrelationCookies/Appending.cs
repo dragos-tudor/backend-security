@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Remote;
 
-partial class Funcs {
+partial class RemoteFuncs {
 
   internal const string CorrelationCookieMarker = "N";
 

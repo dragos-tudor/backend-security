@@ -1,10 +1,11 @@
 
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Cookies;
 
-partial class Funcs {
+partial class CookiesFuncs {
 
   public static AuthenticationTicket SignInCookie (
     HttpContext context,
@@ -12,10 +13,12 @@ partial class Funcs {
     AuthenticationProperties authProperties,
     CookieAuthenticationOptions authOptions,
     CookieBuilder cookieBuilder,
+    ICookieManager cookieManager,
+    ISecureDataFormat<AuthenticationTicket> secureDataFormat,
     DateTimeOffset currentUtc)
   {
     SetAuthenticationPropertiesIssued(authProperties, currentUtc);
-    SetAuthenticationPropertiesExpires(authProperties, authOptions.ExpireTimeSpan, currentUtc);
+    SetAuthenticationPropertiesExpires(authProperties, currentUtc, authOptions.ExpireTimeSpan);
 
     var cookieOptions = BuildCookieOptions(cookieBuilder, context);
     var cookieName = GetCookieName(cookieBuilder, authOptions);
@@ -23,8 +26,8 @@ partial class Funcs {
     SetCookieOptionsSecure(cookieOptions, IsSecuredCookie(context, cookieBuilder.SecurePolicy));
 
     var ticket = CreateAuthenticationTicket(principal, authProperties, authOptions.SchemeName);
-    var protectedTicket = ProtectAuthenticationTicket(ticket, authOptions.TicketDataFormat);
-    SetResponseCookieHeader(context, protectedTicket, authOptions.CookieManager, cookieOptions, cookieName);
+    var protectedTicket = ProtectAuthenticationTicket(ticket, secureDataFormat);
+    SetResponseCookieHeader(context, protectedTicket, cookieManager, cookieOptions, cookieName);
     ResetResponseCacheHeaders(context.Response);
     if (IsRequestLoginPath(context.Request, authOptions))
     if (GetPropertiesRedirectUriOrQueryReturnUrl(context, authProperties, authOptions.ReturnUrlParameter) is string redirectUrl)
@@ -33,5 +36,19 @@ partial class Funcs {
     LogSignedInCookie(Logger, authOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
     return ticket;
   }
+
+  public static AuthenticationTicket SignInCookie (
+    HttpContext context,
+    ClaimsPrincipal principal,
+    AuthenticationProperties? authProperties = default) =>
+      SignInCookie(
+        context,
+        principal,
+        authProperties ?? CreateAuthenticationProperties(),
+        ResolveService<CookieAuthenticationOptions>(context),
+        ResolveService<CookieBuilder>(context),
+        ResolveService<ICookieManager>(context),
+        ResolveService<ISecureDataFormat<AuthenticationTicket>>(context),
+        ResolveService<TimeProvider>(context).GetUtcNow());
 
 }

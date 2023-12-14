@@ -7,7 +7,7 @@ using static Security.Testing.Funcs;
 
 namespace Security.Authentication.OAuth;
 
-partial class Tests {
+partial class OAuthTests {
 
   [Fact]
   public void Authorization_request_query_with_access_denied_error__post_authorize__access_denied_error() {

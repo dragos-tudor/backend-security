@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static string JoinPolicySchemeNames (AuthorizationPolicy policy, string separator = ";") =>
     string.Join(separator, policy.AuthenticationSchemes);

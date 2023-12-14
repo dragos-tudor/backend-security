@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   const string AccessToken = "access_token";
   const string ExpiresIn = "expires_in";

@@ -1,7 +1,7 @@
 
 namespace Security.DataProtection;
 
-partial class Funcs {
+partial class DataProtectionFuncs {
 
   const string DataProtectionKeyName = "DATA_PROTECTION_KEY";
 

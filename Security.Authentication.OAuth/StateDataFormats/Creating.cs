@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.DataProtection;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
-  internal static PropertiesDataFormat CreateStateDataFormat (IDataProtectionProvider dataProtectionProvider, string? schemeName = "OAuth") =>
-    new (CreateDataProtector(dataProtectionProvider, typeof(Funcs).FullName!, schemeName!));
+  public static PropertiesDataFormat CreateStateDataFormat (IDataProtectionProvider dataProtectionProvider, string? schemeName = "OAuth") =>
+    new (CreateDataProtector(dataProtectionProvider, typeof(OAuthFuncs).FullName!, schemeName!));
 
 }

@@ -4,4 +4,4 @@ global using Xunit;
 
 namespace Security.Authentication.Cookies;
 
-public partial class Tests { }
+public partial class CookiesTests { }

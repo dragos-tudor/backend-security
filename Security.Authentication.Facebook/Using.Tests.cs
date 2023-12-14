@@ -4,4 +4,4 @@ global using Xunit;
 
 namespace Security.Authentication.Facebook;
 
-public partial class Tests { }
+public partial class FacebookTests { }

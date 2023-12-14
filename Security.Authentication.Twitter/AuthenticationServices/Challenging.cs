@@ -1,21 +1,7 @@
-
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-
 namespace Security.Authentication.Twitter;
 
-partial class Funcs {
+partial class TwitterFuncs {
 
-  public static string ChallengeTwitter (
-    HttpContext context,
-    AuthenticationProperties authProperties,
-    TwitterOptions twitterOptions,
-    DateTimeOffset currentUtc) =>
-      ChallengeOAuth(
-        context,
-        authProperties,
-        twitterOptions,
-        currentUtc
-      );
+  public static readonly ChallengeFunc<TwitterOptions> ChallengeTwitter = ChallengeOAuth<TwitterOptions>;
 
 }

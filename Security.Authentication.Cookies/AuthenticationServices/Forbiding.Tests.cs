@@ -8,13 +8,13 @@ using static Security.Testing.Funcs;
 
 namespace Security.Authentication.Cookies;
 
-partial class Tests {
+partial class CookiesTests {
 
   [Fact]
   public async Task Unautenticated_user_resource_request__forbid__access_denied_redirection()
   {
     using var server = CreateHttpServer(services => services.AddCookies());
-    server.MapGet("/resource", (HttpContext context) => Forbid(context));
+    server.MapGet("/resource", (HttpContext context) => ForbidCookie(context));
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -37,11 +37,5 @@ partial class Tests {
     Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
     Assert.Equal("http://localhost/Account/AccessDenied?ReturnUrl=/resource", GetResponseMessageLocation(response));
   }
-
-  static string? Forbid (HttpContext context) =>
-    ForbidCookie(
-      context,
-      CreateAuthenticationProperties(),
-      ResolveRequiredService<CookieAuthenticationOptions>(context));
 
 }

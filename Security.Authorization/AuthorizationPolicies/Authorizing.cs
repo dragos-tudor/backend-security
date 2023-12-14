@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static async Task<PolicyAuthorizationResult> AuthorizePolicyAsync (
     AuthorizationPolicy policy,

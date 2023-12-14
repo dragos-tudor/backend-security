@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
-  internal static AuthenticationProperties? UnprotectAuthenticationProperties (string? encryptedProperties, ISecureDataFormat<AuthenticationProperties> propertiesDataFormat) =>
-    propertiesDataFormat.Unprotect(encryptedProperties);
+  internal static AuthenticationProperties? UnprotectAuthenticationProperties (
+    string? encryptedProperties,
+    ISecureDataFormat<AuthenticationProperties> secureDataFormat) =>
+      secureDataFormat.Unprotect(encryptedProperties);
 
 }

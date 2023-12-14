@@ -3,4 +3,4 @@ global using static Security.Testing.Funcs;
 
 namespace Security.Authentication.Remote;
 
-public partial class Tests { }
+public partial class RemoteTests { }

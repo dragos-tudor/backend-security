@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static DateTimeOffset? MinimumAuthenticationPropertiesExpires (IEnumerable<AuthenticateResult> results) =>
     results.Aggregate(

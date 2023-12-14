@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static IEnumerable<string> ChallengePolicySchemes (
     AuthorizationPolicy policy,
     HttpContext context,
-    ChallengeSchemeFunc challengeSchemeFunc) =>
+    ChallengeSchemeFunc challengeScheme) =>
       policy
         .AuthenticationSchemes
-        .Select(schemeName => challengeSchemeFunc(context, schemeName));
+        .Select(schemeName => challengeScheme(context, schemeName));
 
 }

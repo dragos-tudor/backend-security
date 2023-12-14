@@ -10,13 +10,13 @@ using static Security.Testing.Funcs;
 
 namespace Security.Authentication.Cookies;
 
-partial class Tests {
+partial class CookiesTests {
 
   [Fact]
   public async Task Logout_request__signout__expired_cookie()
   {
     using var server = CreateHttpServer(services => services.AddCookies() );
-    server.MapPost("/account/logout", (HttpContext context) => SignOut(context) ?? string.Empty);
+    server.MapPost("/account/logout", (HttpContext context) => SignOutCookie(context) ?? string.Empty);
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -31,7 +31,8 @@ partial class Tests {
   public async Task Logout_request_with_return_url__signin__response_redirected_to_return_url()
   {
     using var server = CreateHttpServer(services => services.AddCookies() );
-    server.MapPost("/account/logout", (HttpContext context) => SignOut(context, new AuthenticationProperties() { RedirectUri = context.Request.Form["redirect_url"] }) ?? string.Empty);
+    var GetAuthProperties = (HttpContext context) => new AuthenticationProperties() { RedirectUri = context.Request.Form["redirect_url"] };
+    server.MapPost("/account/logout", (HttpContext context) => SignOutCookie(context, GetAuthProperties(context)) ?? string.Empty);
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -58,12 +59,5 @@ partial class Tests {
     Assert.Contains(".AspNetCore.Cookies=;", GetResponseMessageCookie(response));
     Assert.Contains("expires=Thu, 01 Jan 1970", GetResponseMessageCookie(response));
   }
-
-  static string? SignOut(HttpContext context, AuthenticationProperties? authProperties = default) =>
-    SignOutCookie(
-      context,
-      authProperties ?? CreateAuthenticationProperties(),
-      ResolveRequiredService<CookieAuthenticationOptions>(context),
-      ResolveRequiredService<CookieBuilder>(context));
 
 }

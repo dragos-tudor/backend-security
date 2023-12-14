@@ -1,7 +1,7 @@
 
 namespace Security.Authentication;
 
-partial class Funcs {
+partial class AuthenticationFuncs {
 
   public static bool IsEmptyString (string? value) => string.IsNullOrEmpty(value);
 

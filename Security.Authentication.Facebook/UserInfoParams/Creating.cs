@@ -1,7 +1,7 @@
 
 namespace Security.Authentication.Facebook;
 
-partial class Funcs {
+partial class FacebookFuncs {
 
   const string AccessToken = "access_token";
   const string AppSecretProof = "appsecret_proof";

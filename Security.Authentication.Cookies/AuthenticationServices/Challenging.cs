@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Cookies;
 
-partial class Funcs {
+partial class CookiesFuncs {
 
   public static string ChallengeCookie (
     HttpContext context,
@@ -17,5 +17,13 @@ partial class Funcs {
     LogChallenged(Logger, authOptions.SchemeName, challengePath, context.TraceIdentifier);
     return SetResponseRedirect(context.Response, challengePath);
   }
+
+  public static string ChallengeCookie (
+    HttpContext context,
+    AuthenticationProperties? authProperties = default) =>
+      ChallengeCookie(
+        context,
+        authProperties ?? CreateAuthenticationProperties(),
+        ResolveService<CookieAuthenticationOptions>(context));
 
 }

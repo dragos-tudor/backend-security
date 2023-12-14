@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Cookies;
 
-partial class Funcs {
+partial class CookiesFuncs {
 
   public static string ForbidCookie (
     HttpContext context,
@@ -17,5 +17,13 @@ partial class Funcs {
     LogForbidden(Logger, authOptions.SchemeName, forbidPath, context.TraceIdentifier);
     return SetResponseRedirect(context.Response, forbidPath);
   }
+
+  public static string ForbidCookie (
+    HttpContext context,
+    AuthenticationProperties? authProperties = default) =>
+      ForbidCookie(
+        context,
+        authProperties ?? CreateAuthenticationProperties(),
+        ResolveService<CookieAuthenticationOptions>(context));
 
 }

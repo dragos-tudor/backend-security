@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Security.Authentication;
 
-partial class Funcs {
+partial class AuthenticationFuncs {
 
   [LoggerMessage(1, LogLevel.Information, "AuthenticationScheme: {SchemeName} was not authenticated. Failure message: {FailureMessage}. [{RequestId}]", EventName = "NotAuthenticatedWithFailure")]
   public static partial void LogNotAuthenticatedWithFailure (ILogger logger, string schemeName, string failureMessage, string requestId);

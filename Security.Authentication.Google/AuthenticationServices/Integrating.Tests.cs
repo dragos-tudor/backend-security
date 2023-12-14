@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.DataProtection;
 using static Security.Testing.Funcs;
-using static Security.Authentication.Funcs;
-using static Security.Authentication.Google.Funcs;
+using static Security.Authentication.AuthenticationFuncs;
+using static Security.Authentication.Google.GoogleFuncs;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Security.Authentication.Google;
 
-partial class Tests {
+partial class GoogleTests {
 
   [Fact]
   public async Task User_challenge_authentication__execute_google_authentication_flow__authentication_succedded () {
@@ -23,14 +24,16 @@ partial class Tests {
     await authServer.StartAsync();
     using var authClient = authServer.GetTestClient();
 
-    var provider = new EphemeralDataProtectionProvider();
-    var googleOptions = CreateGoogleOptions(provider) with {
-      AuthorizationEndpoint = "/authorize", TokenEndpoint = "/token", UserInformationEndpoint = "/userinfo", RemoteClient = authClient,
-      // ClientId = "id", ClientSecret = "secret"
+    var googleOptions = CreateGoogleOptions("", "") with {
+      AuthorizationEndpoint = "/authorize", TokenEndpoint = "/token", UserInformationEndpoint = "/userinfo"
     };
-    using var appServer = CreateHttpServer();
-    appServer.MapGet("/challenge", (HttpContext context) => ChallengeGoogle(context, new AuthenticationProperties(), googleOptions, DateTimeOffset.UtcNow));
-    appServer.MapGet(googleOptions.CallbackPath, async delegate (HttpContext context) { return (await AuthenticateGoogleAsync(context, googleOptions)).Succeeded; });
+    using var appServer = CreateHttpServer(services => services
+      .AddSingleton(authClient)
+      .AddSingleton<IDataProtectionProvider>(new EphemeralDataProtectionProvider())
+      .AddGoogle(googleOptions)
+    );
+    appServer.MapGet("/challenge", (HttpContext context) => ChallengeGoogle(context, new AuthenticationProperties()));
+    appServer.MapGet(googleOptions.CallbackPath, async delegate (HttpContext context) { return (await AuthenticateGoogleAsync(context)).Succeeded; });
     await appServer.StartAsync();
     using var appClient = appServer.GetTestClient();
 

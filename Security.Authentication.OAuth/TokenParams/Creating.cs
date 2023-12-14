@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   const string ClientSecret = "client_secret";
   const string AuthorizationCode = "code";

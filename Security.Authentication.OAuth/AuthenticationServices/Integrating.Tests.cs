@@ -3,13 +3,14 @@ using System.Net;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using static Security.Testing.Funcs;
 
 namespace Security.Authentication.OAuth;
 
-partial class Tests {
+partial class OAuthTests {
 
   [Fact]
   public async Task User_challenge_authentication__execute_authentication_flow__authentication_succedded () {
@@ -21,10 +22,11 @@ partial class Tests {
     using var authClient = authServer.GetTestClient();
 
     var context = CreateHttpContext();
-    var authOptions = CreateOAuthOptions(context, authClient) with { AuthorizationEndpoint = "http://oauth/authorize" };
+    var authOptions = CreateOAuthOptions() with { AuthorizationEndpoint = "http://oauth/authorize" };
+    var secureDataFormat = CreateStateDataFormat(ResolveService<IDataProtectionProvider>(context));
     using var appServer = CreateHttpServer();
-    appServer.MapGet("/challenge", (HttpContext context) => ChallengeOAuth(context, new AuthenticationProperties(), authOptions, DateTimeOffset.UtcNow));
-    appServer.MapGet("/callback", async delegate (HttpContext context) { return (await AuthenticateOAuthAsync(context, authOptions, PostAuthorize, ExchangeCodeForTokensAsync, AccessUserInfoAsync)).Succeeded; });
+    appServer.MapGet("/challenge", (HttpContext context) => ChallengeOAuth(context, new AuthenticationProperties(), authOptions, secureDataFormat, DateTimeOffset.UtcNow));
+    appServer.MapGet("/callback", async delegate (HttpContext context) { return (await AuthenticateOAuthAsync(context, authOptions, secureDataFormat, authClient, PostAuthorize, ExchangeCodeForTokensAsync, AccessUserInfoAsync)).Succeeded; });
     await appServer.StartAsync();
     using var appClient = appServer.GetTestClient();
 

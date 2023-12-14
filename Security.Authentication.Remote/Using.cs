@@ -1,9 +1,8 @@
 global using System;
-global using System.Linq;
-global using static Security.Authentication.Funcs;
-global using static Security.Authentication.Remote.Funcs;
+global using static Security.Authentication.AuthenticationFuncs;
+global using static Security.Authentication.Remote.RemoteFuncs;
 
 namespace Security.Authentication.Remote;
 
-public static partial class Funcs { }
+public static partial class RemoteFuncs { }
 

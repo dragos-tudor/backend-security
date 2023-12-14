@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Security.Authentication;
 
-partial class Funcs {
+partial class AuthenticationFuncs {
 
   public static Claim? GetNameClaim (IEnumerable<Claim>? claims) =>
     claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.Name);

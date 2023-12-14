@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static Task<AuthorizationPolicy?> CombinePolicies (
     IAuthorizationPolicyProvider policyProvider,

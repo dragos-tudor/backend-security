@@ -1,7 +1,7 @@
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   static string? GetAccessToken (TokenResult tokenResult) =>
     tokenResult.TokenInfo?.AccessToken;

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 
 namespace Security.DataProtection;
 
-partial class Funcs {
+partial class DataProtectionFuncs {
 
   public static IDataProtectionBuilder ProtectKeysWithSecret<TEncryptor> (this IDataProtectionBuilder builder, DirectoryInfo keysDirectory) where TEncryptor: IXmlEncryptor, new() =>
     builder

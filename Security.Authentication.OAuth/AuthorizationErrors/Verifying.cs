@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   internal const string AccessDeniedAuthorizationError = "access_denied";
   internal const string AuthorizationError = "error";

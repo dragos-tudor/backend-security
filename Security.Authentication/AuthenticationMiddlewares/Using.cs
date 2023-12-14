@@ -4,14 +4,10 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication;
 
-partial class Funcs {
+partial class AuthenticationFuncs {
 
-  public static IApplicationBuilder UseLocalAuthentication (this IApplicationBuilder builder, LocalAuthenticateFunc authenticateFunc) =>
+  public static IApplicationBuilder UseAuthentication (this IApplicationBuilder builder, AuthenticateFunc authenticate) =>
     builder.Use((HttpContext context, RequestDelegate next) =>
-      LocalAuthenticationMiddleware(authenticateFunc, context, next));
-
-  public static IApplicationBuilder UseRemoteAuthentication (this IApplicationBuilder builder, RemoteAuthenticateFunc remoteAuthenticateFunc) =>
-    builder.Use((HttpContext context, RequestDelegate next) =>
-      RemoteAuthenticationMiddleware(remoteAuthenticateFunc, context, next));
+      AuthenticationMiddleware(authenticate, context, next));
 
 }

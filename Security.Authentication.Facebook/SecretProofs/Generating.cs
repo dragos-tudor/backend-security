@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Security.Authentication.Facebook;
 
-partial class Funcs {
+partial class FacebookFuncs {
 
   static string GenerateAppSecretProof (string appSecret, string accessToken) =>
     HMACSHA256

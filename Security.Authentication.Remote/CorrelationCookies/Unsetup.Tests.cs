@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Remote;
 
-partial class Tests {
+partial class RemoteTests {
 
   [Fact]
   public void Request_with_correlation_cookie__unsetup_cookie__response_without_cookie() {

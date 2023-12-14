@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 
 namespace Security.DataProtection;
 
-partial class Funcs {
+partial class DataProtectionFuncs {
 
   public static IDataProtectionProvider CreateDataProtectionProvider () =>
     CreateDataProtectionProvider(new DirectoryInfo(Environment.CurrentDirectory));

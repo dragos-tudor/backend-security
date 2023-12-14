@@ -1,7 +1,7 @@
 
 namespace Security.Authentication.Facebook;
 
-partial class Funcs {
+partial class FacebookFuncs {
 
   static IEnumerable<KeyValuePair<string, string?>> BuildSpecificUserInfoParams (
     FacebookOptions facebookOptions,

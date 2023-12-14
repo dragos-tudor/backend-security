@@ -1,7 +1,7 @@
 global using System;
 global using System.IO;
-global using static Security.DataProtection.Funcs;
+global using static Security.DataProtection.DataProtectionFuncs;
 
 namespace Security.DataProtection;
 
-public static partial class Funcs { }
+public static partial class DataProtectionFuncs { }

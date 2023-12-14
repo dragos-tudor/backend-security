@@ -1,22 +1,27 @@
 
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Google;
 
-partial class Funcs {
+partial class GoogleFuncs {
 
-  internal static GoogleOptions CreateGoogleOptions (
-    IDataProtectionProvider dataProtectionProvider,
-    string? schemeName = GoogleDefaults.AuthenticationScheme) =>
-      CreateOAuthOptions<GoogleOptions>(dataProtectionProvider, schemeName)
-      with {
+  public static GoogleOptions CreateGoogleOptions (
+    string clientId,
+    string clientSecret,
+    string schemeName = GoogleDefaults.AuthenticationScheme) =>
+      new () {
         AuthorizationEndpoint = GoogleDefaults.AuthorizationEndpoint,
-        ClaimActions = MapGoogleClaimActions(new ClaimActionCollection()),
-        CallbackPath = new PathString(GoogleDefaults.CallbackPath),
         TokenEndpoint = GoogleDefaults.TokenEndpoint,
         UserInformationEndpoint = GoogleDefaults.UserInformationEndpoint,
+
+        ClientId = clientId,
+        ClientSecret = clientSecret,
+
+        ClaimActions = MapGoogleClaimActions(new ClaimActionCollection()),
+        CallbackPath = new PathString(GoogleDefaults.CallbackPath),
+
+        SchemeName = schemeName,
         Scope = new [] { "openid", "profile", "email" },
         ScopeSeparator = ' '
       };

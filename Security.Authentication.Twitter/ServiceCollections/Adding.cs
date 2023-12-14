@@ -1,19 +1,19 @@
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
-using static Security.Authentication.Funcs;
 
 namespace Security.Authentication.Twitter;
 
-partial class Funcs {
+partial class TwitterFuncs {
 
   public static IServiceCollection AddTwitter(
     this IServiceCollection services,
-    SetFunc<TwitterOptions>? setOptions = default,
-    string? schemeName = TwitterDefaults.AuthenticationScheme) =>
+    TwitterOptions twitterOptions) =>
       services
-        .AddSingleton((services) => (setOptions ?? Identity)(
-          CreateTwitterOptions(ResolveService<IDataProtectionProvider>(services), schemeName)))
-        .TryAddSingleton(TimeProvider.System);
+        .AddSingleton(twitterOptions)
+        .AddSingleton<ISecureDataFormat<AuthenticationProperties>>((services) =>
+          CreateStateDataFormat(services.GetRequiredService<IDataProtectionProvider>(), twitterOptions.SchemeName))
+        .AddSingleton(TimeProvider.System);
 
 }

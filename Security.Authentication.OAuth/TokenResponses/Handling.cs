@@ -5,7 +5,7 @@ using static System.Text.Json.JsonDocument;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   public static async Task<TokenResult> HandleTokenResponseAsync (
     HttpResponseMessage response,

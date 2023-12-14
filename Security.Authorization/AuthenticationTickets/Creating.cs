@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   internal static AuthenticationTicket CreateAuthenticationTicket (ClaimsPrincipal principal) =>
     new (principal, string.Empty);

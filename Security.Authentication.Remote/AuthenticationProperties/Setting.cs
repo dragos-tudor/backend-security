@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.Remote;
 
-partial class Funcs {
+partial class RemoteFuncs {
 
   public const string CallbackUri = "callbackUri";
 

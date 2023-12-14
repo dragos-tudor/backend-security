@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static bool IsSchemelessPolicy (AuthorizationPolicy policy) =>
     policy.AuthenticationSchemes is null ||

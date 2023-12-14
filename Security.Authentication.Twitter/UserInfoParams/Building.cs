@@ -1,7 +1,7 @@
 
 namespace Security.Authentication.Twitter;
 
-partial class Funcs {
+partial class TwitterFuncs {
 
   const string Expansions = "expansions";
   const string TweetFields = "tweet.fields";

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   internal static string? GetAuthenticationPropertiesCodeVerifier (AuthenticationProperties authProperties) =>
     authProperties.Items.ContainsKey(CodeVerifier)?

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   public static ClaimsPrincipal? GetContextUser (HttpContext context) =>
     context.User;

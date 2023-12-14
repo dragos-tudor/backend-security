@@ -5,16 +5,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Facebook;
 
-partial class Funcs {
+partial class FacebookFuncs {
 
-  public static Task<AuthenticateResult> AuthenticateFacebookAsync (
-    HttpContext context,
-    FacebookOptions facebookOptions) =>
-      AuthenticateOAuthAsync(
-        context,
-        facebookOptions,
-        PostAuthorize<FacebookOptions>,
-        ExchangeCodeForTokensAsync<FacebookOptions>,
-        AccessFacebookUserInfoAsync);
+  public static Task<AuthenticateResult> AuthenticateFacebookAsync (HttpContext context) =>
+    AuthenticateOAuthAsync<FacebookOptions>(
+      context,
+      PostAuthorize<FacebookOptions>,
+      ExchangeCodeForTokensAsync<FacebookOptions>,
+      AccessFacebookUserInfoAsync);
 
 }

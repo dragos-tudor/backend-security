@@ -1,7 +1,7 @@
 
 namespace Security.Samples;
 
-partial class Funcs {
+partial class SampleFuncs {
 
   static AuthenticationProperties CreateAuthenticationProperties(DateTimeOffset? currentUtc = default) =>
     new() {

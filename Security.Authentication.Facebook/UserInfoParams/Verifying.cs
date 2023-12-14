@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Security.Authentication.Facebook;
 
-partial class Funcs {
+partial class FacebookFuncs {
 
   static bool HasExtraFields (FacebookOptions facebookOptions) =>
     facebookOptions.Fields.Any();

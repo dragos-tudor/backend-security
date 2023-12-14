@@ -3,7 +3,7 @@ using System.Net.Http;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   static HttpRequestMessage CreateUserInfoRequest (string requestUri) =>
     new (HttpMethod.Get, requestUri);

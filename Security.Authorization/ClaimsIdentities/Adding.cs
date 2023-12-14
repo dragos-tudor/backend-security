@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static ClaimsPrincipal AddAuthenticatedClaimsIdentities (this ClaimsPrincipal first, ClaimsPrincipal? second) =>
     second?.Identities is not null?

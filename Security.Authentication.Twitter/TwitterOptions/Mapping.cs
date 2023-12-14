@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 
 namespace Security.Authentication.Twitter;
 
-partial class Funcs {
+partial class TwitterFuncs {
 
   static ClaimActionCollection MapTwitterClaimActions (ClaimActionCollection claimActions) {
     claimActions.MapJsonSubKey(ClaimTypes.Name, "data", "username");

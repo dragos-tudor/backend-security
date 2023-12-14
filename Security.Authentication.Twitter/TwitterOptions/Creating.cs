@@ -1,22 +1,27 @@
 
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Twitter;
 
-partial class Funcs {
+partial class TwitterFuncs {
 
-  internal static TwitterOptions CreateTwitterOptions (
-    IDataProtectionProvider dataProtectionProvider,
-    string? schemeName = TwitterDefaults.AuthenticationScheme) =>
-      CreateOAuthOptions<TwitterOptions>(dataProtectionProvider, schemeName)
-      with {
+  public static TwitterOptions CreateTwitterOptions (
+    string consumerKey,
+    string consumerSecret,
+    string schemeName = TwitterDefaults.AuthenticationScheme) =>
+      new () {
         AuthorizationEndpoint = TwitterDefaults.AuthorizationEndpoint,
-        ClaimActions = MapTwitterClaimActions(new ClaimActionCollection()),
-        CallbackPath = new PathString(TwitterDefaults.CallbackPath),
         TokenEndpoint = TwitterDefaults.TokenEndpoint,
         UserInformationEndpoint = TwitterDefaults.UserInformationEndpoint,
+
+        ClientId = consumerKey,
+        ClientSecret = consumerSecret,
+
+        ClaimActions = MapTwitterClaimActions(new ClaimActionCollection()),
+        CallbackPath = new PathString(TwitterDefaults.CallbackPath),
+
+        SchemeName = schemeName,
         Scope = new [] { "tweet.read", "users.read" },
         ScopeSeparator = ' ',
         UsePkce = true

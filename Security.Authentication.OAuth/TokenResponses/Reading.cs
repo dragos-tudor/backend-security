@@ -6,7 +6,7 @@ using static System.Text.Json.JsonDocument;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   static Task<string> ReadTokenResponseContentAsync (HttpResponseMessage response, CancellationToken cancellationToken = default) =>
     response.Content.ReadAsStringAsync(cancellationToken);

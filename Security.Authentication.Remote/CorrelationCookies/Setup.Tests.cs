@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Remote;
 
-partial class Tests {
+partial class RemoteTests {
 
   [Fact]
   public void Authentication_options_with_remote_timeout__setup_cookie__cookie_expires_is_current_time_plus_remote_timeout() {

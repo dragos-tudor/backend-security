@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication;
 
-partial class Funcs {
+partial class AuthenticationFuncs {
 
   public static string BuildAbsoluteUri (HttpRequest request, string path) =>
     IsRelativeUri(path)?

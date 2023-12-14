@@ -4,7 +4,7 @@ using static System.Convert;
 
 namespace Security.Authentication.Twitter;
 
-partial class Funcs {
+partial class TwitterFuncs {
 
   internal static string GetTwitterCredentials (string clientId, string clientSecret) =>
     ToBase64String(

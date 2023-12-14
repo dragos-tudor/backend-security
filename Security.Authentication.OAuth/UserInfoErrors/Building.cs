@@ -3,7 +3,7 @@ using System.Net.Http;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   internal const string UserInfoEndpointError = "User info endpoint failure";
 

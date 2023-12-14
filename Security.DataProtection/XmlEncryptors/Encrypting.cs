@@ -4,7 +4,7 @@ using System.Xml.Linq;
 
 namespace Security.DataProtection;
 
-partial class Funcs {
+partial class DataProtectionFuncs {
 
   internal const string KeyIVName = "iv";
 

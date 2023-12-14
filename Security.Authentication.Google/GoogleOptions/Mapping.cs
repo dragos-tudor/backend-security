@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 
 namespace Security.Authentication.Google;
 
-partial class Funcs {
+partial class GoogleFuncs {
 
   static ClaimActionCollection MapGoogleClaimActions (ClaimActionCollection claimActions) {
     claimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");

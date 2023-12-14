@@ -4,7 +4,7 @@ using System.Net.Http.Headers;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   static void SetUserInfoRequestBearer(HttpRequestMessage request, string accessTokenHeader, string accessToken) =>
     request.Headers.Authorization = new AuthenticationHeaderValue(accessTokenHeader, accessToken);

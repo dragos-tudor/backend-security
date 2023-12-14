@@ -3,4 +3,4 @@ global using System.Security.Claims;
 
 namespace Security.Authentication;
 
-public static partial class Funcs { }
+public static partial class AuthenticationFuncs { }

@@ -1,17 +1,19 @@
 
 namespace Security.Samples;
 
-partial class Funcs {
-
+partial class SampleFuncs
+{
   internal static WebApplication UseMiddlewares (WebApplication app)
   {
-    app.UseDeveloperExceptionPage();
-    app.UseHttpsRedirection();
-    app.UseStaticFiles();
-    app.UseRouting();
-    app.UseRemoteAuthentication(AuthenticateRemoteAsync);
-    app.UseLocalAuthentication(AuthenticateLocal);
-    app.UseSchemeAuthorization(AuthenticateScheme, ChallengeScheme!, ForbidScheme!);
+    app.UseDeveloperExceptionPage()
+      .UseHttpsRedirection()
+      .UseStaticFiles()
+      .UseRouting()
+      .UseAuthentication(AuthenticateCookie)
+      .UseAuthorization(
+        AuthenticateScheme,
+        (context, _) => ChallengeCookie(context),
+        (context, _) => ForbidCookie(context));
     return app;
   }
 }

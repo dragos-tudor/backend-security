@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 
 namespace Security.DataProtection;
 
-partial class Funcs {
+partial class DataProtectionFuncs {
 
   static SymmetricAlgorithm CreateAlgorithm (SymmetricAlgorithmType algorithmType) =>
     algorithmType switch {

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.Remote;
 
-partial class Funcs {
+partial class RemoteFuncs {
 
   internal const string CorrelationIdKey = ".xsrf";
 

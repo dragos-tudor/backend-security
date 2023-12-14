@@ -4,5 +4,5 @@ global using static Security.Testing.Funcs;
 
 namespace Security.Authorization;
 
-public partial class Tests { }
+public partial class AuthorizationTests { }
 public partial class MicrosoftTests { }

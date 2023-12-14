@@ -1,7 +1,7 @@
 
 namespace Security.Authentication.OAuth;
 
-static partial class Funcs {
+static partial class OAuthFuncs {
 
   public static readonly string CodeVerifier = "code_verifier";
   public static readonly string CodeChallenge = "code_challenge";

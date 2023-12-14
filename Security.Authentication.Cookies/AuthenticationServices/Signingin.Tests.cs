@@ -10,13 +10,13 @@ using static Security.Testing.Funcs;
 
 namespace Security.Authentication.Cookies;
 
-partial class Tests {
+partial class CookiesTests {
 
   [Fact]
   public static async Task Login_request__signin__authentication_cookie()
   {
-    using var server = CreateHttpServer(services => services.AddCookies(options => options with { SchemeName = "CookiesScheme" }));
-    server.MapPost("/account/login", (HttpContext context) => SignIn(context, CreateNamedClaimsPrincipal("CookiesScheme", "user")).ToString());
+    using var server = CreateHttpServer(services => services.AddCookies((CreateCookieAuthenticationOptions()) with { SchemeName = "CookiesScheme" }));
+    server.MapPost("/account/login", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("CookiesScheme", "user")).ToString());
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -30,9 +30,10 @@ partial class Tests {
   [Fact]
   public static async Task Login_request_with_return_url__signin__response_redirected_to_return_url()
   {
-    using var server = CreateHttpServer(services => services.AddCookies(options => options with { SchemeName = "CookiesScheme" }));
-    server.MapPost("/account/login", (HttpContext context) =>
-      SignIn(context, CreateNamedClaimsPrincipal("CookiesScheme", "user"), new AuthenticationProperties() { RedirectUri  = context.Request.Form["redirect_url"] }).ToString());
+    using var server = CreateHttpServer(services => services.AddCookies((CreateCookieAuthenticationOptions()) with { SchemeName = "CookiesScheme" }));
+    var principal = CreateNamedClaimsPrincipal("CookiesScheme", "user");
+    var GetAuthProperties = (HttpContext context) => new AuthenticationProperties() { RedirectUri  = context.Request.Form["redirect_url"] };
+    server.MapPost("/account/login", (HttpContext context) => SignInCookie(context, principal, GetAuthProperties(context)).ToString());
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -55,17 +56,5 @@ partial class Tests {
     Assert.True(response.IsSuccessStatusCode);
     Assert.Contains("CookiesScheme", GetResponseMessageCookie(response));
   }
-
-  static AuthenticationTicket SignIn(
-    HttpContext context,
-    ClaimsPrincipal principal,
-    AuthenticationProperties? authProperties = default) =>
-      SignInCookie(context,
-        principal,
-        authProperties ?? CreateAuthenticationProperties(),
-        ResolveRequiredService<CookieAuthenticationOptions>(context),
-        ResolveRequiredService<CookieBuilder>(context)!,
-        ResolveRequiredService<TimeProvider>(context)!.GetUtcNow()
-      );
 
 }

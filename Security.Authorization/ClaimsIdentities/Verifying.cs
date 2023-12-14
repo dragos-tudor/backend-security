@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static bool IsAuthenticatedClaimsIdentity (ClaimsIdentity identity) =>
     identity.IsAuthenticated ||

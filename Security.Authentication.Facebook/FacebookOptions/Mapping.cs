@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 
 namespace Security.Authentication.Facebook;
 
-partial class Funcs {
+partial class FacebookFuncs {
 
   static ClaimActionCollection MapFacebookClaimActions (ClaimActionCollection claimActions) {
     claimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");

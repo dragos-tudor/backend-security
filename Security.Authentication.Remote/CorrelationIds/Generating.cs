@@ -1,7 +1,7 @@
 
 namespace Security.Authentication.Remote;
 
-partial class Funcs {
+partial class RemoteFuncs {
 
   public static string GenerateCorrelationId ()
   {

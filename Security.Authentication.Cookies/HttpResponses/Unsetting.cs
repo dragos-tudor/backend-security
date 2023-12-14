@@ -1,18 +1,19 @@
 
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Cookies;
 
-partial class Funcs {
+partial class CookiesFuncs {
 
   static void UnsetResponseCookieHeader (
     HttpContext context,
-    CookieAuthenticationOptions authOptions,
+    ICookieManager cookieManager,
     CookieOptions cookieOptions,
     string cookieName) =>
       DeleteAuthenticationCookie(
         context,
-        authOptions.CookieManager,
+        cookieManager,
         cookieName,
         cookieOptions
       );

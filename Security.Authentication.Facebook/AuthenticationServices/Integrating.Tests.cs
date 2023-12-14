@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.DataProtection;
 using static Security.Testing.Funcs;
-using static Security.Authentication.Funcs;
-using static Security.Authentication.Facebook.Funcs;
+using static Security.Authentication.Facebook.FacebookFuncs;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Security.Authentication.Facebook;
 
-partial class Tests {
+partial class FacebookTests {
 
   [Fact]
   public async Task User_challenge_authentication__execute_facebook_authentication_flow__authentication_succedded () {
@@ -23,14 +23,16 @@ partial class Tests {
     await authServer.StartAsync();
     using var authClient = authServer.GetTestClient();
 
-    var provider = new EphemeralDataProtectionProvider();
-    var facebookOptions = CreateFacebookOptions(provider) with {
-      AuthorizationEndpoint = "/authorize", TokenEndpoint = "/token", UserInformationEndpoint = "/userinfo", RemoteClient = authClient,
-      ClientId = "id", ClientSecret = "secret"
+    var facebookOptions = CreateFacebookOptions("id", "secret") with {
+      AuthorizationEndpoint = "/authorize", TokenEndpoint = "/token", UserInformationEndpoint = "/userinfo"
     };
-    using var appServer = CreateHttpServer();
-    appServer.MapGet("/challenge", (HttpContext context) => ChallengeFacebook(context, new AuthenticationProperties(), facebookOptions, DateTimeOffset.UtcNow));
-    appServer.MapGet(facebookOptions.CallbackPath, async delegate (HttpContext context) { return (await AuthenticateFacebookAsync(context, facebookOptions)).Succeeded; });
+    using var appServer = CreateHttpServer(services => services
+      .AddSingleton(authClient)
+      .AddSingleton<IDataProtectionProvider>(new EphemeralDataProtectionProvider())
+      .AddFacebook(facebookOptions)
+    );
+    appServer.MapGet("/challenge", (HttpContext context) => ChallengeFacebook(context, new AuthenticationProperties()));
+    appServer.MapGet(facebookOptions.CallbackPath, async delegate (HttpContext context) { return (await AuthenticateFacebookAsync(context)).Succeeded; });
     await appServer.StartAsync();
     using var appClient = appServer.GetTestClient();
 

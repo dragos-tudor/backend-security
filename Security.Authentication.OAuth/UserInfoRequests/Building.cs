@@ -4,7 +4,7 @@ using System.Net.Mime;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   const string Bearer = "Bearer";
 

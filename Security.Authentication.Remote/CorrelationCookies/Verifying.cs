@@ -1,7 +1,7 @@
 
 namespace Security.Authentication.Remote;
 
-partial class Funcs {
+partial class RemoteFuncs {
 
   static bool IsCorrelationContentMatch (string correlationContent) =>
     correlationContent == CorrelationCookieMarker;

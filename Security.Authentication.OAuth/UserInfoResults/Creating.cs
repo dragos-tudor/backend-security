@@ -1,7 +1,7 @@
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   static UserInfoResult CreateFailureUserInfoResult (string error) =>
     new (default, error);

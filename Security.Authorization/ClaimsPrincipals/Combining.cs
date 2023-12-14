@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static ClaimsPrincipal CombineClaimsPrincipal (ClaimsPrincipal? firstPrincipal, ClaimsPrincipal? secondPrincipal) =>
     firstPrincipal is null && secondPrincipal is not null?

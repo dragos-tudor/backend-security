@@ -4,12 +4,12 @@ using System.Threading;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   public static Task<HttpResponseMessage> SendTokenRequestAsync (
     HttpRequestMessage request,
-    HttpClient remoteClient,
+    HttpClient httpClient,
     CancellationToken cancellationToken = default) =>
-      remoteClient.SendAsync(request, cancellationToken);
+      httpClient.SendAsync(request, cancellationToken);
 
 }

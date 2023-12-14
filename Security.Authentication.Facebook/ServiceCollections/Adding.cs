@@ -1,19 +1,18 @@
-
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
-using static Security.Authentication.Funcs;
 
 namespace Security.Authentication.Facebook;
 
-partial class Funcs {
+partial class FacebookFuncs {
 
   public static IServiceCollection AddFacebook(
     this IServiceCollection services,
-    SetFunc<FacebookOptions>? setOptions = default,
-    string? schemeName = FacebookDefaults.AuthenticationScheme) =>
+    FacebookOptions facebookOptions) =>
       services
-        .AddSingleton((services) => (setOptions ?? Identity)(
-          CreateFacebookOptions(ResolveService<IDataProtectionProvider>(services), schemeName)))
-        .TryAddSingleton(TimeProvider.System);
+        .AddSingleton(facebookOptions)
+        .AddSingleton<ISecureDataFormat<AuthenticationProperties>>((services) =>
+          CreateStateDataFormat(services.GetRequiredService<IDataProtectionProvider>(), facebookOptions.SchemeName))
+        .AddSingleton(TimeProvider.System);
 
 }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Cookies;
 
-partial class Funcs {
+partial class CookiesFuncs {
 
   const string HeaderValueNoCache = "no-cache";
   const string HeaderValueNoCacheNoStore = "no-cache,no-store";

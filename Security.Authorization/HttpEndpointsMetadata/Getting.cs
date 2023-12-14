@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static IReadOnlyList<T>? GetAllEndpointMetadata<T> (Endpoint? endpoint) where T: class =>
     endpoint?.Metadata.GetOrderedMetadata<T>();

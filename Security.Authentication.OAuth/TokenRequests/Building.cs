@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   public static HttpRequestMessage BuildTokenRequest<TOptions>(
     TOptions authOptions,
     AuthenticationProperties authProperties,
-    string authCode) where TOptions : OAuthOptions
+    string authCode,
+    HttpClient httpClient)
+  where TOptions : OAuthOptions
   {
     var tokenRequest = CreateTokenRequest(authOptions.TokenEndpoint);
     var tokenParams = CreateTokenParams(authOptions, authCode, GetAuthenticationPropertiesCallbackUri(authProperties)!);
@@ -20,7 +22,7 @@ partial class Funcs {
       RemoveAuthenticationPropertiesCodeVerifier(authProperties);
     }
     SetTokenRequestAcceptType(tokenRequest, MediaTypeNames.Application.Json);
-    SetTokenRequestVersion(tokenRequest, authOptions.RemoteClient.DefaultRequestVersion);
+    SetTokenRequestVersion(tokenRequest, httpClient.DefaultRequestVersion);
     SetTokenRequestContent(tokenRequest, tokenParams);
 
     return tokenRequest;

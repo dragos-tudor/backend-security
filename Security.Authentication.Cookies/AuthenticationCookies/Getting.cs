@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Cookies;
 
-partial class Funcs {
+partial class CookiesFuncs {
 
   static string? GetAuthenticationCookie (HttpContext context, ICookieManager cookieManager, string cookieName) =>
     cookieManager.GetRequestCookie(context, cookieName);

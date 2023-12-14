@@ -1,25 +1,31 @@
 
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Facebook;
 
-partial class Funcs {
+partial class FacebookFuncs {
 
-  internal static FacebookOptions CreateFacebookOptions (
-    IDataProtectionProvider dataProtectionProvider,
-    string? schemeName = FacebookDefaults.AuthenticationScheme) =>
-      CreateOAuthOptions<FacebookOptions>(dataProtectionProvider, schemeName)
-      with {
+  public static FacebookOptions CreateFacebookOptions (
+    string appId,
+    string appSecret,
+    string schemeName = FacebookDefaults.AuthenticationScheme) =>
+      new () {
         AuthorizationEndpoint = FacebookDefaults.AuthorizationEndpoint,
-        ClaimActions = MapFacebookClaimActions(new ClaimActionCollection()),
-        CallbackPath = new PathString(FacebookDefaults.CallbackPath),
         TokenEndpoint = FacebookDefaults.TokenEndpoint,
         UserInformationEndpoint = FacebookDefaults.UserInformationEndpoint,
+
+        ClientId = appId,
+        ClientSecret = appSecret,
+
+        ClaimActions = MapFacebookClaimActions(new ClaimActionCollection()),
+        CallbackPath = new PathString(FacebookDefaults.CallbackPath),
+
         Fields = new [] { "name", "email" },
+        SchemeName = schemeName,
         Scope = new [] { "email" },
         ScopeSeparator = ',',
+
         SendAppSecretProof = true
       };
 

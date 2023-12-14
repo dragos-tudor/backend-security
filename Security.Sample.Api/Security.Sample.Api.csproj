@@ -15,7 +15,7 @@
     <None Include="./settings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="./wwwcertificates/localhost*">
+    <None Include="../.certificates/localhost*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

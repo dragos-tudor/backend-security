@@ -3,23 +3,21 @@ using System.Linq;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.DataProtection;
-using static Security.Authentication.Twitter.Funcs;
+using static Security.Authentication.Twitter.TwitterFuncs;
 using static Security.Testing.Funcs;
 #nullable disable
 
 namespace Security.Authentication.Twitter;
 
-partial class Tests {
+partial class TwitterTests {
 
   [Fact]
   public async Task Optional_query_params__access_user_informations__token_endpoint_receive_optional_params () {
-    var context  = CreateHttpContext();
-    var remoteClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {query = request.RequestUri}));
-    var authOptions = CreateTwitterOptions(new EphemeralDataProtectionProvider()) with { ClientSecret = "secret", RemoteClient = remoteClient, UserInformationEndpoint = "http://oauth/userinfo", UserFields = new [] { "field1" } };
+    var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {query = request.RequestUri}));
+    var authOptions = CreateTwitterOptions("", "secret") with { UserInformationEndpoint = "http://oauth/userinfo", UserFields = new [] { "field1" } };
     MapJsonClaim(authOptions, "query");
 
-    var result = await AccessTwitterUserInfoAsync(authOptions, string.Empty, default!);
+    var result = await AccessTwitterUserInfoAsync(authOptions, string.Empty, httpClient);
     Assert.Contains("user.fields=field1", GetSecurityClaim(result.Principal, "query")?.Value);
   }
 

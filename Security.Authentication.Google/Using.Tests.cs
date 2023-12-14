@@ -4,4 +4,4 @@ global using Xunit;
 
 namespace Security.Authentication.Google;
 
-public partial class Tests { }
+public partial class GoogleTests { }

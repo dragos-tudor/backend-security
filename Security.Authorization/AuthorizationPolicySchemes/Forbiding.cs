@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static IEnumerable<string> ForbidPolicySchemes (
     AuthorizationPolicy policy,
     HttpContext context,
-    ForbidSchemeFunc forbidSchemeFunc) =>
+    ForbidSchemeFunc forbidScheme) =>
       policy
         .AuthenticationSchemes
-        .Select(schemeName => forbidSchemeFunc(context, schemeName));
+        .Select(schemeName => forbidScheme(context, schemeName));
 
 }

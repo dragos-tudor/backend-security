@@ -6,7 +6,7 @@ namespace Security.Authentication.Facebook;
 public static class FacebookDefaults
 {
     public const string AuthenticationScheme = "Facebook";
-    internal const string CallbackPath = "/signin-facebook";
+    internal const string CallbackPath = "/callback-facebook";
     internal const string AuthorizationEndpoint = "https://www.facebook.com/v11.0/dialog/oauth";
     internal const string TokenEndpoint = "https://graph.facebook.com/v11.0/oauth/access_token";
     internal const string UserInformationEndpoint = "https://graph.facebook.com/v11.0/me";

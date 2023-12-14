@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Cookies;
 
-partial class Funcs {
+partial class CookiesFuncs {
 
   static string GetCookieName (CookieBuilder cookieBuilder, CookieAuthenticationOptions authOptions) =>
     IsDefaultAuthenticationSchemeName(authOptions)?

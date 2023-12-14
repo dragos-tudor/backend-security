@@ -3,9 +3,9 @@ using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
-  static readonly string LoggerCategory = typeof(Funcs).Namespace!;
+  static readonly string LoggerCategory = typeof(AuthorizationFuncs).Namespace!;
   const string LoggerFactory = nameof(ILoggerFactory);
 
   static ILogger Logger {

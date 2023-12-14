@@ -1,7 +1,7 @@
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   internal const string AccessTokenNotFound = "Failed to retrieve access token";
 

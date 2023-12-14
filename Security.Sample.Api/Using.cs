@@ -8,16 +8,16 @@ global using Security.Authentication.Facebook;
 global using Security.Authentication.Twitter;
 global using Security.Authentication;
 
-global using static Security.Authentication.Funcs;
-global using static Security.Authentication.Cookies.Funcs;
-global using static Security.Authentication.Google.Funcs;
-global using static Security.Authentication.Facebook.Funcs;
-global using static Security.Authentication.Twitter.Funcs;
-global using static Security.Authentication.OAuth.Funcs;
-global using static Security.Authorization.Funcs;
-global using static Security.Samples.Funcs;
+global using static Security.Authentication.AuthenticationFuncs;
+global using static Security.Authentication.Cookies.CookiesFuncs;
+global using static Security.Authentication.Google.GoogleFuncs;
+global using static Security.Authentication.Facebook.FacebookFuncs;
+global using static Security.Authentication.Twitter.TwitterFuncs;
+global using static Security.Authentication.OAuth.OAuthFuncs;
+global using static Security.Authorization.AuthorizationFuncs;
+global using static Security.Samples.SampleFuncs;
 
 
 namespace Security.Samples;
 
-public static partial class Funcs { }
+public static partial class SampleFuncs { }

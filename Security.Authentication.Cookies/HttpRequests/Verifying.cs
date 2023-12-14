@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Cookies;
 
-partial class Funcs {
+partial class CookiesFuncs {
 
   static bool IsRequestLoginPath (HttpRequest request, CookieAuthenticationOptions authOptions) =>
     request.Path == authOptions.LoginPath;

@@ -7,14 +7,14 @@ using static Security.Testing.Funcs;
 
 namespace Security.Authentication.Cookies;
 
-partial class Tests {
+partial class CookiesTests {
 
   [Fact]
   public static async Task Authenticated_user__access_protected_resource__access_allowed()
   {
-    using var server = CreateHttpServer(services => services.AddCookies());
-    server.UseLocalAuthentication((context) => Authenticate(context) );
-    server.MapPost("/account/login", (HttpContext context) => SignIn(context, CreateNamedClaimsPrincipal("Cookies", "user")).ToString());
+    using var server = CreateHttpServer(services => services.AddCookies(CreateCookieAuthenticationOptions()));
+    server.UseAuthentication(AuthenticateCookie);
+    server.MapPost("/account/login", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("Cookies", "user")).ToString());
     server.MapGet("/resource", (HttpContext context) => GetPrincipalName(context.User) );
     await server.StartAsync();
 
@@ -45,11 +45,11 @@ partial class Tests {
   public async Task Authenticated_user_by_identity_app__access_other_api_resource__user_authenticated()
   {
     using var identityServer = CreateHttpServer(services => services.AddCookies());
-    identityServer.MapPost("/account/login", (HttpContext context) => SignIn(context, CreateNamedClaimsPrincipal("Cookies", "user")).ToString() );
+    identityServer.MapPost("/account/login", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("Cookies", "user")).ToString() );
     await identityServer.StartAsync();
 
     using var apiServer = CreateHttpServer(services => services.AddCookies());
-    apiServer.UseLocalAuthentication((context) => Authenticate(context) );
+    apiServer.UseAuthentication((context) => AuthenticateCookie(context) );
     apiServer.MapGet("/resource", (HttpContext context) => GetPrincipalName(context.User) );
     await apiServer.StartAsync();
 
@@ -87,9 +87,9 @@ partial class Tests {
   public async Task Authenticated_user__expire_authentication_cookie__unauthenticated_user()
   {
     var expireCookieTicket = TimeSpan.FromMinutes(10);
-    using var server = CreateHttpServer(services => services.AddCookies((options) => options with { ExpireTimeSpan = expireCookieTicket }));
-    server.UseLocalAuthentication((context) => Authenticate(context) );
-    server.MapPost("/account/login", (HttpContext context) => SignIn(context, CreateNamedClaimsPrincipal("Cookies", "user")).ToString());
+    using var server = CreateHttpServer(services => services.AddCookies((CreateCookieAuthenticationOptions()) with { ExpireTimeSpan = expireCookieTicket }));
+    server.UseAuthentication((context) => AuthenticateCookie(context) );
+    server.MapPost("/account/login", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("Cookies", "user")).ToString());
     server.MapGet("/resource", (HttpContext context) => GetPrincipalIdentity(context.User)!.IsAuthenticated ? "auth" : "unauth");
     await server.StartAsync();
 
@@ -123,7 +123,7 @@ partial class Tests {
   public async Task Authenticated_user_by_identity_api__interop_access_other_api__authenticated_user()
   {
     using var identityServer = CreateHttpServer(services => services.AddCookies());
-    identityServer.MapPost("/account/login", (HttpContext context) => SignIn(context, CreateNamedClaimsPrincipal("Cookies", "user")).ToString() );
+    identityServer.MapPost("/account/login", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("Cookies", "user")).ToString() );
     await identityServer.StartAsync();
 
     using var apiServer = CreateHttpServer(services => services.AddAuthentication().AddCookie());
@@ -139,14 +139,6 @@ partial class Tests {
 
     Assert.Equal("user", await ReadResponseMessageContent(apiResponse));
   }
-
-   static AuthenticateResult Authenticate (HttpContext context) =>
-    AuthenticateCookie(
-      context,
-      ResolveRequiredService<CookieAuthenticationOptions>(context),
-      ResolveRequiredService<CookieBuilder>(context),
-      ResolveRequiredService<TimeProvider>(context).GetUtcNow()
-    );
 
   static ClaimsPrincipal CreateNamedClaimsPrincipal (string schemeName, string name) =>
     CreateClaimsPrincipal(schemeName, new [] { CreateNameClaim(name) });

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   static bool ExistsAuthorizationCode (HttpRequest request) =>
     GetAuthorizationCode(request) is not null;

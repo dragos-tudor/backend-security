@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 
 namespace Security.DataProtection;
 
-partial class Funcs {
+partial class DataProtectionFuncs {
 
   public static byte[] DecryptBytes (SymmetricAlgorithm algorithm, byte[] encryptedBytes, SymmetricEncryptionType encryptionType) =>
     encryptionType switch {

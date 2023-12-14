@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   static StringBuilder AddAuthorizationErrorDetail (this StringBuilder builder, string name, string? message) =>
     !IsEmptyString(message)?

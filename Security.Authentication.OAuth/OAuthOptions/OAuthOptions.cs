@@ -1,23 +1,23 @@
 
 using System.Collections.Generic;
-using Auth = Microsoft.AspNetCore.Authentication;
 using Security.Authentication.Remote;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 
 namespace Security.Authentication.OAuth;
 
-public record OAuthOptions: RemoteAuthenticationOptions {
+public record OAuthOptions: RemoteAuthenticationOptions
+{
+  public required string AuthorizationEndpoint { get; init; }
+  public required string TokenEndpoint { get; init; }
+  public required string UserInformationEndpoint { get; init; }
 
-  public string AuthorizationEndpoint { get; init; } = default!;
-  public ClaimActionCollection ClaimActions { get; init; } = default!;
-  public string ClientId { get; init; } = default!;
-  public string ClientSecret { get; init; } = default!;
-  public RemoteAuthenticationOptions RemoteOptions { get; init; } = default!;
-  public IEnumerable<string> Scope { get; init; } = default!;
-  public char ScopeSeparator { get; init; } = default!;
-  public string TokenEndpoint { get; init; } = default!;
-  public string UserInformationEndpoint { get; init; } = default!;
+  public ClaimActionCollection ClaimActions { get; init; } = [];
+  public string? ClaimsIssuer { get; init; }
+
+  public required string ClientId { get; init; }
+  public required string ClientSecret { get; init; }
+
+  public IEnumerable<string>? Scope { get; init; }
+  public char ScopeSeparator { get; init; } = ' ';
   public bool UsePkce { get; init; }
-
-  public Auth.ISecureDataFormat<Auth.AuthenticationProperties> StateDataFormat { get; init; } = default!;
 }

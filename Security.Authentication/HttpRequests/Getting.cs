@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication;
 
-partial class Funcs {
+partial class AuthenticationFuncs {
 
   public static string? GetRequestQueryReturnUrl (HttpRequest request, string returnUrlParameter) =>
     IsRelativeUri(request.Query[returnUrlParameter])?

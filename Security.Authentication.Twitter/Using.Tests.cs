@@ -4,4 +4,4 @@ global using Xunit;
 
 namespace Security.Authentication.Twitter;
 
-public partial class Tests { }
+public partial class TwitterTests { }

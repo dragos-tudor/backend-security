@@ -4,7 +4,7 @@ using Security.Testing;
 
 namespace Security.Authentication.Remote;
 
-partial class Tests {
+partial class RemoteTests {
 
   [Fact]
   public void Request_without_correlation_cookie__validate_cookie__correlation_cookie_not_found_error() {

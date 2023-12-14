@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 
 namespace Security.Authentication.OAuth;
 
-partial class Funcs {
+partial class OAuthFuncs {
 
   static ClaimsPrincipal BuildClaimsPrincipalWithClaims (
     JsonDocument responseJson,

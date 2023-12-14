@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.DataProtection;
 using static Security.Testing.Funcs;
-using static Security.Authentication.Funcs;
-using static Security.Authentication.Twitter.Funcs;
+using static Security.Authentication.Twitter.TwitterFuncs;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Security.Authentication.Twitter;
 
-partial class Tests {
+partial class TwitterTests {
 
   [Fact]
   public async Task User_challenge_authentication__execute_twitter_authentication_flow__authentication_succedded () {
@@ -23,14 +23,16 @@ partial class Tests {
     await authServer.StartAsync();
     using var authClient = authServer.GetTestClient();
 
-    var provider = new EphemeralDataProtectionProvider();
-    var twitterOptions = CreateTwitterOptions(provider) with {
-      AuthorizationEndpoint = "/authorize", TokenEndpoint = "/token", UserInformationEndpoint = "/userinfo", RemoteClient = authClient,
-      ClientId = "id", ClientSecret = "secret"
+    var twitterOptions = CreateTwitterOptions("id", "secret") with {
+      AuthorizationEndpoint = "/authorize", TokenEndpoint = "/token", UserInformationEndpoint = "/userinfo"
     };
-    using var appServer = CreateHttpServer();
-    appServer.MapGet("/challenge", (HttpContext context) => ChallengeTwitter(context, new AuthenticationProperties(), twitterOptions, DateTimeOffset.UtcNow));
-    appServer.MapGet(twitterOptions.CallbackPath, async delegate (HttpContext context) { return (await AuthenticateTwitterAsync(context, twitterOptions)).Succeeded; });
+    using var appServer = CreateHttpServer(services => services
+      .AddSingleton(authClient)
+      .AddSingleton<IDataProtectionProvider>(new EphemeralDataProtectionProvider())
+      .AddTwitter(twitterOptions)
+    );
+    appServer.MapGet("/challenge", (HttpContext context) => ChallengeTwitter(context, new AuthenticationProperties()));
+    appServer.MapGet(twitterOptions.CallbackPath, async delegate (HttpContext context) { return (await AuthenticateTwitterAsync(context)).Succeeded; });
     await appServer.StartAsync();
     using var appClient = appServer.GetTestClient();
 

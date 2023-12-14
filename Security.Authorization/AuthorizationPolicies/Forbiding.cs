@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static string ForbidPolicy (
     AuthorizationPolicy policy,
     HttpContext context,
-    ForbidSchemeFunc forbidSchemeFunc) =>
+    ForbidSchemeFunc forbidScheme) =>
       IsSchemelessPolicy(policy)?
-        forbidSchemeFunc(context):
-        ForbidPolicySchemes(policy, context, forbidSchemeFunc).JoinPolicySchemeFailures();
+        forbidScheme(context):
+        ForbidPolicySchemes(policy, context, forbidScheme).JoinPolicySchemeFailures();
 }

@@ -5,16 +5,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Google;
 
-partial class Funcs {
+partial class GoogleFuncs {
 
-  public static Task<AuthenticateResult> AuthenticateGoogleAsync (
-    HttpContext context,
-    GoogleOptions googleOptions) =>
-      AuthenticateOAuthAsync(
-        context,
-        googleOptions,
-        PostAuthorize<GoogleOptions>,
-        ExchangeCodeForTokensAsync<GoogleOptions>,
-        AccessUserInfoAsync);
+  public static Task<AuthenticateResult> AuthenticateGoogleAsync (HttpContext context) =>
+    AuthenticateOAuthAsync<GoogleOptions>(
+      context,
+      PostAuthorize<GoogleOptions>,
+      ExchangeCodeForTokensAsync<GoogleOptions>,
+      AccessUserInfoAsync);
 
 }

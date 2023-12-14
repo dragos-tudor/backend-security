@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.Cookies;
 
-partial class Funcs {
+partial class CookiesFuncs {
 
   static AuthenticationTicket? UnprotectAuthenticationTicket (string protectedText, ISecureDataFormat<AuthenticationTicket> ticketDataFormat) =>
     ticketDataFormat.Unprotect(protectedText);

@@ -2,14 +2,13 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
-using static Security.Authentication.Twitter.Funcs;
+using static Security.Authentication.Twitter.TwitterFuncs;
 using static Security.Testing.Funcs;
 
 namespace Security.Authentication.Twitter;
 
-partial class Tests {
+partial class TwitterTests {
 
   [Fact]
   public async Task User_credentials__exchange_code_for_tokens__endpoint_receive_credentials () {
@@ -18,10 +17,9 @@ partial class Tests {
     await authServer.StartAsync();
     using var authClient = authServer.GetTestClient();
 
-    var context  = CreateHttpContext();
-    var authOptions = CreateTwitterOptions(new EphemeralDataProtectionProvider()) with { ClientId = "id", ClientSecret = "secret", RemoteClient = authClient, TokenEndpoint = "http://oauth/token" };
+    var authOptions = CreateTwitterOptions("id", "secret") with { TokenEndpoint = "http://oauth/token" };
     var authProperties = new AuthenticationProperties();
-    var result = await ExchangeTwitterCodeForTokensAsync(authOptions, authProperties, string.Empty, context.RequestAborted);
+    var result = await ExchangeTwitterCodeForTokensAsync(authOptions, authProperties, string.Empty, authClient);
 
     Assert.Equal("Basic " + GetTwitterCredentials("id", "secret"), result.TokenInfo!.TokenType);
   }

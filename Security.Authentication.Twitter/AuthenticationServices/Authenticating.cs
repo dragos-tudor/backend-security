@@ -5,16 +5,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Twitter;
 
-partial class Funcs {
+partial class TwitterFuncs {
 
-  public static Task<AuthenticateResult> AuthenticateTwitterAsync (
-    HttpContext context,
-    TwitterOptions twitterOptions) =>
-      AuthenticateOAuthAsync(
-        context,
-        twitterOptions,
-        PostAuthorize<TwitterOptions>,
-        ExchangeTwitterCodeForTokensAsync,
-        AccessTwitterUserInfoAsync);
+  public static Task<AuthenticateResult> AuthenticateTwitterAsync (HttpContext context) =>
+    AuthenticateOAuthAsync<TwitterOptions>(
+      context,
+      PostAuthorize<TwitterOptions>,
+      ExchangeTwitterCodeForTokensAsync,
+      AccessTwitterUserInfoAsync);
 
 }

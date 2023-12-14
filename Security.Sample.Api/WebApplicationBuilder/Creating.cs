@@ -1,7 +1,7 @@
 
 namespace Security.Samples;
 
-partial class Funcs {
+partial class SampleFuncs {
 
   internal static WebApplicationBuilder CreateWebApplicationBuilder (string[] args) =>
     WebApplication.CreateBuilder(args);

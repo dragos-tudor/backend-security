@@ -3,7 +3,7 @@ using System.Security.Claims;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static bool IsAuthenticatedClaimsPrincipal (ClaimsPrincipal? principal) =>
     principal?.Identity?.IsAuthenticated ?? false;

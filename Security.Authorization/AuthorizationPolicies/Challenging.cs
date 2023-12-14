@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static string ChallengePolicy (
     AuthorizationPolicy policy,
     HttpContext context,
-    ChallengeSchemeFunc challengeSchemeFunc) =>
+    ChallengeSchemeFunc challengeScheme) =>
       IsSchemelessPolicy(policy)?
-        challengeSchemeFunc(context):
-        ChallengePolicySchemes(policy, context, challengeSchemeFunc).JoinPolicySchemeFailures();
+        challengeScheme(context):
+        ChallengePolicySchemes(policy, context, challengeScheme).JoinPolicySchemeFailures();
 }

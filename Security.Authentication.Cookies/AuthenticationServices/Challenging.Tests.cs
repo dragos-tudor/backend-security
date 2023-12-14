@@ -8,13 +8,13 @@ using static Security.Testing.Funcs;
 
 namespace Security.Authentication.Cookies;
 
-partial class Tests {
+partial class CookiesTests {
 
   [Fact]
   public async Task Unautenticated_user_resource_request__challenge__login_redirection()
   {
     using var server = CreateHttpServer(services => services.AddCookies());
-    server.MapGet("/resource", (HttpContext context) => Challenge(context));
+    server.MapGet("/resource", (HttpContext context) => ChallengeCookie(context));
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -37,11 +37,5 @@ partial class Tests {
     Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
     Assert.Equal("http://localhost/Account/Login?ReturnUrl=/resource", GetResponseMessageLocation(response));
   }
-
-  static string? Challenge (HttpContext context) =>
-    ChallengeCookie(
-      context,
-      CreateAuthenticationProperties(),
-      ResolveRequiredService<CookieAuthenticationOptions>(context));
 
 }

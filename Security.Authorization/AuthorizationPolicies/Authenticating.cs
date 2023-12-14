@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static AuthenticateResult AuthenticateSchemefullPolicy (
     AuthorizationPolicy policy,
-    AuthenticateSchemeFunc authenticateSchemeFunc,
+    AuthenticateSchemeFunc authenticateScheme,
     HttpContext context)
   {
-    var authenticateResults = AuthenticatePolicySchemes(policy, context, authenticateSchemeFunc);
+    var authenticateResults = AuthenticatePolicySchemes(policy, context, authenticateScheme);
     var expires = MinimumAuthenticationPropertiesExpires(authenticateResults);
     var principals = authenticateResults.Select(result => result.Principal);
     var authenticatedPrincipals = GetAuthenticatedClaimsPrincipals(principals);
@@ -32,10 +32,10 @@ partial class Funcs {
 
   static AuthenticateResult AuthenticatePolicy (
     AuthorizationPolicy policy,
-    AuthenticateSchemeFunc authenticateSchemeFunc,
+    AuthenticateSchemeFunc authenticateScheme,
     HttpContext context) =>
       IsSchemelessPolicy(policy!)?
         AuthenticateSchemelessPolicy(context):
-        AuthenticateSchemefullPolicy(policy!, authenticateSchemeFunc, context);
+        AuthenticateSchemefullPolicy(policy!, authenticateScheme, context);
 
 }

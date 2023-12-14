@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace Security.Authorization;
 
-partial class Funcs {
+partial class AuthorizationFuncs {
 
   static IEnumerable<ClaimsIdentity> GetAuthenticatedClaimsIdentities (ClaimsPrincipal principal) =>
     principal

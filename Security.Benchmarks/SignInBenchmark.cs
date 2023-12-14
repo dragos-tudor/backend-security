@@ -9,12 +9,12 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Security.Authentication.Cookies;
-using static Security.Authentication.Cookies.Funcs;
+using static Security.Authentication.Cookies.CookiesFuncs;
 #pragma warning disable CA1822
 
 namespace Security.Benchmarks;
 
-[SimpleJob(invocationCount: 2048)]
+// [SimpleJob(invocationCount: 2048)] // took to long
 [MemoryDiagnoser]
 public class SignInBenchmarks
 {
@@ -30,10 +30,7 @@ public class SignInBenchmarks
     SignInCookie(
       context,
       new ClaimsPrincipal(identity),
-      new AuthenticationProperties(),
-      context.RequestServices.GetRequiredService<Authentication.Cookies.CookieAuthenticationOptions>(),
-      context.RequestServices.GetRequiredService<CookieBuilder>(),
-      DateTimeOffset.UtcNow);
+      new AuthenticationProperties());
   }
 
   [Benchmark]

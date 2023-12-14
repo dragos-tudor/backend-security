@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Security.Authentication.Remote;
 
-partial class Funcs {
+partial class RemoteFuncs {
 
   [LoggerMessage(25, LogLevel.Information, "AuthenticationScheme: {SchemeName} An error was encountered while handling the remote login. Failure message: {FailureMessage}", EventName = "AuthenticateRemoteFailure")]
   public static partial void AuthenticateRemoteFailureLog (ILogger logger, string schemeName, string failureMessage);
