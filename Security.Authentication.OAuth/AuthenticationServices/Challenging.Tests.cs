@@ -14,7 +14,7 @@ partial class OAuthTests {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions() with { AuthorizationEndpoint = "http://oauth/" };
     var secureDataFormat = CreateStateDataFormat(ResolveService<IDataProtectionProvider>(context));
-    var authorizationPath = ChallengeOAuth(context, authOptions, secureDataFormat, DateTimeOffset.Now);
+    var authorizationPath = ChallengeRemoteOAuth(context, authOptions, secureDataFormat, DateTimeOffset.Now);
 
     Assert.StartsWith("http://oauth/?", authorizationPath);
   }
@@ -24,7 +24,7 @@ partial class OAuthTests {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions() with { Scope = new [] { "openid", "email" } };
     var secureDataFormat = CreateStateDataFormat(ResolveService<IDataProtectionProvider>(context));
-    var authorizationPath = ChallengeOAuth(context, authOptions, secureDataFormat, DateTimeOffset.Now);
+    var authorizationPath = ChallengeRemoteOAuth(context, authOptions, secureDataFormat, DateTimeOffset.Now);
 
     Assert.Contains("scope=openid%20email", authorizationPath);
   }
@@ -34,7 +34,7 @@ partial class OAuthTests {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions() with { ClientId = "clientID" };
     var secureDataFormat = CreateStateDataFormat(ResolveService<IDataProtectionProvider>(context));
-    var authorizationPath = ChallengeOAuth(context, authOptions, secureDataFormat, DateTimeOffset.Now);
+    var authorizationPath = ChallengeRemoteOAuth(context, authOptions, secureDataFormat, DateTimeOffset.Now);
 
     Assert.Contains("client_id=clientID", authorizationPath);
   }
@@ -44,7 +44,7 @@ partial class OAuthTests {
     var context = CreateHttpContext(new Uri("http://localhost"));
     var authOptions = CreateOAuthOptions() with { CallbackPath = "/callback" };
     var secureDataFormat = CreateStateDataFormat(ResolveService<IDataProtectionProvider>(context));
-    var authorizationPath = ChallengeOAuth(context, authOptions, secureDataFormat, DateTimeOffset.Now);
+    var authorizationPath = ChallengeRemoteOAuth(context, authOptions, secureDataFormat, DateTimeOffset.Now);
 
     Assert.Contains("redirect_uri=" + Uri.EscapeDataString("http://localhost/callback"), authorizationPath);
   }
@@ -54,7 +54,7 @@ partial class OAuthTests {
     var context = CreateHttpContext(new Uri("http://localhost"));
     var authOptions = CreateOAuthOptions() with { UsePkce = true };
     var secureDataFormat = CreateStateDataFormat(ResolveService<IDataProtectionProvider>(context));
-    var authorizationPath = ChallengeOAuth(context, authOptions, secureDataFormat, DateTimeOffset.Now);
+    var authorizationPath = ChallengeRemoteOAuth(context, authOptions, secureDataFormat, DateTimeOffset.Now);
 
     var authProperties = secureDataFormat.Unprotect(QueryHelpers.ParseQuery(authorizationPath)["state"]);
     var codeChallenge = HashCodeVerifier(GetAuthenticationPropertiesCodeVerifier(authProperties!)!);
@@ -66,7 +66,7 @@ partial class OAuthTests {
     var context = CreateHttpContext(new Uri("http://localhost/challenge?returnUrl=/index"));
     var authOptions = CreateOAuthOptions();
     var secureDataFormat = CreateStateDataFormat(ResolveService<IDataProtectionProvider>(context));
-    var authorizationPath = ChallengeOAuth(context, authOptions, secureDataFormat, DateTimeOffset.Now);
+    var authorizationPath = ChallengeRemoteOAuth(context, authOptions, secureDataFormat, DateTimeOffset.Now);
     var stateParam = GetQueryStateParam(authorizationPath);
     var properties = UnprotectAuthenticationProperties(stateParam.Value, secureDataFormat);
 
@@ -78,7 +78,7 @@ partial class OAuthTests {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
     var secureDataFormat = CreateStateDataFormat(ResolveService<IDataProtectionProvider>(context));
-    var authorizationPath = ChallengeOAuth(context, authOptions, secureDataFormat, DateTimeOffset.Now);
+    var authorizationPath = ChallengeRemoteOAuth(context, authOptions, secureDataFormat, DateTimeOffset.Now);
     var stateParam = GetQueryStateParam(authorizationPath);
     var properties = UnprotectAuthenticationProperties(stateParam.Value, secureDataFormat)!;
 

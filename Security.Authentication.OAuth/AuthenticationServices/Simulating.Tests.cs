@@ -25,7 +25,7 @@ partial class OAuthTests {
     var authOptions = CreateOAuthOptions() with { AuthorizationEndpoint = "http://oauth/authorize" };
     var secureDataFormat = CreateStateDataFormat(ResolveService<IDataProtectionProvider>(context));
     using var appServer = CreateHttpServer();
-    appServer.MapGet("/challenge", (HttpContext context) => ChallengeOAuth(context, authOptions, secureDataFormat, DateTimeOffset.UtcNow));
+    appServer.MapGet("/challenge", (HttpContext context) => ChallengeRemoteOAuth(context, authOptions, secureDataFormat, DateTimeOffset.UtcNow));
     appServer.MapGet("/callback", async delegate (HttpContext context) { return (await AuthenticateOAuthAsync(context, authOptions, secureDataFormat, authClient, PostAuthorize, ExchangeCodeForTokensAsync, AccessUserInfoAsync)).Succeeded; });
     await appServer.StartAsync();
     using var appClient = appServer.GetTestClient();
