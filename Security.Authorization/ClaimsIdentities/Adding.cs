@@ -6,19 +6,19 @@ namespace Security.Authorization;
 
 partial class AuthorizationFuncs {
 
-  static ClaimsPrincipal AddAuthenticatedClaimsIdentities (this ClaimsPrincipal first, ClaimsPrincipal? second) =>
+  static ClaimsPrincipal AddAuthenticatedIdentities (this ClaimsPrincipal first, ClaimsPrincipal? second) =>
     second?.Identities is not null?
-      AddClaimsIdentities(first, GetAuthenticatedClaimsIdentities(second)):
+      AddIdentities(first, GetAuthenticatedIdentities(second)):
       first;
 
-  static ClaimsPrincipal AddClaimsIdentities (ClaimsPrincipal principal, IEnumerable<ClaimsIdentity> identities) {
+  static ClaimsPrincipal AddIdentities (ClaimsPrincipal principal, IEnumerable<ClaimsIdentity> identities) {
     principal.AddIdentities(identities);
     return principal;
   }
 
-  static ClaimsPrincipal AddClaimsIdentities (this ClaimsPrincipal first, ClaimsPrincipal? second) =>
+  static ClaimsPrincipal AddIdentities (this ClaimsPrincipal first, ClaimsPrincipal? second) =>
     second?.Identities is not null?
-      AddClaimsIdentities(first, second.Identities):
+      AddIdentities(first, second.Identities):
       first;
 
 }

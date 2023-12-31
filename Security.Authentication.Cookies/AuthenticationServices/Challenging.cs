@@ -4,15 +4,15 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Cookies;
 
-partial class CookiesFuncs {
-
+partial class CookiesFuncs
+{
   public static string ChallengeCookie (
     HttpContext context,
     AuthenticationProperties authProperties,
     CookieAuthenticationOptions authOptions)
   {
-    var returnUrl = GetPropertiesRedirectUriOrCurrentUri(context, authProperties);
-    var challengePath = BuildChallengePath(authOptions, returnUrl);
+    var returnUri = GetAuthenticationPropertiesRedirectUri(authProperties) ?? BuildRelativeUri(context.Request);
+    var challengePath = BuildChallengePath(authOptions, returnUri);
 
     LogChallenged(Logger, authOptions.SchemeName, challengePath, context.TraceIdentifier);
     return SetResponseRedirect(context.Response, challengePath);
@@ -20,10 +20,9 @@ partial class CookiesFuncs {
 
   public static string ChallengeCookie (
     HttpContext context,
-    AuthenticationProperties? authProperties = default) =>
+    AuthenticationProperties authProperties) =>
       ChallengeCookie(
         context,
-        authProperties ?? CreateAuthenticationProperties(),
+        authProperties,
         ResolveService<CookieAuthenticationOptions>(context));
-
 }

@@ -12,7 +12,7 @@ partial class OAuthFuncs {
     string claimsIssuer,
     string schemeName)
   {
-    var claimsPrincipal = CreateClaimsPrincipal(schemeName);
+    var claimsPrincipal = CreatePrincipal(schemeName);
     var claimsIdentity = (ClaimsIdentity)claimsPrincipal.Identity!;
     foreach (var claimAction in claimActions)
       claimAction.Run(responseJson.RootElement, claimsIdentity, claimsIssuer);

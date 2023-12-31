@@ -59,7 +59,7 @@ partial class OAuthTests {
   public async Task Valid_authentication_flow__authenticate__authentication_with_expected_claims_principal () {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
-    var principal = CreateClaimsPrincipal("user name");
+    var principal = CreatePrincipal("user name");
     SetAuthorizationQueryParams(context, code: "code");
 
     var postAuthorize = Substitute.For<PostAuthorizeFunc<OAuthOptions>>();
@@ -78,6 +78,7 @@ partial class OAuthTests {
       AccessDeniedPath = "/forbid",
       AuthorizationEndpoint = "/authorize",
       CallbackPath = "/callback",
+      ChallengePath = "/challenge",
       ClientId = "client id",
       ClientSecret = "client secret",
       Scope = new [] { "scope1", "scope2" },

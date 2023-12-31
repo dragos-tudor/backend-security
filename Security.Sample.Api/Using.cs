@@ -13,7 +13,6 @@ global using static Security.Authentication.Cookies.CookiesFuncs;
 global using static Security.Authentication.Google.GoogleFuncs;
 global using static Security.Authentication.Facebook.FacebookFuncs;
 global using static Security.Authentication.Twitter.TwitterFuncs;
-global using static Security.Authentication.OAuth.OAuthFuncs;
 global using static Security.Authorization.AuthorizationFuncs;
 global using static Security.Samples.SampleFuncs;
 

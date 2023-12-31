@@ -10,10 +10,7 @@ partial class SampleFuncs
       .UseStaticFiles()
       .UseRouting()
       .UseAuthentication(AuthenticateCookie)
-      .UseAuthorization(
-        AuthenticateScheme,
-        (context, _) => ChallengeCookie(context),
-        (context, _) => ForbidCookie(context));
+      .UseAuthorization(ChallengeGoogle, ForbidCookie);
     return app;
   }
 }

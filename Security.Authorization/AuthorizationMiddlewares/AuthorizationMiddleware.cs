@@ -1,28 +1,20 @@
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Security.Authentication;
+using static Security.Authentication.AuthenticationFuncs;
 
 namespace Security.Authorization;
 
 partial class AuthorizationFuncs {
 
   static async Task AuthorizationMiddleware (
-    AuthenticateSchemeFunc authenticateScheme,
-    ChallengeSchemeFunc challengeScheme,
-    ForbidSchemeFunc forbidScheme,
-    IAuthorizationPolicyProvider policyProvider,
-    IAuthorizationService authorizationService,
+    ChallengeFunc challenge,
+    ForbidFunc forbid,
     HttpContext context,
     RequestDelegate next)
   {
     var (authorizationResult, authorizedPrincipal) =
-      await AuthorizeAsync(
-        authenticateScheme,
-        challengeScheme,
-        forbidScheme,
-        policyProvider,
-        authorizationService,
-        context);
+      await AuthorizeAsync(context, challenge, forbid);
 
     SetContextUser(context, authorizedPrincipal);
     if (IsSuccessfulAuthorization(authorizationResult)) await next(context);

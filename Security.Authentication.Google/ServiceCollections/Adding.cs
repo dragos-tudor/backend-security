@@ -13,7 +13,7 @@ partial class GoogleFuncs
       services
         .AddSingleton(googleOptions)
         .AddSingleton<ISecureDataFormat<AuthenticationProperties>>((services) =>
-          CreateStateDataFormat(services.GetRequiredService<IDataProtectionProvider>(), googleOptions.SchemeName))
+          CreateStateDataFormat(ResolveService<IDataProtectionProvider>(services), googleOptions.SchemeName))
         .AddSingleton(TimeProvider.System);
 
 }

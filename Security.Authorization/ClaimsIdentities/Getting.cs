@@ -7,9 +7,9 @@ namespace Security.Authorization;
 
 partial class AuthorizationFuncs {
 
-  static IEnumerable<ClaimsIdentity> GetAuthenticatedClaimsIdentities (ClaimsPrincipal principal) =>
+  static IEnumerable<ClaimsIdentity> GetAuthenticatedIdentities (ClaimsPrincipal principal) =>
     principal
       .Identities
-      .Where(IsAuthenticatedClaimsIdentity);
+      .Where(IsAuthenticatedIdentity);
 
 }

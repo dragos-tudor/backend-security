@@ -6,8 +6,8 @@ using static Microsoft.AspNetCore.Authentication.AuthenticateResult;
 
 namespace Security.Authentication.Cookies;
 
-partial class CookiesFuncs {
-
+partial class CookiesFuncs
+{
   const string TicketExpired = "Ticket expired";
   const string UnprotectTicketFailed = "Unprotect ticket failed";
 
@@ -48,5 +48,4 @@ partial class CookiesFuncs {
     if(result.Succeeded) LogAuthenticated(Logger, authOptions.SchemeName, GetPrincipalNameId(result.Principal)!, context.TraceIdentifier);
     return result;
   }
-
 }

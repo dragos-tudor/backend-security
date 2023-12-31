@@ -13,7 +13,7 @@ partial class TwitterFuncs {
       services
         .AddSingleton(twitterOptions)
         .AddSingleton<ISecureDataFormat<AuthenticationProperties>>((services) =>
-          CreateStateDataFormat(services.GetRequiredService<IDataProtectionProvider>(), twitterOptions.SchemeName))
+          CreateStateDataFormat(ResolveService<IDataProtectionProvider>(services), twitterOptions.SchemeName))
         .AddSingleton(TimeProvider.System);
 
 }

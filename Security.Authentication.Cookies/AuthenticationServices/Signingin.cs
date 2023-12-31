@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Cookies;
 
-partial class CookiesFuncs {
-
+partial class CookiesFuncs
+{
   public static AuthenticationTicket SignInCookie (
     HttpContext context,
     ClaimsPrincipal principal,
@@ -30,8 +30,8 @@ partial class CookiesFuncs {
     SetResponseCookieHeader(context, protectedTicket, cookieManager, cookieOptions, cookieName);
     ResetResponseCacheHeaders(context.Response);
     if (IsRequestLoginPath(context.Request, authOptions))
-    if (GetPropertiesRedirectUriOrQueryReturnUrl(context, authProperties, authOptions.ReturnUrlParameter) is string redirectUrl)
-      SetResponseRedirect(context.Response, redirectUrl);
+    if (GetSigningRedirectUri(context, authProperties, authOptions.ReturnUrlParameter) is string redirectUri)
+      SetResponseRedirect(context.Response, redirectUri);
 
     LogSignedInCookie(Logger, authOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
     return ticket;
@@ -40,15 +40,14 @@ partial class CookiesFuncs {
   public static AuthenticationTicket SignInCookie (
     HttpContext context,
     ClaimsPrincipal principal,
-    AuthenticationProperties? authProperties = default) =>
+    AuthenticationProperties authProperties) =>
       SignInCookie(
         context,
         principal,
-        authProperties ?? CreateAuthenticationProperties(),
+        authProperties,
         ResolveService<CookieAuthenticationOptions>(context),
         ResolveService<CookieBuilder>(context),
         ResolveService<ICookieManager>(context),
         ResolveService<ISecureDataFormat<AuthenticationTicket>>(context),
         ResolveService<TimeProvider>(context).GetUtcNow());
-
 }

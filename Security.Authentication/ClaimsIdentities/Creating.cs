@@ -5,7 +5,7 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs {
 
-  static ClaimsIdentity CreateClaimsIdentity (string schemeName, IEnumerable<Claim>? claims = default) =>
+  static ClaimsIdentity CreateIdentity (string schemeName, IEnumerable<Claim>? claims = default) =>
     new(claims, schemeName);
 
 }

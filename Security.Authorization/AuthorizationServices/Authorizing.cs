@@ -1,33 +1,46 @@
-
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
+using Security.Authentication;
+using static Security.Authentication.AuthenticationFuncs;
 
 namespace Security.Authorization;
 
 partial class AuthorizationFuncs {
 
   static async Task<(PolicyAuthorizationResult?, ClaimsPrincipal?)> AuthorizeAsync (
-    AuthenticateSchemeFunc authenticateScheme,
-    ChallengeSchemeFunc challengeScheme,
-    ForbidSchemeFunc forbidScheme,
+    HttpContext context,
+    ChallengeFunc challenge,
+    ForbidFunc forbid,
     IAuthorizationPolicyProvider policyProvider,
-    IAuthorizationService authorizationService,
-    HttpContext context)
+    IAuthorizationService authorizationService)
   {
     var endpoint = MarkEndpointInvoked(context, context.GetEndpoint());
     var policy = await CombinePolicies(policyProvider, endpoint);
     if (policy is null) return (default, default);
 
-    var authenticateResult = AuthenticatePolicy(policy, authenticateScheme, context);
-    if (IsAnonymousEndpoint(endpoint)) return (default, authenticateResult.Principal);
+    var authResult = GetAuthenticationFeature<AuthenticateResult>(context) ?? GetDefaultAuthenticateResult(context);
+    if (IsAnonymousEndpoint(endpoint)) return (default, authResult.Principal);
 
-    var authorizationResult = await AuthorizePolicyAsync(policy, authenticateResult, authorizationService, context, endpoint);
-    if (authorizationResult.Forbidden) ForbidPolicy(policy, context, forbidScheme);
-    if (authorizationResult.Challenged) ChallengePolicy(policy, context, challengeScheme);
+    var authorizationResult = await AuthorizePolicyAsync(policy, authResult, authorizationService, context, endpoint);
+    if (authorizationResult.Forbidden) forbid(context, authResult.Properties!);
+    if (authorizationResult.Challenged) challenge(context, authResult.Properties!);
 
-    return (authorizationResult, authenticateResult.Principal);
+    return (authorizationResult, authResult.Principal);
   }
+
+  static Task<(PolicyAuthorizationResult?, ClaimsPrincipal?)> AuthorizeAsync (
+    HttpContext context,
+    ChallengeFunc challenge,
+    ForbidFunc forbid) =>
+      AuthorizeAsync(
+        context,
+        challenge,
+        forbid,
+        ResolveService<IAuthorizationPolicyProvider>(context),
+        ResolveService<IAuthorizationService>(context)
+      );
 
 }

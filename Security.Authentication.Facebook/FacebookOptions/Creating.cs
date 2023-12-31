@@ -18,8 +18,9 @@ partial class FacebookFuncs {
         ClientId = appId,
         ClientSecret = appSecret,
 
+        ChallengePath = new PathString(FacebookDefaults.ChallengePath),
         ClaimActions = MapFacebookClaimActions(new ClaimActionCollection()),
-        CallbackPath = new PathString(FacebookDefaults.CallbackPath),
+        CallbackPath = new PathString(FacebookDefaults.SigninPath),
 
         Fields = new [] { "name", "email" },
         SchemeName = schemeName,

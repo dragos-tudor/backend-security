@@ -11,7 +11,11 @@ partial class AuthenticationFuncs {
     HttpContext context,
     RequestDelegate next)
   {
-    SetContextUser(context, authenticate(context).Principal);
+    var authenticateResult = authenticate(context);
+    if(authenticateResult.Succeeded)
+      SetAuthenticationFeature(context, authenticateResult);
+
+    SetContextUser(context, authenticateResult.Principal);
     return next(context);
   }
 

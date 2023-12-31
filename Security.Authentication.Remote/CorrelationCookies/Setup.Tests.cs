@@ -8,7 +8,7 @@ partial class RemoteTests {
   [Fact]
   public void Authentication_options_with_remote_timeout__setup_cookie__cookie_expires_is_current_time_plus_remote_timeout() {
     var context = new DefaultHttpContext();
-    var authOptions = new RemoteAuthenticationOptions() { RemoteAuthenticationTimeout = TimeSpan.FromHours(1) };
+    var authOptions = new RemoteAuthenticationOptions() { CallbackPath = "/callback", RemoteAuthenticationTimeout = TimeSpan.FromHours(1) };
     var currentUtc = DateTimeOffset.UtcNow;
     var cookieName = SetupCorrelationCookie(context, authOptions, currentUtc, "correlaton.id");
 

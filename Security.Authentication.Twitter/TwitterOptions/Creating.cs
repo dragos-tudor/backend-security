@@ -1,5 +1,3 @@
-
-using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Twitter;
@@ -18,8 +16,9 @@ partial class TwitterFuncs {
         ClientId = consumerKey,
         ClientSecret = consumerSecret,
 
-        ClaimActions = MapTwitterClaimActions(new ClaimActionCollection()),
-        CallbackPath = new PathString(TwitterDefaults.CallbackPath),
+        ChallengePath = new PathString(TwitterDefaults.ChallengePath),
+        ClaimActions = MapTwitterClaimActions([]),
+        CallbackPath = new PathString(TwitterDefaults.SigninPath),
 
         SchemeName = schemeName,
         Scope = new [] { "tweet.read", "users.read" },

@@ -16,7 +16,8 @@ partial class CookiesTests {
   public async Task Logout_request__signout__expired_cookie()
   {
     using var server = CreateHttpServer(services => services.AddCookies() );
-    server.MapPost("/account/logout", (HttpContext context) => SignOutCookie(context) ?? string.Empty);
+    var authProperties = CreateAuthenticationProperties();
+    server.MapPost("/account/logout", (HttpContext context) => SignOutCookie(context, authProperties) ?? string.Empty);
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -47,7 +48,7 @@ partial class CookiesTests {
   {
     using var server = CreateHttpServer(services => services.AddAuthentication().AddCookie());
     server.UseAuthentication();
-    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreateClaimsPrincipal("Cookies", new [] { CreateNameClaim("user") })));
+    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreatePrincipal("Cookies", new [] { CreateNameClaim("user") })));
     server.MapPost("/account/logout", (HttpContext context) => context.SignOutAsync());
     await server.StartAsync();
 

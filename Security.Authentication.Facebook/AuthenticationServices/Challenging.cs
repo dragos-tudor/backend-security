@@ -3,6 +3,6 @@ namespace Security.Authentication.Facebook;
 
 partial class FacebookFuncs {
 
-  public static ChallengeFunc<FacebookOptions> ChallengeFacebook => ChallengeOAuth<FacebookOptions>;
+  public readonly static ChallengeFunc ChallengeFacebook = ChallengeLocalOAuth<FacebookOptions>;
 
 }

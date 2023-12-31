@@ -5,17 +5,11 @@ partial class SampleFuncs {
 
   internal static WebApplication MapEndpoints (WebApplication app)
   {
-    app.MapPost(LoginUserEndpointName, LoginUserEndpoint);
-    app.MapPost(LogoutUserEndpointName, LogoutUserEndpoint);
-
-    app.MapGet(ChallengeGoogleEndpointName, ChallengeGoogleEndpoint);
-    app.MapGet(ChallengeFacebookEndpointName, ChallengeFacebookEndpoint);
-    app.MapGet(ChallengeTwitterEndpointName, ChallengeTwitterEndpoint);
-
-    app.MapGet(ResolveService<GoogleOptions>(app.Services).CallbackPath, (Delegate)CallbackGoogleEndpoint);
-    app.MapGet(ResolveService<FacebookOptions>(app.Services).CallbackPath, (Delegate)CallbackFacebookEndpoint);
-    app.MapGet(ResolveService<TwitterOptions>(app.Services).CallbackPath, (Delegate)CallbackTwitterEndpoint);
-
+    app.MapPost("/api/accounts/signin", SignInEndpoint);
+    app.MapPost("/api/accounts/signout", SignOutEndpoint);
+    app.MapFacebook(ResolveService<FacebookOptions>(app.Services), SignInCookie);
+    app.MapGoogle(ResolveService<GoogleOptions>(app.Services), SignInCookie);
+    app.MapTwitter(ResolveService<TwitterOptions>(app.Services), SignInCookie);
     return app;
   }
 

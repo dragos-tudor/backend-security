@@ -14,7 +14,8 @@ partial class CookiesTests {
   public async Task Unautenticated_user_resource_request__forbid__access_denied_redirection()
   {
     using var server = CreateHttpServer(services => services.AddCookies());
-    server.MapGet("/resource", (HttpContext context) => ForbidCookie(context));
+    var authProperties = CreateAuthenticationProperties();
+    server.MapGet("/resource", (HttpContext context) => ForbidCookie(context, authProperties));
     await server.StartAsync();
 
     using var client = server.GetTestClient();

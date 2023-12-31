@@ -18,8 +18,9 @@ partial class GoogleFuncs {
         ClientId = clientId,
         ClientSecret = clientSecret,
 
+        ChallengePath = new PathString(GoogleDefaults.ChallengePath),
         ClaimActions = MapGoogleClaimActions(new ClaimActionCollection()),
-        CallbackPath = new PathString(GoogleDefaults.CallbackPath),
+        CallbackPath = new PathString(GoogleDefaults.SigninPath),
 
         SchemeName = schemeName,
         Scope = new [] { "openid", "profile", "email" },

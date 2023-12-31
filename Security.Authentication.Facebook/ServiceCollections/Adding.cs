@@ -12,7 +12,6 @@ partial class FacebookFuncs {
       services
         .AddSingleton(facebookOptions)
         .AddSingleton<ISecureDataFormat<AuthenticationProperties>>((services) =>
-          CreateStateDataFormat(services.GetRequiredService<IDataProtectionProvider>(), facebookOptions.SchemeName))
+          CreateStateDataFormat(ResolveService<IDataProtectionProvider>(services), facebookOptions.SchemeName))
         .AddSingleton(TimeProvider.System);
-
 }

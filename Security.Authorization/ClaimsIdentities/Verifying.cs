@@ -6,7 +6,7 @@ namespace Security.Authorization;
 
 partial class AuthorizationFuncs {
 
-  static bool IsAuthenticatedClaimsIdentity (ClaimsIdentity identity) =>
+  static bool IsAuthenticatedIdentity (ClaimsIdentity identity) =>
     identity.IsAuthenticated ||
     identity.Claims.Any();
 

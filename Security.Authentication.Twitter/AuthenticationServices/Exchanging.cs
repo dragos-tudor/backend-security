@@ -12,7 +12,7 @@ partial class TwitterFuncs {
 
   const string BasicSchema = "Basic";
 
-  internal static async Task<TokenResult> ExchangeTwitterCodeForTokensAsync (
+  public static async Task<TokenResult> ExchangeTwitterCodeForTokensAsync (
     TwitterOptions twitterOptions,
     AuthenticationProperties authProperties,
     string authCode,
@@ -25,7 +25,7 @@ partial class TwitterFuncs {
     return await HandleTokenResponseAsync(response, cancellationToken);
   }
 
-  internal static Task<TokenResult> ExchangeTwitterCodeForTokensAsync (
+  public static Task<TokenResult> ExchangeTwitterCodeForTokensAsync (
     HttpContext context,
     AuthenticationProperties authProperties,
     string authCode,

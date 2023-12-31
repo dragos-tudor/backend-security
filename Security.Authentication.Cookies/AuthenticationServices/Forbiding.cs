@@ -4,15 +4,15 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Cookies;
 
-partial class CookiesFuncs {
-
+partial class CookiesFuncs
+{
   public static string ForbidCookie (
     HttpContext context,
     AuthenticationProperties authProperties,
     CookieAuthenticationOptions authOptions)
   {
-    var returnUrl = GetPropertiesRedirectUriOrCurrentUri(context, authProperties);
-    var forbidPath = BuildForbidPath(authOptions, returnUrl);
+    var returnUri = GetAuthenticationPropertiesRedirectUri(authProperties) ?? BuildRelativeUri(context.Request);
+    var forbidPath = BuildForbidPath(authOptions, returnUri);
 
     LogForbidden(Logger, authOptions.SchemeName, forbidPath, context.TraceIdentifier);
     return SetResponseRedirect(context.Response, forbidPath);
@@ -20,10 +20,9 @@ partial class CookiesFuncs {
 
   public static string ForbidCookie (
     HttpContext context,
-    AuthenticationProperties? authProperties = default) =>
+    AuthenticationProperties authProperties) =>
       ForbidCookie(
         context,
-        authProperties ?? CreateAuthenticationProperties(),
+        authProperties,
         ResolveService<CookieAuthenticationOptions>(context));
-
 }

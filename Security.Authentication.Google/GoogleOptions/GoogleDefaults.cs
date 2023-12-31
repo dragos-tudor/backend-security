@@ -5,9 +5,11 @@ namespace Security.Authentication.Google;
 
 public static class GoogleDefaults
 {
-    public const string AuthenticationScheme = "Google";
-    internal const string CallbackPath = "/callback-google";
-    internal const string AuthorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
-    internal const string TokenEndpoint = "https://oauth2.googleapis.com/token";
-    internal const string UserInformationEndpoint = "https://www.googleapis.com/oauth2/v2/userinfo";
+  public const string AuthenticationScheme = "Google";
+  public const string ChallengePath = "/challenge-google";
+  public const string SigninPath = "/signin-google";
+
+  internal const string AuthorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
+  internal const string TokenEndpoint = "https://oauth2.googleapis.com/token";
+  internal const string UserInformationEndpoint = "https://www.googleapis.com/oauth2/v2/userinfo";
 }

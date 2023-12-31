@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Cookies;
 
-partial class CookiesFuncs {
-
+partial class CookiesFuncs
+{
   public static string? SignOutCookie (
     HttpContext context,
     AuthenticationProperties authProperties,
@@ -20,8 +20,8 @@ partial class CookiesFuncs {
     ResetResponseCacheHeaders(context.Response);
 
     if (IsRequestLogoutPath(context.Request, authOptions))
-    if (GetPropertiesRedirectUriOrQueryReturnUrl(context, authProperties, authOptions.ReturnUrlParameter) is string redirectUrl)
-      SetResponseRedirect(context.Response, redirectUrl);
+    if (GetSigningRedirectUri(context, authProperties, authOptions.ReturnUrlParameter) is string redirectUri)
+      SetResponseRedirect(context.Response, redirectUri);
 
     LogSignedOutCookie(Logger, authOptions.SchemeName, context.TraceIdentifier);
     return GetResponseLocation(context.Response);
@@ -29,12 +29,11 @@ partial class CookiesFuncs {
 
   public static string? SignOutCookie (
     HttpContext context,
-    AuthenticationProperties? authProperties = default) =>
+    AuthenticationProperties authProperties) =>
       SignOutCookie(
         context,
-        authProperties ?? CreateAuthenticationProperties(),
+        authProperties,
         ResolveService<CookieAuthenticationOptions>(context),
         ResolveService<CookieBuilder>(context),
         ResolveService<ICookieManager>(context));
-
 }

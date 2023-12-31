@@ -22,7 +22,6 @@ partial class CookiesFuncs {
         .AddSingleton<ICookieManager, ChunkingCookieManager>()
         .AddSingleton<ISecureDataFormat<AuthenticationTicket>>((services) =>
           CreateTicketDataFormat(services.GetRequiredService<IDataProtectionProvider>(), authOptions.SchemeName))
-        .AddSingleton(CreateCookieBuilder())
         .AddSingleton(TimeProvider.System);
 
 }

@@ -4,7 +4,7 @@ using static System.Console;
 
 var builder = CreateWebApplicationBuilder(args);
 AddConfigurationProviders(builder);
-AddServices(builder);
+AddServices(builder, Environment.CurrentDirectory + "/bin/keys");
 
 var app = builder.Build();
 UseMiddlewares(app);

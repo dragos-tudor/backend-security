@@ -12,7 +12,11 @@ partial class OAuthFuncs {
     ISecureDataFormat<AuthenticationProperties> secureDataFormat)
   where TOptions: OAuthOptions
   {
-    if (ValidateAuthorizationResult(context) is string authError) return (default, authError);
+    if (ValidateAuthorizationResult(context) is string authError) {
+      if(IsAccessDeniedError(authError))
+        SetResponseRedirect(context.Response, authOptions.AccessDeniedPath);
+      return (default, authError);
+    }
     if (UnprotectAuthenticationProperties(GetAuthorizationState(context.Request), secureDataFormat) is not AuthenticationProperties authProperties) return (default, UnprotectAuthorizationStateFailed);
     if (ValidateAuthorizationCorrelationCookie(context, authProperties) is string correlationError) return (default, correlationError);
 
