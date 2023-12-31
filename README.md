@@ -7,18 +7,24 @@
 - [Authentication.Facebook](/Security.Authentication.Facebook/).
 - [Authentication.Google](/Security.Authentication.Google/).
 - [Authentication.Twitter](/Security.Authentication.Twitter/).
-- [Authorization](/Security.Authorization//).
+- [Authorization](/Security.Authorization/).
+- [DataProtection](/Security.DataProtection/).
 
 ### Design
-- security libraries implement **authentication and authorization services** - the security backbone. These services are named **high-level** functions because act as security behaviour controllers and use **low-level** functions.
-- security libraries were written following **FP principles** [pure functions, high-order functions, immutability, high-level functions with side-effects, separate data from functions/behaviour].
-- DI is used as **thin layer** usually over functional security services [eg. *SignInCookie* have 2 implementations with/without DI services].
-- **high-level** functions usually use declarative style [eg. *SignInCookie*].
+- security services [**authentication and authorization services**] represent the security backbone.
+- security services [**high-level** functions] act as security behaviour controllers and use **low-level** functions.
+- security libraries were written following **FP principles** [pure functions, static methods as first-class citiziens, high-order functions, immutability, data/behaviour separation, high-level functions with side-effects].
+- DI is used as **thin layer** usually over functional security services [eg. *SignInCookie* have 2 implementations with/without DI services]. DI services implementations are registred as usual with specific extensions [eg. *AddCookies*, *AddFacebook*].
+- security mechanism is based on security services [authentication scheme free-mechanism]:
+  - *authentication middleware* receive authentication service [*UseAuthentication* extension].
+  - *authorization middleware* receive challenge and forbid services [*UseAuthorization* extension].
+  - *oauth callback endpoints* receive signin service [eg. *MapFacebook*].
+- **high-level** functions usually use declarative style and TDA principle [eg. *SignInCookie*].
 - **low-level** functions usually use imperative style and are one-liners [eg. *IsSecuredCookie*].
 
 ### Services
-- authentication libraries implement specific authentication services [**AuthenticateCookie**, **SignInCookie**, **ChallengeGoogle**, **AuthenticateFacebookAsync**].
-- authorization library implement authorization services [**AuthorizeAsync**].
+- authentication libraries implement specific authentication services [eg. *AuthenticateCookie*, *SignInCookie*, *ChallengeGoogle*, *AuthenticateFacebookAsync*].
+- authorization library implement authorization services [eg. *AuthorizeAsync*].
 
 ### Remarks
 - rewriting completely authentication mechanism.
