@@ -17,7 +17,7 @@ partial class CookiesFuncs
     CookieBuilder cookieBuilder,
     ICookieManager cookieManager,
     ISecureDataFormat<AuthenticationTicket> ticketProtector,
-    ITicketStore? ticketStore,
+    ITicketStore ticketStore,
     DateTimeOffset currentUtc)
   {
     if (IsRequestLoginPath(context.Request, authOptions)) return NoResult();
@@ -27,7 +27,7 @@ partial class CookiesFuncs
     if (cookie is null) return NoResult();
 
     var protectedTicket = cookie;
-    if (ticketStore is not null) protectedTicket = await ticketStore.UnstoreTicket(cookie);
+    if (ticketStore is not DefaultTicketStore) protectedTicket = await ticketStore.UnstoreTicket(cookie);
 
     var ticket = UnprotectAuthenticationTicket(protectedTicket, ticketProtector);
     if (ticket is null) return Fail(UnprotectTicketFailed);
@@ -46,7 +46,7 @@ partial class CookiesFuncs
       ResolveService<CookieBuilder>(context),
       ResolveService<ICookieManager>(context),
       ResolveService<ISecureDataFormat<AuthenticationTicket>>(context),
-      ResolveOptionalService<ITicketStore>(context),
+      ResolveService<ITicketStore>(context),
       ResolveService<TimeProvider>(context).GetUtcNow()
     );
     if(result.None) LogNotAuthenticated(Logger, authOptions.SchemeName, context.TraceIdentifier);

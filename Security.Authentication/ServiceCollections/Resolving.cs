@@ -14,12 +14,4 @@ partial class AuthenticationFuncs {
     where TService : class =>
       services.GetRequiredService<TService>();
 
-  public static TService? ResolveOptionalService<TService> (HttpContext context)
-    where TService : class =>
-      context.RequestServices.GetService<TService>();
-
-  public static TService? ResolveOptionalService<TService> (IServiceProvider services)
-    where TService : class =>
-      services.GetService<TService>();
-
 }
