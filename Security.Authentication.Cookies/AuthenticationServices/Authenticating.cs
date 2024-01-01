@@ -11,36 +11,42 @@ partial class CookiesFuncs
   const string TicketExpired = "Ticket expired";
   const string UnprotectTicketFailed = "Unprotect ticket failed";
 
-  public static AuthenticateResult AuthenticateCookie (
+  public static async ValueTask<AuthenticateResult> AuthenticateCookie (
     HttpContext context,
     CookieAuthenticationOptions authOptions,
     CookieBuilder cookieBuilder,
     ICookieManager cookieManager,
     ISecureDataFormat<AuthenticationTicket> ticketProtector,
+    ITicketStore? ticketStore,
     DateTimeOffset currentUtc)
   {
     if (IsRequestLoginPath(context.Request, authOptions)) return NoResult();
     if (IsRequestLogoutPath(context.Request, authOptions)) return NoResult();
+
     var cookie = GetAuthenticationCookie(context, cookieManager, GetCookieName(cookieBuilder, authOptions));
     if (cookie is null) return NoResult();
 
-    var ticket = UnprotectAuthenticationTicket(cookie, ticketProtector);
+    var protectedTicket = cookie;
+    if (ticketStore is not null) protectedTicket = await ticketStore.UnstoreTicket(cookie);
+
+    var ticket = UnprotectAuthenticationTicket(protectedTicket, ticketProtector);
     if (ticket is null) return Fail(UnprotectTicketFailed);
     if (IsExpiredAuthenticationTicket(ticket, currentUtc)) return Fail(TicketExpired);
-    if (!IsRenewableAuthenticationTicket(ticket, currentUtc, authOptions.SlidingExpiration)) return Success(ticket);
 
-    return Success(SignInCookie(context, ticket.Principal, ticket.Properties, authOptions, cookieBuilder, cookieManager, ticketProtector, currentUtc));
+    if (!IsRenewableAuthenticationTicket(ticket, currentUtc, authOptions.SlidingExpiration)) return Success(ticket);
+    return Success(await SignInCookie(context, ticket.Principal, ticket.Properties, authOptions, cookieBuilder, cookieManager, ticketProtector, ticketStore, currentUtc));
   }
 
-  public static AuthenticateResult AuthenticateCookie (HttpContext context)
+  public static async ValueTask<AuthenticateResult> AuthenticateCookie (HttpContext context)
   {
     var authOptions = ResolveService<CookieAuthenticationOptions>(context);
-    var result = AuthenticateCookie(
+    var result = await AuthenticateCookie(
       context,
       authOptions,
       ResolveService<CookieBuilder>(context),
       ResolveService<ICookieManager>(context),
       ResolveService<ISecureDataFormat<AuthenticationTicket>>(context),
+      ResolveOptionalService<ITicketStore>(context),
       ResolveService<TimeProvider>(context).GetUtcNow()
     );
     if(result.None) LogNotAuthenticated(Logger, authOptions.SchemeName, context.TraceIdentifier);

@@ -53,7 +53,7 @@ partial class FacebookTests {
   static string GetQueryParamValue (HttpRequest request, string keyName) =>
     request.Query[keyName]!;
 
-  static AuthenticationTicket SignIn(HttpContext _, ClaimsPrincipal principal, AuthenticationProperties authProperties) =>
-    new (principal, authProperties, string.Empty);
+  static ValueTask<AuthenticationTicket> SignIn(HttpContext _, ClaimsPrincipal principal, AuthenticationProperties authProperties) =>
+    new(new AuthenticationTicket(principal, authProperties, string.Empty));
 
 }

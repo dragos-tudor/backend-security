@@ -19,7 +19,7 @@ partial class OAuthFuncs {
     }
 
     if (authResult.Principal is not null) {
-      signin(context, authResult.Principal, authResult.Properties!);
+      await signin(context, authResult.Principal, authResult.Properties!);
       var redirectUri = GetSigningRedirectUri(authResult.Properties!);
       return SetResponseRedirect(context.Response, redirectUri);
     }

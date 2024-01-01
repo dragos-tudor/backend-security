@@ -7,7 +7,7 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  public static AuthenticationTicket SignInCookie (
+  public static async ValueTask<AuthenticationTicket> SignInCookie (
     HttpContext context,
     ClaimsPrincipal principal,
     AuthenticationProperties authProperties,
@@ -15,6 +15,7 @@ partial class CookiesFuncs
     CookieBuilder cookieBuilder,
     ICookieManager cookieManager,
     ISecureDataFormat<AuthenticationTicket> ticketProtector,
+    ITicketStore? ticketStore,
     DateTimeOffset currentUtc)
   {
     SetAuthenticationPropertiesIssued(authProperties, currentUtc);
@@ -27,7 +28,11 @@ partial class CookiesFuncs
 
     var ticket = CreateAuthenticationTicket(principal, authProperties, authOptions.SchemeName);
     var protectedTicket = ProtectAuthenticationTicket(ticket, ticketProtector);
-    AppendAuthenticationCookie(context, cookieManager, cookieName, protectedTicket, cookieOptions);
+
+    var cookie = protectedTicket;
+    if (ticketStore is not null) cookie = await ticketStore.StoreTicket(protectedTicket);
+
+    AppendAuthenticationCookie(context, cookieManager, cookieName, cookie, cookieOptions);
     ResetResponseCacheHeaders(context.Response);
     if (IsRequestLoginPath(context.Request, authOptions))
     if (GetSigningRedirectUri(context, authProperties, authOptions.ReturnUrlParameter) is string redirectUri)
@@ -37,7 +42,7 @@ partial class CookiesFuncs
     return ticket;
   }
 
-  public static AuthenticationTicket SignInCookie (
+  public static ValueTask<AuthenticationTicket> SignInCookie (
     HttpContext context,
     ClaimsPrincipal principal,
     AuthenticationProperties authProperties) =>
@@ -49,5 +54,6 @@ partial class CookiesFuncs
         ResolveService<CookieBuilder>(context),
         ResolveService<ICookieManager>(context),
         ResolveService<ISecureDataFormat<AuthenticationTicket>>(context),
+        ResolveOptionalService<ITicketStore>(context),
         ResolveService<TimeProvider>(context).GetUtcNow());
 }

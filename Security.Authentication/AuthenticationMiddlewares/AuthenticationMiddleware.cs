@@ -6,17 +6,17 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs {
 
-  static Task AuthenticationMiddleware (
+  static async Task AuthenticationMiddleware (
     AuthenticateFunc authenticate,
     HttpContext context,
     RequestDelegate next)
   {
-    var authenticateResult = authenticate(context);
+    var authenticateResult = await authenticate(context);
     if(authenticateResult.Succeeded)
       SetAuthenticationFeature(context, authenticateResult);
 
     SetContextUser(context, authenticateResult.Principal);
-    return next(context);
+    await next(context);
   }
 
 }

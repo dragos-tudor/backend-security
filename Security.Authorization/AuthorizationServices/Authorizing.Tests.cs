@@ -48,7 +48,7 @@ partial class AuthorizationTests {
   }
 
   [Fact]
-  public async Task Unauthenticated_user__access_private_resource__unauthenticated_access()
+  public async Task Unauthenticated_user__access_private_resource__unauthorized_access()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization() );
     server.UseAuthorization(challegeFunc, forbidFunc);
@@ -63,7 +63,7 @@ partial class AuthorizationTests {
   }
 
   [Fact]
-  public async Task Authenticated_user_without_role__access_role_policy_private_resource__unauthorized_access()
+  public async Task Authenticated_user_without_role__access_role_policy_private_resource__forbidden_access()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization(options => options.AddPolicy("role policy", policy => policy.RequireRole("admin"))).AddAuthentication().AddCookie());
     server.UseAuthentication().UseAuthorization(challegeFunc, forbidFunc);
@@ -96,19 +96,12 @@ partial class AuthorizationTests {
     Assert.Equal("private", await ReadResponseMessageContent(response));
   }
 
-  internal static ClaimsPrincipal CreateClaimsPrincipal (string userName, string? roleName = "role") =>
-    new (new ClaimsIdentity(new List<Claim>{ new Claim(ClaimTypes.Name, userName), new Claim(ClaimTypes.Role, roleName!)}, "Cookies"));
-
-}
-
-partial class MicrosoftTests {
-
   [Fact]
-  public async Task Authenticated_user__access_private_resource__user_authorized()
+  public async Task Authenticated_user__access_private_resource__user_authorized_microsoft()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization().AddAuthentication().AddCookie());
     server.UseAuthentication().UseAuthorization();
-    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(AuthorizationTests.CreateClaimsPrincipal("user", "admin")));
+    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreateClaimsPrincipal("user", "admin")));
     server.MapGet("/resource", (HttpContext context) => "private").RequireAuthorization();
     await server.StartAsync();
 
@@ -118,5 +111,8 @@ partial class MicrosoftTests {
 
     Assert.Equal("private", await ReadResponseMessageContent(response));
   }
+
+  internal static ClaimsPrincipal CreateClaimsPrincipal (string userName, string? roleName = "role") =>
+    new (new ClaimsIdentity(new List<Claim>{ new Claim(ClaimTypes.Name, userName), new Claim(ClaimTypes.Role, roleName!)}, "Cookies"));
 
 }

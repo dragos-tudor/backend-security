@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Security.Samples;
 
@@ -9,11 +10,11 @@ partial class SampleFuncs
       ResolveService<CookieAuthenticationOptions>(context).SchemeName,
       [ CreateNameClaim(context.Request.Form["user"]) ]);
 
-  static string? SignInEndpoint(HttpContext context) =>
-    SignInCookie(
+  static async Task<string?> SignInEndpoint(HttpContext context) =>
+    (await SignInCookie(
       context,
       CreateUserClaimsPrincipal(context),
       CreateAuthenticationProperties()
-    ).AuthenticationScheme;
+    )).AuthenticationScheme;
 
 }
