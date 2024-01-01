@@ -16,7 +16,7 @@ partial class CookiesFuncs
     CookieAuthenticationOptions authOptions,
     CookieBuilder cookieBuilder,
     ICookieManager cookieManager,
-    ISecureDataFormat<AuthenticationTicket> secureDataFormat,
+    ISecureDataFormat<AuthenticationTicket> ticketProtector,
     DateTimeOffset currentUtc)
   {
     if (IsRequestLoginPath(context.Request, authOptions)) return NoResult();
@@ -24,12 +24,12 @@ partial class CookiesFuncs
     var cookie = GetAuthenticationCookie(context, cookieManager, GetCookieName(cookieBuilder, authOptions));
     if (cookie is null) return NoResult();
 
-    var ticket = UnprotectAuthenticationTicket(cookie, secureDataFormat);
+    var ticket = UnprotectAuthenticationTicket(cookie, ticketProtector);
     if (ticket is null) return Fail(UnprotectTicketFailed);
     if (IsExpiredAuthenticationTicket(ticket, currentUtc)) return Fail(TicketExpired);
     if (!IsRenewableAuthenticationTicket(ticket, currentUtc, authOptions.SlidingExpiration)) return Success(ticket);
 
-    return Success(SignInCookie(context, ticket.Principal, ticket.Properties, authOptions, cookieBuilder, cookieManager, secureDataFormat, currentUtc));
+    return Success(SignInCookie(context, ticket.Principal, ticket.Properties, authOptions, cookieBuilder, cookieManager, ticketProtector, currentUtc));
   }
 
   public static AuthenticateResult AuthenticateCookie (HttpContext context)

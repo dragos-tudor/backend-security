@@ -16,7 +16,7 @@ partial class CookiesFuncs
   {
     var cookieOptions = BuildCookieOptions(cookieBuilder, context);
     var cookieName = GetCookieName(cookieBuilder, authOptions);
-    UnsetResponseCookieHeader(context, cookieManager, cookieOptions, cookieName);
+    DeleteAuthenticationCookie(context, cookieManager, cookieName, cookieOptions);
     ResetResponseCacheHeaders(context.Response);
 
     if (IsRequestLogoutPath(context.Request, authOptions))

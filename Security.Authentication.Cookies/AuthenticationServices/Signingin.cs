@@ -14,7 +14,7 @@ partial class CookiesFuncs
     CookieAuthenticationOptions authOptions,
     CookieBuilder cookieBuilder,
     ICookieManager cookieManager,
-    ISecureDataFormat<AuthenticationTicket> secureDataFormat,
+    ISecureDataFormat<AuthenticationTicket> ticketProtector,
     DateTimeOffset currentUtc)
   {
     SetAuthenticationPropertiesIssued(authProperties, currentUtc);
@@ -26,8 +26,8 @@ partial class CookiesFuncs
     SetCookieOptionsSecure(cookieOptions, IsSecuredCookie(context, cookieBuilder.SecurePolicy));
 
     var ticket = CreateAuthenticationTicket(principal, authProperties, authOptions.SchemeName);
-    var protectedTicket = ProtectAuthenticationTicket(ticket, secureDataFormat);
-    SetResponseCookieHeader(context, protectedTicket, cookieManager, cookieOptions, cookieName);
+    var protectedTicket = ProtectAuthenticationTicket(ticket, ticketProtector);
+    AppendAuthenticationCookie(context, cookieManager, cookieName, protectedTicket, cookieOptions);
     ResetResponseCacheHeaders(context.Response);
     if (IsRequestLoginPath(context.Request, authOptions))
     if (GetSigningRedirectUri(context, authProperties, authOptions.ReturnUrlParameter) is string redirectUri)
