@@ -5,7 +5,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs {
 
-  public static async Task<string?> SigninOAuthAsync<TOptions> (
+  public static async Task<string?> CallbackOAuth<TOptions> (
     HttpContext context,
     TOptions authOptions,
     Func<HttpContext, Task<AuthenticateResult>> authenticate,
@@ -28,12 +28,12 @@ partial class OAuthFuncs {
   }
 
 
-  public static Task<string?> SigninOAuthAsync<TOptions> (
+  public static Task<string?> CallbackOAuth<TOptions> (
     HttpContext context,
     Func<HttpContext, Task<AuthenticateResult>> authenticate,
     SignInFunc signin)
   where TOptions : OAuthOptions =>
-      SigninOAuthAsync(
+      CallbackOAuth(
         context,
         ResolveService<TOptions>(context),
         authenticate,
