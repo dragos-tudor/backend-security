@@ -8,7 +8,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs {
 
-  public static async Task<TokenResult> ExchangeCodeForTokensAsync<TOptions> (
+  public static async Task<TokenResult> ExchangeCodeForTokens<TOptions> (
     TOptions authOptions,
     AuthenticationProperties authProperties,
     string authCode,
@@ -17,17 +17,17 @@ partial class OAuthFuncs {
   where TOptions: OAuthOptions
   {
     var request = BuildTokenRequest(authOptions, authProperties, authCode, httpClient);
-    using var response = await SendTokenRequestAsync(request, httpClient, cancellationToken);
-    return await HandleTokenResponseAsync(response, cancellationToken);
+    using var response = await SendTokenRequest(request, httpClient, cancellationToken);
+    return await HandleTokenResponse(response, cancellationToken);
   }
 
-  public static Task<TokenResult> ExchangeCodeForTokensAsync<TOptions> (
+  public static Task<TokenResult> ExchangeCodeForTokens<TOptions> (
     HttpContext context,
     AuthenticationProperties authProperties,
     string authCode,
     CancellationToken cancellationToken = default)
   where TOptions: OAuthOptions =>
-    ExchangeCodeForTokensAsync(
+    ExchangeCodeForTokens(
       ResolveService<TOptions>(context),
       authProperties,
       authCode,

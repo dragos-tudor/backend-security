@@ -7,11 +7,11 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs {
 
-  public static async Task<TokenResult> HandleTokenResponseAsync (
+  public static async Task<TokenResult> HandleTokenResponse (
     HttpResponseMessage response,
     CancellationToken cancellationToken = default)
   {
-    var responseContent = await ReadTokenResponseContentAsync(response, cancellationToken);
+    var responseContent = await ReadTokenResponseContent(response, cancellationToken);
     using var responseJson = Parse(responseContent);
 
     return response.IsSuccessStatusCode ?

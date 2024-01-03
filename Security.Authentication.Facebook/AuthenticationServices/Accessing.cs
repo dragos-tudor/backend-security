@@ -10,7 +10,7 @@ namespace Security.Authentication.Facebook;
 
 partial class FacebookFuncs {
 
-  public static async Task<UserInfoResult> AccessFacebookUserInfoAsync (
+  public static async Task<UserInfoResult> AccessFacebookUserInfo (
     FacebookOptions facebookOptions,
     string accessToken,
     HttpClient httpClient,
@@ -20,16 +20,16 @@ partial class FacebookFuncs {
     var requestUri = QueryHelpers.AddQueryString(facebookOptions.UserInformationEndpoint, userInfoParams);
     var request = BuildUserInfoRequest(requestUri, accessToken);
 
-    using var response = await SendUserInfoRequestAsync(request, httpClient, cancellationToken);
-    return await HandleUserInfoResponseAsync(response, facebookOptions, cancellationToken);
+    using var response = await SendUserInfoRequest(request, httpClient, cancellationToken);
+    return await HandleUserInfoResponse(response, facebookOptions, cancellationToken);
   }
 
-  public static Task<UserInfoResult> AccessFacebookUserInfoAsync (
+  public static Task<UserInfoResult> AccessFacebookUserInfo (
     HttpContext context,
     FacebookOptions facebookOptions,
     string accessToken,
     CancellationToken cancellationToken = default) =>
-      AccessFacebookUserInfoAsync(
+      AccessFacebookUserInfo(
         facebookOptions,
         accessToken,
         ResolveService<HttpClient>(context),

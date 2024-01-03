@@ -17,7 +17,7 @@ partial class TwitterTests {
     var authOptions = CreateTwitterOptions("", "secret") with { UserInformationEndpoint = "http://oauth/userinfo", UserFields = new [] { "field1" } };
     MapJsonClaim(authOptions, "query");
 
-    var result = await AccessTwitterUserInfoAsync(authOptions, string.Empty, httpClient);
+    var result = await AccessTwitterUserInfo(authOptions, string.Empty, httpClient);
     Assert.Contains("user.fields=field1", GetSecurityClaim(result.Principal, "query")?.Value);
   }
 

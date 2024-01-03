@@ -8,10 +8,10 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs {
 
-  static Task<string> ReadTokenResponseContentAsync (HttpResponseMessage response, CancellationToken cancellationToken = default) =>
+  static Task<string> ReadTokenResponseContent (HttpResponseMessage response, CancellationToken cancellationToken = default) =>
     response.Content.ReadAsStringAsync(cancellationToken);
 
-  public static async Task<JsonDocument> ReadTokenResponseAsync (HttpResponseMessage response, CancellationToken cancellationToken = default) =>
-    Parse(await ReadTokenResponseContentAsync(response, cancellationToken));
+  public static async Task<JsonDocument> ReadTokenResponse (HttpResponseMessage response, CancellationToken cancellationToken = default) =>
+    Parse(await ReadTokenResponseContent(response, cancellationToken));
 
 }

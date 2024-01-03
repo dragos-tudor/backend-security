@@ -8,7 +8,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs {
 
-  public static async Task<AuthenticateResult> AuthenticateOAuthAsync<TOptions> (
+  public static async Task<AuthenticateResult> AuthenticateOAuth<TOptions> (
     HttpContext context,
     TOptions authOptions,
     ISecureDataFormat<AuthenticationProperties> secureDataFormat,
@@ -39,13 +39,13 @@ partial class OAuthFuncs {
   }
 
 
-  public static Task<AuthenticateResult> AuthenticateOAuthAsync<TOptions> (
+  public static Task<AuthenticateResult> AuthenticateOAuth<TOptions> (
     HttpContext context,
     PostAuthorizeFunc<TOptions> postAuthorize,
     ExchangeCodeForTokensFunc<TOptions> exchangeCodeForTokens,
     AccessUserInfoFunc<TOptions> accessUserInfo)
   where TOptions: OAuthOptions =>
-    AuthenticateOAuthAsync(
+    AuthenticateOAuth(
       context,
       ResolveService<TOptions>(context),
       ResolveService<ISecureDataFormat<AuthenticationProperties>>(context),

@@ -8,7 +8,7 @@ namespace Security.Authorization;
 
 partial class AuthorizationFuncs {
 
-  static async Task<PolicyAuthorizationResult> AuthorizePolicyAsync (
+  static async Task<PolicyAuthorizationResult> AuthorizePolicy (
     AuthorizationPolicy policy,
     AuthenticateResult authenticateResult,
     IAuthorizationService authorizationService,

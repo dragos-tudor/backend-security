@@ -19,7 +19,7 @@ partial class OAuthTests {
     var postAuthorize = Substitute.For<PostAuthorizeFunc<OAuthOptions>>();
     postAuthorize(default!, default!, default!).ReturnsForAnyArgs((default, "authorize error"));
 
-    var result = await AuthenticateOAuthAsync(context, authOptions, secureDataFormat, httpClient, postAuthorize, default!, default!);
+    var result = await AuthenticateOAuth(context, authOptions, secureDataFormat, httpClient, postAuthorize, default!, default!);
     Assert.Equal("authorize error", result.Failure!.Message);
   }
 
@@ -34,7 +34,7 @@ partial class OAuthTests {
     postAuthorize(default!, default!, default!).ReturnsForAnyArgs((default, default));
     exchangeCodeForTokens(default!, default!, "code", default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(default, "stop exec")));
 
-    await AuthenticateOAuthAsync(context, authOptions, secureDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, default!);
+    await AuthenticateOAuth(context, authOptions, secureDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, default!);
     exchangeCodeForTokens.Received(1);
   }
 
@@ -51,7 +51,7 @@ partial class OAuthTests {
     exchangeCodeForTokens(default!, default!, "code", default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(new TokenInfo() { AccessToken = "token" }, default)));
     accessUserInfo(default!, "token", default!)!.ReturnsForAnyArgs(ToTask(new UserInfoResult(default, "stop exec")));
 
-    await AuthenticateOAuthAsync(context, authOptions, secureDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, accessUserInfo);
+    await AuthenticateOAuth(context, authOptions, secureDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, accessUserInfo);
     accessUserInfo.Received(1);
   }
 
@@ -69,7 +69,7 @@ partial class OAuthTests {
     exchangeCodeForTokens(default!, default!, "code", default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(new TokenInfo() { AccessToken = "token" }, default)));
     accessUserInfo(default!, "token", default!)!.ReturnsForAnyArgs(ToTask(new UserInfoResult(principal, default)));
 
-    var result = await AuthenticateOAuthAsync(context, authOptions, secureDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, accessUserInfo);
+    var result = await AuthenticateOAuth(context, authOptions, secureDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, accessUserInfo);
     Assert.Same(principal, result.Principal);
   }
 

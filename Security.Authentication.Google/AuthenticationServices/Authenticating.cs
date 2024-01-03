@@ -7,11 +7,11 @@ namespace Security.Authentication.Google;
 
 partial class GoogleFuncs {
 
-  public static Task<AuthenticateResult> AuthenticateGoogleAsync (HttpContext context) =>
-    AuthenticateOAuthAsync<GoogleOptions>(
+  public static Task<AuthenticateResult> AuthenticateGoogle (HttpContext context) =>
+    AuthenticateOAuth<GoogleOptions>(
       context,
       PostAuthorize<GoogleOptions>,
-      ExchangeCodeForTokensAsync<GoogleOptions>,
-      AccessUserInfoAsync);
+      ExchangeCodeForTokens<GoogleOptions>,
+      AccessUserInfo);
 
 }

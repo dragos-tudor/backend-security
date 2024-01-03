@@ -7,11 +7,11 @@ namespace Security.Authentication.Facebook;
 
 partial class FacebookFuncs {
 
-  public static Task<AuthenticateResult> AuthenticateFacebookAsync (HttpContext context) =>
-    AuthenticateOAuthAsync<FacebookOptions>(
+  public static Task<AuthenticateResult> AuthenticateFacebook (HttpContext context) =>
+    AuthenticateOAuth<FacebookOptions>(
       context,
       PostAuthorize<FacebookOptions>,
-      ExchangeCodeForTokensAsync<FacebookOptions>,
-      AccessFacebookUserInfoAsync);
+      ExchangeCodeForTokens<FacebookOptions>,
+      AccessFacebookUserInfo);
 
 }

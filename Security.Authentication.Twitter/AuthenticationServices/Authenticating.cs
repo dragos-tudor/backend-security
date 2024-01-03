@@ -7,11 +7,11 @@ namespace Security.Authentication.Twitter;
 
 partial class TwitterFuncs {
 
-  public static Task<AuthenticateResult> AuthenticateTwitterAsync (HttpContext context) =>
-    AuthenticateOAuthAsync<TwitterOptions>(
+  public static Task<AuthenticateResult> AuthenticateTwitter (HttpContext context) =>
+    AuthenticateOAuth<TwitterOptions>(
       context,
       PostAuthorize<TwitterOptions>,
-      ExchangeTwitterCodeForTokensAsync,
-      AccessTwitterUserInfoAsync);
+      ExchangeTwitterCodeForTokens,
+      AccessTwitterUserInfo);
 
 }

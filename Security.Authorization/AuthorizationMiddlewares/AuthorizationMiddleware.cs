@@ -14,7 +14,7 @@ partial class AuthorizationFuncs {
     RequestDelegate next)
   {
     var (authorizationResult, authorizedPrincipal) =
-      await AuthorizeAsync(context, challenge, forbid);
+      await Authorize(context, challenge, forbid);
 
     SetContextUser(context, authorizedPrincipal);
     if (IsSuccessfulAuthorization(authorizationResult)) await next(context);

@@ -12,7 +12,7 @@ partial class TwitterFuncs {
 
   const string BasicSchema = "Basic";
 
-  public static async Task<TokenResult> ExchangeTwitterCodeForTokensAsync (
+  public static async Task<TokenResult> ExchangeTwitterCodeForTokens (
     TwitterOptions twitterOptions,
     AuthenticationProperties authProperties,
     string authCode,
@@ -21,16 +21,16 @@ partial class TwitterFuncs {
   {
     var request = BuildTokenRequest(twitterOptions, authProperties, authCode, httpClient);
     SetAuthorizationHeader(request, BasicSchema, GetTwitterCredentials(twitterOptions.ClientId, twitterOptions.ClientSecret));
-    using var response = await SendTokenRequestAsync(request, httpClient, cancellationToken);
-    return await HandleTokenResponseAsync(response, cancellationToken);
+    using var response = await SendTokenRequest(request, httpClient, cancellationToken);
+    return await HandleTokenResponse(response, cancellationToken);
   }
 
-  public static Task<TokenResult> ExchangeTwitterCodeForTokensAsync (
+  public static Task<TokenResult> ExchangeTwitterCodeForTokens (
     HttpContext context,
     AuthenticationProperties authProperties,
     string authCode,
     CancellationToken cancellationToken = default) =>
-      ExchangeCodeForTokensAsync(
+      ExchangeCodeForTokens(
         ResolveService<TwitterOptions>(context),
         authProperties,
         authCode,

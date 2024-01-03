@@ -10,7 +10,7 @@ namespace Security.Authentication.Twitter;
 
 partial class TwitterFuncs {
 
-  public static async Task<UserInfoResult> AccessTwitterUserInfoAsync (
+  public static async Task<UserInfoResult> AccessTwitterUserInfo (
     TwitterOptions twitterOptions,
     string accessToken,
     HttpClient httpClient,
@@ -18,15 +18,15 @@ partial class TwitterFuncs {
   {
     var requestUri = QueryHelpers.AddQueryString(twitterOptions.UserInformationEndpoint, BuildSpecificUserInfoParams(twitterOptions));
     var request = BuildUserInfoRequest(requestUri, accessToken);
-    using var response = await SendUserInfoRequestAsync(request, httpClient, cancellationToken);
-    return await HandleUserInfoResponseAsync(response, twitterOptions, cancellationToken);
+    using var response = await SendUserInfoRequest(request, httpClient, cancellationToken);
+    return await HandleUserInfoResponse(response, twitterOptions, cancellationToken);
   }
 
-  public static Task<UserInfoResult> AccessTwitterUserInfoAsync (
+  public static Task<UserInfoResult> AccessTwitterUserInfo (
     HttpContext context,
     string accessToken,
     CancellationToken cancellationToken = default) =>
-      AccessTwitterUserInfoAsync(
+      AccessTwitterUserInfo(
         ResolveService<TwitterOptions>(context),
         accessToken,
         ResolveService<HttpClient>(context),

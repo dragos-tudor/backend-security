@@ -10,7 +10,7 @@ namespace Security.Authorization;
 
 partial class AuthorizationFuncs {
 
-  static async Task<(PolicyAuthorizationResult?, ClaimsPrincipal?)> AuthorizeAsync (
+  static async Task<(PolicyAuthorizationResult?, ClaimsPrincipal?)> Authorize (
     HttpContext context,
     ChallengeFunc challenge,
     ForbidFunc forbid,
@@ -24,18 +24,18 @@ partial class AuthorizationFuncs {
     var authResult = GetAuthenticationFeature<AuthenticateResult>(context) ?? GetDefaultAuthenticateResult(context);
     if (IsAnonymousEndpoint(endpoint)) return (default, authResult.Principal);
 
-    var authorizationResult = await AuthorizePolicyAsync(policy, authResult, authorizationService, context, endpoint);
+    var authorizationResult = await AuthorizePolicy(policy, authResult, authorizationService, context, endpoint);
     if (authorizationResult.Forbidden) forbid(context, authResult.Properties!);
     if (authorizationResult.Challenged) challenge(context, authResult.Properties!);
 
     return (authorizationResult, authResult.Principal);
   }
 
-  static Task<(PolicyAuthorizationResult?, ClaimsPrincipal?)> AuthorizeAsync (
+  static Task<(PolicyAuthorizationResult?, ClaimsPrincipal?)> Authorize (
     HttpContext context,
     ChallengeFunc challenge,
     ForbidFunc forbid) =>
-      AuthorizeAsync(
+      Authorize(
         context,
         challenge,
         forbid,

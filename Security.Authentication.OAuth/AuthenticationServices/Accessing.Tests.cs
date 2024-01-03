@@ -17,7 +17,7 @@ partial class OAuthTests {
     var authOptions = CreateOAuthOptions();
     MapJsonClaim(authOptions, "scheme");
     MapJsonClaim(authOptions, "parameter");
-    var result = await AccessUserInfoAsync(authOptions, "token_abc", httpClient);
+    var result = await AccessUserInfo(authOptions, "token_abc", httpClient);
 
     Assert.Equal("Bearer", GetSecurityClaim(result.Principal, "scheme").Value);
     Assert.Equal("token_abc", GetSecurityClaim(result.Principal, "parameter").Value);
@@ -29,7 +29,7 @@ partial class OAuthTests {
     var authOptions = CreateOAuthOptions();
     MapJsonClaim(authOptions, "test");
 
-    var result = await AccessUserInfoAsync(authOptions, string.Empty, httpClient);
+    var result = await AccessUserInfo(authOptions, string.Empty, httpClient);
     Assert.Equal(authOptions.SchemeName, GetSecurityClaim(result.Principal, "test").Issuer);
   }
 
@@ -39,7 +39,7 @@ partial class OAuthTests {
     var authOptions = CreateOAuthOptions() with { ClaimsIssuer = "issuer" };
     MapJsonClaim(authOptions, "test");
 
-    var result = await AccessUserInfoAsync(authOptions, string.Empty, httpClient);
+    var result = await AccessUserInfo(authOptions, string.Empty, httpClient);
     Assert.Equal("issuer", GetSecurityClaim(result.Principal, "test").Issuer);
   }
 
@@ -47,7 +47,7 @@ partial class OAuthTests {
   public async Task User_info_endpoint_response_with_generic_error__access_user_informations__client_receive_error () {
     var httpClient = CreateHttpClient("http://oauth", "/userinfo", JsonContent.Create(new {message = "error"}), 400);
     var authOptions = CreateOAuthOptions();
-    var result = await AccessUserInfoAsync(authOptions, string.Empty, httpClient);
+    var result = await AccessUserInfo(authOptions, string.Empty, httpClient);
 
     Assert.StartsWith("User info endpoint failure. Status: BadRequest.", result.Failure);
   }

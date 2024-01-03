@@ -7,24 +7,24 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs {
 
-  public static async Task<UserInfoResult> AccessUserInfoAsync<TOptions> (
+  public static async Task<UserInfoResult> AccessUserInfo<TOptions> (
     TOptions authOptions,
     string accessToken,
     HttpClient httpClient,
     CancellationToken cancellationToken = default) where TOptions: OAuthOptions
   {
     var request = BuildUserInfoRequest(authOptions.UserInformationEndpoint, accessToken);
-    using var response = await SendUserInfoRequestAsync(request, httpClient, cancellationToken);
-    return await HandleUserInfoResponseAsync(response, authOptions, cancellationToken);
+    using var response = await SendUserInfoRequest(request, httpClient, cancellationToken);
+    return await HandleUserInfoResponse(response, authOptions, cancellationToken);
   }
 
-  public static Task<UserInfoResult> AccessUserInfoAsync<TOptions> (
+  public static Task<UserInfoResult> AccessUserInfo<TOptions> (
     HttpContext context,
     TOptions authOptions,
     string accessToken,
     CancellationToken cancellationToken = default)
   where TOptions: OAuthOptions =>
-    AccessUserInfoAsync(
+    AccessUserInfo(
       authOptions,
       accessToken,
       ResolveService<HttpClient>(context),
