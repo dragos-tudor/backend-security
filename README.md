@@ -23,8 +23,8 @@
 - *low-level* functions usually use imperative style and are one-liners [eg. *IsSecuredCookie*].
 
 ### Services
-- authentication libraries implement specific authentication services [eg. *AuthenticateCookie*, *SignInCookie*, *ChallengeGoogle*, *AuthenticateFacebookAsync*].
-- authorization library implement authorization services [eg. *AuthorizeAsync*].
+- authentication libraries implement specific authentication services [eg. *AuthenticateCookie*, *SignInCookie*, *ChallengeGoogle*, *AuthenticateFacebook*].
+- authorization library implement authorization services [eg. *Authorize*].
 
 ### Remarks
 - rewriting completely authentication mechanism.
