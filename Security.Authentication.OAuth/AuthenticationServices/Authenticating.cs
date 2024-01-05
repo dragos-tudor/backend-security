@@ -21,6 +21,7 @@ partial class OAuthFuncs {
     var (authProperties, authError) = postAuthorize(context, authOptions, secureDataFormat);
     if(authError is not null) LogPostAuthorizeWithFailure(Logger, authOptions.SchemeName, authError, context.TraceIdentifier);
     if(authError is not null) return Fail(authError);
+    LogPostAuthorize(Logger, authOptions.SchemeName, context.TraceIdentifier);
 
     var authorizationCode = GetAuthorizationCode(context.Request)!;
     var tokenResult = await exchangeCodeForTokens(authOptions, authProperties!, authorizationCode, httpClient, context.RequestAborted);

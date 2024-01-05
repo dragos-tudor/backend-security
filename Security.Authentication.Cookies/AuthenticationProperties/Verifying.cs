@@ -5,6 +5,6 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs {
 
-  static bool IsAuthenticationPropertiesPersistent (AuthenticationProperties authProperties) => authProperties.IsPersistent;
-
+  static bool IsAuthenticationPropertiesPersistent (AuthenticationProperties authProperties) =>
+    authProperties?.IsPersistent ?? false;
 }

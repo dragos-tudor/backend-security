@@ -5,10 +5,10 @@ namespace Security.Authentication.Cookies;
 
 public record CookieAuthenticationOptions: AuthenticationOptions
 {
-  public PathString AccessDeniedPath { get; init; } = "/accessdenied";
-  public TimeSpan? ExpireTimeSpan { get; init; }
-  public PathString LoginPath { get; init; } = "/login";
-  public PathString LogoutPath { get; init; } = "/logout";
-  public string ReturnUrlParameter { get; init; } = "returnUrl";
+  public required PathString AccessDeniedPath { get; init; }
+  public required TimeSpan ExpireTimeSpan { get; init; }
+  public required PathString LoginPath { get; init; }
+  public required PathString LogoutPath { get; init; }
+  public required string ReturnUrlParameter { get; init; }
   public bool SlidingExpiration { get; init; }
 }

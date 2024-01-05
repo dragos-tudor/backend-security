@@ -21,25 +21,28 @@ partial class CookiesFuncs
     SetAuthenticationPropertiesIssued(authProperties, currentUtc);
     SetAuthenticationPropertiesExpires(authProperties, currentUtc, authOptions.ExpireTimeSpan);
 
-    var cookieOptions = BuildCookieOptions(cookieBuilder, context);
     var cookieName = GetCookieName(cookieBuilder, authOptions);
-    SetCookieOptionsExpires(cookieOptions, IsAuthenticationPropertiesPersistent(authProperties) ? GetAuthenticationPropertiesExpires(authProperties) : default);
-    SetCookieOptionsSecure(cookieOptions, IsSecuredCookie(context, cookieBuilder.SecurePolicy));
+    var cookieOptions = BuildCookieOptions(cookieBuilder, authProperties, context);
 
-    var ticket = CreateAuthenticationTicket(principal, authProperties, authOptions.SchemeName);
-    var protectedTicket = ProtectAuthenticationTicket(ticket, ticketProtector);
+    var authTicket = CreateAuthenticationTicket(principal, authProperties, authOptions.SchemeName);
+    var sessionTicketId = GetSessionTicketId(context);
+    var cookieTicket = ExistsTicketStore(ticketStore)?
+      CreateSessionIdTicket(
+        sessionTicketId is null?
+          await SetSessionTicket(ticketStore, authTicket, context.RequestAborted):
+          await RenewSessionTicket(ticketStore, authTicket, sessionTicketId, context.RequestAborted),
+        authOptions.SchemeName):
+      authTicket;
 
-    var cookie = protectedTicket;
-    if (ticketStore is not DefaultTicketStore) cookie = await ticketStore.StoreTicket(protectedTicket);
+    var protectedTicket = ProtectAuthenticationTicket(cookieTicket, ticketProtector);
+    AppendAuthenticationCookie(context, cookieManager, cookieName, protectedTicket, cookieOptions);
 
-    AppendAuthenticationCookie(context, cookieManager, cookieName, cookie, cookieOptions);
     ResetResponseCacheHeaders(context.Response);
-    if (IsRequestLoginPath(context.Request, authOptions))
-    if (GetSigningRedirectUri(context, authProperties, authOptions.ReturnUrlParameter) is string redirectUri)
+    if (ResolveRedirectUri(context, authProperties, authOptions) is string redirectUri)
       SetResponseRedirect(context.Response, redirectUri);
 
     LogSignedInCookie(Logger, authOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
-    return ticket;
+    return authTicket;
   }
 
   public static ValueTask<AuthenticationTicket> SignInCookie (

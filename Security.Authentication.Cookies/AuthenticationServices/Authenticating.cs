@@ -2,16 +2,12 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
-using static Microsoft.AspNetCore.Authentication.AuthenticateResult;
 
 namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  const string TicketExpired = "Ticket expired";
-  const string UnprotectTicketFailed = "Unprotect ticket failed";
-
-  public static async ValueTask<AuthenticateResult> AuthenticateCookie (
+  public static async Task<AuthenticateResult> AuthenticateCookie (
     HttpContext context,
     CookieAuthenticationOptions authOptions,
     CookieBuilder cookieBuilder,
@@ -20,24 +16,32 @@ partial class CookiesFuncs
     ITicketStore ticketStore,
     DateTimeOffset currentUtc)
   {
-    if (IsRequestLoginPath(context.Request, authOptions)) return NoResult();
-    if (IsRequestLogoutPath(context.Request, authOptions)) return NoResult();
+    var authResult = await AuthenticateCoreCookie(context, authOptions, cookieBuilder,
+      cookieManager, ticketProtector, ticketStore, currentUtc);
 
-    var cookie = GetAuthenticationCookie(context, cookieManager, GetCookieName(cookieBuilder, authOptions));
-    if (cookie is null) return NoResult();
+    var isExpiredTicket = IsExpiredResultTicket(authResult);
+    var isRenewableTicket = IsRenewableResultTicket(authResult, currentUtc);
+    if (!isExpiredTicket && !isRenewableTicket) return authResult;
 
-    var protectedTicket = cookie;
-    if (ticketStore is not DefaultTicketStore) protectedTicket = await ticketStore.UnstoreTicket(cookie);
+    var cookieName = GetCookieName(cookieBuilder, authOptions);
+    var cookieOptions = BuildCookieOptions(cookieBuilder, authResult.Properties!, context);
+    var cookieTicket = ExistsTicketStore(ticketStore)?
+      CreateSessionIdTicket(GetSessionTicketId(context)!, authOptions.SchemeName):
+      authResult.Ticket!;
 
-    var ticket = UnprotectAuthenticationTicket(protectedTicket, ticketProtector);
-    if (ticket is null) return Fail(UnprotectTicketFailed);
-    if (IsExpiredAuthenticationTicket(ticket, currentUtc)) return Fail(TicketExpired);
+    if (isExpiredTicket) DeleteAuthenticationCookie(context, cookieManager, cookieName, cookieOptions);
+    if (isRenewableTicket) AppendAuthenticationCookie(context, cookieManager, cookieName,
+      ProtectAuthenticationTicket(cookieTicket, ticketProtector), cookieOptions);
 
-    if (!IsRenewableAuthenticationTicket(ticket, currentUtc, authOptions.SlidingExpiration)) return Success(ticket);
-    return Success(await SignInCookie(context, ticket.Principal, ticket.Properties, authOptions, cookieBuilder, cookieManager, ticketProtector, ticketStore, currentUtc));
+    var ticketId = GetSessionTicketId(context);
+    if (ticketId is null) return authResult;
+
+    if (isExpiredTicket) await RemoveSessionTicket(ticketStore, ticketId, context.RequestAborted);
+    if (isRenewableTicket) await RenewSessionTicket(ticketStore, authResult.Ticket!, ticketId, context.RequestAborted);
+    return authResult;
   }
 
-  public static async ValueTask<AuthenticateResult> AuthenticateCookie (HttpContext context)
+  public static async Task<AuthenticateResult> AuthenticateCookie (HttpContext context)
   {
     var authOptions = ResolveService<CookieAuthenticationOptions>(context);
     var result = await AuthenticateCookie(
@@ -49,9 +53,12 @@ partial class CookiesFuncs
       ResolveService<ITicketStore>(context),
       ResolveService<TimeProvider>(context).GetUtcNow()
     );
-    if(result.None) LogNotAuthenticated(Logger, authOptions.SchemeName, context.TraceIdentifier);
-    if(result.Failure is not null) LogNotAuthenticatedWithFailure(Logger, authOptions.SchemeName, result.Failure.Message, context.TraceIdentifier);
-    if(result.Succeeded) LogAuthenticated(Logger, authOptions.SchemeName, GetPrincipalNameId(result.Principal)!, context.TraceIdentifier);
+
+    var schemeName = authOptions.SchemeName;
+    var traceId = context.TraceIdentifier;
+    if(result.None) LogNotAuthenticated(Logger, schemeName, traceId);
+    if(result.Failure is not null) LogNotAuthenticatedWithFailure(Logger, schemeName, result.Failure.Message, traceId);
+    if(result.Succeeded) LogAuthenticated(Logger, schemeName, GetPrincipalNameId(result.Principal)!, traceId);
     return result;
   }
 }

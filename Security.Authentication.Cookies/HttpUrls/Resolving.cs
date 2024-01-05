@@ -6,10 +6,10 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  static string? GetSigningRedirectUri (
+  static string? ResolveRedirectUri (
     HttpContext context,
     AuthenticationProperties authProperties,
-    string returnUrlParameter) =>
+    CookieAuthenticationOptions authOptions) =>
       GetAuthenticationPropertiesRedirectUri(authProperties) ??
-      GetRequestQueryReturnUrl(context.Request, returnUrlParameter);
+      GetRequestQueryReturnUrl(context.Request, authOptions.ReturnUrlParameter);
 }

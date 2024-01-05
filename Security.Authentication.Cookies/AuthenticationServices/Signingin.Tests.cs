@@ -13,15 +13,15 @@ namespace Security.Authentication.Cookies;
 partial class CookiesTests {
 
   [Fact]
-  public static async Task Login_request__signin__authentication_cookie()
+  public static async Task Signin_request__signin__authentication_cookie()
   {
     using var server = CreateHttpServer(services => services.AddCookies((CreateCookieAuthenticationOptions()) with { SchemeName = "CookiesScheme" }));
     var authProperties = CreateAuthenticationProperties();
-    server.MapPost("/account/login", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("CookiesScheme", "user"), authProperties).ToString());
+    server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("CookiesScheme", "user"), authProperties).ToString());
     await server.StartAsync();
 
     using var client = server.GetTestClient();
-    using var response = await client.PostAsync("/account/login");
+    using var response = await client.PostAsync("/api/account/signin");
 
     Assert.True(response.IsSuccessStatusCode);
     Assert.Contains("CookiesScheme", GetResponseMessageCookie(response));
@@ -29,30 +29,31 @@ partial class CookiesTests {
   }
 
   [Fact]
-  public static async Task Login_request_with_return_url__signin__response_redirected_to_return_url()
+  public static async Task Signin_request_with_return_url__signin__response_redirected_to_return_url()
   {
-    using var server = CreateHttpServer(services => services.AddCookies((CreateCookieAuthenticationOptions()) with { SchemeName = "CookiesScheme" }));
+    var cookieOptions = CreateCookieAuthenticationOptions() with { SchemeName = "CookiesScheme" };
+    using var server = CreateHttpServer(services => services.AddCookies(cookieOptions));
     var principal = CreateNamedClaimsPrincipal("CookiesScheme", "user");
     var GetAuthProperties = (HttpContext context) => new AuthenticationProperties() { RedirectUri  = context.Request.Form["redirect_url"] };
-    server.MapPost("/account/login", (HttpContext context) => SignInCookie(context, principal, GetAuthProperties(context)).ToString());
+    server.MapPost("/api/accounts/signin", (HttpContext context) => SignInCookie(context, principal, GetAuthProperties(context)).ToString());
     await server.StartAsync();
 
     using var client = server.GetTestClient();
-    using var response = await client.PostAsync("/account/login", new FormUrlEncodedContent(new Dictionary<string, string> { { "redirect_url", "/logged-in" } }));
+    using var response = await client.PostAsync("/api/accounts/signin", new FormUrlEncodedContent(new Dictionary<string, string> { { "redirect_url", "/logged-in" } }));
 
     Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
     Assert.Equal("/logged-in", GetResponseMessageLocation(response));
   }
 
   [Fact]
-  public async Task Login_request__signin__authentication_cookie_microsoft()
+  public async Task Signin_request__signin__authentication_cookie_microsoft()
   {
     using var server = CreateHttpServer(services => services.AddAuthentication().AddCookie(o => o.Cookie.Name = "CookiesScheme"));
-    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreatePrincipal("CookiesScheme", new [] { CreateNameClaim("user") })));
+    server.MapPost("/api/account/signin", (HttpContext context) => context.SignInAsync(CreatePrincipal("CookiesScheme", new [] { CreateNameClaim("user") })));
     await server.StartAsync();
 
     using var client = server.GetTestClient();
-    using var response = await client.PostAsync("/account/login", default);
+    using var response = await client.PostAsync("/api/account/signin", default);
 
     Assert.True(response.IsSuccessStatusCode);
     Assert.Contains("CookiesScheme", GetResponseMessageCookie(response));

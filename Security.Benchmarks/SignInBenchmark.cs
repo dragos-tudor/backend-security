@@ -14,31 +14,34 @@ using static Security.Authentication.Cookies.CookiesFuncs;
 
 namespace Security.Benchmarks;
 
-// [SimpleJob(invocationCount: 2048)] // took to long
+[DryJob]
+[SimpleJob(invocationCount: 128)]
+[SimpleJob(invocationCount: 512)]
+[SimpleJob(invocationCount: 1024)]
 [MemoryDiagnoser]
 public class SignInBenchmarks
 {
   static readonly IServiceProvider msServices = new ServiceCollection().AddLogging().AddAuthentication("Cookies").AddCookie().Services.BuildServiceProvider()!;
   static readonly IServiceProvider services = new ServiceCollection().AddLogging().AddCookies().AddDataProtection().Services.BuildServiceProvider();
   static readonly IIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-	// static readonly IAuthenticationService authenticationService = MsServices.GetRequiredService<IAuthenticationService>();
+	static readonly IAuthenticationService authenticationService = msServices.GetRequiredService<IAuthenticationService>();
 
   [Benchmark(Baseline = true)]
-  public void FPBenchmark ()
+  public async Task FPBenchmark ()
   {
     var context = new DefaultHttpContext(){RequestServices = services};
-    SignInCookie(
+    await SignInCookie(
       context,
       new ClaimsPrincipal(identity),
       new AuthenticationProperties());
   }
 
   [Benchmark]
-  public Task OOPBenchmark ()
+  public async Task OOPBenchmark ()
   {
     var context = new DefaultHttpContext(){RequestServices = msServices};
-    var authenticationService = msServices.GetRequiredService<IAuthenticationService>();
-    return authenticationService.SignInAsync(
+    // var authenticationService = msServices.GetRequiredService<IAuthenticationService>();
+    await authenticationService.SignInAsync(
       context,
       CookieAuthenticationDefaults.AuthenticationScheme,
       new ClaimsPrincipal(identity),
