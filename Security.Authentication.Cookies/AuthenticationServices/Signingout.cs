@@ -13,18 +13,19 @@ partial class CookiesFuncs
     CookieAuthenticationOptions authOptions,
     CookieBuilder cookieBuilder,
     ICookieManager cookieManager,
+    ISecureDataFormat<AuthenticationTicket> ticketProtector,
     ITicketStore ticketStore)
   {
     var cookieOptions = BuildCookieOptions(cookieBuilder, authProperties, context);
     var cookieName = GetCookieName(cookieBuilder, authOptions);
-    DeleteAuthenticationCookie(context, cookieManager, cookieName, cookieOptions);
 
-    if (GetSessionTicketId(context) is string ticketId)
+    if (IsSessionBasedCookie(ticketStore) &&
+        ExtractSessionTicketId(context, cookieManager, cookieName, ticketProtector) is string ticketId)
       await RemoveSessionTicket(ticketStore, ticketId);
 
+    DeleteAuthenticationCookie(context, cookieManager, cookieName, cookieOptions);
     ResetResponseCacheHeaders(context.Response);
-    if (ResolveRedirectUri(context, authProperties, authOptions) is string redirectUri)
-      SetResponseRedirect(context.Response, redirectUri);
+    SetResponseRedirect(context.Response, ResolveRedirectUri(context, authProperties, authOptions));
 
     LogSignedOutCookie(Logger, authOptions.SchemeName, context.TraceIdentifier);
     return GetResponseLocation(context.Response);
@@ -39,6 +40,7 @@ partial class CookiesFuncs
         ResolveService<CookieAuthenticationOptions>(context),
         ResolveService<CookieBuilder>(context),
         ResolveService<ICookieManager>(context),
+        ResolveService<ISecureDataFormat<AuthenticationTicket>>(context),
         ResolveService<ITicketStore>(context)
         );
 }

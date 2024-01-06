@@ -2,12 +2,16 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
+using static Microsoft.AspNetCore.Authentication.AuthenticateResult;
 
 namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  public static async Task<AuthenticateResult> AuthenticateCookie (
+  const string TicketExpired = "Ticket expired";
+  const string UnprotectTicketFailed = "Unprotect ticket failed";
+
+  public static async ValueTask<AuthenticateResult> AuthenticateCookie (
     HttpContext context,
     CookieAuthenticationOptions authOptions,
     CookieBuilder cookieBuilder,
@@ -16,28 +20,28 @@ partial class CookiesFuncs
     ITicketStore ticketStore,
     DateTimeOffset currentUtc)
   {
-    var authResult = await AuthenticateCoreCookie(context, authOptions, cookieBuilder,
-      cookieManager, ticketProtector, ticketStore, currentUtc);
-
-    var isExpiredTicket = IsExpiredResultTicket(authResult);
-    var isRenewableTicket = IsRenewableResultTicket(authResult, currentUtc);
-    if (!isExpiredTicket && !isRenewableTicket) return authResult;
-
     var cookieName = GetCookieName(cookieBuilder, authOptions);
-    var cookieOptions = BuildCookieOptions(cookieBuilder, authResult.Properties!, context);
-    var cookieTicket = ExistsTicketStore(ticketStore)?
-      CreateSessionIdTicket(GetSessionTicketId(context)!, authOptions.SchemeName):
-      authResult.Ticket!;
+    var cookie = GetAuthenticationCookie(context, cookieManager, cookieName);
+    if (cookie is null) return NoResult();
 
-    if (isExpiredTicket) DeleteAuthenticationCookie(context, cookieManager, cookieName, cookieOptions);
-    if (isRenewableTicket) AppendAuthenticationCookie(context, cookieManager, cookieName,
+    var cookieTicket = UnprotectAuthenticationTicket(cookie, ticketProtector);
+    if (cookieTicket is null) return Fail(UnprotectTicketFailed);
+
+    if (IsSessionBasedCookie(ticketStore))
+      return await AuthenticateSessionCookie(context, authOptions, cookieBuilder, cookieManager,
+        ticketProtector, ticketStore, GetSessionTicketId(cookieTicket.Principal), currentUtc);
+
+    var cookieOptions = BuildCookieOptions(cookieBuilder, cookieTicket.Properties!, context);
+    var authResult = GetAuthenticationTicketState(cookieTicket, currentUtc, authOptions) switch {
+      AuthenticationTicketState.ExpiredTicket => Fail(TicketExpired),
+      AuthenticationTicketState.RenewableTicket => Success(RenewAuthenticationTicket(cookieTicket, currentUtc)),
+      _ => Success(cookieTicket)
+    };
+
+    if (IsExpiredAuthenticationTicket(authResult)) DeleteAuthenticationCookie(context, cookieManager, cookieName, cookieOptions);
+    if (IsRenewableAuthenticationTicket(authResult, currentUtc)) AppendAuthenticationCookie(context, cookieManager, cookieName,
       ProtectAuthenticationTicket(cookieTicket, ticketProtector), cookieOptions);
 
-    var ticketId = GetSessionTicketId(context);
-    if (ticketId is null) return authResult;
-
-    if (isExpiredTicket) await RemoveSessionTicket(ticketStore, ticketId, context.RequestAborted);
-    if (isRenewableTicket) await RenewSessionTicket(ticketStore, authResult.Ticket!, ticketId, context.RequestAborted);
     return authResult;
   }
 

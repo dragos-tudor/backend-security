@@ -16,7 +16,7 @@ partial class OAuthFuncs
     var challengePath = BuildChallengePath(authOptions, returnUri);
 
     LogChallenged(Logger, authOptions.SchemeName, challengePath, context.TraceIdentifier);
-    return SetResponseRedirect(context.Response, challengePath);
+    return SetResponseRedirect(context.Response, challengePath)!;
   }
 
   public static string ChallengeOAuth<TOptions> (

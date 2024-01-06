@@ -25,21 +25,19 @@ partial class CookiesFuncs
     var cookieOptions = BuildCookieOptions(cookieBuilder, authProperties, context);
 
     var authTicket = CreateAuthenticationTicket(principal, authProperties, authOptions.SchemeName);
-    var sessionTicketId = GetSessionTicketId(context);
-    var cookieTicket = ExistsTicketStore(ticketStore)?
+    var cookieTicket = IsSessionBasedCookie(ticketStore)?
       CreateSessionIdTicket(
-        sessionTicketId is null?
-          await SetSessionTicket(ticketStore, authTicket, context.RequestAborted):
-          await RenewSessionTicket(ticketStore, authTicket, sessionTicketId, context.RequestAborted),
+        ExtractSessionTicketId(context, cookieManager, cookieName, ticketProtector) switch {
+          null => await SetSessionTicket(ticketStore, authTicket, context.RequestAborted),
+          var ticketId => await RenewSessionTicket(ticketStore, authTicket, ticketId, context.RequestAborted)
+        },
         authOptions.SchemeName):
       authTicket;
 
     var protectedTicket = ProtectAuthenticationTicket(cookieTicket, ticketProtector);
     AppendAuthenticationCookie(context, cookieManager, cookieName, protectedTicket, cookieOptions);
-
     ResetResponseCacheHeaders(context.Response);
-    if (ResolveRedirectUri(context, authProperties, authOptions) is string redirectUri)
-      SetResponseRedirect(context.Response, redirectUri);
+    SetResponseRedirect(context.Response, ResolveRedirectUri(context, authProperties, authOptions));
 
     LogSignedInCookie(Logger, authOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
     return authTicket;

@@ -15,7 +15,7 @@ partial class CookiesFuncs
     var forbidPath = BuildForbidPath(authOptions, returnUri);
 
     LogForbidden(Logger, authOptions.SchemeName, forbidPath, context.TraceIdentifier);
-    return SetResponseRedirect(context.Response, forbidPath);
+    return SetResponseRedirect(context.Response, forbidPath)!;
   }
 
   public static string ForbidCookie (
