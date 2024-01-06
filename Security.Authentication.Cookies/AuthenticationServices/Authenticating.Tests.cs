@@ -10,7 +10,7 @@ namespace Security.Authentication.Cookies;
 partial class CookiesTests
 {
   [Fact]
-  public static async Task Authenticated_user__access_protected_resource__access_allowed()
+  public async Task Authenticated_user__access_protected_resource__access_allowed()
   {
     using var server = CreateHttpServer(services => services.AddCookies(CreateCookieAuthenticationOptions()));
     var authProperties = CreateAuthenticationProperties();

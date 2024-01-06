@@ -13,7 +13,7 @@ namespace Security.Authentication.Cookies;
 partial class CookiesTests {
 
   [Fact]
-  public static async Task Signin_request__signin__authentication_cookie()
+  public async Task Signin_request__signin__authentication_cookie()
   {
     using var server = CreateHttpServer(services => services.AddCookies((CreateCookieAuthenticationOptions()) with { SchemeName = "CookiesScheme" }));
     var authProperties = CreateAuthenticationProperties();
@@ -29,7 +29,7 @@ partial class CookiesTests {
   }
 
   [Fact]
-  public static async Task Signin_request_with_return_url__signin__response_redirected_to_return_url()
+  public async Task Signin_request_with_return_url__signin__response_redirected_to_return_url()
   {
     var cookieOptions = CreateCookieAuthenticationOptions() with { SchemeName = "CookiesScheme" };
     using var server = CreateHttpServer(services => services.AddCookies(cookieOptions));

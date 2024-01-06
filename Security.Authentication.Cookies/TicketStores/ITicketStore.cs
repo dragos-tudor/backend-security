@@ -10,7 +10,7 @@ public interface ITicketStore
 
   Task RemoveTicket(string ticketId, CancellationToken token = default);
 
-  Task<string> RenewTicket(AuthenticationTicket ticket, string ticketId, DateTimeOffset? expiresAt, CancellationToken token = default);
+  Task<string> RenewTicket(AuthenticationTicket ticket, string ticketId, CancellationToken token = default);
 
-  Task<string> SetTicket(AuthenticationTicket ticket, DateTimeOffset? expiresAt, CancellationToken token = default);
+  Task<string> SetTicket(AuthenticationTicket ticket, CancellationToken token = default);
 }

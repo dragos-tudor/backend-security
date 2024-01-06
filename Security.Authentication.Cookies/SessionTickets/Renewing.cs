@@ -10,5 +10,5 @@ partial class CookiesFuncs
     AuthenticationTicket ticket,
     string ticketId,
     CancellationToken token = default) =>
-      ticketStore.RenewTicket(ticket, ticketId, GetAuthenticationPropertiesExpires(ticket.Properties), token);
+      ticketStore.RenewTicket(ticket, ticketId, token);
 }

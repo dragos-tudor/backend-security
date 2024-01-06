@@ -8,8 +8,8 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  const string TicketExpired = "Ticket expired";
-  const string UnprotectTicketFailed = "Unprotect ticket failed";
+  internal const string TicketExpired = "Ticket expired";
+  internal const string UnprotectTicketFailed = "Unprotect ticket failed";
 
   public static async ValueTask<AuthenticateResult> AuthenticateCookie (
     HttpContext context,
@@ -29,7 +29,7 @@ partial class CookiesFuncs
 
     if (IsSessionBasedCookie(ticketStore))
       return await AuthenticateSessionCookie(context, authOptions, cookieBuilder, cookieManager,
-        ticketProtector, ticketStore, GetSessionTicketId(cookieTicket.Principal), currentUtc);
+        ticketProtector, ticketStore, currentUtc, GetSessionTicketId(cookieTicket.Principal));
 
     var cookieOptions = BuildCookieOptions(cookieBuilder, cookieTicket.Properties!, context);
     var authResult = GetAuthenticationTicketState(cookieTicket, currentUtc, authOptions) switch {

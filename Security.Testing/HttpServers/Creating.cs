@@ -11,10 +11,7 @@ partial class Funcs {
   public static WebApplication CreateHttpServer (Action<IServiceCollection>? configServices = default, LogLevel minimumLogLevel = LogLevel.None) {
     var builder = WebApplication.CreateBuilder();
     configServices?.Invoke(builder.Services);
-    builder.Services
-      .AddLogging(o => o.SetMinimumLevel(minimumLogLevel))
-      .AddDataProtection(Environment.CurrentDirectory + "/keys")
-      .AddSingleton<TimeProvider>(new FakeTimeProvider());
+    builder.Services.AddTestServices(minimumLogLevel);
     builder.WebHost.UseTestServer();
 
     return builder

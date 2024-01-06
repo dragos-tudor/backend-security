@@ -8,40 +8,55 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  const string MissingSessionTicketId = "Missing session ticket id";
-  const string MissingSessionTicket = "Missing session ticket";
+  internal const string MissingSessionTicketId = "Missing session ticket id";
+  internal const string MissingSessionTicket = "Missing session ticket";
 
-  internal static async Task<AuthenticateResult> AuthenticateSessionCookie(
+  internal static async ValueTask<AuthenticateResult> AuthenticateSessionCookie(
     HttpContext context,
     CookieAuthenticationOptions authOptions,
     CookieBuilder cookieBuilder,
     ICookieManager cookieManager,
     ISecureDataFormat<AuthenticationTicket> ticketProtector,
     ITicketStore ticketStore,
-    string? ticketId,
-    DateTimeOffset currentUtc)
+    DateTimeOffset currentUtc,
+    string? ticketId)
   {
     if (ticketId is null) return Fail(MissingSessionTicketId);
 
     var sessionTicket = await GetSessionTicket(ticketStore, ticketId, context.RequestAborted);
     if (sessionTicket is null) return Fail(MissingSessionTicket);
 
-    var sessionCookieOptions = BuildCookieOptions(cookieBuilder, sessionTicket.Properties!, context);
-    var sessionResult = GetAuthenticationTicketState(sessionTicket, currentUtc, authOptions) switch {
+    var authResult = GetAuthenticationTicketState(sessionTicket, currentUtc, authOptions) switch {
       AuthenticationTicketState.ExpiredTicket => Fail(TicketExpired),
       AuthenticationTicketState.RenewableTicket => Success(RenewAuthenticationTicket(sessionTicket, currentUtc)),
       _ => Success(sessionTicket)
     };
 
-    if (IsExpiredAuthenticationTicket(sessionResult)) await RemoveSessionTicket(ticketStore, ticketId, context.RequestAborted);
-    if (IsRenewableAuthenticationTicket(sessionResult, currentUtc)) await RenewSessionTicket(ticketStore, sessionResult.Ticket!, ticketId, context.RequestAborted);
+    if (IsExpiredAuthenticationTicket(authResult)) await RemoveSessionTicket(ticketStore, ticketId, context.RequestAborted);
+    if (IsRenewableAuthenticationTicket(authResult, currentUtc)) await RenewSessionTicket(ticketStore, authResult.Ticket!, ticketId, context.RequestAborted);
 
     var cookieName = GetCookieName(cookieBuilder, authOptions);
-    if (IsExpiredAuthenticationTicket(sessionResult)) DeleteAuthenticationCookie(context, cookieManager, cookieName, sessionCookieOptions);
-    if (IsRenewableAuthenticationTicket(sessionResult, currentUtc)) AppendAuthenticationCookie(context, cookieManager, cookieName,
-      ProtectAuthenticationTicket(CreateSessionIdTicket(ticketId, authOptions.SchemeName), ticketProtector), sessionCookieOptions);
+    var cookieOptions = BuildCookieOptions(cookieBuilder, sessionTicket.Properties!, context);
+    if (IsExpiredAuthenticationTicket(authResult)) DeleteAuthenticationCookie(context, cookieManager, cookieName, cookieOptions);
+    if (IsRenewableAuthenticationTicket(authResult, currentUtc)) AppendAuthenticationCookie(context, cookieManager, cookieName,
+      ProtectAuthenticationTicket(CreateSessionIdTicket(ticketId, authOptions.SchemeName), ticketProtector), cookieOptions);
 
-    return sessionResult;
+    return authResult;
   }
+
+  internal static ValueTask<AuthenticateResult> AuthenticateSessionCookie(
+    HttpContext context,
+    CookieAuthenticationOptions authOptions,
+    string? ticketId) =>
+      AuthenticateSessionCookie(
+        context,
+        authOptions,
+        ResolveService<CookieBuilder>(context),
+        ResolveService<ICookieManager>(context),
+        ResolveService<ISecureDataFormat<AuthenticationTicket>>(context),
+        ResolveService<ITicketStore>(context),
+        ResolveService<TimeProvider>(context).GetUtcNow(),
+        ticketId
+      );
 
 }

@@ -27,7 +27,12 @@
 - authorization library implement authorization services [eg. *Authorize*].
 
 ### Remarks
-- rewriting completely authentication mechanism.
-- rewriting partially authorization mechamism [keeping authorization policies mechanism].
+- rewriting *completely* authentication mechanism.
+- rewriting *partially* authorization mechamism [keeping compatibility with ASPNET authorization policies mechanism].
+- cookie authentication services *surgically* implement session-based cookies feature [authentication session based cookies service completely isolated]. Authenticating, signingin and signingout services completely independent each other [no dependencies on HTTPContext features].
+- authentication options containing implementation contains only data [eg. *CookieAuthenticationOptions*]. Cookie authentication services [non DI-based ones] receive all dependencies aa paramaters.
+- Microsoft ASPNET authentication options implementation contains data and behaviour/services [eg. *SessionStore*, *TicketDataFormat*, *SystemClock* for *CookieAuthenticationOptions*]. This design have some advantages comparing with my implementation allowing options:
+  - to have different services from those registered on DI.
+  - to encapsulate and carry on those services through the authentication flow [reducing the number of parameters so].
 
 [wip JWT, Sample.Api, Sample.www]
