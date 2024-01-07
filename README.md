@@ -27,13 +27,13 @@
 - authorization library implement authorization services [eg. *Authorize*].
 
 ### Remarks
-- *completely* rewriting authentication mechanism.
-- *partially* rewriting authorization mechamism [keeping compatibility with ASPNET authorization policies mechanism].
+- *completely* rewritten authentication mechanism.
+- *partially* rewritten authorization mechamism [keeping compatibility with ASPNET authorization policies mechanism].
 - cookie authentication services *surgically* implement session-based cookies feature [using *IsSessionBasedCookie* func]. Authenticating, signingin and signingout services are completely independent each other [no dependencies on HttpContext features]. Authentication session-based cookies service is completely isolated.
 - authentication options implementation contains only data [eg. *CookieAuthenticationOptions*]. Cookie authentication services [non DI-based ones] receive all dependencies as parameters.
 - Microsoft ASPNET authentication options implementation contains data and behaviour/services [eg. *SessionStore*, *TicketDataFormat*, *SystemClock* for *CookieAuthenticationOptions*]. This design have some advantages comparing with my implementation allowing options:
   - to have different services from those registered on DI.
   - to encapsulate and carry on those services through the authentication flow [reducing the number of parameters so].
-- *AuthenticateOAuth* oauth authentication func use template design pattern allowing oauth libraries to override when neccessary *postAuthenticate*, *exchangeCodeForTokens* or *accessUserInfo* funcs dependencies [eg. *AuthenticateTwitter*, *AuthenticateFacebook*].
+- *AuthenticateOAuth* oauth authentication func use template method design pattern allowing oauth libraries to override when neccessary *postAuthenticate*, *exchangeCodeForTokens* or *accessUserInfo* funcs dependencies [eg. *AuthenticateTwitter*, *AuthenticateFacebook*].
 
 [wip JWT, Sample.Api, Sample.www]
