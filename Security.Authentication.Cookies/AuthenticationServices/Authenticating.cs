@@ -39,7 +39,7 @@ partial class CookiesFuncs
     };
 
     if (IsExpiredAuthenticationTicket(authResult)) DeleteAuthenticationCookie(context, cookieManager, cookieName, cookieOptions);
-    if (IsRenewableAuthenticationTicket(authResult, currentUtc)) AppendAuthenticationCookie(context, cookieManager, cookieName,
+    if (IsRenewedAuthenticationTicket(authResult, currentUtc)) AppendAuthenticationCookie(context, cookieManager, cookieName,
       ProtectAuthenticationTicket(cookieTicket, ticketProtector), cookieOptions);
 
     return authResult;
