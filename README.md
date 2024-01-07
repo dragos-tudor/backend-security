@@ -21,8 +21,6 @@
   - *oauth callback endpoints* receive signin service [eg. *MapFacebook*].
 - *high-level* functions usually use declarative style and TDA principle [eg. *SignInCookie*].
 - *low-level* functions usually use imperative style and are one-liners [eg. *IsSecuredCookie*].
-
-### Services
 - authentication libraries implement specific authentication services [eg. *AuthenticateCookie*, *SignInCookie*, *ChallengeGoogle*, *AuthenticateFacebook*].
 - authorization library implement authorization services [eg. *Authorize*].
 
@@ -34,6 +32,6 @@
 - Microsoft ASPNET authentication options implementation contains data and behaviour/services [eg. *SessionStore*, *TicketDataFormat*, *SystemClock* for *CookieAuthenticationOptions*]. This design have some advantages comparing with my implementation allowing options:
   - to have different services from those registered on DI.
   - to encapsulate and carry on those services through the authentication flow [reducing the number of parameters so].
-- *AuthenticateOAuth* oauth authentication func use template method design pattern allowing oauth libraries to override when neccessary *postAuthenticate*, *exchangeCodeForTokens* or *accessUserInfo* funcs dependencies [eg. *AuthenticateTwitter*, *AuthenticateFacebook*].
+- *AuthenticateOAuth* oauth authentication func use template method design pattern allowing oauth libraries to override when neccessary *postAuthenticate*, *exchangeCodeForTokens* or *accessUserInfo* funcs params/dependencies [eg. *AuthenticateTwitter*, *AuthenticateFacebook*].
 
 [wip JWT, Sample.Api, Sample.www]
