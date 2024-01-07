@@ -46,11 +46,11 @@ partial class CookiesFuncs
   public static ValueTask<AuthenticationTicket> SignInCookie (
     HttpContext context,
     ClaimsPrincipal principal,
-    AuthenticationProperties authProperties) =>
+    AuthenticationProperties? authProperties = default) =>
       SignInCookie(
         context,
         principal,
-        authProperties,
+        authProperties ?? CreateAuthenticationProperties(),
         ResolveService<CookieAuthenticationOptions>(context),
         ResolveService<CookieBuilder>(context),
         ResolveService<ICookieManager>(context),

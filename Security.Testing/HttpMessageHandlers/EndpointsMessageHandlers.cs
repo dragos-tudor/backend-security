@@ -1,7 +1,6 @@
 
 using System.Threading;
 using static Security.Testing.Funcs;
-#pragma warning disable CA1854
 
 namespace Security.Testing;
 

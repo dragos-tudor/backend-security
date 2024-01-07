@@ -11,6 +11,8 @@ partial class CookiesTests
   {
     readonly Dictionary<string, AuthenticationTicket> Tickets = [];
 
+    static string GenerateTicketId() => Guid.NewGuid().ToString();
+
     public Task<AuthenticationTicket?> GetTicket(string ticketId, CancellationToken token = default) =>
       Tickets.TryGetValue(ticketId, out var ticket)?
         Task.FromResult<AuthenticationTicket?>(ticket):
@@ -27,7 +29,7 @@ partial class CookiesTests
 
     public Task<string> SetTicket(AuthenticationTicket ticket, CancellationToken token = default)
     {
-      var ticketId = Guid.NewGuid().ToString();
+      var ticketId = GenerateTicketId();
       Tickets.Add(ticketId, ticket);
       return Task.FromResult(ticketId);
     }

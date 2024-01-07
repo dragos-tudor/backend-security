@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,9 +16,10 @@ partial class CookiesTests {
   [Fact]
   public async Task Signin_request__signin__authentication_cookie()
   {
-    using var server = CreateHttpServer(services => services.AddCookies((CreateCookieAuthenticationOptions()) with { SchemeName = "CookiesScheme" }));
-    var authProperties = CreateAuthenticationProperties();
-    server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("CookiesScheme", "user"), authProperties).ToString());
+    var cookieOptions = CreateCookieAuthenticationOptions() with { SchemeName = "CookiesScheme" };
+    using var server = CreateHttpServer(services => services.AddCookies(cookieOptions));
+    server.UseAuthentication(AuthenticateCookie);
+    server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("CookiesScheme", "user")).ToString());
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -29,13 +31,30 @@ partial class CookiesTests {
   }
 
   [Fact]
+  public async Task Signin_non_persisted_cookie_request__signin__non_persited_authentication_cookie()
+  {
+    var nonPersistedProps = new AuthenticationProperties(){ IsPersistent = false };
+    using var server = CreateHttpServer(services => services.AddCookies(CreateCookieAuthenticationOptions()));
+    server.UseAuthentication(AuthenticateCookie);
+    server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal(CookieAuthenticationDefaults.AuthenticationScheme, "user"), nonPersistedProps).ToString());
+    await server.StartAsync();
+
+    using var client = server.GetTestClient();
+    using var response = await client.PostAsync("/api/account/signin");
+
+    Assert.True(response.IsSuccessStatusCode);
+    Assert.DoesNotContain("expires", GetResponseMessageCookie(response));
+  }
+
+  [Fact]
   public async Task Signin_request_with_return_url__signin__response_redirected_to_return_url()
   {
-    var cookieOptions = CreateCookieAuthenticationOptions() with { SchemeName = "CookiesScheme" };
-    using var server = CreateHttpServer(services => services.AddCookies(cookieOptions));
-    var principal = CreateNamedClaimsPrincipal("CookiesScheme", "user");
     var GetAuthProperties = (HttpContext context) => new AuthenticationProperties() { RedirectUri  = context.Request.Form["redirect_url"] };
-    server.MapPost("/api/accounts/signin", (HttpContext context) => SignInCookie(context, principal, GetAuthProperties(context)).ToString());
+    using var server = CreateHttpServer(services => services.AddCookies(CreateCookieAuthenticationOptions()));
+    server.UseAuthentication(AuthenticateCookie);
+    server.MapPost("/api/accounts/signin", (HttpContext context) => SignInCookie(context,
+      CreateNamedClaimsPrincipal(CookieAuthenticationDefaults.AuthenticationScheme, "user"),
+      GetAuthProperties(context)).ToString());
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -43,6 +62,42 @@ partial class CookiesTests {
 
     Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
     Assert.Equal("/logged-in", GetResponseMessageLocation(response));
+  }
+
+  [Fact]
+  public async Task Signin_session_based_request__signin__session_based_authentication_cookie()
+  {
+    var ticketStore = new FakeTicketStore();
+    using var server = CreateHttpServer(services => services.AddCookies(CreateCookieAuthenticationOptions(), ticketStore));
+    server.UseAuthentication(AuthenticateCookie);
+    server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal(CookieAuthenticationDefaults.AuthenticationScheme, "user")).ToString());
+    await server.StartAsync();
+
+    using var client = server.GetTestClient();
+    using var response = await client.PostAsync("/api/account/signin");
+    var ticketId = GetSessionBasedCookieTicketId(response, server.Services);
+
+    Assert.True(response.IsSuccessStatusCode);
+    Assert.NotNull(await ticketStore.GetTicket(ticketId!));
+  }
+
+  [Fact]
+  public async Task Signin_twice_session_based_request__signin__session_based_authentication_cookie()
+  {
+    var ticketStore = new FakeTicketStore();
+    var cookieOptions = CreateCookieAuthenticationOptions() with { SchemeName = "CookiesScheme" };
+    using var server = CreateHttpServer(services => services.AddCookies(cookieOptions, ticketStore));
+    server.UseAuthentication(AuthenticateCookie);
+    server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("CookiesScheme", "user")).ToString());
+    await server.StartAsync();
+
+    using var client = server.GetTestClient();
+    using var firstResponse = await client.PostAsync("/api/account/signin");
+    using var secondResponse = await client.PostAsync("/api/account/signin", GetRequestMessageCookieHeader(firstResponse));
+    var ticketId = GetSessionBasedCookieTicketId(secondResponse, server.Services);
+
+    Assert.True(secondResponse.IsSuccessStatusCode);
+    Assert.NotNull(await ticketStore.GetTicket(ticketId!));
   }
 
   [Fact]
@@ -59,4 +114,12 @@ partial class CookiesTests {
     Assert.Contains("CookiesScheme", GetResponseMessageCookie(response));
   }
 
+  static string? GetSessionBasedCookieTicketId(HttpResponseMessage response, IServiceProvider services)
+  {
+    var cookie = GetResponseMessageCookie(response);
+    var cookieContent = GetRequestMessageCookieContent(cookie);
+    var ticketProtector = ResolveService<ISecureDataFormat<AuthenticationTicket>>(services);
+
+    return GetSessionTicketId(ticketProtector.Unprotect(cookieContent)!.Principal);
+  }
 }

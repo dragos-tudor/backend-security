@@ -5,15 +5,15 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs {
 
-  static bool AllowAuthenticationTicketRefresh (AuthenticationTicket ticket) => ticket.Properties.AllowRefresh ?? true;
+  static bool AllowAuthenticationTicketRefresh (AuthenticationTicket ticket) => ticket.Properties?.AllowRefresh ?? true;
 
   static bool AllowAuthenticationTicketSlideExpiration (bool slidingExpiration) => slidingExpiration;
 
-  static bool IsSetAuthenticationTicketIssued (AuthenticationTicket ticket) => ticket.Properties.IssuedUtc is not null;
+  static bool IsSetAuthenticationTicketIssued (AuthenticationTicket ticket) => ticket.Properties?.IssuedUtc is not null;
 
-  static bool IsSetAuthenticationTicketExpires (AuthenticationTicket ticket) => ticket.Properties.ExpiresUtc is not null;
+  static bool IsSetAuthenticationTicketExpires (AuthenticationTicket ticket) => ticket.Properties?.ExpiresUtc is not null;
 
-  static bool IsExpiredAuthenticationTicket (AuthenticationTicket ticket, DateTimeOffset currentUtc) =>
+  internal static bool IsExpiredAuthenticationTicket (AuthenticationTicket ticket, DateTimeOffset currentUtc) =>
     IsSetAuthenticationTicketExpires(ticket) &&
     GetAuthenticationTicketExpires(ticket) < currentUtc;
 
@@ -21,7 +21,7 @@ partial class CookiesFuncs {
     GetAuthenticationTicketTimeElapsed(ticket, currentUtc) >
     GetAuthenticationTicketTimeRemaining(ticket, currentUtc);
 
-  static bool IsRenewableAuthenticationTicket (AuthenticationTicket ticket, DateTimeOffset currentUtc, bool slidingExpiration) =>
+  internal static bool IsRenewableAuthenticationTicket (AuthenticationTicket ticket, DateTimeOffset currentUtc, bool slidingExpiration = true) =>
     AllowAuthenticationTicketSlideExpiration(slidingExpiration) &&
     AllowAuthenticationTicketRefresh(ticket) &&
     IsSetAuthenticationTicketIssued(ticket) &&

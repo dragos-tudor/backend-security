@@ -33,10 +33,10 @@ partial class CookiesFuncs
 
   public static ValueTask<string?> SignOutCookie (
     HttpContext context,
-    AuthenticationProperties authProperties) =>
+    AuthenticationProperties? authProperties = default) =>
       SignOutCookie(
         context,
-        authProperties,
+        authProperties ?? CreateAuthenticationProperties(),
         ResolveService<CookieAuthenticationOptions>(context),
         ResolveService<CookieBuilder>(context),
         ResolveService<ICookieManager>(context),

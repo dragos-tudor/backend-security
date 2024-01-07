@@ -7,6 +7,7 @@ using System.Net;
 using System.Collections.Generic;
 using System.Net.Http;
 using static Security.Testing.Funcs;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Security.Authentication.Cookies;
 
@@ -16,8 +17,8 @@ partial class CookiesTests {
   public async Task Signout_request__signout__expired_cookie()
   {
     using var server = CreateHttpServer(services => services.AddCookies() );
-    var authProperties = CreateAuthenticationProperties();
-    server.MapPost("/api/account/signout", async (HttpContext context) => (await SignOutCookie(context, authProperties)) ?? string.Empty);
+    server.UseAuthentication(AuthenticateCookie);
+    server.MapPost("/api/account/signout", async (HttpContext context) => (await SignOutCookie(context)) ?? string.Empty);
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -29,10 +30,49 @@ partial class CookiesTests {
   }
 
   [Fact]
+  public async Task Signout_session_based_request__signout__expired_session_based_authentication_cookie()
+  {
+    var cookieOptions = CreateCookieAuthenticationOptions() with { SchemeName = "CookiesScheme" };
+    var ticketStore = new FakeTicketStore();
+    using var server = CreateHttpServer(services => services.AddCookies(cookieOptions, ticketStore));
+    server.UseAuthentication(AuthenticateCookie);
+    server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("CookiesScheme", "user")).ToString());
+    server.MapPost("/api/account/signout", async (HttpContext context) => (await SignOutCookie(context)) ?? string.Empty);
+    await server.StartAsync();
+
+    using var client = server.GetTestClient();
+    using var signinResponse = await client.PostAsync("/api/account/signin");
+    using var signoutResponse = await client.PostAsync("/api/account/signout", GetRequestMessageCookieHeader(signinResponse));
+
+    Assert.True(signoutResponse.IsSuccessStatusCode);
+    Assert.Contains("CookiesScheme=;", GetResponseMessageCookie(signoutResponse));
+    Assert.Contains("expires=Thu, 01 Jan 1970", GetResponseMessageCookie(signoutResponse));
+  }
+
+  [Fact]
+  public async Task Signout_session_based_request__signout__session_ticket_removed_from_store()
+  {
+    var ticketStore = new FakeTicketStore();
+    using var server = CreateHttpServer(services => services.AddCookies(CreateCookieAuthenticationOptions(), ticketStore));
+    server.UseAuthentication(AuthenticateCookie);
+    server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal(CookieAuthenticationDefaults.AuthenticationScheme, "user")).ToString());
+    server.MapPost("/api/account/signout", async (HttpContext context) => (await SignOutCookie(context)) ?? string.Empty);
+    await server.StartAsync();
+
+    using var client = server.GetTestClient();
+    using var signinResponse = await client.PostAsync("/api/account/signin");
+    var ticketId = GetSessionBasedCookieTicketId(signinResponse, server.Services);
+    using var signoutResponse = await client.PostAsync("/api/account/signout", GetRequestMessageCookieHeader(signinResponse));
+
+    Assert.Null(await ticketStore.GetTicket(ticketId!));
+  }
+
+  [Fact]
   public async Task Signout_request_with_return_url__signin__response_redirected_to_return_url()
   {
-    using var server = CreateHttpServer(services => services.AddCookies() );
     var GetAuthProperties = (HttpContext context) => new AuthenticationProperties() { RedirectUri = context.Request.Form["redirect_url"] };
+    using var server = CreateHttpServer(services => services.AddCookies() );
+    server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/api/accounts/signout", (HttpContext context) => SignOutCookie(context, GetAuthProperties(context)));
     await server.StartAsync();
 

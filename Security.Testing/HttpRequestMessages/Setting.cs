@@ -11,7 +11,7 @@ partial class Funcs {
     return headers;
   }
 
-  static HttpHeaders SetRequestMessageHeaders (HttpRequestMessage request, params (string, string)[] headers)  =>
+  static HttpRequestHeaders SetRequestMessageHeaders (HttpRequestMessage request, params (string, string)[] headers)  =>
     headers.Aggregate(request.Headers, SetRequestMessageHeader);
 
 }
