@@ -35,4 +35,4 @@
   - to encapsulate and carry on those services through the authentication flow [reducing the number of parameters so].
 - *AuthenticateOAuth* oauth authentication func use template method design pattern allowing oauth libraries to override when neccessary *postAuthenticate*, *exchangeCodeForTokens* or *accessUserInfo* funcs params/dependencies [eg. *AuthenticateTwitter*, *AuthenticateFacebook*].
 
-[wip JWT, Sample.Api, Sample.www]
+[wip BearerToken, Sample.Api, Sample.www]
