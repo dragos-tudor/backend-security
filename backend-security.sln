@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.Authentication.Twi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.Sample.Api", "Security.Sample.Api\Security.Sample.Api.csproj", "{7D502505-C28D-430E-8EE0-7CD826E3EE81}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.Authentication.BearerToken", "Security.Authentication.BearerToken\Security.Authentication.BearerToken.csproj", "{838D5F3E-11E7-4DA9-A087-A01A81194A5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,5 +86,9 @@ Global
 		{7D502505-C28D-430E-8EE0-7CD826E3EE81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D502505-C28D-430E-8EE0-7CD826E3EE81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D502505-C28D-430E-8EE0-7CD826E3EE81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{838D5F3E-11E7-4DA9-A087-A01A81194A5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{838D5F3E-11E7-4DA9-A087-A01A81194A5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{838D5F3E-11E7-4DA9-A087-A01A81194A5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{838D5F3E-11E7-4DA9-A087-A01A81194A5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

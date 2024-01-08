@@ -7,6 +7,7 @@
 - [Authentication.Facebook](/Security.Authentication.Facebook/).
 - [Authentication.Google](/Security.Authentication.Google/).
 - [Authentication.Twitter](/Security.Authentication.Twitter/).
+- [Authentication.BearerToken](/Security.Authentication.BearerToken/).
 - [Authorization](/Security.Authorization/).
 - [DataProtection](/Security.DataProtection/).
 
