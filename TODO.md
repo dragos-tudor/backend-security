@@ -7,5 +7,5 @@
 - [x] add *AuthenticationProperties* cookies tests.
 - [x] add session-based cookies tests.
 - [x] add roles authorization tests.
-- [ ] add claims authorization tests.
-- [ ] add policies authorization tests.
+- [x] add claims authorization tests.
+- [x] add requirements authorization tests.

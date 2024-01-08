@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using System.Collections.Generic;
 using Security.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Security.Authorization;
 
@@ -96,6 +97,44 @@ partial class AuthorizationTests {
     Assert.Equal("private", await ReadResponseMessageContent(response));
   }
 
+
+  [Fact]
+  public async Task Authenticated_user_with_claims__access_role_policy_private_resource__authorized_access()
+  {
+    using var server = CreateHttpServer(services => services.AddAuthorization(options => options.AddPolicy("claim policy", policy => policy.RequireClaim("custom claim", "value"))).AddAuthentication().AddCookie());
+    server.UseAuthentication().UseAuthorization(challegeFunc, forbidFunc);
+    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreateClaimsPrincipalWithClaim("custom claim", "value")) );
+    server.MapGet("/resource", (HttpContext context) => "private").RequireAuthorization("claim policy");
+    await server.StartAsync();
+
+    using var client = server.GetTestClient();
+    using var loginResponse = await client.PostAsync("/account/login", default);
+    using var response = await client.GetAsync("/resource", GetRequestMessageCookieHeader(loginResponse));
+
+    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    Assert.Equal("private", await ReadResponseMessageContent(response));
+  }
+
+  [Fact]
+  public async Task Authenticated_user_with_requirement__access_role_policy_private_resource__authorized_access()
+  {
+    using var server = CreateHttpServer(services => services
+      .AddSingleton<IAuthorizationHandler, MinimumAgeHandler>()
+      .AddAuthorization(options => options.AddPolicy("req policy", policy => policy.AddRequirements([new MinimumAgeRequirement(21)])))
+      .AddAuthentication().AddCookie());
+    server.UseAuthentication().UseAuthorization(challegeFunc, forbidFunc);
+    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreateClaimsPrincipalWithClaim(ClaimTypes.DateOfBirth, DateTime.Now.AddYears(-23).ToString())) );
+    server.MapGet("/resource", (HttpContext context) => "private").RequireAuthorization("req policy");
+    await server.StartAsync();
+
+    using var client = server.GetTestClient();
+    using var loginResponse = await client.PostAsync("/account/login", default);
+    using var response = await client.GetAsync("/resource", GetRequestMessageCookieHeader(loginResponse));
+
+    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    Assert.Equal("private", await ReadResponseMessageContent(response));
+  }
+
   [Fact]
   public async Task Authenticated_user__access_private_resource__user_authorized_microsoft()
   {
@@ -112,7 +151,37 @@ partial class AuthorizationTests {
     Assert.Equal("private", await ReadResponseMessageContent(response));
   }
 
-  internal static ClaimsPrincipal CreateClaimsPrincipal (string userName, string? roleName = "role") =>
-    new (new ClaimsIdentity(new List<Claim>{ new Claim(ClaimTypes.Name, userName), new Claim(ClaimTypes.Role, roleName!)}, "Cookies"));
+  static ClaimsPrincipal CreateClaimsPrincipal (string userName, string? roleName = "role") =>
+    new (new ClaimsIdentity(new List<Claim>{ new (ClaimTypes.Name, userName), new (ClaimTypes.Role, roleName!)}, "Cookies"));
+
+  static ClaimsPrincipal CreateClaimsPrincipalWithClaim (string claimType, string claimValue) =>
+    new (new ClaimsIdentity(new List<Claim>{ new (claimType, claimValue!) }, "Cookies"));
+
+  public class MinimumAgeRequirement : IAuthorizationRequirement
+  {
+      public MinimumAgeRequirement(int minimumAge) =>
+          MinimumAge = minimumAge;
+
+      public int MinimumAge { get; }
+  }
+
+  public class MinimumAgeHandler : AuthorizationHandler<MinimumAgeRequirement>
+  {
+    protected override Task HandleRequirementAsync(
+        AuthorizationHandlerContext context,
+        MinimumAgeRequirement requirement)
+    {
+        var dateOfBirthClaim = context.User.FindFirst(c => c.Type == ClaimTypes.DateOfBirth);
+        if (dateOfBirthClaim is null) return Task.CompletedTask;
+
+        var dateOfBirth = Convert.ToDateTime(dateOfBirthClaim.Value);
+        int calculatedAge = DateTime.Today.Year - dateOfBirth.Year;
+
+        if (dateOfBirth > DateTime.Today.AddYears(-calculatedAge)) calculatedAge--;
+        if (calculatedAge >= requirement.MinimumAge) context.Succeed(requirement);
+
+        return Task.CompletedTask;
+    }
+  }
 
 }
