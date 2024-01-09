@@ -16,7 +16,7 @@ partial class CookiesFuncs
     CookieAuthenticationOptions authOptions,
     CookieBuilder cookieBuilder,
     ICookieManager cookieManager,
-    ISecureDataFormat<AuthenticationTicket> ticketProtector,
+    TicketDataFormat ticketProtector,
     ITicketStore ticketStore,
     DateTimeOffset currentUtc,
     string? ticketId)
@@ -54,7 +54,7 @@ partial class CookiesFuncs
         authOptions,
         ResolveService<CookieBuilder>(context),
         ResolveService<ICookieManager>(context),
-        ResolveService<ISecureDataFormat<AuthenticationTicket>>(context),
+        ResolveService<TicketDataFormat>(context),
         ResolveService<ITicketStore>(context),
         ResolveService<TimeProvider>(context).GetUtcNow(),
         ticketId

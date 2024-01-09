@@ -118,7 +118,7 @@ partial class CookiesTests {
   {
     var cookie = GetResponseMessageCookie(response);
     var cookieContent = GetRequestMessageCookieContent(cookie);
-    var ticketProtector = ResolveService<ISecureDataFormat<AuthenticationTicket>>(services);
+    var ticketProtector = ResolveService<TicketDataFormat>(services);
 
     return GetSessionTicketId(ticketProtector.Unprotect(cookieContent)!.Principal);
   }

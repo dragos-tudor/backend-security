@@ -1,5 +1,4 @@
 
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -21,8 +20,8 @@ partial class CookiesFuncs {
         .AddSingleton((services) => authOptions)
         .AddSingleton((services) => cookieBuilder ?? CreateCookieBuilder())
         .AddSingleton<ICookieManager, ChunkingCookieManager>()
-        .AddSingleton<ISecureDataFormat<AuthenticationTicket>>((services) =>
-          CreateTicketProtector(services.GetRequiredService<IDataProtectionProvider>(), authOptions.SchemeName))
+        .AddSingleton((services) =>
+          CreateTicketProtector(ResolveService<IDataProtectionProvider>(services), authOptions.SchemeName))
         .AddSingleton(ticketStore ?? new DefaultTicketStore())
         .AddSingleton(TimeProvider.System);
 

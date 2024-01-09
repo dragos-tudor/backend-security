@@ -5,7 +5,7 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs {
 
-  static string ProtectAuthenticationTicket (AuthenticationTicket ticket, ISecureDataFormat<AuthenticationTicket> ticketProtector) =>
+  static string ProtectAuthenticationTicket (AuthenticationTicket ticket, TicketDataFormat ticketProtector) =>
     ticketProtector.Protect(ticket);
 
 }

@@ -10,7 +10,7 @@ partial class CookiesFuncs
     HttpContext context,
     ICookieManager cookieManager,
     string cookieName,
-    ISecureDataFormat<AuthenticationTicket> ticketProtector)
+    TicketDataFormat ticketProtector)
   {
     if(GetAuthenticationCookie(context, cookieManager, cookieName) is not string cookie) return default;
     if(UnprotectAuthenticationTicket(cookie, ticketProtector) is not AuthenticationTicket cookieTicket) return default;
