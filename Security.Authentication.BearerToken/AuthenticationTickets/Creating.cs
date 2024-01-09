@@ -4,19 +4,19 @@ namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenFuncs
 {
-  static AuthenticationTicket CreateBearerTicket(
-    ClaimsPrincipal user,
+  static AuthenticationTicket CreateBearerTokenTicket(
+    ClaimsPrincipal principal,
     AuthenticationProperties authProperties,
     BearerTokenOptions tokenOptions) =>
-      new(user, authProperties, $"{tokenOptions.SchemeName}:AccessToken");
+      new (principal, authProperties, $"{tokenOptions.SchemeName}:AccessToken");
 
   static AuthenticationTicket CreateRefreshTicket(
-    ClaimsPrincipal user,
+    ClaimsPrincipal principal,
     BearerTokenOptions tokenOptions,
     DateTimeOffset currentUtc)
   {
     var authProperties = new AuthenticationProperties();
     SetAuthenticationPropertiesExpires(authProperties, currentUtc, tokenOptions.BearerTokenExpiration);
-    return new AuthenticationTicket(user, authProperties, $"{tokenOptions.SchemeName}:RefreshToken");
+    return new (principal, authProperties, $"{tokenOptions.SchemeName}:RefreshToken");
   }
 }

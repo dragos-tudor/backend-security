@@ -6,21 +6,39 @@ namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenFuncs
 {
-  static readonly AuthenticateResult FailedUnprotectingToken = Fail("Unprotected token failed");
-  static readonly AuthenticateResult TokenExpired = Fail("Token expired");
+  const string UnprotectingTokenFailed = "Unprotecting token failed";
+  const string TokenExpired = "Token expired";
+
+  static readonly AuthenticateResult UnprotectingTokenFailedResult = Fail(UnprotectingTokenFailed);
+  static readonly AuthenticateResult TokenExpiredResult = Fail(TokenExpired);
 
   public static AuthenticateResult AuthenticateBearerToken(
     HttpContext context,
-    SecureDataFormat<AuthenticationTicket> bearerTokenProtector,
+    ISecureDataFormat<AuthenticationTicket> bearerTokenProtector,
     DateTimeOffset currentUtc)
   {
     var token = GetRequestBearerToken(context.Request);
     if (token is null) return NoResult();
 
     var ticket = bearerTokenProtector.Unprotect(token);
-    if (GetAuthenticationTicketExpires(ticket) is not {} expiresUtc) return FailedUnprotectingToken;
-    if (currentUtc >= expiresUtc) return TokenExpired;
+    var expiresUtc = GetAuthenticationTicketExpires(ticket);
+
+    if (expiresUtc is null) return UnprotectingTokenFailedResult;
+    if (currentUtc >= expiresUtc) return TokenExpiredResult;
 
     return Success(ticket!);
+  }
+
+  public static Task<AuthenticateResult> AuthenticateBearerToken (HttpContext context)
+  {
+    var authOptions = ResolveService<BearerTokenOptions>(context);
+    var authResult = AuthenticateBearerToken(
+      context,
+      ResolveService<ISecureDataFormat<AuthenticationTicket>>(context),
+      ResolveService<TimeProvider>(context).GetUtcNow()
+    );
+
+    LogAuthenticationResult(Logger, authResult, authOptions.SchemeName, context.TraceIdentifier);
+    return Task.FromResult(authResult);
   }
 }

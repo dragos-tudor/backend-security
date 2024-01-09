@@ -7,14 +7,13 @@ namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenFuncs
 {
-  internal static TicketDataFormat CreateBearerTokenTicketProtector (
+  internal static ISecureDataFormat<AuthenticationTicket> CreateBearerTokenTicketProtector (
     IDataProtectionProvider dataProtectionProvider,
     string? schemeName = BearerTokenDefaults.AuthenticationScheme) =>
-      new (CreateDataProtector(dataProtectionProvider, schemeName!, "BearerToken"));
+      new TicketDataFormat(CreateDataProtector(dataProtectionProvider, schemeName!, "BearerToken"));
 
-  internal static TicketDataFormat CreateRefreshTokenTicketProtector (
+  internal static ISecureDataFormat<AuthenticationTicket> CreateRefreshTokenTicketProtector (
     IDataProtectionProvider dataProtectionProvider,
     string? schemeName = BearerTokenDefaults.AuthenticationScheme) =>
-      new (CreateDataProtector(dataProtectionProvider, schemeName!, "RefreshToken"));
-
+      new TicketDataFormat(CreateDataProtector(dataProtectionProvider, schemeName!, "RefreshToken"));
 }

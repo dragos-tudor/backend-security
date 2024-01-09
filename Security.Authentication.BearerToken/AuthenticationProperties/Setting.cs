@@ -8,7 +8,7 @@ partial class BearerTokenFuncs
   static DateTimeOffset? SetAuthenticationPropertiesExpires (
     AuthenticationProperties authProperties,
     DateTimeOffset currentUtc,
-    TimeSpan expires
+    TimeSpan expiresAfter
   ) =>
-    authProperties.ExpiresUtc = currentUtc.Add(expires);
+    authProperties.ExpiresUtc = currentUtc + expiresAfter;
 }

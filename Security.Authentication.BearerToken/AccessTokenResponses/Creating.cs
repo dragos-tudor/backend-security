@@ -5,16 +5,15 @@ namespace Security.Authentication.BearerToken;
 partial class BearerTokenFuncs
 {
   static AccessTokenResponse CreateAccessTokenResponse(
-    ClaimsPrincipal user,
-    AuthenticationProperties authProperties,
+    AuthenticationTicket bearerTokenTicket,
+    AuthenticationTicket refreshTokenTicket,
     BearerTokenOptions tokenOptions,
-    ISecureDataFormat<AuthenticationTicket> bearerTokenProtector,
-    ISecureDataFormat<AuthenticationTicket> refreshTokenProtector,
-    DateTimeOffset currentUtc)
+    IBearerTokenProtector bearerTokenProtector,
+    IRefreshTokenProtector refreshTokenProtector)
     =>
       new (){
-        AccessToken = bearerTokenProtector.Protect(CreateBearerTicket(user, authProperties, tokenOptions)),
+        AccessToken = bearerTokenProtector.Protect(bearerTokenTicket),
         ExpiresIn = (long)tokenOptions.BearerTokenExpiration.TotalSeconds,
-        RefreshToken = refreshTokenProtector.Protect(CreateRefreshTicket(user, tokenOptions, currentUtc)),
+        RefreshToken = refreshTokenProtector.Protect(refreshTokenTicket),
       };
 }
