@@ -6,7 +6,7 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  public static string ChallengeCookie (
+  public static string? ChallengeCookie (
     HttpContext context,
     AuthenticationProperties authProperties,
     CookieAuthenticationOptions authOptions)
@@ -18,7 +18,7 @@ partial class CookiesFuncs
     return SetResponseRedirect(context.Response, challengePath)!;
   }
 
-  public static string ChallengeCookie (
+  public static string? ChallengeCookie (
     HttpContext context,
     AuthenticationProperties authProperties) =>
       ChallengeCookie(

@@ -48,7 +48,7 @@ partial class CookiesFuncs
   public static async Task<AuthenticateResult> AuthenticateCookie (HttpContext context)
   {
     var authOptions = ResolveService<CookieAuthenticationOptions>(context);
-    var result = await AuthenticateCookie(
+    var authResult = await AuthenticateCookie(
       context,
       authOptions,
       ResolveService<CookieBuilder>(context),
@@ -58,11 +58,7 @@ partial class CookiesFuncs
       ResolveService<TimeProvider>(context).GetUtcNow()
     );
 
-    var schemeName = authOptions.SchemeName;
-    var traceId = context.TraceIdentifier;
-    if(result.None) LogNotAuthenticated(Logger, schemeName, traceId);
-    if(result.Failure is not null) LogNotAuthenticatedWithFailure(Logger, schemeName, result.Failure.Message, traceId);
-    if(result.Succeeded) LogAuthenticated(Logger, schemeName, GetPrincipalNameId(result.Principal)!, traceId);
-    return result;
+    LogAuthenticationResult(Logger, authResult, authOptions.SchemeName, context.TraceIdentifier);
+    return authResult;
   }
 }

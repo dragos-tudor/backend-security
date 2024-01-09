@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 
 namespace Security.Authentication;
@@ -14,4 +15,15 @@ partial class AuthenticationFuncs {
   [LoggerMessage(3, LogLevel.Debug, "AuthenticationScheme: {SchemeName} was not authenticated. [{RequestId}]", EventName = "NotAuthenticated")]
   public static partial void LogNotAuthenticated (ILogger logger, string schemeName, string requestId);
 
+  public static AuthenticateResult LogAuthenticationResult(
+    ILogger logger,
+    AuthenticateResult autResult,
+    string schemeName,
+    string traceId)
+  {
+    if(autResult.None) LogNotAuthenticated(logger, schemeName, traceId);
+    if(autResult.Failure is not null) LogNotAuthenticatedWithFailure(logger, schemeName, autResult.Failure.Message, traceId);
+    if(autResult.Succeeded) LogAuthenticated(logger, schemeName, GetPrincipalNameId(autResult.Principal)!, traceId);
+    return autResult;
+  }
 }

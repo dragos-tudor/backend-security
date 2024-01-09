@@ -6,7 +6,7 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  public static string ForbidCookie (
+  public static string? ForbidCookie (
     HttpContext context,
     AuthenticationProperties authProperties,
     CookieAuthenticationOptions authOptions)
@@ -18,7 +18,7 @@ partial class CookiesFuncs
     return SetResponseRedirect(context.Response, forbidPath)!;
   }
 
-  public static string ForbidCookie (
+  public static string? ForbidCookie (
     HttpContext context,
     AuthenticationProperties authProperties) =>
       ForbidCookie(
