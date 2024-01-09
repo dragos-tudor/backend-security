@@ -10,8 +10,8 @@ partial class BearerTokenFuncs
     ClaimsPrincipal principal,
     AuthenticationProperties authProperties,
     BearerTokenOptions tokenOptions,
-    IBearerTokenProtector bearerTokenProtector,
-    IRefreshTokenProtector refreshTokenProtector,
+    BearerTokenProtector bearerTokenProtector,
+    RefreshTokenProtector refreshTokenProtector,
     DateTimeOffset currentUtc
   )
   {
@@ -23,7 +23,7 @@ partial class BearerTokenFuncs
     var token = CreateAccessTokenResponse(bearerTokenTicket, refreshTokenTicket,
       tokenOptions, bearerTokenProtector, refreshTokenProtector);
 
-    var tokenJsonTypeInfo = ResolveAccessTokenJsonTypeInfo(context);
+    var tokenJsonTypeInfo = ResolveAccessTokenResponseJsonTypeInfo(context);
     await context.Response.WriteAsJsonAsync(token, tokenJsonTypeInfo);
 
     LogSignInBearerToken(Logger, tokenOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
@@ -39,7 +39,7 @@ partial class BearerTokenFuncs
         principal,
         authProperties ?? new AuthenticationProperties(),
         ResolveService<BearerTokenOptions>(context),
-        ResolveService<IBearerTokenProtector>(context),
-        ResolveService<IRefreshTokenProtector>(context),
+        ResolveService<BearerTokenProtector>(context),
+        ResolveService<RefreshTokenProtector>(context),
         ResolveService<TimeProvider>(context).GetUtcNow());
 }

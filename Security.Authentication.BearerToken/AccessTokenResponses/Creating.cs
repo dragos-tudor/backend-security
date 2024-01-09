@@ -8,8 +8,8 @@ partial class BearerTokenFuncs
     AuthenticationTicket bearerTokenTicket,
     AuthenticationTicket refreshTokenTicket,
     BearerTokenOptions tokenOptions,
-    IBearerTokenProtector bearerTokenProtector,
-    IRefreshTokenProtector refreshTokenProtector)
+    BearerTokenProtector bearerTokenProtector,
+    RefreshTokenProtector refreshTokenProtector)
     =>
       new (){
         AccessToken = bearerTokenProtector.Protect(bearerTokenTicket),

@@ -1,5 +1,4 @@
 
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.DataProtection;
 
@@ -7,13 +6,13 @@ namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenFuncs
 {
-  internal static ISecureDataFormat<AuthenticationTicket> CreateBearerTokenTicketProtector (
+  internal static BearerTokenProtector CreateBearerTokenTicketProtector (
     IDataProtectionProvider dataProtectionProvider,
     string? schemeName = BearerTokenDefaults.AuthenticationScheme) =>
-      new TicketDataFormat(CreateDataProtector(dataProtectionProvider, schemeName!, "BearerToken"));
+      new (CreateDataProtector(dataProtectionProvider, schemeName!, "BearerToken"));
 
-  internal static ISecureDataFormat<AuthenticationTicket> CreateRefreshTokenTicketProtector (
+  internal static RefreshTokenProtector CreateRefreshTokenTicketProtector (
     IDataProtectionProvider dataProtectionProvider,
     string? schemeName = BearerTokenDefaults.AuthenticationScheme) =>
-      new TicketDataFormat(CreateDataProtector(dataProtectionProvider, schemeName!, "RefreshToken"));
+      new (CreateDataProtector(dataProtectionProvider, schemeName!, "RefreshToken"));
 }

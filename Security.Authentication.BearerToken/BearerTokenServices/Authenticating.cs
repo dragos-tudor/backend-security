@@ -14,7 +14,7 @@ partial class BearerTokenFuncs
 
   public static AuthenticateResult AuthenticateBearerToken(
     HttpContext context,
-    IBearerTokenProtector bearerTokenProtector,
+    BearerTokenProtector bearerTokenProtector,
     DateTimeOffset currentUtc)
   {
     var token = GetRequestBearerToken(context.Request);
@@ -31,14 +31,14 @@ partial class BearerTokenFuncs
 
   public static Task<AuthenticateResult> AuthenticateBearerToken (HttpContext context)
   {
-    var authOptions = ResolveService<BearerTokenOptions>(context);
+    var tokenOptions = ResolveService<BearerTokenOptions>(context);
     var authResult = AuthenticateBearerToken(
       context,
-      ResolveService<IBearerTokenProtector>(context),
+      ResolveService<BearerTokenProtector>(context),
       ResolveService<TimeProvider>(context).GetUtcNow()
     );
 
-    LogAuthenticationResult(Logger, authResult, authOptions.SchemeName, context.TraceIdentifier);
+    LogAuthenticationResult(Logger, authResult, tokenOptions.SchemeName, context.TraceIdentifier);
     return Task.FromResult(authResult);
   }
 }

@@ -6,6 +6,6 @@ using System.Text.Json.Serialization;
 namespace Security.Authentication.BearerToken;
 
 [JsonSerializable(typeof(AccessTokenResponse))]
-internal sealed partial class AccessTokenResponseSerializerContext : JsonSerializerContext
+internal sealed partial class AccessTokenResponseJsonMetadata : JsonSerializerContext
 {
 }
