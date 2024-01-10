@@ -6,8 +6,8 @@ namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenFuncs
 {
-  const string UnprotectingTokenFailed = "Unprotecting token failed";
-  const string TokenExpired = "Token expired";
+  internal const string UnprotectingTokenFailed = "Unprotecting token failed";
+  internal const string TokenExpired = "Token expired";
 
   static readonly AuthenticateResult UnprotectingTokenFailedResult = Fail(UnprotectingTokenFailed);
   static readonly AuthenticateResult TokenExpiredResult = Fail(TokenExpired);
@@ -17,10 +17,11 @@ partial class BearerTokenFuncs
     BearerTokenProtector bearerTokenProtector,
     DateTimeOffset currentUtc)
   {
-    var token = GetRequestBearerToken(context.Request);
-    if (token is null) return NoResult();
+    var authorization = GetRequestAuthorizationHeader(context.Request);
+    var bearerToken = GetRequestBearerToken(context.Request, authorization);
+    if (bearerToken is null) return NoResult();
 
-    var ticket = bearerTokenProtector.Unprotect(token);
+    var ticket = bearerTokenProtector.Unprotect(bearerToken);
     var expiresUtc = GetAuthenticationTicketExpires(ticket);
 
     if (expiresUtc is null) return UnprotectingTokenFailedResult;

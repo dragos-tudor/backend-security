@@ -4,13 +4,13 @@ namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenFuncs
 {
-  const string BearerTokenName = "Bearer ";
+  internal const string BearerTokenName = "Bearer ";
 
-  static string? GetRequestBearerToken(HttpRequest request)
-  {
-    var authorization = request.Headers.Authorization.ToString();
-    return authorization.StartsWith(BearerTokenName, StringComparison.Ordinal)?
+  static string GetRequestAuthorizationHeader(HttpRequest request) =>
+    request.Headers.Authorization.ToString();
+
+  static string? GetRequestBearerToken(HttpRequest request, string authorization) =>
+    authorization.StartsWith(BearerTokenName, StringComparison.Ordinal)?
       authorization[BearerTokenName.Length ..]:
       default;
-  }
 }

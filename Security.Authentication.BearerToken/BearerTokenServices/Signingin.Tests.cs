@@ -21,7 +21,7 @@ partial class BearerTokenTests {
     var cookieOptions = CreateBearerTokenOptions() with { SchemeName = "BearerTokenScheme" };
     using var server = CreateHttpServer(services => services.AddBearerToken(cookieOptions));
     server.UseAuthentication(AuthenticateBearerToken);
-    server.MapPost("/api/account/signin", (HttpContext context) => SignInBearerToken(context, CreateNamedClaimsPrincipal("BearerTokenScheme", "user")));
+    server.MapPost("/api/account/signin", (HttpContext context) => SignInBearerToken(context, CreateNamedClaimsPrincipal("user", "BearerTokenScheme")));
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -55,7 +55,7 @@ partial class BearerTokenTests {
     Assert.Equal("user", GetPrincipalName(tokenTicket!.Principal));
   }
 
-  static ClaimsPrincipal CreateNamedClaimsPrincipal (string schemeName, string name) =>
+  static ClaimsPrincipal CreateNamedClaimsPrincipal (string name, string schemeName =BearerTokenDefaults.AuthenticationScheme ) =>
     CreatePrincipal(schemeName, new [] { CreateNameClaim(name) });
 
   static AccessTokenResponse? GetAccessTokenResponse(
