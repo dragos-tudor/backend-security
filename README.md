@@ -47,8 +47,8 @@
 - *AuthenticateOAuth* oauth authentication func use template method design pattern allowing oauth libraries to override when neccessary *postAuthenticate*, *exchangeCodeForTokens* or *accessUserInfo* funcs params/dependencies [eg. *AuthenticateTwitter*, *AuthenticateFacebook*].
 
 ### Project goals
-- to untangle/demystify the ASPNET authentication/authorization workflows.
-- to simplify authentication/authorization mechanisms removing centric schema-based ASPNET mechanism.
+- to untangle/demystify the ASPNET authentication/authorization mechanism and local/remote workflows.
+- to simplify authentication/authorization mechanisms removing schema-based ASPNET mechanism.
 - to demonstrate the superiority of functional programming paradigm over OOP paradigm.
 
 [wip OpenIdConnect, Sample.Api, Sample.www]
