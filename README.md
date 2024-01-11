@@ -25,6 +25,17 @@
 - authentication libraries implement specific authentication services [eg. *AuthenticateCookie*, *SignInCookie*, *ChallengeGoogle*, *AuthenticateFacebook*].
 - authorization library implement authorization services [eg. *Authorize*].
 
+### Workflows
+- exists 2 different workflows: local and remote.
+- for *local workflow* (cookie/bearer token):
+  - each request [when use authentication middlware] goes through *authentication func* [eg. *AuthenticateCookie*]. Based on authorization result middleare set *HttpContext.User* prop.
+  - then each request [when use authentication middlware] goes through *authorization func* [eg. *Authorize*]. Based on authorization policies result is decided if the request is allowed, unauthenticated/challenged or unauthorized/forbidden.
+  - signin/signout funcs are used on specific endpoints/controller actions implememted by programmer.
+- for *remote workflow* (oauth):
+  - registered *challenge endpoint* [with eg. MapFacebook] build and send authoriztion request to authorization server.
+  - registered *callback endpoint* [with eg. MapFacebook] receive authorization server response and goes through *callback func* [eg. *ChallengeFacebook*] having two steps: authentication and signin. After authentication for succedded *AuthenticationResult* signin func is called [eg. *SiginInCookie^, *SignInBearerToken*]. Signin func is configured on oauth endpoints registration.
+  - after callback redirection next requests will goes through *local workflow*.
+
 ### Remarks
 - *completely* rewritten authentication mechanism.
 - *partially* rewritten authorization mechamism [keeping compatibility with ASPNET authorization policies mechanism].
@@ -35,4 +46,9 @@
   - to encapsulate and carry on those services through the authentication flow [reducing the number of parameters so].
 - *AuthenticateOAuth* oauth authentication func use template method design pattern allowing oauth libraries to override when neccessary *postAuthenticate*, *exchangeCodeForTokens* or *accessUserInfo* funcs params/dependencies [eg. *AuthenticateTwitter*, *AuthenticateFacebook*].
 
-[wip BearerToken, Sample.Api, Sample.www]
+### Project goals
+- to untangle/demystify the ASPNET authentication/authorization workflows.
+- to simplify authentication/authorization mechanisms removing centric schema-based ASPNET mechanism.
+- to demonstrate the superiority of functional programming paradigm over OOP paradigm.
+
+[wip OpenIdConnect, Sample.Api, Sample.www]
