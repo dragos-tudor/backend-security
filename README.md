@@ -50,5 +50,6 @@
 - to untangle/demystify the ASPNET authentication/authorization mechanism and local/remote workflows.
 - to simplify authentication/authorization mechanisms removing schema-based ASPNET mechanism.
 - to demonstrate the superiority of functional programming paradigm over OOP paradigm.
+- to demonstrate the alternative to OOP.
 
 [wip OpenIdConnect, Sample.Api, Sample.www]
