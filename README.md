@@ -28,8 +28,8 @@
 ### Processes
 - there are 2 different authentication processes: local and remote.
 - *local authenticaiton process* (cookie/bearer token):
-  - each request [when use authentication middlware] goes through *authentication func* [eg. *AuthenticateCookie*]. Based on authorization result the middleware set *HttpContext.User* prop.
-  - then each request [when use authentication middlware] goes through *authorization func* [eg. *Authorize*]. Based on authorization policies result is decided if the request is allowed, unauthenticated/challenged or unauthorized/forbidden.
+  - each request [when use authentication middlware] goes to *authentication func* [eg. *AuthenticateCookie*]. Based on authorization result the middleware set *HttpContext.User* prop.
+  - then each request [when use authentication middlware] goes to *authorization func* [eg. *Authorize*]. Based on authorization policies result is decided if the request is allowed, unauthenticated/challenged or unauthorized/forbidden.
   - signin/signout funcs are used on specific endpoints/controller actions implememted by programmer.
 - *remote authentication process* (oauth):
   - when called the *challenge endpoint* [registered with eg. MapFacebook] build and send authoriztion request to authorization server.
@@ -39,7 +39,7 @@
       * *ExchangeCodeForTokens* - exchange with the authorization server the authentication code for the access [and refresh] tokens [remote].
       * *AccessUserInfo* - using access token gets from the authorization server the user informations [remote].
     - signin: after oauth authentication step for succedded *AuthenticationResult* the signin func is called [eg. *SiginInCookie^, *SignInBearerToken*]. Signin func is set on oauth endpoints registration.
-  - after callback redirection next requests will goes through the *local authentication process*.
+  - after callback redirection next requests will goes to the *local authentication process*.
 
 ### Remarks
 - *completely* rewritten authentication mechanism.
@@ -48,7 +48,7 @@
 - authentication options implementation contains only data [eg. *CookieAuthenticationOptions*]. Cookie authentication services [non DI-based ones] receive all dependencies as parameters.
 - Microsoft ASPNET authentication options implementation contains data and behaviour/services [eg. *SessionStore*, *TicketDataFormat*, *SystemClock* for *CookieAuthenticationOptions*]. This design have some advantages comparing with my implementation allowing options:
   - to have different services from those registered on DI.
-  - to encapsulate and carry on those services through the authentication flow [reducing the number of parameters so].
+  - to encapsulate and carry on those services through the authentication process [reducing the number of parameters so].
 - *AuthenticateOAuth* oauth authentication func use template method design pattern allowing oauth libraries to override/decorate when neccessary *postAuthenticate*, *exchangeCodeForTokens* or *accessUserInfo* authentication substeps [eg. *AuthenticateTwitter*, *AuthenticateFacebook*].
 
 ### Project goals
