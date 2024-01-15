@@ -25,7 +25,7 @@
 - authentication libraries implement specific authentication services [eg. *AuthenticateCookie*, *SignInCookie*, *ChallengeGoogle*, *AuthenticateFacebook*].
 - authorization library implement authorization services [eg. *Authorize*].
 
-### Workflows
+### Processes
 - there are 2 different authentication processes: local and remote.
 - *local authenticaiton process* (cookie/bearer token):
   - each request [when use authentication middlware] goes through *authentication func* [eg. *AuthenticateCookie*]. Based on authorization result the middleware set *HttpContext.User* prop.
