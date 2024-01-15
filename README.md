@@ -12,29 +12,34 @@
 - [DataProtection](/Security.DataProtection/).
 
 ### Design
-- security services [authentication and authorization services] represent the **security backbone**.
+- security services [authentication and authorization services] represent the **mechanism backbone**.
 - security services [*high-level* functions] act as **security behaviour controllers** and use *low-level* functions.
-- security libraries were written following **FP principles** [pure functions, static methods as first-class citiziens, high-order functions, immutability, data/behaviour separation, *high-level* functions with side-effects].
-- DI is used as **thin layer** usually over functional security services [eg. *SignInCookie* have 2 implementations with/without DI services]. DI services implementations are registred as usual with specific extensions [eg. *AddCookies*, *AddFacebook*].
+- security libraries were written following **FP principles** [pure functions, high-order functions, immutability, data/behaviour separation, static methods/functions as first-class citiziens].
+- DI is used as **thin layer** usually over functional security services [eg. *SignInCookie* have 2 implementations with/without DI services]. DI services implementations are registred as usual with specific method extensions [eg. *AddCookies*, *AddFacebook*].
 - **security mechanism** is based on security services [authentication scheme free-mechanism]:
   - *authentication middleware* receive authentication service [*UseAuthentication* extension].
   - *authorization middleware* receive challenge and forbid services [*UseAuthorization* extension].
   - *oauth callback endpoints* receive signin service [eg. *MapFacebook*].
-- *high-level* functions usually use declarative style and TDA principle [eg. *SignInCookie*].
+- *high-level* functions usually use declarative style and TDA principle [eg. *SignInCookie*]. *High-level* functions, usually impure functions [with side-effects], are built on top of *low-level* functions, usually pure or semi-pure functions [some parameters are changed]. I named this kind of design *Lego principle*.
 - *low-level* functions usually use imperative style and are one-liners [eg. *IsSecuredCookie*].
 - authentication libraries implement specific authentication services [eg. *AuthenticateCookie*, *SignInCookie*, *ChallengeGoogle*, *AuthenticateFacebook*].
 - authorization library implement authorization services [eg. *Authorize*].
 
 ### Workflows
-- exists 2 different workflows: local and remote.
-- for *local workflow* (cookie/bearer token):
-  - each request [when use authentication middlware] goes through *authentication func* [eg. *AuthenticateCookie*]. Based on authorization result middleare set *HttpContext.User* prop.
+- there are 2 different authentication processes: local and remote.
+- *local authenticaiton process* (cookie/bearer token):
+  - each request [when use authentication middlware] goes through *authentication func* [eg. *AuthenticateCookie*]. Based on authorization result the middleware set *HttpContext.User* prop.
   - then each request [when use authentication middlware] goes through *authorization func* [eg. *Authorize*]. Based on authorization policies result is decided if the request is allowed, unauthenticated/challenged or unauthorized/forbidden.
   - signin/signout funcs are used on specific endpoints/controller actions implememted by programmer.
-- for *remote workflow* (oauth):
-  - registered *challenge endpoint* [with eg. MapFacebook] build and send authoriztion request to authorization server.
-  - registered *callback endpoint* [with eg. MapFacebook] receive authorization server response and goes through *callback func* [eg. *ChallengeFacebook*] having two steps: authentication and signin. After authentication for succedded *AuthenticationResult* signin func is called [eg. *SiginInCookie^, *SignInBearerToken*]. Signin func is configured on oauth endpoints registration.
-  - after callback redirection next requests will goes through *local workflow*.
+- *remote authentication process* (oauth):
+  - when called the *challenge endpoint* [registered with eg. MapFacebook] build and send authoriztion request to authorization server.
+  - then the authorization server redirect response to *callback endpoint* [registered with eg. MapFacebook]. That endpoint receive authorization server response and call *callback func* [eg. *ChallengeFacebook*]. The *callback func* has 2 steps:
+    - authentication: oauth authentication func [*AuthenticateOAuth*] has 3 substeps:
+      * *PostAuthorize* - validate the authentication code and the request from the authorization server [local].
+      * *ExchangeCodeForTokens* - exchange with the authorization server the authentication code for the access [and refresh] tokens [remote].
+      * *AccessUserInfo* - using access token gets from the authorization server the user informations [remote].
+    - signin: after oauth authentication step for succedded *AuthenticationResult* the signin func is called [eg. *SiginInCookie^, *SignInBearerToken*]. Signin func is set on oauth endpoints registration.
+  - after callback redirection next requests will goes through the *local authentication process*.
 
 ### Remarks
 - *completely* rewritten authentication mechanism.
@@ -44,12 +49,12 @@
 - Microsoft ASPNET authentication options implementation contains data and behaviour/services [eg. *SessionStore*, *TicketDataFormat*, *SystemClock* for *CookieAuthenticationOptions*]. This design have some advantages comparing with my implementation allowing options:
   - to have different services from those registered on DI.
   - to encapsulate and carry on those services through the authentication flow [reducing the number of parameters so].
-- *AuthenticateOAuth* oauth authentication func use template method design pattern allowing oauth libraries to override when neccessary *postAuthenticate*, *exchangeCodeForTokens* or *accessUserInfo* funcs params/dependencies [eg. *AuthenticateTwitter*, *AuthenticateFacebook*].
+- *AuthenticateOAuth* oauth authentication func use template method design pattern allowing oauth libraries to override/decorate when neccessary *postAuthenticate*, *exchangeCodeForTokens* or *accessUserInfo* authentication substeps [eg. *AuthenticateTwitter*, *AuthenticateFacebook*].
 
 ### Project goals
-- to untangle/demystify the ASPNET authentication/authorization mechanism and local/remote workflows.
-- to simplify authentication/authorization mechanisms removing schema-based ASPNET mechanism.
+- to untangle/demystify the ASPNET authentication/authorization mechanisms and local/remote authenticaiton processes.
+- to simplify authentication/authorization mechanisms [ASPNET schema-based free mechanism].
 - to demonstrate the superiority of functional programming paradigm over OOP paradigm.
-- to demonstrate the alternative to OOP.
+- to demonstrate a practical alternative to OOP.
 
 [wip OpenIdConnect, Sample.Api, Sample.www]
