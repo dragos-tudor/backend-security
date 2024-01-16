@@ -26,12 +26,13 @@
 - authorization library implement authorization services [eg. *Authorize*].
 
 ### Processes
-- there are 2 different security processes: *local authentication* and *remote authorization*.
+- there are 2 different security processes: *local authentication* and *remote authentication*.
+- even *OAuth2* is an authorization protocol the process is named *remote authentication* because when succedded the authenticated principal is signed in.
 - *local authentication process* [cookie/bearer token]:
   - each request [when use authentication middlware] call *authentication func* [eg. *AuthenticateCookie*]. Based on authorization result the middleware set *HttpContext.User* prop.
   - then each request [when use authentication middlware] call *authorization func* [eg. *Authorize*]. Based on authorization policies result is decided if the request is allowed, unauthenticated/challenged or unauthorized/forbidden.
   - signin/signout funcs are used on specific endpoints/controller actions implememted by devs.
-- *remote authorization process* [oauth]:
+- *remote authentication process* [oauth]:
   - when called, the *challenge endpoint* [eg. registered with *MapFacebook*] build and send an authorization request to authorization server.
   - after processing the authorization request the authorization server redirect response to *callback endpoint* [eg. registered with *MapFacebook*]. That endpoint receive authorization server response and call *callback func* [eg. *ChallengeFacebook*]. The *callback func* has 2 steps:
     - authentication: *AuthenticateOAuth* oauth authentication func has 3 substeps:

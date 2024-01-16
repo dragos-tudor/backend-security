@@ -17,8 +17,10 @@ partial class OAuthFuncs {
         SetResponseRedirect(context.Response, authOptions.AccessDeniedPath);
       return (default, authError);
     }
-    if (UnprotectAuthenticationProperties(GetAuthorizationState(context.Request), secureDataFormat) is not AuthenticationProperties authProperties) return (default, UnprotectAuthorizationStateFailed);
-    if (ValidateAuthorizationCorrelationCookie(context, authProperties) is string correlationError) return (default, correlationError);
+    if (UnprotectAuthenticationProperties(GetAuthorizationState(context.Request), secureDataFormat) is not AuthenticationProperties authProperties)
+      return (default, UnprotectAuthorizationStateFailed);
+    if (ValidateAuthorizationCorrelationCookie(context, authProperties) is string correlationError)
+      return (default, correlationError);
 
     UnsetupCorrelationCookie(context, authOptions, GetAuthenticationPropertiesCorrelationId(authProperties)!);
     DeleteAuthenticationPropertiesCorrelationId(authProperties);

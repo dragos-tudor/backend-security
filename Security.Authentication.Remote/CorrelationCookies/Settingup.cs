@@ -14,7 +14,7 @@ partial class RemoteFuncs {
     var cookieOptions = CreateCorrelationCookieOptions(context);
     SetCorrelationCookieOptionsExpires(cookieOptions, GetCorrelationCookieOptionsExpires(cookieOptions, authOptions.RemoteAuthenticationTimeout, currentUtc));
     SetCorrelationCookieOptionsPath(cookieOptions, GetCorrelationCookieOptionsPath(context.Request, authOptions.CallbackPath));
-    SetResponseCookieHeader(context.Response, cookieOptions, correlationId);
+    AppendCorrelationCookie(context.Response, GetCorrelationCookieName(correlationId), cookieOptions);
     return GetCorrelationCookieName(correlationId);
   }
 

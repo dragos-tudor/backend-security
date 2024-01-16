@@ -12,7 +12,7 @@ partial class RemoteFuncs {
   {
     var cookieOptions = CreateCorrelationCookieOptions(context);
     SetCorrelationCookieOptionsPath(cookieOptions, GetCorrelationCookieOptionsPath(context.Request, remoteOptions.CallbackPath));
-    UnsetResponseCookieHeader(context.Response, cookieOptions, correlationId);
+    DeleteCorrelationCookie(context.Response, GetCorrelationCookieName(correlationId), cookieOptions);
     return GetCorrelationCookieName(correlationId);
   }
 
