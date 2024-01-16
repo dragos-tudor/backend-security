@@ -9,7 +9,7 @@ partial class BearerTokenFuncs
   static string GetRequestAuthorizationHeader(HttpRequest request) =>
     request.Headers.Authorization.ToString();
 
-  static string? GetRequestBearerToken(HttpRequest request, string authorization) =>
+  static string? GetRequestBearerToken(string authorization) =>
     authorization.StartsWith(BearerTokenName, StringComparison.Ordinal)?
       authorization[BearerTokenName.Length ..]:
       default;
