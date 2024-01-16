@@ -28,19 +28,19 @@
 ### Processes
 - there are 2 different security processes: *local authentication* and *remote authorization*.
 - *local authentication process* [cookie/bearer token]:
-  - each request [when use authentication middlware] goes to *authentication func* [eg. *AuthenticateCookie*]. Based on authorization result the middleware set *HttpContext.User* prop.
-  - then each request [when use authentication middlware] goes to *authorization func* [eg. *Authorize*]. Based on authorization policies result is decided if the request is allowed, unauthenticated/challenged or unauthorized/forbidden.
+  - each request [when use authentication middlware] call *authentication func* [eg. *AuthenticateCookie*]. Based on authorization result the middleware set *HttpContext.User* prop.
+  - then each request [when use authentication middlware] call *authorization func* [eg. *Authorize*]. Based on authorization policies result is decided if the request is allowed, unauthenticated/challenged or unauthorized/forbidden.
   - signin/signout funcs are used on specific endpoints/controller actions implememted by devs.
 - *remote authorization process* [oauth]:
-  - when called, the *challenge endpoint* [registered with eg. *MapFacebook8] build and send an authorization request to authorization server.
-  - after processing the authorization request the authorization server redirect response to *callback endpoint* [registered with eg. *MapFacebook*]. That endpoint receive authorization server response and call *callback func* [eg. *ChallengeFacebook*]. The *callback func* has 2 steps:
+  - when called, the *challenge endpoint* [eg. registered with *MapFacebook*] build and send an authorization request to authorization server.
+  - after processing the authorization request the authorization server redirect response to *callback endpoint* [eg. registered with *MapFacebook*]. That endpoint receive authorization server response and call *callback func* [eg. *ChallengeFacebook*]. The *callback func* has 2 steps:
     - authentication: *AuthenticateOAuth* oauth authentication func has 3 substeps:
       * *PostAuthorize* - validate the authorization code and the request from the authorization server [local].
       * *ExchangeCodeForTokens* - exchange with the authorization server the authorization code for the access [and refresh] tokens [remote].
       * *AccessUserInfo* - using access token gets from the authorization server the user informations [remote].
       * The authentication step transform user informations received from authorization server into security claims, add them to the claims identity, create an authentication ticket and return the *AuthenticationResult*.
     - signin: after oauth authentication step when *AuthenticationResult* succedded then the signin func is called [eg. *SiginInCookie^, *SignInBearerToken*]. Signin func is set on oauth endpoints registration.
-  - after callback redirection next requests will goes to the *local authentication process*.
+  - after callback redirection next requests will use *local authentication process*.
 
 ### Remarks
 - *completely* rewritten authentication mechanism.
