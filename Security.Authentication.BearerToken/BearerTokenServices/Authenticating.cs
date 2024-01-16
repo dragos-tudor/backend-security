@@ -18,7 +18,7 @@ partial class BearerTokenFuncs
     DateTimeOffset currentUtc)
   {
     var authorization = GetRequestAuthorizationHeader(context.Request);
-    var bearerToken = GetRequestBearerToken(authorization);
+    var bearerToken = GetAuthorizationBearerToken(authorization);
     if (bearerToken is null) return NoResult();
 
     var ticket = bearerTokenProtector.Unprotect(bearerToken);
