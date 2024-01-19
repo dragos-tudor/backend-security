@@ -6,7 +6,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs {
 
-  public static PropertiesDataFormat CreateStateDataFormat (IDataProtectionProvider dataProtectionProvider, string? schemeName = "OAuth") =>
+  public static PropertiesDataFormat CreatePropertiesDataFormat (IDataProtectionProvider dataProtectionProvider, string? schemeName = "OAuth") =>
     new (CreateDataProtector(dataProtectionProvider, typeof(OAuthFuncs).FullName!, schemeName!));
 
 }

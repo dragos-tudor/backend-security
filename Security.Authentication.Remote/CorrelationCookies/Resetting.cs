@@ -5,15 +5,13 @@ namespace Security.Authentication.Remote;
 
 partial class RemoteFuncs {
 
-  public static string UnsetupCorrelationCookie (
+  public static CookieOptions ResetCorrelationCookie (
     HttpContext context,
-    RemoteAuthenticationOptions remoteOptions,
-    string correlationId)
+    RemoteAuthenticationOptions remoteOptions)
   {
     var cookieOptions = CreateCorrelationCookieOptions(context);
     SetCorrelationCookieOptionsPath(cookieOptions, GetCorrelationCookieOptionsPath(context.Request, remoteOptions.CallbackPath));
-    DeleteCorrelationCookie(context.Response, GetCorrelationCookieName(correlationId), cookieOptions);
-    return GetCorrelationCookieName(correlationId);
+    return cookieOptions;
   }
 
 }

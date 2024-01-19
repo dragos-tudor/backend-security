@@ -48,7 +48,7 @@ partial class BearerTokenTests {
 
     var content = await ReadResponseMessageContent(response);
     var tokenResponse = GetAccessTokenResponse(content, server.Services);
-    var tokenTicket = CreateBearerTokenTicketProtector(ResolveService<IDataProtectionProvider>(server.Services))
+    var tokenTicket = CreateBearerTokenDataFormat(ResolveService<IDataProtectionProvider>(server.Services))
       .Unprotect(tokenResponse!.AccessToken);
 
     Assert.True(response.IsSuccessStatusCode);
@@ -67,6 +67,6 @@ partial class BearerTokenTests {
   static AuthenticationTicket? GetAccessTokenTicket(
     AccessTokenResponse? accessTokenResponse,
     IServiceProvider services) =>
-      ResolveService<BearerTokenProtector>(services)
+      ResolveService<BearerTokenDataFormat>(services)
         .Unprotect(accessTokenResponse!.AccessToken);
 }

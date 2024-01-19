@@ -5,7 +5,7 @@ namespace Security.Authentication.BearerToken;
 /// <summary>
 /// Contains the options used to authenticate using opaque bearer tokens.
 /// </summary>
-public record BearerTokenOptions : AuthenticationOptions
+public sealed record BearerTokenOptions : AuthenticationOptions
 {
     /// <summary>
     /// Controls how much time the bearer token will remain valid from the point it is created.

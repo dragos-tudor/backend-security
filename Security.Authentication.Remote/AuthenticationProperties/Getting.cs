@@ -11,7 +11,7 @@ partial class RemoteFuncs {
     GetAuthenticationPropertiesItem(properties, CorrelationIdKey);
 
   public static string? GetAuthenticationPropertiesItem (AuthenticationProperties properties, string key) =>
-    ExistsAuthenticationPropertyItem(properties, key) ? properties.Items[key] : default;
+    properties.Items.TryGetValue(key, out string? authProperties)? authProperties: default;
 
   public static string? GetAuthenticationPropertiesRedirectUri (AuthenticationProperties? properties) =>
     properties?.RedirectUri;

@@ -20,11 +20,11 @@ partial class FacebookFuncs {
 
         ChallengePath = new PathString(FacebookDefaults.ChallengePath),
         ClaimActions = MapFacebookClaimActions(new ClaimActionCollection()),
-        CallbackPath = new PathString(FacebookDefaults.SigninPath),
+        CallbackPath = new PathString(FacebookDefaults.CallbackPath),
 
-        Fields = new [] { "name", "email" },
+        Fields = [ "name", "email" ],
         SchemeName = schemeName,
-        Scope = new [] { "email" },
+        Scope = ["email" ],
         ScopeSeparator = ',',
 
         SendAppSecretProof = true

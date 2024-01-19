@@ -6,12 +6,12 @@ namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenFuncs
 {
-  internal static BearerTokenProtector CreateBearerTokenTicketProtector (
+  internal static BearerTokenDataFormat CreateBearerTokenDataFormat (
     IDataProtectionProvider dataProtectionProvider,
     string? schemeName = BearerTokenDefaults.AuthenticationScheme) =>
       new (CreateDataProtector(dataProtectionProvider, schemeName!, "BearerToken"));
 
-  internal static RefreshTokenProtector CreateRefreshTokenTicketProtector (
+  internal static RefreshTokenDataFormat CreateRefreshTokenDataFormat (
     IDataProtectionProvider dataProtectionProvider,
     string? schemeName = BearerTokenDefaults.AuthenticationScheme) =>
       new (CreateDataProtector(dataProtectionProvider, schemeName!, "RefreshToken"));

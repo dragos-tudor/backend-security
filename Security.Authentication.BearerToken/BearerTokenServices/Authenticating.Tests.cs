@@ -16,7 +16,7 @@ partial class BearerTokenTests
   {
     var authProperties = new AuthenticationProperties(){ ExpiresUtc = DateTimeOffset.UtcNow.AddSeconds(1) };
     var ticket = new AuthenticationTicket(CreateNamedClaimsPrincipal("user"), authProperties, BearerTokenDefaults.AuthenticationScheme);
-    var bearerTokenProtector = CreateBearerTokenTicketProtector(new EphemeralDataProtectionProvider().CreateProtector(""));
+    var bearerTokenProtector = CreateBearerTokenDataFormat(new EphemeralDataProtectionProvider().CreateProtector(""));
     var context = new DefaultHttpContext();
     context.Request.Headers.Authorization = BearerTokenName + bearerTokenProtector.Protect(ticket);
 
@@ -55,7 +55,7 @@ partial class BearerTokenTests
   [Fact]
   public void Authentication_request_without_bearer_token__authenticate__unprotecting_token_failure()
   {
-    var bearerTokenProtector = CreateBearerTokenTicketProtector(new EphemeralDataProtectionProvider().CreateProtector(""));
+    var bearerTokenProtector = CreateBearerTokenDataFormat(new EphemeralDataProtectionProvider().CreateProtector(""));
     var context = new DefaultHttpContext();
     context.Request.Headers.Authorization = BearerTokenName;
 
@@ -68,7 +68,7 @@ partial class BearerTokenTests
   {
     var authProperties = new AuthenticationProperties(){ ExpiresUtc = DateTimeOffset.UtcNow.AddSeconds(-1) };
     var expiredTicket = new AuthenticationTicket(new ClaimsPrincipal(), authProperties, BearerTokenDefaults.AuthenticationScheme);
-    var bearerTokenProtector = CreateBearerTokenTicketProtector(new EphemeralDataProtectionProvider().CreateProtector(""));
+    var bearerTokenProtector = CreateBearerTokenDataFormat(new EphemeralDataProtectionProvider().CreateProtector(""));
     var context = new DefaultHttpContext();
     context.Request.Headers.Authorization = BearerTokenName + bearerTokenProtector.Protect(expiredTicket);
 

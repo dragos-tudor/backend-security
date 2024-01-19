@@ -15,8 +15,8 @@ partial class OAuthTests {
   public void Invalid_authorization_request__post_authorize__result_error() {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
-    var secureDataFormat = CreateStateDataFormat(ResolveService<IDataProtectionProvider>(context));
-    var (_, error) = PostAuthorize(context, authOptions, secureDataFormat);
+    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
+    var (_, error) = PostAuthorize(context, authOptions, propertiesDataFormat);
 
     Assert.NotEmpty(error!);
   }
@@ -27,11 +27,11 @@ partial class OAuthTests {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
-    var secureDataFormat = CreateStateDataFormat(ResolveService<IDataProtectionProvider>(context));
+    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
     SetAuthorizationQueryParams(context);
     SetAuthenticationPropertiesCorrelationId(authProperties, "correlation.id");
 
-    var (_, error) = PostAuthorize(context, authOptions, secureDataFormat);
+    var (_, error) = PostAuthorize(context, authOptions, propertiesDataFormat);
     Assert.Equal(UnprotectAuthorizationStateFailed, error);
   }
 
@@ -40,11 +40,11 @@ partial class OAuthTests {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
-    var secureDataFormat = CreateStateDataFormat(ResolveService<IDataProtectionProvider>(context));
+    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
     SetAuthenticationPropertiesCorrelationId(authProperties, "correlation.id");
-    SetAuthorizationQueryParams(context, ProtectAuthenticationProperties(authProperties, secureDataFormat));
+    SetAuthorizationQueryParams(context, ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
 
-    var (_, error) = PostAuthorize(context, authOptions, secureDataFormat);
+    var (_, error) = PostAuthorize(context, authOptions, propertiesDataFormat);
     Assert.Contains("Correlation cookie", error);
   }
 
@@ -53,12 +53,12 @@ partial class OAuthTests {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
-    var secureDataFormat = CreateStateDataFormat(ResolveService<IDataProtectionProvider>(context));
+    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
     SetAuthorizationCorrelationCookie(context, "correlation.id");
     SetAuthenticationPropertiesCorrelationId(authProperties, "correlation.id");
-    SetAuthorizationQueryParams(context, ProtectAuthenticationProperties(authProperties, secureDataFormat));
+    SetAuthorizationQueryParams(context, ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
 
-    var (_, _) = PostAuthorize(context, authOptions, secureDataFormat);
+    var (_, _) = PostAuthorize(context, authOptions, propertiesDataFormat);
     var correlationCookie = GetResponseCookie(context.Response, GetCorrelationCookieName("correlation.id"));
 
     Assert.Contains("expires=Thu, 01 Jan 1970", correlationCookie);
@@ -69,12 +69,12 @@ partial class OAuthTests {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
-    var secureDataFormat = CreateStateDataFormat(ResolveService<IDataProtectionProvider>(context));
+    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
     SetAuthorizationCorrelationCookie(context, "correlation.id");
     SetAuthenticationPropertiesCorrelationId(authProperties, "correlation.id");
-    SetAuthorizationQueryParams(context, ProtectAuthenticationProperties(authProperties, secureDataFormat));
+    SetAuthorizationQueryParams(context, ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
 
-    var (authProperties2, _) = PostAuthorize(context, authOptions, secureDataFormat);
+    var (authProperties2, _) = PostAuthorize(context, authOptions, propertiesDataFormat);
     Assert.Null(GetAuthenticationPropertiesCorrelationId(authProperties2!));
   }
 

@@ -14,7 +14,7 @@ partial class BearerTokenFuncs
 
   public static AuthenticateResult AuthenticateBearerToken(
     HttpContext context,
-    BearerTokenProtector bearerTokenProtector,
+    BearerTokenDataFormat bearerTokenProtector,
     DateTimeOffset currentUtc)
   {
     var authorization = GetRequestAuthorizationHeader(context.Request);
@@ -35,7 +35,7 @@ partial class BearerTokenFuncs
     var tokenOptions = ResolveService<BearerTokenOptions>(context);
     var authResult = AuthenticateBearerToken(
       context,
-      ResolveService<BearerTokenProtector>(context),
+      ResolveService<BearerTokenDataFormat>(context),
       ResolveService<TimeProvider>(context).GetUtcNow()
     );
 

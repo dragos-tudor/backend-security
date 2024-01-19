@@ -16,7 +16,7 @@ partial class CookiesFuncs
     CookieAuthenticationOptions authOptions,
     CookieBuilder cookieBuilder,
     ICookieManager cookieManager,
-    TicketDataFormat ticketProtector,
+    TicketDataFormat ticketDataFormat,
     ITicketStore ticketStore,
     DateTimeOffset currentUtc,
     string? ticketId)
@@ -40,7 +40,7 @@ partial class CookiesFuncs
 
     if (IsExpiredAuthenticationTicket(authResult)) DeleteAuthenticationCookie(context, cookieManager, cookieName, cookieOptions);
     if (IsRenewedAuthenticationTicket(authResult, currentUtc)) AppendAuthenticationCookie(context, cookieManager, cookieName,
-      ProtectAuthenticationTicket(CreateSessionIdTicket(ticketId, authOptions.SchemeName), ticketProtector), cookieOptions);
+      ProtectAuthenticationTicket(CreateSessionIdTicket(ticketId, authOptions.SchemeName), ticketDataFormat), cookieOptions);
 
     return authResult;
   }

@@ -3,5 +3,5 @@ using Microsoft.AspNetCore.DataProtection;
 
 namespace Security.Authentication.BearerToken;
 
-public sealed class BearerTokenProtector(IDataProtector protector) :
-  TicketDataFormat(protector) { }
+public sealed class BearerTokenDataFormat(IDataProtector dataProtector) :
+  TicketDataFormat(dataProtector) { }

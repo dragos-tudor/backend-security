@@ -14,7 +14,7 @@ partial class CookiesFuncs
     CookieAuthenticationOptions authOptions,
     CookieBuilder cookieBuilder,
     ICookieManager cookieManager,
-    TicketDataFormat ticketProtector,
+    TicketDataFormat ticketDataFormat,
     ITicketStore ticketStore,
     DateTimeOffset currentUtc)
   {
@@ -27,14 +27,14 @@ partial class CookiesFuncs
     var authTicket = CreateAuthenticationTicket(principal, authProperties, authOptions.SchemeName);
     var cookieTicket = IsSessionBasedCookie(ticketStore)?
       CreateSessionIdTicket(
-        ExtractSessionTicketId(context, cookieManager, cookieName, ticketProtector) switch {
+        ExtractSessionTicketId(context, cookieManager, cookieName, ticketDataFormat) switch {
           null => await SetSessionTicket(ticketStore, authTicket, context.RequestAborted),
           var ticketId => await RenewSessionTicket(ticketStore, authTicket, ticketId, context.RequestAborted)
         },
         authOptions.SchemeName):
       authTicket;
 
-    var protectedTicket = ProtectAuthenticationTicket(cookieTicket, ticketProtector);
+    var protectedTicket = ProtectAuthenticationTicket(cookieTicket, ticketDataFormat);
     AppendAuthenticationCookie(context, cookieManager, cookieName, protectedTicket, cookieOptions);
     ResetResponseCacheHeaders(context.Response);
     SetResponseRedirect(context.Response, ResolveRedirectUri(context, authProperties, authOptions));

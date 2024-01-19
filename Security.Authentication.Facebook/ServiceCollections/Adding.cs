@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,10 +7,11 @@ partial class FacebookFuncs {
 
   public static IServiceCollection AddFacebook(
     this IServiceCollection services,
-    FacebookOptions facebookOptions) =>
+    FacebookOptions facebookOptions,
+    IDataProtectionProvider? dataProtectionProvider = default) =>
       services
         .AddSingleton(facebookOptions)
-        .AddSingleton<ISecureDataFormat<AuthenticationProperties>>((services) =>
-          CreateStateDataFormat(ResolveService<IDataProtectionProvider>(services), facebookOptions.SchemeName))
+        .AddSingleton((services) =>
+          CreatePropertiesDataFormat(dataProtectionProvider ?? ResolveService<IDataProtectionProvider>(services), facebookOptions.SchemeName))
         .AddSingleton(TimeProvider.System);
 }

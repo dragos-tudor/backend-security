@@ -10,4 +10,7 @@ partial class AuthenticationFuncs {
       request.Query[returnUrlParameter]:
       default;
 
+  public static string GetRequestUrl (HttpRequest request) =>
+    $"{request.PathBase}{request.Path}{request.QueryString}";
+
 }

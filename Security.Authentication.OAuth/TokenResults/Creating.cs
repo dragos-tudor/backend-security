@@ -15,11 +15,13 @@ partial class OAuthFuncs {
     new (default, error);
 
   static TokenResult CreateSuccessTokenResult (JsonElement elem) =>
-    new (new TokenInfo() {
-      AccessToken = elem.GetString(AccessToken),
-      ExpiresIn = elem.GetString(ExpiresIn),
-      RefreshToken = elem.GetString(RefreshToken),
-      TokenType = elem.GetString(TokenType)
-    }, default);
+    new (
+      new TokenInfo(
+        elem.GetString(AccessToken),
+        elem.GetString(TokenType),
+        elem.GetString(RefreshToken),
+        elem.GetString(ExpiresIn)),
+      default
+    );
 
 }

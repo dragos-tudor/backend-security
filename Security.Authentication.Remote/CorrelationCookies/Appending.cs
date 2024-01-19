@@ -7,7 +7,7 @@ partial class RemoteFuncs {
 
   internal const string CorrelationCookieMarker = "N";
 
-  internal static void AppendCorrelationCookie (HttpResponse response, string cookieName, CookieOptions cookieOptions) =>
+  public static void AppendCorrelationCookie (HttpResponse response, string cookieName, CookieOptions cookieOptions) =>
     response.Cookies.Append(cookieName, CorrelationCookieMarker, cookieOptions);
 
 }

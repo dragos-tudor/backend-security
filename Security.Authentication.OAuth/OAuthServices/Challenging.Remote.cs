@@ -9,21 +9,23 @@ partial class OAuthFuncs {
   public static string ChallengeRemoteOAuth<TOptions> (
     HttpContext context,
     TOptions authOptions,
-    ISecureDataFormat<AuthenticationProperties> secureDataFormat,
+    PropertiesDataFormat propertiesDataFormat,
     DateTimeOffset currentUtc)
   where TOptions: OAuthOptions
   {
     var correlationId = GenerateCorrelationId();
-    var signinUri = BuildAbsoluteUrl(context.Request, authOptions.CallbackPath);
+    var cookieOptions = BuildCorrelationCookie(context, authOptions, currentUtc);
+    AppendCorrelationCookie(context.Response, GetCorrelationCookieName(correlationId), cookieOptions);
+
+    var callbackUrl = BuildAbsoluteUrl(context.Request, authOptions.CallbackPath);
     var authProperties = new AuthenticationProperties();
-    SetupCorrelationCookie(context, authOptions, currentUtc, correlationId);
     SetAuthenticationPropertiesCorrelationId(authProperties, correlationId);
     SetAuthenticationPropertiesRedirectUri(authProperties, GetRequestQueryReturnUrl(context.Request, authOptions.ReturnUrlParameter)!);
-    SetAuthenticationPropertiesCallbackUri(authProperties, signinUri);
+    SetAuthenticationPropertiesCallbackUri(authProperties, callbackUrl);
     if (authOptions.UsePkce) SetAuthenticationPropertiesCodeVerifier(authProperties, GenerateCodeVerifier());
 
-    var state = ProtectAuthenticationProperties(authProperties, secureDataFormat);
-    var authParams = CreateAuthorizationParams(authOptions.ClientId, FormatOAuthScopes(authOptions), state, signinUri);
+    var state = ProtectAuthenticationProperties(authProperties, propertiesDataFormat);
+    var authParams = CreateAuthorizationParams(authOptions.ClientId, FormatOAuthScopes(authOptions), state, callbackUrl);
     if (authOptions.UsePkce) AddAuthorizationCodeChallengeParams(authParams, HashCodeVerifier(GetAuthenticationPropertiesCodeVerifier(authProperties)!));
 
     var authUri = BuildAuthorizationUri(authOptions, authParams);
@@ -35,7 +37,7 @@ partial class OAuthFuncs {
     ChallengeRemoteOAuth(
       context,
       ResolveService<TOptions>(context),
-      ResolveService<ISecureDataFormat<AuthenticationProperties>>(context),
+      ResolveService<PropertiesDataFormat>(context),
       ResolveService<TimeProvider>(context).GetUtcNow()
     );
 

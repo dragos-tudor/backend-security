@@ -6,7 +6,7 @@ namespace Security.Authentication.Remote;
 partial class RemoteFuncs {
 
   const string AuthenticationScheme = "X-Authentication-Scheme";
-  const string UserAgentHeader = "security authentication";
+  const string UserAgentHeader = "Security.Authentication.Remote";
   const long MaxResponseBufferSize = 1024 * 1024 * 10; // 10 MB
 
   static void SetRemoteClientAuthenticationScheme (HttpClient client, string schemeName) =>

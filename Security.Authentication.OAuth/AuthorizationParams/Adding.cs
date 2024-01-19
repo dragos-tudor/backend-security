@@ -5,7 +5,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs {
 
-  static IDictionary<string, string> AddAuthorizationCodeChallengeParams (IDictionary<string, string> @params, string codeChallenge) {
+  public static IDictionary<string, string> AddAuthorizationCodeChallengeParams (IDictionary<string, string> @params, string codeChallenge) {
     @params.Add(CodeChallenge, codeChallenge);
     @params.Add(CodeChallengeMethod, CodeChallengeMethodS256);
     return @params;

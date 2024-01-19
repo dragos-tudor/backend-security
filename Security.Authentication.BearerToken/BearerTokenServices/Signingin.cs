@@ -10,8 +10,8 @@ partial class BearerTokenFuncs
     ClaimsPrincipal principal,
     AuthenticationProperties authProperties,
     BearerTokenOptions tokenOptions,
-    BearerTokenProtector bearerTokenProtector,
-    RefreshTokenProtector refreshTokenProtector,
+    BearerTokenDataFormat bearerTokenProtector,
+    RefreshTokenDataFormat refreshTokenProtector,
     DateTimeOffset currentUtc
   )
   {
@@ -39,7 +39,7 @@ partial class BearerTokenFuncs
         principal,
         authProperties ?? new AuthenticationProperties(),
         ResolveService<BearerTokenOptions>(context),
-        ResolveService<BearerTokenProtector>(context),
-        ResolveService<RefreshTokenProtector>(context),
+        ResolveService<BearerTokenDataFormat>(context),
+        ResolveService<RefreshTokenDataFormat>(context),
         ResolveService<TimeProvider>(context).GetUtcNow());
 }

@@ -9,7 +9,7 @@ partial class OAuthFuncs {
   public static (AuthenticationProperties?, string?) PostAuthorize<TOptions> (
     HttpContext context,
     TOptions authOptions,
-    ISecureDataFormat<AuthenticationProperties> secureDataFormat)
+    PropertiesDataFormat propertiesDataFormat)
   where TOptions: OAuthOptions
   {
     if (ValidateAuthorizationResult(context) is string authError) {
@@ -17,12 +17,14 @@ partial class OAuthFuncs {
         SetResponseRedirect(context.Response, authOptions.AccessDeniedPath);
       return (default, authError);
     }
-    if (UnprotectAuthenticationProperties(GetAuthorizationState(context.Request), secureDataFormat) is not AuthenticationProperties authProperties)
+    if (UnprotectAuthenticationProperties(GetAuthorizationState(context.Request), propertiesDataFormat) is not AuthenticationProperties authProperties)
       return (default, UnprotectAuthorizationStateFailed);
     if (ValidateAuthorizationCorrelationCookie(context, authProperties) is string correlationError)
       return (default, correlationError);
 
-    UnsetupCorrelationCookie(context, authOptions, GetAuthenticationPropertiesCorrelationId(authProperties)!);
+    var correlationId = GetAuthenticationPropertiesCorrelationId(authProperties);
+    var cookieOptions = ResetCorrelationCookie(context, authOptions!);
+    DeleteCorrelationCookie(context.Response, GetCorrelationCookieName(correlationId!), cookieOptions);
     DeleteAuthenticationPropertiesCorrelationId(authProperties);
     return (authProperties, default);
   }
@@ -32,7 +34,7 @@ partial class OAuthFuncs {
     PostAuthorize(
       context,
       ResolveService<TOptions>(context),
-      ResolveService<ISecureDataFormat<AuthenticationProperties>>(context)
+      ResolveService<PropertiesDataFormat>(context)
     );
 
 }

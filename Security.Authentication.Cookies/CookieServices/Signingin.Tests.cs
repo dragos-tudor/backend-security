@@ -118,8 +118,8 @@ partial class CookiesTests {
   {
     var cookie = GetResponseMessageCookie(response);
     var cookieContent = GetRequestMessageCookieContent(cookie);
-    var ticketProtector = ResolveService<TicketDataFormat>(services);
+    var ticketDataFormat = ResolveService<TicketDataFormat>(services);
 
-    return GetSessionTicketId(ticketProtector.Unprotect(cookieContent)!.Principal);
+    return GetSessionTicketId(ticketDataFormat.Unprotect(cookieContent)!.Principal);
   }
 }

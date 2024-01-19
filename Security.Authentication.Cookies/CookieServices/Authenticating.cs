@@ -16,7 +16,7 @@ partial class CookiesFuncs
     CookieAuthenticationOptions authOptions,
     CookieBuilder cookieBuilder,
     ICookieManager cookieManager,
-    TicketDataFormat ticketProtector,
+    TicketDataFormat ticketDataFormat,
     ITicketStore ticketStore,
     DateTimeOffset currentUtc)
   {
@@ -24,12 +24,12 @@ partial class CookiesFuncs
     var cookie = GetAuthenticationCookie(context, cookieManager, cookieName);
     if (cookie is null) return NoResult();
 
-    var cookieTicket = UnprotectAuthenticationTicket(cookie, ticketProtector);
+    var cookieTicket = UnprotectAuthenticationTicket(cookie, ticketDataFormat);
     if (cookieTicket is null) return Fail(UnprotectTicketFailed);
 
     if (IsSessionBasedCookie(ticketStore))
       return await AuthenticateSessionCookie(context, authOptions, cookieBuilder, cookieManager,
-        ticketProtector, ticketStore, currentUtc, GetSessionTicketId(cookieTicket.Principal));
+        ticketDataFormat, ticketStore, currentUtc, GetSessionTicketId(cookieTicket.Principal));
 
     var cookieOptions = BuildCookieOptions(cookieBuilder, cookieTicket.Properties!, context);
     var authResult = GetAuthenticationTicketState(cookieTicket, currentUtc, authOptions) switch {
@@ -40,7 +40,7 @@ partial class CookiesFuncs
 
     if (IsExpiredAuthenticationTicket(authResult)) DeleteAuthenticationCookie(context, cookieManager, cookieName, cookieOptions);
     if (IsRenewedAuthenticationTicket(authResult, currentUtc)) AppendAuthenticationCookie(context, cookieManager, cookieName,
-      ProtectAuthenticationTicket(cookieTicket, ticketProtector), cookieOptions);
+      ProtectAuthenticationTicket(cookieTicket, ticketDataFormat), cookieOptions);
 
     return authResult;
   }

@@ -7,7 +7,7 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  internal static TicketDataFormat CreateTicketProtector (
+  internal static TicketDataFormat CreateTicketDataFormat (
     IDataProtectionProvider dataProtectionProvider,
     string? schemeName = CookieAuthenticationDefaults.AuthenticationScheme) =>
       new (CreateDataProtector(dataProtectionProvider, schemeName!));

@@ -13,14 +13,14 @@ partial class CookiesFuncs
     CookieAuthenticationOptions authOptions,
     CookieBuilder cookieBuilder,
     ICookieManager cookieManager,
-    TicketDataFormat ticketProtector,
+    TicketDataFormat ticketDataFormat,
     ITicketStore ticketStore)
   {
     var cookieOptions = BuildCookieOptions(cookieBuilder, authProperties, context);
     var cookieName = GetCookieName(cookieBuilder, authOptions);
 
     if (IsSessionBasedCookie(ticketStore) &&
-        ExtractSessionTicketId(context, cookieManager, cookieName, ticketProtector) is string ticketId)
+        ExtractSessionTicketId(context, cookieManager, cookieName, ticketDataFormat) is string ticketId)
       await RemoveSessionTicket(ticketStore, ticketId);
 
     DeleteAuthenticationCookie(context, cookieManager, cookieName, cookieOptions);

@@ -1,5 +1,4 @@
 
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,11 +8,12 @@ partial class GoogleFuncs
 {
   public static IServiceCollection AddGoogle(
     this IServiceCollection services,
-    GoogleOptions googleOptions) =>
+    GoogleOptions googleOptions,
+    IDataProtectionProvider? dataProtectionProvider = default) =>
       services
         .AddSingleton(googleOptions)
-        .AddSingleton<ISecureDataFormat<AuthenticationProperties>>((services) =>
-          CreateStateDataFormat(ResolveService<IDataProtectionProvider>(services), googleOptions.SchemeName))
+        .AddSingleton((services) =>
+          CreatePropertiesDataFormat(dataProtectionProvider ?? ResolveService<IDataProtectionProvider>(services), googleOptions.SchemeName))
         .AddSingleton(TimeProvider.System);
 
 }

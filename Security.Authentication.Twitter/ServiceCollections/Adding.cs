@@ -9,11 +9,12 @@ partial class TwitterFuncs {
 
   public static IServiceCollection AddTwitter(
     this IServiceCollection services,
-    TwitterOptions twitterOptions) =>
+    TwitterOptions twitterOptions,
+    IDataProtectionProvider? dataProtectionProvider = default) =>
       services
         .AddSingleton(twitterOptions)
-        .AddSingleton<ISecureDataFormat<AuthenticationProperties>>((services) =>
-          CreateStateDataFormat(ResolveService<IDataProtectionProvider>(services), twitterOptions.SchemeName))
+        .AddSingleton((services) =>
+          CreatePropertiesDataFormat(dataProtectionProvider ?? ResolveService<IDataProtectionProvider>(services), twitterOptions.SchemeName))
         .AddSingleton(TimeProvider.System);
 
 }

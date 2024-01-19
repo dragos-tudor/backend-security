@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Cookies;
 
-public record CookieAuthenticationOptions: AuthenticationOptions
+public sealed record CookieAuthenticationOptions: AuthenticationOptions
 {
   public required PathString AccessDeniedPath { get; init; }
   public required TimeSpan ExpireTimeSpan { get; init; }

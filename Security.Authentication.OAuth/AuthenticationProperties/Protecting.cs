@@ -7,7 +7,7 @@ partial class OAuthFuncs {
 
   internal static string ProtectAuthenticationProperties (
     AuthenticationProperties authProperties,
-    ISecureDataFormat<AuthenticationProperties> secureDataFormat) =>
-      secureDataFormat.Protect(authProperties);
+    PropertiesDataFormat propertiesDataFormat) =>
+      propertiesDataFormat.Protect(authProperties);
 
 }

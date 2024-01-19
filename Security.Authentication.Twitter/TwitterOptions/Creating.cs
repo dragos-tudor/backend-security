@@ -18,7 +18,7 @@ partial class TwitterFuncs {
 
         ChallengePath = new PathString(TwitterDefaults.ChallengePath),
         ClaimActions = MapTwitterClaimActions([]),
-        CallbackPath = new PathString(TwitterDefaults.SigninPath),
+        CallbackPath = new PathString(TwitterDefaults.CallbackPath),
 
         SchemeName = schemeName,
         Scope = new [] { "tweet.read", "users.read" },

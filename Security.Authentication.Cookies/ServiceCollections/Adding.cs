@@ -15,13 +15,14 @@ partial class CookiesFuncs {
     this IServiceCollection services,
     CookieAuthenticationOptions authOptions,
     ITicketStore? ticketStore = default,
-    CookieBuilder? cookieBuilder = default) =>
+    CookieBuilder? cookieBuilder = default,
+    IDataProtectionProvider? dataProtectionProvider = default) =>
       services
         .AddSingleton((services) => authOptions)
         .AddSingleton((services) => cookieBuilder ?? CreateCookieBuilder())
         .AddSingleton<ICookieManager, ChunkingCookieManager>()
         .AddSingleton((services) =>
-          CreateTicketProtector(ResolveService<IDataProtectionProvider>(services), authOptions.SchemeName))
+          CreateTicketDataFormat(dataProtectionProvider ?? ResolveService<IDataProtectionProvider>(services), authOptions.SchemeName))
         .AddSingleton(ticketStore ?? new DefaultTicketStore())
         .AddSingleton(TimeProvider.System);
 

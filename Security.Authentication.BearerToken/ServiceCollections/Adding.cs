@@ -11,13 +11,14 @@ partial class BearerTokenFuncs {
 
   public static IServiceCollection AddBearerToken(
     this IServiceCollection services,
-    BearerTokenOptions tokenOptions) =>
+    BearerTokenOptions tokenOptions,
+    IDataProtectionProvider? dataProtectionProvider = default) =>
       services
         .AddSingleton((services) => tokenOptions)
         .AddSingleton((services) =>
-          CreateBearerTokenTicketProtector(ResolveService<IDataProtectionProvider>(services), tokenOptions.SchemeName))
+          CreateBearerTokenDataFormat(dataProtectionProvider ?? ResolveService<IDataProtectionProvider>(services), tokenOptions.SchemeName))
         .AddSingleton((services) =>
-          CreateRefreshTokenTicketProtector(ResolveService<IDataProtectionProvider>(services), tokenOptions.SchemeName))
+          CreateRefreshTokenDataFormat(dataProtectionProvider ?? ResolveService<IDataProtectionProvider>(services), tokenOptions.SchemeName))
         .AddSingleton(TimeProvider.System);
 
 }

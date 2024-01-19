@@ -11,14 +11,14 @@ partial class OAuthFuncs {
   public static async Task<AuthenticateResult> AuthenticateOAuth<TOptions> (
     HttpContext context,
     TOptions authOptions,
-    ISecureDataFormat<AuthenticationProperties> secureDataFormat,
+    PropertiesDataFormat propertiesDataFormat,
     HttpClient httpClient,
     PostAuthorizeFunc<TOptions> postAuthorize,
     ExchangeCodeForTokensFunc<TOptions> exchangeCodeForTokens,
     AccessUserInfoFunc<TOptions> accessUserInfo)
   where TOptions: OAuthOptions
   {
-    var (authProperties, authError) = postAuthorize(context, authOptions, secureDataFormat);
+    var (authProperties, authError) = postAuthorize(context, authOptions, propertiesDataFormat);
     if(authError is not null) LogPostAuthorizeWithFailure(Logger, authOptions.SchemeName, authError, context.TraceIdentifier);
     if(authError is not null) return Fail(authError);
     LogPostAuthorize(Logger, authOptions.SchemeName, context.TraceIdentifier);
@@ -49,7 +49,7 @@ partial class OAuthFuncs {
     AuthenticateOAuth(
       context,
       ResolveService<TOptions>(context),
-      ResolveService<ISecureDataFormat<AuthenticationProperties>>(context),
+      ResolveService<PropertiesDataFormat>(context),
       ResolveService<HttpClient>(context),
       postAuthorize,
       exchangeCodeForTokens,
