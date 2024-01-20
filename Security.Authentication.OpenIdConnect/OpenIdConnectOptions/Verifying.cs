@@ -15,4 +15,10 @@ partial class OpenIdConnectFuncs
 
   static bool IsFormPostOpenIdConnectAuthenticationMethod(OpenIdConnectOptions oidcOptions) =>
     oidcOptions.AuthenticationMethod == OpenIdConnectRedirectBehaviour.FormPost;
+
+  static bool ShouldUseCodeChallenge(OpenIdConnectOptions oidcOptions) =>
+    oidcOptions.UsePkce && IsCodeOpenIdConnectResponseType(oidcOptions);
+
+  static bool ShouldUseNonceCookie(OpenIdConnectOptions oidcOptions) =>
+    oidcOptions.RequireNonce;
 }

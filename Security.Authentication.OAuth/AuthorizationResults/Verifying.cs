@@ -11,7 +11,7 @@ partial class OAuthFuncs {
   static bool ExistsAuthenticationState (HttpRequest request) =>
     GetAuthorizationState(request) is not null;
 
-  public static bool IsAccessDeniedError (string error) =>
+  public static bool IsAccessDeniedError (string? error) =>
     error == AccessDenied;
 
 }

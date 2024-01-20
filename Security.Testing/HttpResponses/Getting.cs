@@ -10,9 +10,6 @@ partial class Funcs {
   static StringValues GetResponseCookies (HttpResponse response) =>
     response.Headers.SetCookie;
 
-  static Func<string, bool> IsCookieStartingWithName(string cookieName) =>
-    cookie => cookie!.StartsWith(cookieName);
-
   public static string? GetResponseCookie(HttpResponse response, string cookieName) =>
     GetResponseCookies(response)
       .FirstOrDefault(IsCookieStartingWithName(cookieName)!);

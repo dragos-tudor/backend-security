@@ -19,48 +19,39 @@ partial class OpenIdConnectFuncs
   {
     var oidcMessage = CreateOpenIdConnectMessage(context, authProperties, oidcOptions, oidcConfiguration);
 
-    if (IsEmptyString(authProperties.RedirectUri))
-      SetAuthenticationPropertiesRedirectUri(authProperties, GetRequestUrl(context.Request));
+    UseCorrelationCookie(context, GenerateCorrelationId(), oidcOptions, currentUtc);
 
-    if (oidcOptions.RequireNonce)
-      AppendNonceCookie(context.Response,
-        GetNonceCookieName(nonceCookieBuilder, protocolValidator, stringDataFormat),
-        nonceCookieBuilder.Build(context, currentUtc));
+    if (ShouldUseNonceCookie(oidcOptions))
+      UseNonceCookie(context, nonceCookieBuilder, stringDataFormat, protocolValidator, currentUtc);
 
-    if (oidcOptions.UsePkce && IsCodeOpenIdConnectResponseType(oidcOptions)) {
-      var codeVerifier = GenerateCodeVerifier();
-      SetAuthenticationPropertiesCodeVerifier(authProperties, codeVerifier);
-      AddAuthorizationCodeChallengeParams(oidcMessage.Parameters, HashCodeVerifier(codeVerifier));
-    }
-
-    AppendCorrelationCookie(context.Response,
-      GetCorrelationCookieName(GenerateCorrelationId()),
-      BuildCorrelationCookie(context, oidcOptions, currentUtc));
-
-    if (!IsEmptyString(oidcMessage.State))
-      SetAuthenticationPropertiesUserState(authProperties, oidcMessage.State);
-    SetAuthenticationPropertiesRedirectUriForCode(authProperties, oidcMessage.RedirectUri);
-
-    if(!IsCodeOpenIdConnectResponseType(oidcOptions) || !IsQueryOpenIdConnectResponseMode(oidcOptions))
-      SetOpenIdConnectMessageResponseMode(oidcMessage, oidcOptions.ResponseMode);
-    SetOpenIdConnectMessageState(oidcMessage, propertiesDataFormat.Protect(authProperties));
+    SetChallengeAuthenticationProperties(authProperties, oidcOptions, oidcMessage, GetRequestUrl(context.Request));
+    SetChallengeOpenIdConnectMessage(oidcMessage, authProperties, oidcOptions, propertiesDataFormat);
 
     if (IsRedirectGetOpenIdConnectAuthenticationMethod(oidcOptions))
       SetResponseRedirect(context.Response, oidcMessage.CreateAuthenticationRequestUrl());
 
     if (IsFormPostOpenIdConnectAuthenticationMethod(oidcOptions))
     {
-      var content = oidcMessage.BuildFormPost();
       ResetResponseCacheHeaders(context.Response);
-      await WriteResponseHtmlContent(context.Response, content);
+      await WriteResponseHtmlContent(context.Response, oidcMessage.BuildFormPost());
     }
 
-    if (IsEmptyString(context.Response.Headers.Location))
-      SetResponseLocation(context.Response, "(not set)");
-
-    if (IsEmptyString(context.Response.Headers.SetCookie))
-      SetResponseLocation(context.Response, "(not set)");
-
+    SanitizeChallengeHttpResponse(context.Response);
     return GetResponseLocation(context.Response);
   }
+
+  public static ValueTask<string?> ChallengeOidc(
+    HttpContext context,
+    AuthenticationProperties authProperties) =>
+      ChallengeOidc(
+        context,
+        authProperties,
+        ResolveService<OpenIdConnectOptions>(context),
+        ResolveService<OpenIdConnectConfiguration>(context),
+        ResolveService<NonceCookieBuilder>(context) ?? new NonceCookieBuilder(ResolveService<OpenIdConnectOptions>(context)),
+        ResolveService<PropertiesDataFormat>(context),
+        ResolveService<StringDataFormat>(context),
+        ResolveService<OpenIdConnectProtocolValidator>(context) ?? new OpenIdConnectProtocolValidator(),
+        ResolveService<TimeProvider>(context).GetUtcNow()
+      );
 }

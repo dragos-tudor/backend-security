@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
@@ -14,22 +15,17 @@ partial class OAuthFuncs {
   where TOptions: OAuthOptions
   {
     var correlationId = GenerateCorrelationId();
-    var cookieOptions = BuildCorrelationCookie(context, authOptions, currentUtc);
-    AppendCorrelationCookie(context.Response, GetCorrelationCookieName(correlationId), cookieOptions);
+    UseCorrelationCookie(context, correlationId, authOptions, currentUtc);
 
     var callbackUrl = BuildAbsoluteUrl(context.Request, authOptions.CallbackPath);
-    var authProperties = new AuthenticationProperties();
-    SetAuthenticationPropertiesCorrelationId(authProperties, correlationId);
-    SetAuthenticationPropertiesRedirectUri(authProperties, GetRequestQueryReturnUrl(context.Request, authOptions.ReturnUrlParameter)!);
-    SetAuthenticationPropertiesCallbackUri(authProperties, callbackUrl);
-    if (authOptions.UsePkce) SetAuthenticationPropertiesCodeVerifier(authProperties, GenerateCodeVerifier());
+    var authProperties = BuildAuthenticationProperties(context, authOptions, callbackUrl, correlationId);
 
     var state = ProtectAuthenticationProperties(authProperties, propertiesDataFormat);
-    var authParams = CreateAuthorizationParams(authOptions.ClientId, FormatOAuthScopes(authOptions), state, callbackUrl);
-    if (authOptions.UsePkce) AddAuthorizationCodeChallengeParams(authParams, HashCodeVerifier(GetAuthenticationPropertiesCodeVerifier(authProperties)!));
+    var authParams = BuildAuthorizationParams(authProperties, authOptions, callbackUrl, state);
 
-    var authUri = BuildAuthorizationUri(authOptions, authParams);
+    var authUri = GetAuthorizationUri(authOptions, authParams);
     LogChallenged(Logger, authOptions.SchemeName, authUri, context.TraceIdentifier);
+
     return SetResponseRedirect(context.Response, authUri)!;
   }
 

@@ -12,20 +12,20 @@ partial class OAuthFuncs {
     PropertiesDataFormat propertiesDataFormat)
   where TOptions: OAuthOptions
   {
-    if (ValidateAuthorizationResult(context) is string authError) {
-      if(IsAccessDeniedError(authError))
-        SetResponseRedirect(context.Response, authOptions.AccessDeniedPath);
-      return (default, authError);
-    }
-    if (UnprotectAuthenticationProperties(GetAuthorizationState(context.Request), propertiesDataFormat) is not AuthenticationProperties authProperties)
-      return (default, UnprotectAuthorizationStateFailed);
-    if (ValidateAuthorizationCorrelationCookie(context, authProperties) is string correlationError)
-      return (default, correlationError);
+    var authError = ValidateAuthorizationResult(context);
+    if (IsAccessDeniedError(authError)) SetResponseRedirect(context.Response, authOptions.AccessDeniedPath);
+    if (authError is not null) return (default, authError);
+
+    var authProperties = UnprotectAuthenticationProperties(GetAuthorizationState(context.Request), propertiesDataFormat);
+    if (authProperties is null) return (default, UnprotectAuthorizationStateFailed);
+
+    var correlationError = ValidateAuthorizationCorrelationCookie(context, authProperties);
+    if (correlationError is not null) return (default, correlationError);
 
     var correlationId = GetAuthenticationPropertiesCorrelationId(authProperties);
-    var cookieOptions = ResetCorrelationCookie(context, authOptions!);
-    DeleteCorrelationCookie(context.Response, GetCorrelationCookieName(correlationId!), cookieOptions);
+    NonUseCorrelationCookie(context, authOptions, correlationId);
     DeleteAuthenticationPropertiesCorrelationId(authProperties);
+
     return (authProperties, default);
   }
 

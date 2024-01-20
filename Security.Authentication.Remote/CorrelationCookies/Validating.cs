@@ -12,6 +12,7 @@ partial class RemoteFuncs {
   {
     var cookieName = GetCorrelationCookieName(correlationId);
     var cookieContent = GetCorrelationCookieContent(request, cookieName);
+
     if (IsEmptyCorrelationContent(cookieContent)) return CorrelationCookieNotFound;
     if (!IsCorrelationContentMatch(cookieContent!)) return UnexpectedCorrelationCookieContent;
     return default;

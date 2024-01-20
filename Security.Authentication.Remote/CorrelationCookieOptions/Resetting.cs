@@ -5,7 +5,7 @@ namespace Security.Authentication.Remote;
 
 partial class RemoteFuncs {
 
-  public static CookieOptions ResetCorrelationCookie (
+  static CookieOptions ResetCorrelationCookieOptions (
     HttpContext context,
     RemoteAuthenticationOptions remoteOptions)
   {
