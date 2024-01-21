@@ -11,18 +11,12 @@ partial class OAuthFuncs {
     SignInFunc signin) where TOptions : OAuthOptions
   {
     var authResult = await authenticate(context);
-
-    if (authResult.Failure is not null) {
-      var errorPath = BuildErrorPath(authOptions, authResult.Failure);
-      return SetResponseRedirect(context.Response, errorPath);
-    }
-    if (authResult.Principal is null)
-      return string.Empty;
+    if (authResult.None) return string.Empty;
+    if (!authResult.Succeeded)
+      return SetResponseRedirect(context.Response, BuildErrorPath(authOptions, authResult.Failure!));
 
     await signin(context, authResult.Principal, authResult.Properties!);
-
-    var redirectUri = GetSigningRedirectUri(authResult.Properties!);
-    return SetResponseRedirect(context.Response, redirectUri);
+    return SetResponseRedirect(context.Response, GetCallbackRedirectUri(authResult.Properties!));
   }
 
 

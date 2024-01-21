@@ -1,28 +1,21 @@
 
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
-using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs {
 
-  public static HttpRequestMessage BuildTokenRequest<TOptions>(
-    TOptions authOptions,
-    AuthenticationProperties authProperties,
-    string authCode,
-    HttpClient httpClient)
-  where TOptions : OAuthOptions
+  public static HttpRequestMessage BuildTokenRequest(
+    string tokenEndpoint,
+    IDictionary<string, string> tokenParams,
+    Version requestVersion)
   {
-    var tokenRequest = CreateTokenRequest(authOptions.TokenEndpoint);
-    var tokenParams = CreateTokenParams(authOptions, authCode, GetAuthenticationPropertiesCallbackUri(authProperties)!);
+    var tokenRequest = CreateTokenRequest(tokenEndpoint);
 
-    if (authOptions.UsePkce) {
-      AddTokenCodeVerifierParam(tokenParams, GetAuthenticationPropertiesCodeVerifier(authProperties)!);
-      RemoveAuthenticationPropertiesCodeVerifier(authProperties);
-    }
     SetTokenRequestAcceptType(tokenRequest, MediaTypeNames.Application.Json);
-    SetTokenRequestVersion(tokenRequest, httpClient.DefaultRequestVersion);
+    SetTokenRequestVersion(tokenRequest, requestVersion);
     SetTokenRequestContent(tokenRequest, tokenParams);
 
     return tokenRequest;

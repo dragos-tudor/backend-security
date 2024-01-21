@@ -6,7 +6,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs {
 
-  public static Task<HttpResponseMessage> SendUserInfoRequest (HttpRequestMessage request, HttpClient remoteClient, CancellationToken cancellationToken = default) =>
-    remoteClient.SendAsync(request, cancellationToken);
+  public static Task<HttpResponseMessage> SendUserInfoRequest (HttpRequestMessage request, HttpClient httpClient, CancellationToken cancellationToken = default) =>
+    httpClient.SendAsync(request, cancellationToken);
 
 }

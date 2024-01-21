@@ -16,6 +16,9 @@ partial class OpenIdConnectFuncs
   static bool IsFormPostOpenIdConnectAuthenticationMethod(OpenIdConnectOptions oidcOptions) =>
     oidcOptions.AuthenticationMethod == OpenIdConnectRedirectBehaviour.FormPost;
 
+  static bool ShouldSetOpenIdConnectResponseMode(OpenIdConnectOptions oidcOptions) =>
+    !IsCodeOpenIdConnectResponseType(oidcOptions) || !IsQueryOpenIdConnectResponseMode(oidcOptions);
+
   static bool ShouldUseCodeChallenge(OpenIdConnectOptions oidcOptions) =>
     oidcOptions.UsePkce && IsCodeOpenIdConnectResponseType(oidcOptions);
 

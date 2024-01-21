@@ -14,14 +14,12 @@ partial class OAuthFuncs
   {
     // https://www.ietf.org/rfc/rfc6749.txt [Authorization Request page 25]
     var authParams = new Dictionary<string, string>();
+
     SetAuthorizationParamClientId(authParams, authOptions.ClientId);
     SetAuthorizationParamResponseType(authParams, responseType);
     SetAuthorizationParamRedirectUri(authParams, redirectUri);
     SetAuthorizationParamScope(authParams, FormatOAuthScopes(authOptions));
     SetAuthorizationParamState(authParams, state);
-
-    if (ShouldUseCodeChallenge(authOptions))
-      SetAuthorizationParamsCodeChallenge(authProperties, authParams);
 
     return authParams;
   }

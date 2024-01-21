@@ -37,8 +37,8 @@ partial class OAuthFuncs
     SetAuthorizationParam(authParams, State, state);
 
   public static IDictionary<string, string> SetAuthorizationParamsCodeChallenge(
-    AuthenticationProperties authProperties,
-    IDictionary<string, string> authParams)
+    IDictionary<string, string> authParams,
+    AuthenticationProperties authProperties)
   {
     var codeVerifier = GetAuthenticationPropertiesCodeVerifier(authProperties)!;
     var codeChallenge = HashCodeVerifier(codeVerifier);

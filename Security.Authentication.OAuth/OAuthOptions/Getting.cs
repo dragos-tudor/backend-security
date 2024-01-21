@@ -3,7 +3,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs {
 
-  public static string GetClaimsIssuer (OAuthOptions oAuthOptions) =>
-    oAuthOptions.ClaimsIssuer ?? oAuthOptions.SchemeName;
+  public static string GetClaimsIssuer (OAuthOptions authOptions) =>
+    authOptions.ClaimsIssuer ?? authOptions.SchemeName;
 
 }

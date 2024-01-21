@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
@@ -12,7 +13,7 @@ partial class BearerTokenFuncs
     BearerTokenOptions tokenOptions)
   {
     SetResponseHeader(context, HeaderNames.WWWAuthenticate, "Bearer");
-    SetResponseStatus(context, System.Net.HttpStatusCode.Unauthorized);
+    SetResponseStatus(context, HttpStatusCode.Unauthorized);
 
     LogChallenged(Logger, tokenOptions.SchemeName, string.Empty, context.TraceIdentifier);
     return default;

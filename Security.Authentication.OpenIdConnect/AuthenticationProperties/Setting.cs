@@ -1,6 +1,5 @@
 
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Security.Authentication.OpenIdConnect;
@@ -18,7 +17,6 @@ partial class OpenIdConnectFuncs
 
   static AuthenticationProperties SetChallengeAuthenticationProperties(
     AuthenticationProperties authProperties,
-    OpenIdConnectOptions oidcOptions,
     OpenIdConnectMessage oidcMessage,
     string requestUrl)
   {
@@ -27,9 +25,6 @@ partial class OpenIdConnectFuncs
 
     if (!IsEmptyString(oidcMessage.State))
       SetAuthenticationPropertiesUserState(authProperties, oidcMessage.State);
-
-    if (ShouldUseCodeChallenge(oidcOptions))
-      SetAuthenticationPropertiesCodeVerifier(authProperties, GenerateCodeVerifier());
 
     SetAuthenticationPropertiesRedirectUriForCode(authProperties, oidcMessage.RedirectUri);
     return authProperties;

@@ -17,11 +17,6 @@ partial class OAuthFuncs
     SetAuthenticationPropertiesRedirectUri(authProperties, GetRequestQueryReturnUrl(context.Request, authOptions.ReturnUrlParameter)!);
     SetAuthenticationPropertiesCallbackUri(authProperties, callbackUrl);
 
-    if (ShouldUseCodeChallenge(authOptions)){
-      var codeVerifier = GenerateCodeVerifier();
-      SetAuthenticationPropertiesCodeVerifier(authProperties, codeVerifier);
-    }
-
     return authProperties;
   }
 }

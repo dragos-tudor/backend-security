@@ -12,8 +12,7 @@ partial class BearerTokenFuncs
     BearerTokenOptions tokenOptions,
     BearerTokenDataFormat bearerTokenProtector,
     RefreshTokenDataFormat refreshTokenProtector,
-    DateTimeOffset currentUtc
-  )
+    DateTimeOffset currentUtc)
   {
     SetAuthenticationPropertiesExpires(authProperties, currentUtc, tokenOptions.BearerTokenExpiration);
 
@@ -24,7 +23,7 @@ partial class BearerTokenFuncs
       tokenOptions, bearerTokenProtector, refreshTokenProtector);
 
     var tokenJsonTypeInfo = ResolveAccessTokenResponseJsonTypeInfo(context);
-    await context.Response.WriteAsJsonAsync(token, tokenJsonTypeInfo);
+    await WriteJsonHttpResponse(context, token, tokenJsonTypeInfo);
 
     LogSignInBearerToken(Logger, tokenOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
     return bearerTokenTicket;

@@ -24,8 +24,13 @@ partial class OpenIdConnectFuncs
     if (ShouldUseNonceCookie(oidcOptions))
       UseNonceCookie(context, nonceCookieBuilder, stringDataFormat, protocolValidator, currentUtc);
 
-    SetChallengeAuthenticationProperties(authProperties, oidcOptions, oidcMessage, GetRequestUrl(context.Request));
+    SetChallengeAuthenticationProperties(authProperties, oidcMessage, GetRequestUrl(context.Request));
+    if (ShouldUseCodeChallenge(oidcOptions))
+      SetAuthenticationPropertiesCodeVerifier(authProperties, GenerateCodeVerifier());
+
     SetChallengeOpenIdConnectMessage(oidcMessage, authProperties, oidcOptions, propertiesDataFormat);
+    if (ShouldUseCodeChallenge(oidcOptions))
+      SetAuthorizationParamsCodeChallenge(oidcMessage.Parameters, authProperties);
 
     if (IsRedirectGetOpenIdConnectAuthenticationMethod(oidcOptions))
       SetResponseRedirect(context.Response, oidcMessage.CreateAuthenticationRequestUrl());

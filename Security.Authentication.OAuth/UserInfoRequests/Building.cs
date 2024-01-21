@@ -8,9 +8,11 @@ partial class OAuthFuncs {
 
   const string Bearer = "Bearer";
 
-  public static HttpRequestMessage BuildUserInfoRequest(string requestUri, string accessToken)
+  public static HttpRequestMessage BuildUserInfoRequest(
+    string userInfoEndpoint,
+    string accessToken)
   {
-    var request = CreateUserInfoRequest(requestUri);
+    var request = CreateUserInfoRequest(userInfoEndpoint);
     SetUserInfoRequestAcceptType(request, MediaTypeNames.Application.Json);
     SetUserInfoRequestBearer(request, Bearer, accessToken);
     return request;

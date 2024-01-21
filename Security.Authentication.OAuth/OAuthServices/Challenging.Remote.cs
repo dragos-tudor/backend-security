@@ -19,9 +19,13 @@ partial class OAuthFuncs {
 
     var callbackUrl = BuildAbsoluteUrl(context.Request, authOptions.CallbackPath);
     var authProperties = BuildAuthenticationProperties(context, authOptions, callbackUrl, correlationId);
+    if (ShouldUseCodeChallenge(authOptions))
+      SetAuthenticationPropertiesCodeVerifier(authProperties, GenerateCodeVerifier());
 
     var state = ProtectAuthenticationProperties(authProperties, propertiesDataFormat);
     var authParams = BuildAuthorizationParams(authProperties, authOptions, callbackUrl, state);
+    if (ShouldUseCodeChallenge(authOptions))
+      SetAuthorizationParamsCodeChallenge(authParams, authProperties);
 
     var authUri = GetAuthorizationUri(authOptions, authParams);
     LogChallenged(Logger, authOptions.SchemeName, authUri, context.TraceIdentifier);

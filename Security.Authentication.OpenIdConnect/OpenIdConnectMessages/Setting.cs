@@ -17,14 +17,11 @@ partial class OpenIdConnectFuncs
     OpenIdConnectOptions oidcOptions,
     PropertiesDataFormat propertiesDataFormat)
   {
-    if (!IsCodeOpenIdConnectResponseType(oidcOptions) ||
-        !IsQueryOpenIdConnectResponseMode(oidcOptions))
+    SetOpenIdConnectMessageState(oidcMessage, propertiesDataFormat.Protect(authProperties));
+
+    if (ShouldSetOpenIdConnectResponseMode(oidcOptions))
       SetOpenIdConnectMessageResponseMode(oidcMessage, oidcOptions.ResponseMode);
 
-    if (ShouldUseCodeChallenge(oidcOptions))
-      SetAuthorizationParamsCodeChallenge(authProperties, oidcMessage.Parameters);
-
-    SetOpenIdConnectMessageState(oidcMessage, propertiesDataFormat.Protect(authProperties));
     return oidcMessage;
   }
 }

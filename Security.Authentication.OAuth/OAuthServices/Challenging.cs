@@ -12,7 +12,7 @@ partial class OAuthFuncs
     TOptions authOptions)
   where TOptions : OAuthOptions
   {
-    var returnUri = GetAuthenticationPropertiesRedirectUri(authProperties) ?? BuildRelativeUri(context.Request);
+    var returnUri = GetChallengeReturnUri(context.Request, authProperties);
     var challengePath = BuildChallengePath(authOptions, returnUri);
 
     LogChallenged(Logger, authOptions.SchemeName, challengePath, context.TraceIdentifier);
