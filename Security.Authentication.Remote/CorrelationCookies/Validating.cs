@@ -1,4 +1,5 @@
 
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Remote;
@@ -18,4 +19,6 @@ partial class RemoteFuncs {
     return default;
   }
 
+  public static string? ValidateCorrelationCookie (HttpRequest request, AuthenticationProperties authProperties) =>
+    ValidateCorrelationCookie(request, GetAuthenticationPropertiesCorrelationId(authProperties)!);
 }

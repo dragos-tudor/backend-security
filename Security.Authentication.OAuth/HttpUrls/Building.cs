@@ -1,6 +1,5 @@
 
 using System.Net;
-using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.OAuth;
 
@@ -13,12 +12,6 @@ partial class OAuthFuncs {
     string errorMessage)
   where TOptions: OAuthOptions =>
     $"{authOptions.AccessDeniedPath}?error_description={WebUtility.UrlEncode(errorMessage)}";
-
-  static string BuildChallengePath<TOptions> (
-    TOptions authOptions,
-    string returnUri)
-  where TOptions: OAuthOptions =>
-    authOptions.ChallengePath + QueryString.Create(authOptions.ReturnUrlParameter, returnUri);
 
   static string BuildGenericErrorPath<TOptions> (
     TOptions authOptions,

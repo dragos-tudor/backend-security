@@ -10,5 +10,6 @@ public delegate Task<TokenResult> ExchangeCodeForTokensFunc<TOptions> (
   AuthenticationProperties authProperties,
   string authCode,
   HttpClient httpClient,
+  string? codeVerifier = default,
   CancellationToken cancellationToken = default
 ) where TOptions: OAuthOptions;

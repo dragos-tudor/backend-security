@@ -13,18 +13,13 @@ partial class OAuthFuncs {
     AuthenticationProperties authProperties,
     string authCode,
     HttpClient httpClient,
+    string? codeVerifier = default,
     CancellationToken cancellationToken = default)
   where TOptions: OAuthOptions
   {
-    var tokenParams = BuildTokenParams(authProperties, authOptions, authCode);
-    if (ShouldUseCodeChallenge(authOptions)) {
-      SetTokenParamCodeVerifier(tokenParams, GetAuthenticationPropertiesCodeVerifier(authProperties)!);
-      RemoveAuthenticationPropertiesCodeVerifier(authProperties);
-    }
-
+    var tokenParams = BuildTokenParams(authProperties, authOptions, authCode, codeVerifier);
     var request = BuildTokenRequest(authOptions.TokenEndpoint, tokenParams, httpClient.DefaultRequestVersion);
     using var response = await SendTokenRequest(request, httpClient, cancellationToken);
-
     return await HandleTokenResponse(response, cancellationToken);
   }
 
@@ -32,6 +27,7 @@ partial class OAuthFuncs {
     HttpContext context,
     AuthenticationProperties authProperties,
     string authCode,
+    string? codeVerifier,
     CancellationToken cancellationToken = default)
   where TOptions: OAuthOptions =>
     ExchangeCodeForTokens(
@@ -39,6 +35,7 @@ partial class OAuthFuncs {
       authProperties,
       authCode,
       ResolveService<HttpClient>(context),
+      codeVerifier,
       cancellationToken
     );
 

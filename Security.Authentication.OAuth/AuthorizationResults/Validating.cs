@@ -19,7 +19,7 @@ partial class OAuthFuncs {
     return default;
   }
 
-  static string? ValidateAuthorizationResultSuccess (HttpRequest request) {
+  static string? ValidateAuthorizationResultSuccedded (HttpRequest request) {
     if (IsAccessDeniedAuthorizationError(request)) return AccessDenied;
     if (IsGenericAuthorizationError(request)) return BuildAuthorizationError(request);
     return default;
@@ -32,7 +32,7 @@ partial class OAuthFuncs {
   }
 
   internal static string? ValidateAuthorizationResult (HttpContext context) {
-    if (ValidateAuthorizationResultSuccess(context.Request) is string authorizationError) return authorizationError;
+    if (ValidateAuthorizationResultSuccedded(context.Request) is string authorizationError) return authorizationError;
     if (ValidateAuthorizationResultCodeAndState(context.Request) is string missingError) return missingError;
     return default;
   }

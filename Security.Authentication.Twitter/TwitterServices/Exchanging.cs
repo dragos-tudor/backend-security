@@ -17,9 +17,11 @@ partial class TwitterFuncs {
     AuthenticationProperties authProperties,
     string authCode,
     HttpClient httpClient,
+    string? codeVerifier = default,
     CancellationToken cancellationToken = default)
   {
-    var request = BuildTokenRequest(twitterOptions, authProperties, authCode, httpClient);
+    var tokenParams = BuildTokenParams(authProperties, twitterOptions, authCode, codeVerifier);
+    var request = BuildTokenRequest(twitterOptions.TokenEndpoint, tokenParams, httpClient.DefaultRequestVersion);
     SetAuthorizationHeader(request, BasicSchema, GetTwitterCredentials(twitterOptions.ClientId, twitterOptions.ClientSecret));
     using var response = await SendTokenRequest(request, httpClient, cancellationToken);
     return await HandleTokenResponse(response, cancellationToken);
@@ -29,12 +31,14 @@ partial class TwitterFuncs {
     HttpContext context,
     AuthenticationProperties authProperties,
     string authCode,
+    string? codeVerifier = default,
     CancellationToken cancellationToken = default) =>
       ExchangeCodeForTokens(
         ResolveService<TwitterOptions>(context),
         authProperties,
         authCode,
         ResolveService<HttpClient>(context),
+        codeVerifier,
         cancellationToken
       );
 

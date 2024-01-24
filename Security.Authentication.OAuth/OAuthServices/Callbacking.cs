@@ -23,8 +23,7 @@ partial class OAuthFuncs {
   public static Task<string?> CallbackOAuth<TOptions> (
     HttpContext context,
     AuthenticateFunc authenticate,
-    SignInFunc signin)
-  where TOptions : OAuthOptions =>
+    SignInFunc signin) where TOptions : OAuthOptions =>
       CallbackOAuth(
         context,
         ResolveService<TOptions>(context),

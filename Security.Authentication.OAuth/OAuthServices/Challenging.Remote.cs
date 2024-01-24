@@ -28,8 +28,8 @@ partial class OAuthFuncs {
       SetAuthorizationParamsCodeChallenge(authParams, authProperties);
 
     var authUri = GetAuthorizationUri(authOptions, authParams);
-    LogChallenged(Logger, authOptions.SchemeName, authUri, context.TraceIdentifier);
 
+    LogChallengedRemote(Logger, authOptions.SchemeName, authUri, context.TraceIdentifier);
     return SetResponseRedirect(context.Response, authUri)!;
   }
 

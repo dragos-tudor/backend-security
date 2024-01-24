@@ -11,7 +11,7 @@ partial class OAuthFuncs {
     request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(mediaType));
 
   static HttpContent? SetTokenRequestContent (HttpRequestMessage request, IDictionary<string, string> tokenParams) =>
-    request.Content = new FormUrlEncodedContent(tokenParams!);
+    request.Content = new FormUrlEncodedContent(tokenParams);
 
   static Version SetTokenRequestVersion (HttpRequestMessage request, Version version) =>
     request.Version = version;

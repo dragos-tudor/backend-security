@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Security.Authentication.OAuth;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace Security.Authentication.Twitter;
 
@@ -16,7 +15,7 @@ partial class TwitterFuncs {
     HttpClient httpClient,
     CancellationToken cancellationToken = default)
   {
-    var requestUri = QueryHelpers.AddQueryString(twitterOptions.UserInformationEndpoint, BuildSpecificUserInfoParams(twitterOptions));
+    var requestUri = AddQueryString(twitterOptions.UserInformationEndpoint, BuildSpecificUserInfoParams(twitterOptions));
     var request = BuildUserInfoRequest(requestUri, accessToken);
     using var response = await SendUserInfoRequest(request, httpClient, cancellationToken);
     return await HandleUserInfoResponse(response, twitterOptions, cancellationToken);

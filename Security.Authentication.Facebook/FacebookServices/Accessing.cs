@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.WebUtilities;
 using Security.Authentication.OAuth;
 
 namespace Security.Authentication.Facebook;
@@ -17,7 +16,7 @@ partial class FacebookFuncs {
     CancellationToken cancellationToken = default)
   {
     var userInfoParams = BuildSpecificUserInfoParams(facebookOptions, accessToken);
-    var requestUri = QueryHelpers.AddQueryString(facebookOptions.UserInformationEndpoint, userInfoParams);
+    var requestUri = AddQueryString(facebookOptions.UserInformationEndpoint, userInfoParams);
     var request = BuildUserInfoRequest(requestUri, accessToken);
 
     using var response = await SendUserInfoRequest(request, httpClient, cancellationToken);
