@@ -17,4 +17,8 @@ partial class OpenIdConnectFuncs
 
   static ICollection<string>? GetAuthenticationPropertiesScope(AuthenticationProperties authProperties) =>
     GetAuthenticationPropertiesParam<ICollection<string>>(authProperties, OpenIdConnectParameterNames.Scope);
+
+  static string? GetAuthenticationPropertiesUserState(AuthenticationProperties authProperties) =>
+    authProperties.Items.TryGetValue(OpenIdConnectDefaults.UserStatePropertiesKey, out var userState)?
+      userState: default;
 }

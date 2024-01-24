@@ -6,14 +6,34 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static string SetAuthenticationPropertiesRedirectUri (AuthenticationProperties authProperties, string redirectUri) =>
+  static void SetAuthenticationPropertiesCheckSessionIFrame(AuthenticationProperties authProperties, string CheckSessionIframe) =>
+    authProperties.Items.Add(OpenIdConnectSessionProperties.CheckSessionIFrame, CheckSessionIframe);
+
+  static void SetAuthenticationPropertiesRedirectUriForCode(AuthenticationProperties authProperties, string redirectUri) =>
+    authProperties.Items.Add(OpenIdConnectDefaults.RedirectUriForCodePropertiesKey, redirectUri);
+
+  static string SetAuthenticationPropertiesRedirectUri(AuthenticationProperties authProperties, string redirectUri) =>
     authProperties.RedirectUri = redirectUri;
 
-  static void SetAuthenticationPropertiesUserState (AuthenticationProperties authProperties, string state) =>
+  static void SetAuthenticationPropertiesSessionState(AuthenticationProperties authProperties, string sessionState) =>
+    authProperties.Items.Add(OpenIdConnectSessionProperties.SessionState, sessionState);
+
+  static void SetAuthenticationPropertiesUserState(AuthenticationProperties authProperties, string state) =>
     authProperties.Items.Add(OpenIdConnectDefaults.UserStatePropertiesKey, state);
 
-  static void SetAuthenticationPropertiesRedirectUriForCode (AuthenticationProperties authProperties, string redirectUri) =>
-    authProperties.Items.Add(OpenIdConnectDefaults.RedirectUriForCodePropertiesKey, redirectUri);
+  static AuthenticationProperties SetAuthenticationPropertiesSession(
+    AuthenticationProperties authProperties,
+    OpenIdConnectOptions oidcOptions,
+    OpenIdConnectMessage oidcMessage)
+  {
+    if (!IsEmptyString(oidcMessage.SessionState))
+      SetAuthenticationPropertiesSessionState(authProperties, oidcMessage.SessionState);
+
+    if (!IsEmptyString(oidcOptions.CheckSessionIframe))
+      SetAuthenticationPropertiesCheckSessionIFrame(authProperties, oidcOptions.CheckSessionIframe!);
+
+    return authProperties;
+  }
 
   static AuthenticationProperties SetChallengeAuthenticationProperties(
     AuthenticationProperties authProperties,

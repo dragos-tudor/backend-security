@@ -4,7 +4,7 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static HttpResponse SanitizeChallengeHttpResponse(HttpResponse response)
+  static HttpResponse SanitizeChallengeResponse(HttpResponse response)
   {
     if (IsEmptyString(response.Headers.Location))
       SetResponseLocation(response, "(not set)");

@@ -1,62 +1,31 @@
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  public static async ValueTask<string?> ChallengeOidc(
+
+  public static string ChallengeOidc<TOptions> (
     HttpContext context,
     AuthenticationProperties authProperties,
-    OpenIdConnectOptions oidcOptions,
-    OpenIdConnectConfiguration oidcConfiguration,
-    NonceCookieBuilder nonceCookieBuilder,
-    PropertiesDataFormat propertiesDataFormat,
-    StringDataFormat stringDataFormat,
-    OpenIdConnectProtocolValidator protocolValidator,
-    DateTimeOffset currentUtc)
+    TOptions authOptions)
+  where TOptions : OpenIdConnectOptions
   {
-    var oidcMessage = CreateOpenIdConnectMessage(context, authProperties, oidcOptions, oidcConfiguration);
+    var returnUri = GetChallengeReturnUri(context.Request, authProperties);
+    var challengePath = BuildChallengePath(authOptions, returnUri);
 
-    UseCorrelationCookie(context, GenerateCorrelationId(), oidcOptions, currentUtc);
-
-    if (ShouldUseNonceCookie(oidcOptions))
-      UseNonceCookie(context, nonceCookieBuilder, stringDataFormat, protocolValidator, currentUtc);
-
-    SetChallengeAuthenticationProperties(authProperties, oidcMessage, GetRequestUrl(context.Request));
-    if (ShouldUseCodeChallenge(oidcOptions))
-      SetAuthenticationPropertiesCodeVerifier(authProperties, GenerateCodeVerifier());
-
-    SetChallengeOpenIdConnectMessage(oidcMessage, authProperties, oidcOptions, propertiesDataFormat);
-    if (ShouldUseCodeChallenge(oidcOptions))
-      SetAuthorizationParamsCodeChallenge(oidcMessage.Parameters, authProperties);
-
-    if (IsRedirectGetOpenIdConnectAuthenticationMethod(oidcOptions))
-      SetResponseRedirect(context.Response, oidcMessage.CreateAuthenticationRequestUrl());
-
-    if (IsFormPostOpenIdConnectAuthenticationMethod(oidcOptions))
-    {
-      ResetResponseCacheHeaders(context.Response);
-      await WriteResponseHtmlContent(context.Response, oidcMessage.BuildFormPost());
-    }
-
-    SanitizeChallengeHttpResponse(context.Response);
-    return GetResponseLocation(context.Response);
+    LogChallenged(Logger, authOptions.SchemeName, challengePath, context.TraceIdentifier);
+    return SetResponseRedirect(context.Response, challengePath)!;
   }
 
-  public static ValueTask<string?> ChallengeOidc(
+  public static string ChallengeOidc<TOptions> (
     HttpContext context,
-    AuthenticationProperties authProperties) =>
-      ChallengeOidc(
-        context,
-        authProperties,
-        ResolveService<OpenIdConnectOptions>(context),
-        ResolveService<OpenIdConnectConfiguration>(context),
-        ResolveService<NonceCookieBuilder>(context) ?? new NonceCookieBuilder(ResolveService<OpenIdConnectOptions>(context)),
-        ResolveService<PropertiesDataFormat>(context),
-        ResolveService<StringDataFormat>(context),
-        ResolveService<OpenIdConnectProtocolValidator>(context) ?? new OpenIdConnectProtocolValidator(),
-        ResolveService<TimeProvider>(context).GetUtcNow()
-      );
+    AuthenticationProperties authProperties)
+  where TOptions : OpenIdConnectOptions =>
+    ChallengeOidc(
+      context,
+      authProperties,
+      ResolveService<TOptions>(context));
 }

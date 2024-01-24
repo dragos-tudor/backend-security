@@ -11,6 +11,9 @@ partial class OpenIdConnectFuncs
   static void SetOpenIdConnectMessageState(OpenIdConnectMessage oidcMessage, string state) =>
     oidcMessage.State = state;
 
+  static void ResetOpenIdConnectMessageState(OpenIdConnectMessage oidcMessage, string state) =>
+    SetOpenIdConnectMessageState(oidcMessage, state);
+
   static OpenIdConnectMessage SetChallengeOpenIdConnectMessage(
     OpenIdConnectMessage oidcMessage,
     AuthenticationProperties authProperties,

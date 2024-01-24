@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Tokens;
 using Security.Authentication.Remote;
 
 namespace Security.Authentication.OpenIdConnect;
@@ -17,6 +16,7 @@ public record OpenIdConnectOptions : RemoteAuthenticationOptions
   public required string ClientSecret { get; init; }
 
   public required ClaimActionCollection ClaimActions { get; init; }
+  public string? CheckSessionIframe { get; init; }
   public bool GetClaimsFromUserInfoEndpoint { get; init; }
 
   public bool DisableTelemetry { get; init; }
@@ -31,13 +31,11 @@ public record OpenIdConnectOptions : RemoteAuthenticationOptions
   public string? Resource { get; init; }
   public required ICollection<string> Scope { get; init; }
 
-  public required PathString RemoteSignOutPath { get; init; }
+  public required PathString SignOutRemotePath { get; init; }
   public required PathString SignedOutCallbackPath { get; init; }
   public required string SignedOutRedirectUri { get; init; }
   public string? SignOutScheme { get; init; }
 
   public required bool UsePkce { get; init; }
-  public required TokenHandler TokenHandler { get; init; }
-  public required TokenValidationParameters TokenValidationParameters { get; init; }
   public bool UseTokenLifetime { get; init; }
 }

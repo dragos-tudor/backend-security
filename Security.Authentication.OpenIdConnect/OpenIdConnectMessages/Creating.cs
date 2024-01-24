@@ -7,7 +7,10 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static OpenIdConnectMessage CreateOpenIdConnectMessage(
+  static OpenIdConnectMessage CreateCallbackOpenIdConnectMessage(IEnumerable<KeyValuePair<string, string[]>> authParams) =>
+    new (authParams);
+
+  static OpenIdConnectMessage CreateChallengeOpenIdConnectMessage(
     HttpContext context,
     AuthenticationProperties authProperties,
     OpenIdConnectOptions oidcOptions,
@@ -15,10 +18,7 @@ partial class OpenIdConnectFuncs
       new (new Dictionary<string, string[]>()) {
         ClientId = oidcOptions.ClientId,
         EnableTelemetryParameters = !oidcOptions.DisableTelemetry,
-        MaxAge = (GetAuthenticationPropertiesMaxAge(authProperties) ?? oidcOptions.MaxAge) switch{
-          null => default,
-          var maxAge => ToMaxAgeString(maxAge),
-        },
+        MaxAge = (GetAuthenticationPropertiesMaxAge(authProperties) ?? oidcOptions.MaxAge)?.ToOpenIdConnectMessageMaxAgeString(),
         IssuerAddress = oidcConfiguration?.AuthorizationEndpoint ?? string.Empty,
         RedirectUri = BuildAbsoluteUrl(context.Request, oidcOptions.CallbackPath),
         Resource = oidcOptions.Resource,

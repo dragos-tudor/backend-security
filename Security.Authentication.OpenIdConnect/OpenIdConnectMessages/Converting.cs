@@ -7,6 +7,6 @@ partial class OpenIdConnectFuncs
   static double FloorMaxAgeSeconds(TimeSpan maxAge) =>
     Math.Floor(maxAge.TotalSeconds);
 
-  static string ToMaxAgeString(TimeSpan? maxAge) =>
-    Convert.ToInt64(FloorMaxAgeSeconds(maxAge!.Value)).ToString(CultureInfo.InvariantCulture);
+  static string ToOpenIdConnectMessageMaxAgeString(this TimeSpan maxAge) =>
+    Convert.ToInt64(FloorMaxAgeSeconds(maxAge)).ToString(CultureInfo.InvariantCulture);
 }

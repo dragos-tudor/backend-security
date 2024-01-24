@@ -1,8 +1,6 @@
-using System.IdentityModel.Tokens.Jwt;
+
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Security.Authentication.OpenIdConnect;
 
@@ -24,12 +22,11 @@ partial class OpenIdConnectFuncs
       Scope =  ["openid", "profile"],
 
       CallbackPath = new PathString("/signin-oidc"),
-      RemoteSignOutPath = new PathString("/signout-oidc"),
+      ChallengePath = new PathString("/challenge-oidc"),
+      SignOutRemotePath = new PathString("/signout-oidc"),
       SignedOutCallbackPath = new PathString("/signout-callback-oidc"),
       SignedOutRedirectUri = "/",
 
-      TokenHandler = new JsonWebTokenHandler { MapInboundClaims = JwtSecurityTokenHandler.DefaultMapInboundClaims },
-      TokenValidationParameters = new TokenValidationParameters() { ValidAudience = clientId },
       UsePkce = true
     };
 }
