@@ -1,24 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <EnableMSTestRunner>true</EnableMSTestRunner>
-    <OutputType>Exe</OutputType>
-  </PropertyGroup>
+  <Import Project="../Directory.Testing.props" />
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App"></FrameworkReference>
     <ProjectReference Include="../Security.Authentication/Security.Authentication.csproj"/>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(Configuration)'=='Debug'">
-    <PackageReference Include="MsTest" />
-    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
-    <PackageReference Include="Microsoft.CodeCoverage.MSBuild" />
-    <ProjectReference Include="../Security.Testing/Security.Testing.csproj"/>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(Configuration)'=='Release'">
-    <Compile Remove="**/*.Tests.cs"/>
   </ItemGroup>
 
 </Project>
