@@ -16,8 +16,8 @@
 # Test databases
 **/*.db
 
-# C# scripts
-playground.csx
+# Support files
+tools.md
 
 # API secrets
 **/prod.json
