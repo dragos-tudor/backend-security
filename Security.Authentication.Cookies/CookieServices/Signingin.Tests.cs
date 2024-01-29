@@ -27,7 +27,7 @@ partial class CookiesTests {
 
     Assert.IsTrue(response.IsSuccessStatusCode);
     StringAssert.Contains(GetResponseMessageCookie(response), "CookiesScheme");
-    Assert.IsFalse(GetResponseMessageCookie(response)!.Contains("expires=Thu, 01 Jan 1970"));
+    StringAsserts.NotContains(GetResponseMessageCookie(response)!, "expires=Thu, 01 Jan 1970");
   }
 
   [TestMethod]
@@ -43,7 +43,7 @@ partial class CookiesTests {
     using var response = await client.PostAsync("/api/account/signin");
 
     Assert.IsTrue(response.IsSuccessStatusCode);
-    Assert.IsFalse(GetResponseMessageCookie(response)?.Contains("expires"));
+    StringAsserts.NotContains(GetResponseMessageCookie(response), "expires");
   }
 
   [TestMethod]
