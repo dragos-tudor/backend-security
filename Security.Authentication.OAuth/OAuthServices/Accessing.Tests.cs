@@ -8,7 +8,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthTests {
 
-  [Fact]
+  [TestMethod]
   public async Task User_info_endpoint_request_with_token__access_user_informations__endpoint_receive_access_token () {
     var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {
       scheme = request.Headers.Authorization.Scheme,
@@ -19,37 +19,37 @@ partial class OAuthTests {
     MapJsonClaim(authOptions, "parameter");
     var result = await AccessUserInfo(authOptions, "token_abc", httpClient);
 
-    Assert.Equal("Bearer", GetSecurityClaim(result.Principal, "scheme").Value);
-    Assert.Equal("token_abc", GetSecurityClaim(result.Principal, "parameter").Value);
+    Assert.AreEqual("Bearer", GetSecurityClaim(result.Principal, "scheme").Value);
+    Assert.AreEqual("token_abc", GetSecurityClaim(result.Principal, "parameter").Value);
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Authentication_options_without_claims_issuer__access_user_informations__principal_with_scheme_name_as_issuer () {
     var httpClient = CreateHttpClient("http://oauth", "/userinfo", JsonContent.Create(new {test = "abc"}));
     var authOptions = CreateOAuthOptions();
     MapJsonClaim(authOptions, "test");
 
     var result = await AccessUserInfo(authOptions, string.Empty, httpClient);
-    Assert.Equal(authOptions.SchemeName, GetSecurityClaim(result.Principal, "test").Issuer);
+    Assert.AreEqual(authOptions.SchemeName, GetSecurityClaim(result.Principal, "test").Issuer);
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Authentication_options_with_claims_issuer__access_user_informations__principal_with_options_issuer () {
     var httpClient = CreateHttpClient("http://oauth", "/userinfo", JsonContent.Create(new {test = "abc"}));
     var authOptions = CreateOAuthOptions() with { ClaimsIssuer = "issuer" };
     MapJsonClaim(authOptions, "test");
 
     var result = await AccessUserInfo(authOptions, string.Empty, httpClient);
-    Assert.Equal("issuer", GetSecurityClaim(result.Principal, "test").Issuer);
+    Assert.AreEqual("issuer", GetSecurityClaim(result.Principal, "test").Issuer);
   }
 
-  [Fact]
+  [TestMethod]
   public async Task User_info_endpoint_response_with_generic_error__access_user_informations__client_receive_error () {
     var httpClient = CreateHttpClient("http://oauth", "/userinfo", JsonContent.Create(new {message = "error"}), 400);
     var authOptions = CreateOAuthOptions();
     var result = await AccessUserInfo(authOptions, string.Empty, httpClient);
 
-    Assert.StartsWith("User info endpoint failure. Status: BadRequest.", result.Failure);
+    StringAssert.StartsWith(result.Failure, "User info endpoint failure. Status: BadRequest.");
   }
 
 

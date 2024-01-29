@@ -13,7 +13,7 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesTests {
 
-  [Fact]
+  [TestMethod]
   public async Task Signin_request__signin__authentication_cookie()
   {
     var cookieOptions = CreateCookieAuthenticationOptions() with { SchemeName = "CookiesScheme" };
@@ -25,13 +25,13 @@ partial class CookiesTests {
     using var client = server.GetTestClient();
     using var response = await client.PostAsync("/api/account/signin");
 
-    Assert.True(response.IsSuccessStatusCode);
-    Assert.Contains("CookiesScheme", GetResponseMessageCookie(response));
-    Assert.DoesNotContain("expires=Thu, 01 Jan 1970", GetResponseMessageCookie(response));
+    Assert.IsTrue(response.IsSuccessStatusCode);
+    StringAssert.Contains(GetResponseMessageCookie(response), "CookiesScheme");
+    Assert.IsFalse(GetResponseMessageCookie(response)!.Contains("expires=Thu, 01 Jan 1970"));
   }
 
-  [Fact]
-  public async Task Signin_non_persisted_cookie_request__signin__non_persited_authentication_cookie()
+  [TestMethod]
+  public async Task Signin_non_persisting_cookie_request__signin__non_persisted_authentication_cookie()
   {
     var nonPersistedProps = new AuthenticationProperties(){ IsPersistent = false };
     using var server = CreateHttpServer(services => services.AddCookies(CreateCookieAuthenticationOptions()));
@@ -42,11 +42,11 @@ partial class CookiesTests {
     using var client = server.GetTestClient();
     using var response = await client.PostAsync("/api/account/signin");
 
-    Assert.True(response.IsSuccessStatusCode);
-    Assert.DoesNotContain("expires", GetResponseMessageCookie(response));
+    Assert.IsTrue(response.IsSuccessStatusCode);
+    Assert.IsFalse(GetResponseMessageCookie(response)?.Contains("expires"));
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Signin_request_with_return_url__signin__response_redirected_to_return_url()
   {
     var GetAuthProperties = (HttpContext context) => new AuthenticationProperties() { RedirectUri  = context.Request.Form["redirect_url"] };
@@ -60,11 +60,11 @@ partial class CookiesTests {
     using var client = server.GetTestClient();
     using var response = await client.PostAsync("/api/accounts/signin", new FormUrlEncodedContent(new Dictionary<string, string> { { "redirect_url", "/logged-in" } }));
 
-    Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-    Assert.Equal("/logged-in", GetResponseMessageLocation(response));
+    Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
+    Assert.AreEqual("/logged-in", GetResponseMessageLocation(response));
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Signin_session_based_request__signin__session_based_authentication_cookie()
   {
     var ticketStore = new FakeTicketStore();
@@ -77,11 +77,11 @@ partial class CookiesTests {
     using var response = await client.PostAsync("/api/account/signin");
     var ticketId = GetSessionBasedCookieTicketId(response, server.Services);
 
-    Assert.True(response.IsSuccessStatusCode);
-    Assert.NotNull(await ticketStore.GetTicket(ticketId!));
+    Assert.IsTrue(response.IsSuccessStatusCode);
+    Assert.IsNotNull(await ticketStore.GetTicket(ticketId!));
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Signin_twice_session_based_request__signin__session_based_authentication_cookie()
   {
     var ticketStore = new FakeTicketStore();
@@ -96,11 +96,11 @@ partial class CookiesTests {
     using var secondResponse = await client.PostAsync("/api/account/signin", GetRequestMessageCookieHeader(firstResponse));
     var ticketId = GetSessionBasedCookieTicketId(secondResponse, server.Services);
 
-    Assert.True(secondResponse.IsSuccessStatusCode);
-    Assert.NotNull(await ticketStore.GetTicket(ticketId!));
+    Assert.IsTrue(secondResponse.IsSuccessStatusCode);
+    Assert.IsNotNull(await ticketStore.GetTicket(ticketId!));
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Signin_request__signin__authentication_cookie_microsoft()
   {
     using var server = CreateHttpServer(services => services.AddAuthentication().AddCookie(o => o.Cookie.Name = "CookiesScheme"));
@@ -110,8 +110,8 @@ partial class CookiesTests {
     using var client = server.GetTestClient();
     using var response = await client.PostAsync("/api/account/signin", default);
 
-    Assert.True(response.IsSuccessStatusCode);
-    Assert.Contains("CookiesScheme", GetResponseMessageCookie(response));
+    Assert.IsTrue(response.IsSuccessStatusCode);
+    StringAssert.Contains(GetResponseMessageCookie(response),"CookiesScheme");
   }
 
   static string? GetSessionBasedCookieTicketId(HttpResponseMessage response, IServiceProvider services)

@@ -11,7 +11,7 @@ namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenTests
 {
-  [Fact]
+  [TestMethod]
   public void Authentication_request_with_bearer_token__authenticate__authenticated_user()
   {
     var authProperties = new AuthenticationProperties(){ ExpiresUtc = DateTimeOffset.UtcNow.AddSeconds(1) };
@@ -21,10 +21,10 @@ partial class BearerTokenTests
     context.Request.Headers.Authorization = BearerTokenName + bearerTokenProtector.Protect(ticket);
 
     var authResult = AuthenticateBearerToken(context, bearerTokenProtector, DateTime.UtcNow);
-    Assert.Equal("user", GetPrincipalName(authResult.Principal));
+    Assert.AreEqual("user", GetPrincipalName(authResult.Principal));
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Authenticated_user_with_bearer_token__authenticate__authenticated_user()
   {
     using var server = CreateHttpServer(services => services.AddBearerToken());
@@ -40,19 +40,19 @@ partial class BearerTokenTests
     var tokenResponse = GetAccessTokenResponse(content, server.Services);
     using var response = await client.GetAsync("/resource", (HeaderNames.Authorization, BearerTokenName + tokenResponse!.AccessToken));
 
-    Assert.Equal("user", await ReadResponseMessageContent(response));
+    Assert.AreEqual("user", await ReadResponseMessageContent(response));
   }
 
-  [Fact]
+  [TestMethod]
   public void Authentication_request_without_authorization_header__authenticate__no_authentication_result()
   {
     var context = new DefaultHttpContext();
     var authResult = AuthenticateBearerToken(context, default!, DateTime.UtcNow);
 
-    Assert.True(authResult.None);
+    Assert.IsTrue(authResult.None);
   }
 
-  [Fact]
+  [TestMethod]
   public void Authentication_request_without_bearer_token__authenticate__unprotecting_token_failure()
   {
     var bearerTokenProtector = CreateBearerTokenDataFormat(new EphemeralDataProtectionProvider().CreateProtector(""));
@@ -60,10 +60,10 @@ partial class BearerTokenTests
     context.Request.Headers.Authorization = BearerTokenName;
 
     var authResult = AuthenticateBearerToken(context, bearerTokenProtector, DateTime.UtcNow);
-    Assert.Equal(UnprotectingTokenFailed, authResult.Failure!.Message);
+    Assert.AreEqual(UnprotectingTokenFailed, authResult.Failure!.Message);
   }
 
-  [Fact]
+  [TestMethod]
   public void Authentication_request_with_expired_bearer_token__authenticate__expired_token_failure()
   {
     var authProperties = new AuthenticationProperties(){ ExpiresUtc = DateTimeOffset.UtcNow.AddSeconds(-1) };
@@ -73,6 +73,6 @@ partial class BearerTokenTests
     context.Request.Headers.Authorization = BearerTokenName + bearerTokenProtector.Protect(expiredTicket);
 
     var authResult = AuthenticateBearerToken(context, bearerTokenProtector, DateTime.UtcNow);
-    Assert.Equal(TokenExpired, authResult.Failure!.Message);
+    Assert.AreEqual(TokenExpired, authResult.Failure!.Message);
   }
 }

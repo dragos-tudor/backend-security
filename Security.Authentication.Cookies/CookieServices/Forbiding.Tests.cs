@@ -10,7 +10,7 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesTests {
 
-  [Fact]
+  [TestMethod]
   public async Task Unautenticated_user_resource_request__forbid__access_denied_redirection()
   {
     using var server = CreateHttpServer(services => services.AddCookies());
@@ -21,11 +21,11 @@ partial class CookiesTests {
     using var client = server.GetTestClient();
     using var response = await client.GetAsync("/resource");
 
-    Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-    Assert.Equal("/Account/AccessDenied?ReturnUrl=/resource", GetResponseMessageLocation(response));
+    Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
+    Assert.AreEqual("/Account/AccessDenied?ReturnUrl=/resource", GetResponseMessageLocation(response));
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Unautenticated_user_resource_request__forbid__access_denied_redirection_microsoft()
   {
     using var server = CreateHttpServer(services => services.AddAuthentication().AddCookie());
@@ -35,8 +35,8 @@ partial class CookiesTests {
     using var client = server.GetTestClient();
     using var response = await client.GetAsync("/resource");
 
-    Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-    Assert.Equal("http://localhost/Account/AccessDenied?ReturnUrl=/resource", GetResponseMessageLocation(response));
+    Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
+    Assert.AreEqual("http://localhost/Account/AccessDenied?ReturnUrl=/resource", GetResponseMessageLocation(response));
   }
 
 }

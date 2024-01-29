@@ -7,6 +7,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Nullable>enable</Nullable>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
 
     <!-- packing -->
     <IsPackable>true</IsPackable>
@@ -26,9 +27,5 @@
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
-
-  <ItemGroup Condition="'$(Configuration)'=='Debug'">
-    <Content Include="../xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
-  </ItemGroup>
 
 </Project>

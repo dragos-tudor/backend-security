@@ -16,7 +16,7 @@ partial class AuthorizationTests {
   static readonly ChallengeFunc challegeFunc = (context, schemeName) => (context.Response.StatusCode = StatusCodes.Status401Unauthorized).ToString();
   static readonly ForbidFunc forbidFunc = (context, schemeName) => (context.Response.StatusCode = StatusCodes.Status403Forbidden).ToString();
 
-  [Fact]
+  [TestMethod]
   public async Task Authenticated_user__access_private_resource__user_authorized()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization().AddAuthentication().AddCookie() );
@@ -29,11 +29,11 @@ partial class AuthorizationTests {
     using var loginResponse = await client.PostAsync("/account/login", default);
     using var response = await client.GetAsync("/resource", GetRequestMessageCookieHeader(loginResponse));
 
-    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    Assert.Equal("private", await ReadResponseMessageContent(response));
+    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+    Assert.AreEqual("private", await ReadResponseMessageContent(response));
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Unauthenticated_user__access_public_resource__user_authorized()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization() );
@@ -44,11 +44,11 @@ partial class AuthorizationTests {
     using var client = server.GetTestClient();
     using var response = await client.GetAsync("/resource");
 
-    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    Assert.Equal("public", await ReadResponseMessageContent(response));
+    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+    Assert.AreEqual("public", await ReadResponseMessageContent(response));
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Unauthenticated_user__access_private_resource__unauthorized_access()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization() );
@@ -59,11 +59,11 @@ partial class AuthorizationTests {
     using var client = server.GetTestClient();
     using var response = await client.GetAsync("/resource");
 
-    Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
-    Assert.Equal(string.Empty, await ReadResponseMessageContent(response));
+    Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+    Assert.AreEqual(string.Empty, await ReadResponseMessageContent(response));
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Authenticated_user_without_role__access_role_policy_private_resource__forbidden_access()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization(options => options.AddPolicy("role policy", policy => policy.RequireRole("admin"))).AddAuthentication().AddCookie());
@@ -76,11 +76,11 @@ partial class AuthorizationTests {
     using var loginResponse = await client.PostAsync("/account/login", default);
     using var response = await client.GetAsync("/resource", GetRequestMessageCookieHeader(loginResponse));
 
-    Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-    Assert.Equal(string.Empty, await ReadResponseMessageContent(response));
+    Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+    Assert.AreEqual(string.Empty, await ReadResponseMessageContent(response));
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Authenticated_user_with_role__access_role_policy_private_resource__authorized_access()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization(options => options.AddPolicy("role policy", policy => policy.RequireRole("admin"))).AddAuthentication().AddCookie());
@@ -93,12 +93,12 @@ partial class AuthorizationTests {
     using var loginResponse = await client.PostAsync("/account/login", default);
     using var response = await client.GetAsync("/resource", GetRequestMessageCookieHeader(loginResponse));
 
-    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    Assert.Equal("private", await ReadResponseMessageContent(response));
+    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+    Assert.AreEqual("private", await ReadResponseMessageContent(response));
   }
 
 
-  [Fact]
+  [TestMethod]
   public async Task Authenticated_user_with_claims__access_role_policy_private_resource__authorized_access()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization(options => options.AddPolicy("claim policy", policy => policy.RequireClaim("custom claim", "value"))).AddAuthentication().AddCookie());
@@ -111,11 +111,11 @@ partial class AuthorizationTests {
     using var loginResponse = await client.PostAsync("/account/login", default);
     using var response = await client.GetAsync("/resource", GetRequestMessageCookieHeader(loginResponse));
 
-    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    Assert.Equal("private", await ReadResponseMessageContent(response));
+    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+    Assert.AreEqual("private", await ReadResponseMessageContent(response));
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Authenticated_user_with_requirement__access_role_policy_private_resource__authorized_access()
   {
     using var server = CreateHttpServer(services => services
@@ -131,11 +131,11 @@ partial class AuthorizationTests {
     using var loginResponse = await client.PostAsync("/account/login", default);
     using var response = await client.GetAsync("/resource", GetRequestMessageCookieHeader(loginResponse));
 
-    Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    Assert.Equal("private", await ReadResponseMessageContent(response));
+    Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+    Assert.AreEqual("private", await ReadResponseMessageContent(response));
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Authenticated_user__access_private_resource__user_authorized_microsoft()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization().AddAuthentication().AddCookie());
@@ -148,7 +148,7 @@ partial class AuthorizationTests {
     using var loginResponse = await client.PostAsync("/account/login", default);
     using var response = await client.GetAsync("/resource", GetRequestMessageCookieHeader(loginResponse));
 
-    Assert.Equal("private", await ReadResponseMessageContent(response));
+    Assert.AreEqual("private", await ReadResponseMessageContent(response));
   }
 
   static ClaimsPrincipal CreateClaimsPrincipal (string userName, string? roleName = "role") =>

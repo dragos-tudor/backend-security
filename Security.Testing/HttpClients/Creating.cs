@@ -4,7 +4,7 @@ namespace Security.Testing;
 partial class Funcs {
 
   public static HttpClient CreateHttpClient (string baseAddress, params HttpEndpoint[] endpoints) =>
-    new (CreateHttpMessageHandler(endpoints)) { BaseAddress = new Uri(baseAddress) };
+    new (CreateHttpEndpointsHandler(endpoints)) { BaseAddress = new Uri(baseAddress) };
 
   public static HttpClient CreateHttpClient (string baseAddress, string route, HttpContent content, int statusCode = 200) =>
     CreateHttpClient(baseAddress, new HttpEndpoint(route, (_) => CreateResponseMessage(content, (HttpStatusCode)statusCode)));

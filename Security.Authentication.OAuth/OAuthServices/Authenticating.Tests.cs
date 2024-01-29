@@ -1,10 +1,9 @@
 
-#pragma warning disable IDE0039
-using NSubstitute;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.DataProtection;
+using NSubstitute;
 using System.Net.Http;
 using static Security.Testing.Funcs;
-using Microsoft.AspNetCore.DataProtection;
 
 namespace Security.Authentication.OAuth;
 
@@ -13,7 +12,7 @@ partial class OAuthTests {
   readonly PropertiesDataFormat propertiesDataFormat = Substitute.For<PropertiesDataFormat>(Substitute.For<IDataProtector>());
   readonly HttpClient httpClient = Substitute.For<HttpClient>();
 
-  [Fact]
+  [TestMethod]
   public async Task Post_authorize_fail__authenticate__result_authorization_error () {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
@@ -21,10 +20,10 @@ partial class OAuthTests {
     postAuthorize(default!, default!, default!).ReturnsForAnyArgs((default, "authorize error"));
 
     var result = await AuthenticateOAuth(context, authOptions, propertiesDataFormat, httpClient, postAuthorize, default!, default!);
-    Assert.Equal("authorize error", result.Failure!.Message);
+    Assert.AreEqual("authorize error", result.Failure!.Message);
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Authorization_code__authenticate__exchange_authorization_code_for_tokens () {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
@@ -39,7 +38,7 @@ partial class OAuthTests {
     exchangeCodeForTokens.Received(1);
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Access_token__authenticate__access_user_information_with_access_token () {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
@@ -56,7 +55,7 @@ partial class OAuthTests {
     accessUserInfo.Received(1);
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Valid_authentication_flow__authenticate__authentication_with_expected_claims_principal () {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
@@ -71,7 +70,7 @@ partial class OAuthTests {
     accessUserInfo(default!, "token", default!)!.ReturnsForAnyArgs(ToTask(new UserInfoResult(principal, default)));
 
     var result = await AuthenticateOAuth(context, authOptions, propertiesDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, accessUserInfo);
-    Assert.Same(principal, result.Principal);
+    Assert.AreSame(principal, result.Principal);
   }
 
   static OAuthOptions CreateOAuthOptions (string schemeName = "oauth") =>

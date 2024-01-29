@@ -4,16 +4,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.DataProtection;
-using static Security.Testing.Funcs;
-using static Security.Authentication.Facebook.FacebookFuncs;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication;
+using static Security.Testing.Funcs;
+using static Security.Authentication.Facebook.FacebookFuncs;
 
 namespace Security.Authentication.Facebook;
 
 partial class FacebookTests {
 
-  [Fact]
+  [TestMethod]
   public async Task User_challenge_authentication__execute_facebook_authentication_flow__authentication_succedded () {
     using var authServer = CreateHttpServer();
     authServer.MapGet("/authorize", (HttpContext context) => SetResponseRedirect(context.Response, GetCallbackLocation(context.Request)) );
@@ -35,15 +35,15 @@ partial class FacebookTests {
     using var appClient = appServer.GetTestClient();
 
     var challengeResponse = await appClient.GetAsync(facebookOptions.ChallengePath + "?returnUrl=/redirect-from");
-    Assert.Equal(HttpStatusCode.Redirect, challengeResponse.StatusCode);
+    Assert.AreEqual(HttpStatusCode.Redirect, challengeResponse.StatusCode);
 
     var authnUrl = GetResponseMessageLocation(challengeResponse);
     var authResponse = await authClient.GetAsync(authnUrl);
-    Assert.Equal(HttpStatusCode.Redirect, authResponse.StatusCode);
+    Assert.AreEqual(HttpStatusCode.Redirect, authResponse.StatusCode);
 
     var signinUrl = GetResponseMessageLocation(authResponse);
     var signinResponse = await appClient.GetAsync(signinUrl, GetRequestMessageCookieHeader(challengeResponse));
-    Assert.Equal("/redirect-from", await ReadResponseMessageContent(signinResponse));
+    Assert.AreEqual("/redirect-from", await ReadResponseMessageContent(signinResponse));
   }
 
 

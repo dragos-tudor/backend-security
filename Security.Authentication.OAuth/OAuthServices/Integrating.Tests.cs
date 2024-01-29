@@ -12,7 +12,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthTests {
 
-  [Fact]
+  [TestMethod]
   public async Task User_challenge_authentication__execute_authentication_flow__authentication_succedded () {
     using var authServer = CreateHttpServer();
     authServer.MapGet("/authorize", (HttpContext context) => SetResponseRedirect(context.Response, GetCallbackLocation(context.Request)) );
@@ -31,15 +31,15 @@ partial class OAuthTests {
     using var appClient = appServer.GetTestClient();
 
     var challengeResponse = await appClient.GetAsync("/challenge");
-    Assert.Equal(HttpStatusCode.Redirect, challengeResponse.StatusCode);
+    Assert.AreEqual(HttpStatusCode.Redirect, challengeResponse.StatusCode);
 
     var authorizationUrl = GetResponseMessageLocation(challengeResponse);
     var authorizationResponse = await authClient.GetAsync(authorizationUrl);
-    Assert.Equal(HttpStatusCode.Redirect, authorizationResponse.StatusCode);
+    Assert.AreEqual(HttpStatusCode.Redirect, authorizationResponse.StatusCode);
 
     var authenticateUrl = GetResponseMessageLocation(authorizationResponse);
     var authenticationResponse = await appClient.GetAsync(authenticateUrl, GetRequestMessageCookieHeader(challengeResponse));
-    Assert.Equal("true", await ReadResponseMessageContent(authenticationResponse));
+    Assert.AreEqual("true", await ReadResponseMessageContent(authenticationResponse));
   }
 
 

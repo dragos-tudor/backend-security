@@ -1,19 +1,20 @@
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Collections.Generic;
 using System.Net.Http;
 using static Security.Testing.Funcs;
-using Microsoft.AspNetCore.Authentication.Cookies;
+
 
 namespace Security.Authentication.Cookies;
 
 partial class CookiesTests {
 
-  [Fact]
+  [TestMethod]
   public async Task Signout_request__signout__expired_cookie()
   {
     using var server = CreateHttpServer(services => services.AddCookies() );
@@ -24,12 +25,12 @@ partial class CookiesTests {
     using var client = server.GetTestClient();
     using var response = await client.PostAsync("/api/account/signout");
 
-    Assert.True(response.IsSuccessStatusCode);
-    Assert.Contains(".AspNetCore.Cookies=;", GetResponseMessageCookie(response));
-    Assert.Contains("expires=Thu, 01 Jan 1970", GetResponseMessageCookie(response));
+    Assert.IsTrue(response.IsSuccessStatusCode);
+    StringAssert.Contains(GetResponseMessageCookie(response), ".AspNetCore.Cookies=;");
+    StringAssert.Contains(GetResponseMessageCookie(response), "expires=Thu, 01 Jan 1970");
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Signout_session_based_request__signout__expired_session_based_authentication_cookie()
   {
     var cookieOptions = CreateCookieAuthenticationOptions() with { SchemeName = "CookiesScheme" };
@@ -44,12 +45,12 @@ partial class CookiesTests {
     using var signinResponse = await client.PostAsync("/api/account/signin");
     using var signoutResponse = await client.PostAsync("/api/account/signout", GetRequestMessageCookieHeader(signinResponse));
 
-    Assert.True(signoutResponse.IsSuccessStatusCode);
-    Assert.Contains("CookiesScheme=;", GetResponseMessageCookie(signoutResponse));
-    Assert.Contains("expires=Thu, 01 Jan 1970", GetResponseMessageCookie(signoutResponse));
+    Assert.IsTrue(signoutResponse.IsSuccessStatusCode);
+    StringAssert.Contains(GetResponseMessageCookie(signoutResponse), "CookiesScheme=;");
+    StringAssert.Contains(GetResponseMessageCookie(signoutResponse), "expires=Thu, 01 Jan 1970");
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Signout_session_based_request__signout__session_ticket_removed_from_store()
   {
     var ticketStore = new FakeTicketStore();
@@ -64,10 +65,10 @@ partial class CookiesTests {
     var ticketId = GetSessionBasedCookieTicketId(signinResponse, server.Services);
     using var signoutResponse = await client.PostAsync("/api/account/signout", GetRequestMessageCookieHeader(signinResponse));
 
-    Assert.Null(await ticketStore.GetTicket(ticketId!));
+    Assert.IsNull(await ticketStore.GetTicket(ticketId!));
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Signout_request_with_return_url__signin__response_redirected_to_return_url()
   {
     var GetAuthProperties = (HttpContext context) => new AuthenticationProperties() { RedirectUri = context.Request.Form["redirect_url"] };
@@ -79,11 +80,11 @@ partial class CookiesTests {
     using var client = server.GetTestClient();
     using var response = await client.PostAsync("/api/accounts/signout", new FormUrlEncodedContent(new Dictionary<string, string> { { "redirect_url", "/logged-out" } }));
 
-    Assert.Equal(HttpStatusCode.Redirect, response.StatusCode);
-    Assert.Equal("/logged-out", GetResponseMessageLocation(response));
+    Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
+    Assert.AreEqual("/logged-out", GetResponseMessageLocation(response));
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Signout_request__signout__expired_cookie_microsoft()
   {
     using var server = CreateHttpServer(services => services.AddAuthentication().AddCookie());
@@ -96,9 +97,9 @@ partial class CookiesTests {
     using var loginResponse = await client.PostAsync("/api/account/signin");
     using var response = await client.PostAsync("/api/account/signout", GetRequestMessageCookieHeader(loginResponse));
 
-    Assert.True(response.IsSuccessStatusCode);
-    Assert.Contains(".AspNetCore.Cookies=;", GetResponseMessageCookie(response));
-    Assert.Contains("expires=Thu, 01 Jan 1970", GetResponseMessageCookie(response));
+    Assert.IsTrue(response.IsSuccessStatusCode);
+    StringAssert.Contains(GetResponseMessageCookie(response), ".AspNetCore.Cookies=;");
+    StringAssert.Contains(GetResponseMessageCookie(response), "expires=Thu, 01 Jan 1970");
   }
 
 }

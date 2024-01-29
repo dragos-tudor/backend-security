@@ -37,6 +37,23 @@ partial class OpenIdConnectFuncs
 
     SetAuthenticationPropertiesSession(authProperties, oidcOptions, authResponse);
     return (authProperties, default);
+
+    // var idToken = authMessage.IdToken;
+    // var (securityToken, validationException) = await ValidateIdToken(idToken, oidcConfiguration, tokenHandler, validationParameters);
+    // if (validationException is not null)
+    //   return Fail(validationException.Message);
+
+
+    // if (oidcOptions.UseTokenLifetime)
+    // {
+    //   var issued = validatedToken.ValidFrom;
+    //   if (issued != DateTime.MinValue)
+    //     properties.IssuedUtc = issued;
+
+    //   var expires = validatedToken.ValidTo;
+    //   if (expires != DateTime.MinValue)
+    //     properties.ExpiresUtc = expires;
+    // }
   }
 
   public static Task<(AuthenticationProperties?, string?)> PostAuthorize<TOptions>(

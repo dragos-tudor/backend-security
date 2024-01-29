@@ -5,7 +5,7 @@ namespace Security.Authentication.Remote;
 
 partial class RemoteTests {
 
-  [Fact]
+  [TestMethod]
   public void Request_with_correlation_cookie__non_use_correlation_cookie__response_with_expired_cookie() {
     var challengeContext = new DefaultHttpContext();
     var remoteOptions = new RemoteAuthenticationOptions() { CallbackPath = "/callback", ChallengePath = "" };
@@ -15,7 +15,7 @@ partial class RemoteTests {
     SetRequestCookiesHeader(callbackContext.Request, challengeContext.Response);
     NonUseCorrelationCookie(callbackContext, remoteOptions, "correlation.id");
 
-    Assert.Contains("expires=Thu, 01 Jan 1970", GetResponseCookie(callbackContext.Response, cookieName));
+    StringAssert.Contains(GetResponseCookie(callbackContext.Response, cookieName), "expires=Thu, 01 Jan 1970");
   }
 
 }

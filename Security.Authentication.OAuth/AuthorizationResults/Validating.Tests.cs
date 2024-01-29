@@ -9,7 +9,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthTests {
 
-  [Fact]
+  [TestMethod]
   public void Authorization_request_query_with_access_denied_error__post_authorize__access_denied_error() {
     var context = CreateHttpContext();
     context.Request.Query = new QueryCollection(new Dictionary<string, StringValues>() {
@@ -17,10 +17,10 @@ partial class OAuthTests {
     });
     var error = ValidateAuthorizationResult(context);
 
-    Assert.Equal(AccessDenied, error);
+    Assert.AreEqual(error, AccessDenied);
   }
 
-  [Fact]
+  [TestMethod]
   public void Authorization_request_query_with_generic_error__post_authorize__authorization_endpoint_error() {
     var context = CreateHttpContext();
     context.Request.Query = new QueryCollection(new Dictionary<string, StringValues>() {
@@ -29,19 +29,19 @@ partial class OAuthTests {
     });
     var error = ValidateAuthorizationResult(context);
 
-    Assert.Contains(AuthorizationEndpointError, error);
-    Assert.Contains("abc", error);
+    StringAssert.Contains(error, AuthorizationEndpointError);
+    StringAssert.Contains(error, "abc");
   }
 
-  [Fact]
+  [TestMethod]
   public void Authorization_request_query_without_authorization_code__post_authorize__authorization_code_not_found_error() {
     var context = CreateHttpContext();
     var error = ValidateAuthorizationResult(context);
 
-    Assert.Equal(AuthorizationCodeNotFound, error);
+    Assert.AreEqual(error, AuthorizationCodeNotFound);
   }
 
-  [Fact]
+  [TestMethod]
   public void Authorization_request_query_without_state__post_authorize__invalid_state_error() {
     var context = CreateHttpContext();
     context.Request.Query = new QueryCollection(new Dictionary<string, StringValues>() {
@@ -49,26 +49,26 @@ partial class OAuthTests {
     });
     var error = ValidateAuthorizationResult(context);
 
-    Assert.Equal(InvalidAuthorizationState, error);
+    Assert.AreEqual(error, InvalidAuthorizationState);
   }
 
-  [Fact]
+  [TestMethod]
   public void Authentication_properties_without_correlation_id__post_authorize__correlation_id_not_found_error() {
     var context = CreateHttpContext();
     var authProperties = new AuthenticationProperties();
     var error = ValidateAuthorizationCorrelationCookie(context, authProperties);
 
-    Assert.Equal(CorrelationIdKeyNotFound, error);
+    Assert.AreEqual(error, CorrelationIdKeyNotFound);
   }
 
-  [Fact]
+  [TestMethod]
   public void Authentication_request_without_correlation_cookie__post_authorize__correlation_cookie_error() {
     var context = CreateHttpContext();
     var authProperties = new AuthenticationProperties();
     SetAuthenticationPropertiesCorrelationId(authProperties, "id");
     var error = ValidateAuthorizationCorrelationCookie(context, authProperties);
 
-    Assert.StartsWith(CorrelationFailed, error);
+    StringAssert.StartsWith(error, CorrelationFailed);
   }
 
 }

@@ -11,14 +11,14 @@ namespace Security.Authentication.Twitter;
 
 partial class TwitterTests {
 
-  [Fact]
+  [TestMethod]
   public async Task Optional_query_params__access_user_informations__token_endpoint_receive_optional_params () {
     var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {query = request.RequestUri}));
     var authOptions = CreateTwitterOptions("", "secret") with { UserInformationEndpoint = "http://oauth/userinfo", UserFields = new [] { "field1" } };
     MapJsonClaim(authOptions, "query");
 
     var result = await AccessTwitterUserInfo(authOptions, string.Empty, httpClient);
-    Assert.Contains("user.fields=field1", GetSecurityClaim(result.Principal, "query")?.Value);
+    StringAssert.Contains(GetSecurityClaim(result.Principal, "query")?.Value, "user.fields=field1");
   }
 
   static Claim GetSecurityClaim(ClaimsPrincipal principal, string claimType) =>

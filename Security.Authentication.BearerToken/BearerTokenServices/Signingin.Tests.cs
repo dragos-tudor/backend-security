@@ -15,7 +15,7 @@ namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenTests {
 
-  [Fact]
+  [TestMethod]
   public async Task Signin_request__signin__authentication_ticket()
   {
     var cookieOptions = CreateBearerTokenOptions() with { SchemeName = "BearerTokenScheme" };
@@ -31,12 +31,12 @@ partial class BearerTokenTests {
     var tokenResponse = GetAccessTokenResponse(content, server.Services);
     var tokenTicket = GetAccessTokenTicket(tokenResponse, server.Services);
 
-    Assert.True(response.IsSuccessStatusCode);
-    Assert.Equal("user", GetPrincipalName(tokenTicket!.Principal));
-    Assert.Equal("BearerTokenScheme", tokenTicket!.Principal!.Identity!.AuthenticationType);
+    Assert.IsTrue(response.IsSuccessStatusCode);
+    Assert.AreEqual("user", GetPrincipalName(tokenTicket!.Principal));
+    Assert.AreEqual("BearerTokenScheme", tokenTicket!.Principal!.Identity!.AuthenticationType);
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Signin_request__signin__authentication_ticket_microsoft()
   {
     using var server = CreateHttpServer(services => services.AddDataProtection(Environment.CurrentDirectory + "/keys").AddAuthentication().AddBearerToken());
@@ -51,8 +51,8 @@ partial class BearerTokenTests {
     var tokenTicket = CreateBearerTokenDataFormat(ResolveService<IDataProtectionProvider>(server.Services))
       .Unprotect(tokenResponse!.AccessToken);
 
-    Assert.True(response.IsSuccessStatusCode);
-    Assert.Equal("user", GetPrincipalName(tokenTicket!.Principal));
+    Assert.IsTrue(response.IsSuccessStatusCode);
+    Assert.AreEqual("user", GetPrincipalName(tokenTicket!.Principal));
   }
 
   static ClaimsPrincipal CreateNamedClaimsPrincipal (string name, string schemeName =BearerTokenDefaults.AuthenticationScheme ) =>

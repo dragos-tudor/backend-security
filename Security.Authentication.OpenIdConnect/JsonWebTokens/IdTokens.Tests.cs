@@ -4,11 +4,11 @@ using Microsoft.IdentityModel.JsonWebTokens;
 using System.Security.Cryptography.X509Certificates;
 #nullable disable
 
-namespace Security.Testing;
+namespace Security.Authentication.OpenIdConnect;
 
-partial class Tests {
+partial class OpenIdConnectTests {
 
-  [Fact]
+  [TestMethod]
   public async Task Id_token_with_json_web_key__validate_token__validation_result() {
 
     // https://www.googleapis.com/oauth2/v3/certs
@@ -30,11 +30,11 @@ partial class Tests {
 
     // verify signature jwt.io => RSASHA256(base64UrlEncode(header) + "." + base64UrlEncode(payload), <stringKey or string cert>).
     var tokenValidationResult = await tokenHandler.ValidateTokenAsync(token, tokenValidationParameters);
-    Assert.True(tokenValidationResult.IsValid);
+    Assert.IsTrue(tokenValidationResult.IsValid);
 
   }
 
-  [Fact]
+  [TestMethod]
   public async Task Id_token_with_public_key__validate_token__validation_result() {
 
     // https://www.googleapis.com/oauth2/v1/certs
@@ -56,7 +56,7 @@ partial class Tests {
     };
 
     var tokenValidationResult = await tokenHandler.ValidateTokenAsync(token, tokenValidationParameters);
-    Assert.True(tokenValidationResult.IsValid);
+    Assert.IsTrue(tokenValidationResult.IsValid);
 
   }
 

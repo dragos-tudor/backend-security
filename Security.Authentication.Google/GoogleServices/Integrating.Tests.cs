@@ -6,15 +6,15 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.DependencyInjection;
 using static Security.Testing.Funcs;
 using static Security.Authentication.Google.GoogleFuncs;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Security.Authentication.Google;
 
 partial class GoogleTests {
 
-  [Fact]
+  [TestMethod]
   public async Task User_challenge_authentication__execute_google_authentication_flow__authentication_succedded () {
     using var authServer = CreateHttpServer();
     authServer.MapGet("/authorize", (HttpContext context) => SetResponseRedirect(context.Response, GetCallbackLocation(context.Request)) );
@@ -36,15 +36,15 @@ partial class GoogleTests {
     using var appClient = appServer.GetTestClient();
 
     var challengeResponse = await appClient.GetAsync(googleOptions.ChallengePath + "?returnUrl=/redirect-from");
-    Assert.Equal(HttpStatusCode.Redirect, challengeResponse.StatusCode);
+    Assert.AreEqual(HttpStatusCode.Redirect, challengeResponse.StatusCode);
 
     var authUrl = GetResponseMessageLocation(challengeResponse);
     var authResponse = await authClient.GetAsync(authUrl);
-    Assert.Equal(HttpStatusCode.Redirect, authResponse.StatusCode);
+    Assert.AreEqual(HttpStatusCode.Redirect, authResponse.StatusCode);
 
     var signinUrl = GetResponseMessageLocation(authResponse);
     var signinResponse = await appClient.GetAsync(signinUrl, GetRequestMessageCookieHeader(challengeResponse));
-    Assert.Equal("/redirect-from", await ReadResponseMessageContent(signinResponse));
+    Assert.AreEqual("/redirect-from", await ReadResponseMessageContent(signinResponse));
   }
 
 

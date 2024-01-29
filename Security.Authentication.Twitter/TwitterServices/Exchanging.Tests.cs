@@ -10,7 +10,7 @@ namespace Security.Authentication.Twitter;
 
 partial class TwitterTests {
 
-  [Fact]
+  [TestMethod]
   public async Task User_credentials__exchange_code_for_tokens__endpoint_receive_credentials () {
     using var authServer = CreateHttpServer();
     authServer.MapPost("/token", (HttpContext context) => new {token_type = context.Request.Headers.Authorization[0], access_token = string.Empty} );
@@ -21,7 +21,7 @@ partial class TwitterTests {
     var authProperties = new AuthenticationProperties();
     var result = await ExchangeTwitterCodeForTokens(authOptions, authProperties, string.Empty, authClient);
 
-    Assert.Equal("Basic " + GetTwitterCredentials("id", "secret"), result.TokenInfo!.TokenType);
+    Assert.AreEqual("Basic " + GetTwitterCredentials("id", "secret"), result.TokenInfo!.TokenType);
   }
 
 }

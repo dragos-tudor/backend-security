@@ -6,16 +6,15 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.DependencyInjection;
 using static Security.Testing.Funcs;
 using static Security.Authentication.Twitter.TwitterFuncs;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.WebUtilities;
 
 namespace Security.Authentication.Twitter;
 
 partial class TwitterTests {
 
-  [Fact]
+  [TestMethod]
   public async Task User_challenge_authentication__execute_twitter_authentication_flow__authentication_succedded () {
     using var authServer = CreateHttpServer();
     authServer.MapGet("/authorize", (HttpContext context) => SetResponseRedirect(context.Response, GetCallbackLocation(context.Request)) );
@@ -37,15 +36,15 @@ partial class TwitterTests {
     using var appClient = appServer.GetTestClient();
 
     var challengeResponse = await appClient.GetAsync(twitterOptions.ChallengePath + "?returnUrl=/redirect-from");
-    Assert.Equal(HttpStatusCode.Redirect, challengeResponse.StatusCode);
+    Assert.AreEqual(HttpStatusCode.Redirect, challengeResponse.StatusCode);
 
     var authUrl = GetResponseMessageLocation(challengeResponse);
     var authResponse = await authClient.GetAsync(authUrl);
-    Assert.Equal(HttpStatusCode.Redirect, authResponse.StatusCode);
+    Assert.AreEqual(HttpStatusCode.Redirect, authResponse.StatusCode);
 
     var signinUrl = GetResponseMessageLocation(authResponse);
     var signinResponse = await appClient.GetAsync(signinUrl, GetRequestMessageCookieHeader(challengeResponse));
-    Assert.Equal("/redirect-from", await ReadResponseMessageContent(signinResponse));
+    Assert.AreEqual("/redirect-from", await ReadResponseMessageContent(signinResponse));
   }
 
 

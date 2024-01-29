@@ -2,25 +2,22 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App"></FrameworkReference>
-    <ProjectReference Include="../Security.Authentication.Remote/Security.Authentication.Remote.csproj"/>
+    <ProjectReference Include="../Security.Authentication.Remote/Security.Authentication.Remote.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)'=='Debug'">
-    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
-    <PackageReference Include="xunit"/>
-    <PackageReference Include="xunit.runner.visualstudio">
+    <PackageReference Include="MsTest" />
+    <PackageReference Include="coverlet.msbuild" />
+    <PackageReference Include="coverlet.collector">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="coverlet.msbuild"/>
-    <ProjectReference Include="..\Security.Testing\Security.Testing.csproj"/>
-    <PackageReference Include="Microsoft.AspNetCore.TestHost"/>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
-    <PackageReference Include="NSubstitute"/>
+    <PackageReference Include="NSubstitute" />
+    <ProjectReference Include="../Security.Testing/Security.Testing.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)'=='Release'">
-    <Compile Remove="**/*.Tests.cs"/>
+    <Compile Remove="**/*.Tests.cs" />
   </ItemGroup>
 
 </Project>
