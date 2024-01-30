@@ -7,4 +7,8 @@
     <ProjectReference Include="../Security.Authentication.Remote/Security.Authentication.Remote.csproj" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(Configuration)'=='Debug'">
+    <PackageReference Include="NSubstitute" />
+  </ItemGroup>
+
 </Project>
