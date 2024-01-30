@@ -13,6 +13,11 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <!-- <See> Microsoft.NET.Test.Sdk package
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.targets
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.props
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs
+    </See> -->
     <GenerateProgramFile>false</GenerateProgramFile>
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>

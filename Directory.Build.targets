@@ -5,16 +5,18 @@
       --no-restore \
       --no-build \
       --coverage \
-      --coverage-output-format cobertura'
+      --coverage-output "$(MSBuildProjectDirectory)"/../.coverage/$(MSBuildProjectName).cob \
+      --coverage-output-format cobertura \
+      --coverage-settings "$(MSBuildProjectDirectory)"/../.coverage-settings.xml'
     />
   </Target>
 
   <Target Name="Packing">
     <Exec Command='dotnet pack \
-      -p:BuildProjectReferences=false \
-      -c Release \
-      -o "$(MSBuildProjectDirectory)"/../.packages \
-      --no-restore --nologo'
+      --no-restore \
+      --no-build \
+      --configuration Release \
+      --output "$(MSBuildProjectDirectory)"/../.packages'
     />
   </Target>
 
