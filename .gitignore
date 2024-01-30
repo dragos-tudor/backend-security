@@ -17,9 +17,6 @@
 # Test databases
 **/*.db
 
-# Support files
-tools.md
-
 # API secrets
 **/prod.json
 **/secrets.json
