@@ -2,7 +2,7 @@
 	"image": "ubuntu:22.04",
   "customizations": {
     "vscode": {
-	    "extensions": [ "ms-dotnettools.csharp", "ryanluker.vscode-coverage-gutters", "denoland.vscode-deno" ]
+	    "extensions": [ "ms-dotnettools.csharp", "icsharpcode.ilspy-vscode", "denoland.vscode-deno" ]
 	  }
 	},
   "features": {
@@ -14,7 +14,7 @@
   "containerEnv": { "DATA_PROTECTION_KEY": "HFm8fYbLyEarjjlGBj5r9Q==" },
   "mounts": [
 		"source=nuget,target=/home/vscode/.nuget",
-		"source=deno-cache,target=/home/vscode/.deno-cache"		
+		"source=deno-cache,target=/home/vscode/.deno-cache"
   ],
 	"runArgs": [
 		"--name=backend-security",

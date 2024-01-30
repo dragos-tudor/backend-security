@@ -8,7 +8,7 @@
 [Oo]bj/
 
 # Code coverage
-.coverage
+**/.coverage
 **/lcov.info
 
 # .Net local packages

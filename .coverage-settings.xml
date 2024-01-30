@@ -18,7 +18,14 @@
       <Exclude>
         <Attribute>^Microsoft\.VisualStudio\.TestTools\.UnitTesting\.TestClassAttribute$</Attribute>
         <Attribute>^System\.CodeDom\.Compiler\.GeneratedCodeAttribute$</Attribute>
+        <Attribute>^Microsoft\.Extensions\.Logging\.LoggerMessageAttribute$</Attribute>
       </Exclude>
     </Attributes>
+
+    <Sources>
+      <Exclude>
+        <Source>.*\\LoggerMessage\.g\.cs</Source>
+      </Exclude>
+    </Sources>
   </CodeCoverage>
 </Configuration>
