@@ -1,7 +1,7 @@
 
-namespace Security.Authentication.OAuth;
+namespace Security.Authentication.Remote;
 
-partial class OAuthFuncs {
+partial class RemoteFuncs {
 
   public static string GenerateCodeVerifier()
   {

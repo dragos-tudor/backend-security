@@ -1,16 +1,24 @@
 ﻿
-// Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
 using static System.Console;
 
-var builder = CreateWebApplicationBuilder(args);
-AddConfigurationProviders(builder);
-AddServices(builder, Environment.CurrentDirectory + "/bin/keys");
+namespace Security.Sample.Api;
 
-var app = builder.Build();
-UseMiddlewares(app);
-MapEndpoints(app);
+public class Program
+{
+  public static void Main(string[] args)
+  {
+    // Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
+    var builder = CreateWebApplicationBuilder(args);
+    AddConfigurationProviders(builder);
+    AddServices(builder, Environment.CurrentDirectory + "/bin/keys");
 
-WriteLine($"Server started: {builder.WebHost.GetSetting("Kestrel:Endpoints:Https:Url")}");
-WriteLine($"  Environment: {builder.Environment.EnvironmentName}");
-WriteLine($"  Content directory: {builder.Environment.ContentRootPath}");
-app.Run();
+    var app = builder.Build();
+    UseMiddlewares(app);
+    MapEndpoints(app);
+
+    WriteLine($"Server started: {builder.WebHost.GetSetting("Kestrel:Endpoints:Https:Url")}");
+    WriteLine($"  Environment: {builder.Environment.EnvironmentName}");
+    WriteLine($"  Content directory: {builder.Environment.ContentRootPath}");
+    app.Run();
+  }
+}

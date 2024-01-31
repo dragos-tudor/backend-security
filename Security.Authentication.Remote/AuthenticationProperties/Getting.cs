@@ -7,6 +7,11 @@ partial class RemoteFuncs {
 
   internal const string CorrelationIdKey = ".xsrf";
 
+  public static string? GetAuthenticationPropertiesCodeVerifier (AuthenticationProperties authProperties) =>
+    authProperties.Items.TryGetValue(CodeVerifier, out string? codeVerifier)?
+      codeVerifier:
+      default;
+
   public static string? GetAuthenticationPropertiesCorrelationId (AuthenticationProperties properties) =>
     GetAuthenticationPropertiesItem(properties, CorrelationIdKey);
 

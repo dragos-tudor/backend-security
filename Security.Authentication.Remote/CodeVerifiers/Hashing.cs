@@ -3,9 +3,9 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.WebUtilities;
 
-namespace Security.Authentication.OAuth;
+namespace Security.Authentication.Remote;
 
-partial class OAuthFuncs {
+partial class RemoteFuncs {
 
   public static string HashCodeVerifier (string codeVerifier) {
     var codeVerifierBytes = Encoding.UTF8.GetBytes(codeVerifier);

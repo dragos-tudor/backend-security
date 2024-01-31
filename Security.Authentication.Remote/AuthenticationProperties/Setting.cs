@@ -10,6 +10,9 @@ partial class RemoteFuncs {
   public static string SetAuthenticationPropertiesCallbackUri (AuthenticationProperties properties, string callbackUri) =>
     properties.Items[CallbackUri] = callbackUri;
 
+  public static void SetAuthenticationPropertiesCodeVerifier (AuthenticationProperties authProperties, string codeVerifier) =>
+    authProperties.Items.Add(CodeVerifier, codeVerifier);
+
   public static string SetAuthenticationPropertiesCorrelationId (AuthenticationProperties properties, string correlationId) =>
     properties.Items[CorrelationIdKey] = correlationId;
 

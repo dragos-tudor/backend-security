@@ -4,6 +4,7 @@
     <OutputType>Exe</OutputType>
     <IsTestProject>false</IsTestProject>
     <IsPackable>false</IsPackable>
+    <NoWarn>CS8892</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

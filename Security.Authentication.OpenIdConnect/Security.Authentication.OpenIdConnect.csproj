@@ -6,7 +6,7 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
-    <ProjectReference Include="../Security.Authentication.OAuth/Security.Authentication.OAuth.csproj" />
+    <ProjectReference Include="../Security.Authentication.Remote/Security.Authentication.Remote.csproj" />
   </ItemGroup>
 
 </Project>
