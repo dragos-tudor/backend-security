@@ -10,7 +10,7 @@ partial class OpenIdConnectFuncs
 
   static ConfigurationManager<OpenIdConnectConfiguration> CreateConfigurationManager(ConfigurationManagerOptions options, HttpClient remoteClient) =>
     new (
-      options.MetadataAddress + WellKnownPath,
+      $"{options.MetadataAddress}{WellKnownPath}",
       new OpenIdConnectConfigurationRetriever(),
       new HttpDocumentRetriever(remoteClient) { RequireHttps = true })
     {

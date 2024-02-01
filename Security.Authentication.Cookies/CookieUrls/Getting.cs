@@ -6,7 +6,7 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  static string? ResolveRedirectUri (
+  static string? GetRedirectUriOrQueryReturnUrl (
     HttpContext context,
     AuthenticationProperties authProperties,
     CookieAuthenticationOptions authOptions) =>

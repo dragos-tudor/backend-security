@@ -9,6 +9,6 @@ partial class RemoteFuncs {
     request.Cookies[cookieName];
 
   public static string GetCorrelationCookieName (string correlationId) =>
-    CorrelationCookieName + correlationId;
+    $"{CorrelationCookieName}{correlationId}";
 
 }

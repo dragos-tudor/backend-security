@@ -8,5 +8,5 @@ partial class RemoteFuncs
     TOptions authOptions,
     string returnUri)
   where TOptions: RemoteAuthenticationOptions =>
-    authOptions.ChallengePath + QueryString.Create(authOptions.ReturnUrlParameter, returnUri);
+    $"{authOptions.ChallengePath}{QueryString.Create(authOptions.ReturnUrlParameter, returnUri)}";
 }

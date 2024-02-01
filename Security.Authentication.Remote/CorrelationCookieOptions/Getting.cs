@@ -9,6 +9,6 @@ partial class RemoteFuncs {
     cookieOptions.Expires ?? currentUtc.Add(expires);
 
   static string? GetCorrelationCookieOptionsPath (HttpRequest request, string callbackPath) =>
-    request.PathBase + callbackPath;
+    $"{request.PathBase}{callbackPath}";
 
 }

@@ -37,7 +37,7 @@ partial class CookiesFuncs
     var protectedTicket = ProtectAuthenticationTicket(cookieTicket, ticketDataFormat);
     AppendAuthenticationCookie(context, cookieManager, cookieName, protectedTicket, cookieOptions);
     ResetResponseCacheHeaders(context.Response);
-    SetResponseRedirect(context.Response, ResolveRedirectUri(context, authProperties, authOptions));
+    SetResponseRedirect(context.Response, GetRedirectUriOrQueryReturnUrl(context, authProperties, authOptions));
 
     LogSignedInCookie(Logger, authOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
     return authTicket;

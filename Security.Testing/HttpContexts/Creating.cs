@@ -10,7 +10,7 @@ partial class Funcs {
   public static HttpContext CreateHttpContext () {
     var services = new ServiceCollection()
       .AddSingleton<TimeProvider, FakeTimeProvider>()
-      .AddDataProtection(Environment.CurrentDirectory + "/keys")
+      .AddDataProtection($"{Environment.CurrentDirectory}/keys")
       .BuildServiceProvider();
     return new DefaultHttpContext() { RequestServices = services };
   }

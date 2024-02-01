@@ -10,7 +10,7 @@ partial class CookiesFuncs {
     // "Cookie.Expiration is ignored, use ExpireTimeSpan instead."
     HttpOnly = true,
     IsEssential = true,
-    Name = CookieAuthenticationDefaults.CookiePrefix + CookieAuthenticationDefaults.AuthenticationScheme,
+    Name = $"{CookieAuthenticationDefaults.CookiePrefix}{CookieAuthenticationDefaults.AuthenticationScheme}",
     Path = "/",
     SameSite = SameSiteMode.Lax,
     SecurePolicy = CookieSecurePolicy.SameAsRequest

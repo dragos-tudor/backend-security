@@ -11,6 +11,6 @@ partial class Funcs
     LogLevel minimumLogLevel = LogLevel.None) =>
       services
         .AddLogging(o => o.SetMinimumLevel(minimumLogLevel))
-        .AddDataProtection(Environment.CurrentDirectory + "/keys")
+        .AddDataProtection($"{Environment.CurrentDirectory}/keys")
         .AddSingleton<TimeProvider>(new FakeTimeProvider());
 }
