@@ -23,8 +23,8 @@ partial class OAuthFuncs {
     if (correlationError is not null) return (default, correlationError);
 
     var correlationId = GetAuthenticationPropertiesCorrelationId(authProperties);
-    NonUseCorrelationCookie(context, authOptions, correlationId);
-    DeleteAuthenticationPropertiesCorrelationId(authProperties);
+    CleanCorrelationCookie(context, authOptions, correlationId);
+    RemoveAuthenticationPropertiesCorrelationId(authProperties);
 
     return (authProperties, default);
   }

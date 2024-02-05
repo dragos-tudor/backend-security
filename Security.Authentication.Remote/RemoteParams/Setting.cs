@@ -10,15 +10,15 @@ partial class RemoteFuncs
   static readonly string CodeChallengeMethod = "code_challenge_method";
   static readonly string CodeChallengeMethodS256 = "S256";
 
-  public static void SetRemoteParam (IDictionary<string, string> remoteParams, string paramName, string paramValue) =>
-    remoteParams.Add(paramName, paramValue);
+  public static string SetRemoteParam (IDictionary<string, string> remoteParams, string key, string value)
+    { remoteParams.Add(key, value); return value; }
 
-  static void SetRemoteParamCodeChallenge (IDictionary<string, string> remoteParams, string codeChallenge) =>
+  static string SetRemoteParamCodeChallenge (IDictionary<string, string> remoteParams, string codeChallenge) =>
     SetRemoteParam(remoteParams, CodeChallenge, codeChallenge);
 
-  static void SetRemoteParamCodeChallengeMethod (IDictionary<string, string> remoteParams) =>
+  static string SetRemoteParamCodeChallengeMethod (IDictionary<string, string> remoteParams) =>
     SetRemoteParam(remoteParams, CodeChallengeMethod, CodeChallengeMethodS256);
 
-  public static void SetRemoteParamCodeVerifier (IDictionary<string, string> remoteParams, string codeVerifier) =>
+  public static string SetRemoteParamCodeVerifier (IDictionary<string, string> remoteParams, string codeVerifier) =>
     SetRemoteParam(remoteParams, CodeVerifier, codeVerifier);
 }

@@ -15,7 +15,6 @@ partial class OAuthFuncs {
   {
     var request = BuildUserInfoRequest(authOptions.UserInformationEndpoint, accessToken);
     using var response = await SendUserInfoRequest(request, httpClient, cancellationToken);
-
     return await HandleUserInfoResponse(response, authOptions, cancellationToken);
   }
 

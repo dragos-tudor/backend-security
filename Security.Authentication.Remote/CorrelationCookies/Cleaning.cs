@@ -4,7 +4,7 @@ namespace Security.Authentication.Remote;
 
 partial class RemoteFuncs
 {
-  public static string NonUseCorrelationCookie(
+  public static string CleanCorrelationCookie(
     HttpContext context,
     RemoteAuthenticationOptions remoteOptions,
     string? correlationId)
