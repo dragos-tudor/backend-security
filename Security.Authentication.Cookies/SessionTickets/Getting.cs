@@ -9,8 +9,8 @@ partial class CookiesFuncs {
 
   const string SessionTicketIdClaim = "Microsoft.AspNetCore.Authentication.Cookies-SessionId";
 
-  static Task<AuthenticationTicket?> GetSessionTicket(ITicketStore ticketStore, string ticketId, CancellationToken token = default) =>
-    ticketStore.GetTicket(ticketId, token);
+  static Task<AuthenticationTicket?> GetSessionTicket(ITicketStore ticketStore, string ticketId, CancellationToken cancellationToken = default) =>
+    ticketStore.GetTicket(ticketId, cancellationToken);
 
   static Claim GetSessionTicketIdClaim(string ticketId) =>
     new (SessionTicketIdClaim, ticketId);

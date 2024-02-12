@@ -15,7 +15,7 @@ partial class FacebookFuncs {
     HttpClient httpClient,
     CancellationToken cancellationToken = default)
   {
-    var userInfoParams = BuildSpecificUserInfoParams(facebookOptions, accessToken);
+    var userInfoParams = BuildUserInfoParams(facebookOptions, accessToken);
     var requestUri = AddQueryString(facebookOptions.UserInformationEndpoint, userInfoParams);
     var request = BuildUserInfoRequest(requestUri, accessToken);
 

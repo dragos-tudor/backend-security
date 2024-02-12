@@ -1,19 +1,14 @@
 
 namespace Security.Authentication.Facebook;
 
-partial class FacebookFuncs {
-
-  static KeyValuePair<string, string?>[] BuildSpecificUserInfoParams (
+partial class FacebookFuncs
+{
+  static KeyValuePair<string, string?>[] BuildUserInfoParams(
     FacebookOptions facebookOptions,
     string accessToken) =>
       [
         CreateAccessTokenParam(accessToken),
-        ShouldSendAppSecretProof(facebookOptions)?
-          CreateAppSecretProofParam(GenerateAppSecretProof(facebookOptions.ClientSecret, accessToken)):
-          default,
-        HasExtraFields(facebookOptions) ?
-          CreateFieldsParam(string.Join(",", facebookOptions.Fields)):
-          default
+        GetUserInfoAppSecretProofParam(facebookOptions, accessToken),
+        GetUserInfoExtraFieldsParam(facebookOptions)
       ];
-
-}
+ }

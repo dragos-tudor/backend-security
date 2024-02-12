@@ -21,5 +21,4 @@ partial class RemoteFuncs {
 
   public static string? GetAuthenticationPropertiesRedirectUri (AuthenticationProperties? authProperties) =>
     authProperties?.RedirectUri;
-
 }

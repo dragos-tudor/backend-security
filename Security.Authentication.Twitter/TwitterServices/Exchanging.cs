@@ -8,8 +8,8 @@ using Security.Authentication.OAuth;
 
 namespace Security.Authentication.Twitter;
 
-partial class TwitterFuncs {
-
+partial class TwitterFuncs
+{
   const string BasicSchema = "Basic";
 
   public static async Task<TokenResult> ExchangeTwitterCodeForTokens (
@@ -17,10 +17,9 @@ partial class TwitterFuncs {
     AuthenticationProperties authProperties,
     string authCode,
     HttpClient httpClient,
-    string? codeVerifier = default,
     CancellationToken cancellationToken = default)
   {
-    var tokenParams = BuildTokenParams(authProperties, twitterOptions, authCode, codeVerifier);
+    var tokenParams = BuildTokenParams(authProperties, twitterOptions, authCode);
     var request = BuildTokenRequest(twitterOptions.TokenEndpoint, tokenParams, httpClient.DefaultRequestVersion);
     SetAuthorizationHeader(request, BasicSchema, GetTwitterCredentials(twitterOptions.ClientId, twitterOptions.ClientSecret));
     using var response = await SendTokenRequest(request, httpClient, cancellationToken);
@@ -31,14 +30,12 @@ partial class TwitterFuncs {
     HttpContext context,
     AuthenticationProperties authProperties,
     string authCode,
-    string? codeVerifier = default,
     CancellationToken cancellationToken = default) =>
       ExchangeCodeForTokens(
         ResolveService<TwitterOptions>(context),
         authProperties,
         authCode,
         ResolveService<HttpClient>(context),
-        codeVerifier,
         cancellationToken
       );
 

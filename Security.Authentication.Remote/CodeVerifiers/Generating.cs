@@ -5,11 +5,11 @@ partial class RemoteFuncs {
 
   public static string GenerateCodeVerifier()
   {
-    var bytes = RentBytes(32);
-    GenerateRandomBytes(bytes);
+    var data = RentBytes(32);
+    GenerateRandomBytes(data);
 
-    var codeVerifier = EncodeBytes(bytes);
-    ReturnBytes(bytes);
+    var codeVerifier = EncodeBytes(data);
+    ReturnBytes(data);
 
     return codeVerifier;
   }

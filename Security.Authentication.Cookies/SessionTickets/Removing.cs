@@ -7,7 +7,7 @@ partial class CookiesFuncs
   static Task RemoveSessionTicket(
     ITicketStore ticketStore,
     string ticketId,
-    CancellationToken token = default) =>
-      ticketStore.RemoveTicket(ticketId, token);
+    CancellationToken cancellationToken = default) =>
+      ticketStore.RemoveTicket(ticketId, cancellationToken);
 
 }

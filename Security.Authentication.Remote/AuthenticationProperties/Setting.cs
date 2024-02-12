@@ -22,6 +22,12 @@ partial class RemoteFuncs {
   public static string SetAuthenticationPropertiesCorrelationId (AuthenticationProperties authProperties, string correlationId) =>
     SetAuthenticationPropertiesItem(authProperties, CorrelationIdKey, correlationId);
 
+  public static DateTimeOffset? SetAuthenticationPropertiesExpires (AuthenticationProperties authProperties, DateTimeOffset expires) =>
+    authProperties.ExpiresUtc = expires;
+
+  public static DateTimeOffset? SetAuthenticationPropertiesIssued (AuthenticationProperties authProperties, DateTimeOffset issued) =>
+    authProperties.IssuedUtc = issued;
+
   public static string SetAuthenticationPropertiesRedirectUri (AuthenticationProperties authProperties, string redirectUri) =>
     authProperties.RedirectUri ??= redirectUri;
 

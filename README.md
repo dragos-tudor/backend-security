@@ -1,6 +1,6 @@
 ## ASPNET Security libraries
 - simplified ASPNET Security-like libraries.
-- functional-style libraries [90% OOP-free].
+- "light" functional-style libraries [90% OOP-free].
 
 ### Security libraries
 - [Authentication.Cookies](/Security.Authentication.Cookies/).
@@ -14,7 +14,7 @@
 ### Design
 - security services [authentication and authorization services] represent the **mechanism backbone**.
 - security services [*high-level* functions] act as **security behaviour controllers** and use *low-level* functions.
-- security libraries were written following **FP principles** [pure functions, high-order functions, immutability, data/behaviour separation, static methods/functions as first-class citiziens].
+- security libraries were written following some of **FP principles** [pure functions, high-order functions, immutability, data/behaviour separation, static methods/functions as first-class citiziens].
 - DI is used as **thin layer** usually over functional security services [eg. *SignInCookie* have 2 implementations with/without DI services]. DI services implementations are registred as usual with specific method extensions [eg. *AddCookies*, *AddFacebook*].
 - **security mechanism** is based on security services [authentication scheme free-mechanism]:
   - *authentication middleware* receive authentication service [*UseAuthentication* extension].

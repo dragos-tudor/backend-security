@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.OAuth;
 
-partial class OAuthFuncs {
-
+partial class OAuthFuncs
+{
   public static async Task<string?> CallbackOAuth<TOptions> (
     HttpContext context,
     TOptions authOptions,
@@ -14,11 +14,11 @@ partial class OAuthFuncs {
     if (authResult.Succeeded)
       await signin(context, authResult.Principal!, authResult.Properties!);
 
-    if (authResult.Succeeded)
-      return GetResponseLocation(context.Response);
-    if (authResult.Failure is not null)
-      return SetResponseRedirect(context.Response, BuildErrorPath(authOptions, authResult.Failure!));
-    return default;
+    var redirectUri = authResult.Succeeded switch {
+      true => GetResponseLocation(context.Response),
+      false => SetResponseRedirect(context.Response, BuildErrorPath(authOptions, authResult.Failure!))
+    };
+    return redirectUri ?? GetDefaultCallbackRedirectUri(authResult.Properties!);
   }
 
 

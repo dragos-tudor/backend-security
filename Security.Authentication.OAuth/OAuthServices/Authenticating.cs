@@ -24,10 +24,7 @@ partial class OAuthFuncs {
     LogPostAuthorize(Logger, authOptions.SchemeName, context.TraceIdentifier);
 
     var authorizationCode = GetAuthorizationCode(context.Request)!;
-    var codeVerifier = GetAuthenticationPropertiesCodeVerifier(authProperties!);
-    if (ShouldUseCodeChallenge(authOptions))
-      RemoveAuthenticationPropertiesCodeVerifier(authProperties!);
-    var tokenResult = await exchangeCodeForTokens(authOptions, authProperties!, authorizationCode, httpClient, codeVerifier, context.RequestAborted);
+    var tokenResult = await exchangeCodeForTokens(authOptions, authProperties!, authorizationCode, httpClient, context.RequestAborted);
     if (tokenResult.Failure is not null) LogExchangeCodeForTokensWithFailure(Logger, authOptions.SchemeName, tokenResult.Failure, context.TraceIdentifier);
     if (tokenResult.Failure is not null) return Fail(tokenResult.Failure);
     LogExchangeCodeForTokens(Logger, authOptions.SchemeName, context.TraceIdentifier);
@@ -37,6 +34,9 @@ partial class OAuthFuncs {
     if(userInfoResult.Failure is not null) LogAccessUserInfoWithFailure(Logger, authOptions.SchemeName, userInfoResult.Failure, context.TraceIdentifier);
     if(userInfoResult.Failure is not null) return Fail(userInfoResult.Failure);
     LogAccessUserInfo(Logger, authOptions.SchemeName, context.TraceIdentifier);
+
+    if (ShouldCleanCodeChallenge(authOptions))
+      RemoveAuthenticationPropertiesCodeVerifier(authProperties!);
 
     LogAuthenticated(Logger, authOptions.SchemeName, GetPrincipalNameId(userInfoResult.Principal)!, context.TraceIdentifier);
     return Success(CreateAuthenticationTicket(userInfoResult.Principal!, authProperties, authOptions.SchemeName));

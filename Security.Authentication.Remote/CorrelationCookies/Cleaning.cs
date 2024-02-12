@@ -9,8 +9,10 @@ partial class RemoteFuncs
     RemoteAuthenticationOptions remoteOptions,
     string? correlationId)
   {
-    var cookieOptions = ResetCorrelationCookieOptions(context, remoteOptions!);
+    var cookieOptions = CreateCorrelationCookieOptions(context);
     var cookieName = GetCorrelationCookieName(correlationId!);
+
+    SetCorrelationCookieOptionsPath(cookieOptions, GetCorrelationCookieOptionsPath(context.Request, remoteOptions.CallbackPath));
     DeleteCorrelationCookie(context.Response, cookieName, cookieOptions);
     return cookieName;
   }

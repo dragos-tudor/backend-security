@@ -8,8 +8,10 @@ partial class RemoteFuncs {
 
   internal const string CorrelationCookieNotFound = "Correlation cookie not found";
   internal const string UnexpectedCorrelationCookieContent = "Unexpected correlation cookie";
+  internal const string CorrelationIdKeyNotFound = "Correlation id not found on authentication properties";
+  internal const string CorrelationFailed = "Correlation failed";
 
-  public static string? ValidateCorrelationCookie (HttpRequest request, string correlationId)
+  internal static string? ValidateCorrelationCookie (HttpRequest request, string correlationId)
   {
     var cookieName = GetCorrelationCookieName(correlationId);
     var cookieContent = GetCorrelationCookieContent(request, cookieName);
@@ -19,6 +21,9 @@ partial class RemoteFuncs {
     return default;
   }
 
-  public static string? ValidateCorrelationCookie (HttpRequest request, AuthenticationProperties authProperties) =>
-    ValidateCorrelationCookie(request, GetAuthenticationPropertiesCorrelationId(authProperties)!);
+  public static string? ValidateCorrelationCookie (HttpRequest request, AuthenticationProperties authProperties) {
+    if (GetAuthenticationPropertiesCorrelationId(authProperties!) is not string correlationId) return CorrelationIdKeyNotFound;
+    if (ValidateCorrelationCookie(request, correlationId) is string correlationError) return $"{CorrelationFailed} {correlationError}";
+    return default;
+  }
 }

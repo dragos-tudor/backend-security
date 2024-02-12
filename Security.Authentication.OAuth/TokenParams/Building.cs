@@ -8,8 +8,7 @@ partial class OAuthFuncs
   public static IDictionary<string, string> BuildTokenParams(
     AuthenticationProperties authProperties,
     OAuthOptions authOptions,
-    string authCode,
-    string? codeVerifier)
+    string authCode)
   {
     var tokenParams = new Dictionary<string, string>();
 
@@ -18,7 +17,7 @@ partial class OAuthFuncs
     SetTokenParamGrantType(tokenParams, GrantAuthorizationCode);
     SetTokenParamAuthorizationCode(tokenParams, authCode);
     SetTokenParamRedirectUri(tokenParams, GetAuthenticationPropertiesCallbackUri(authProperties)!);
-    if(IsNotEmptyString(codeVerifier))
+    if(GetAuthenticationPropertiesCodeVerifier(authProperties!) is string codeVerifier)
       SetTokenParamCodeVerifier(tokenParams, codeVerifier!);
 
     return tokenParams;

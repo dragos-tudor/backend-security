@@ -1,12 +1,11 @@
 
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.OAuth;
 
-partial class OAuthFuncs {
-
+partial class OAuthFuncs
+{
   public static string ChallengeRemoteOAuth<TOptions> (
     HttpContext context,
     TOptions authOptions,
@@ -20,8 +19,7 @@ partial class OAuthFuncs {
     var authProperties = CreateAuthenticationProperties();
     var authParams = CreateAuthorizationParams();
     if (ShouldUseCodeChallenge(authOptions))
-      SetAuthorizationParamsCodeChallenge(authParams, HashCodeVerifier(
-        SetAuthenticationPropertiesCodeVerifier(authProperties, GenerateCodeVerifier())));
+      UseCodeChallenge(authProperties, authParams, GenerateCodeVerifier());
 
     var callbackUrl = BuildAbsoluteUrl(context.Request, authOptions.CallbackPath);
     var redirectUri = GetRequestQueryReturnUrl(context.Request, authOptions.ReturnUrlParameter)!;

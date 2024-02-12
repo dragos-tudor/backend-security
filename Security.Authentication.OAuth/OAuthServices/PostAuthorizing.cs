@@ -19,7 +19,7 @@ partial class OAuthFuncs {
     var authProperties = UnprotectAuthenticationProperties(GetAuthorizationState(context.Request), propertiesDataFormat);
     if (authProperties is null) return (default, UnprotectAuthorizationStateFailed);
 
-    var correlationError = ValidateAuthorizationCorrelationCookie(context, authProperties);
+    var correlationError = ValidateCorrelationCookie(context.Request, authProperties);
     if (correlationError is not null) return (default, correlationError);
 
     var correlationId = GetAuthenticationPropertiesCorrelationId(authProperties);

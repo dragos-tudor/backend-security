@@ -113,7 +113,8 @@ partial class OAuthTests {
 
     var authOptions = CreateOAuthOptions() with { TokenEndpoint = "/token", UsePkce = true };
     var authProperties = new AuthenticationProperties(new Dictionary<string, string?>());
-    var result = await ExchangeCodeForTokens(authOptions, authProperties, string.Empty, authClient, "code verifier");
+    SetAuthenticationPropertiesCodeVerifier(authProperties, "code verifier");
+    var result = await ExchangeCodeForTokens(authOptions, authProperties, string.Empty, authClient);
 
     Assert.AreEqual("code verifier", result.TokenInfo!.TokenType);
   }

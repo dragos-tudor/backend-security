@@ -14,6 +14,6 @@ partial class OAuthFuncs
   public static string GetChallengeReturnUri (HttpRequest request, AuthenticationProperties authProperties) =>
     GetAuthenticationPropertiesRedirectUri(authProperties) ?? BuildRelativeUri(request);
 
-  static string GetCallbackRedirectUri (AuthenticationProperties authProperties) =>
+  static string GetDefaultCallbackRedirectUri (AuthenticationProperties authProperties) =>
     authProperties.RedirectUri ?? DefaultRedirectUri;
 }

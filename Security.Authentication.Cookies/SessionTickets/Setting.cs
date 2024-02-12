@@ -8,6 +8,6 @@ partial class CookiesFuncs
   static Task<string> SetSessionTicket(
     ITicketStore ticketStore,
     AuthenticationTicket ticket,
-    CancellationToken token = default) =>
-      ticketStore.SetTicket(ticket, token);
+    CancellationToken cancellationToken = default) =>
+      ticketStore.SetTicket(ticket, cancellationToken);
 }

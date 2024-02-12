@@ -5,7 +5,7 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs {
 
-  public static string EncodeBytes (byte[] bytes) =>
-    Base64UrlTextEncoder.Encode(bytes);
+  public static string EncodeBytes (byte[] data) =>
+    Base64UrlTextEncoder.Encode(data);
 
 }

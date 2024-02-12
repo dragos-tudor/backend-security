@@ -83,7 +83,7 @@ partial class OAuthTests {
     var properties = UnprotectAuthenticationProperties(stateParam.Value, propertiesDataFormat)!;
 
     SetRequestCookiesHeader(context.Request, context.Response);
-    var errors = ValidateCorrelationCookie(context.Request, GetAuthenticationPropertiesCorrelationId(properties)!);
+    var errors = ValidateCorrelationCookie(context.Request, properties);
 
     Assert.IsNull(errors);
   }
