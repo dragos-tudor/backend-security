@@ -5,9 +5,6 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static bool IsValidSecurityToken(TokenValidationResult validationResult, SecurityToken securityToken) =>
-    validationResult.IsValid && securityToken is not null;
-
-  static bool IsJwtSecurityToken(SecurityToken securityToken) =>
+  static bool IsJsonWebToken(SecurityToken securityToken) =>
     securityToken is JsonWebToken;
 }

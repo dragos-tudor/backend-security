@@ -5,6 +5,6 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static Task<IFormCollection> ReadRequestForm(HttpRequest request, CancellationToken token = default) =>
-    request.ReadFormAsync(token);
+  static Task<IFormCollection> ReadRequestForm(HttpRequest request, CancellationToken cancellationToken = default) =>
+    request.ReadFormAsync(cancellationToken);
 }

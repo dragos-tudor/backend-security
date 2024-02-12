@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -6,60 +7,51 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  public static async ValueTask<string?> ChallengeRemoteOidc(
+  public static async ValueTask<string?> ChallengeRemoteOidc<TOptions>(
     HttpContext context,
     AuthenticationProperties authProperties,
-    OpenIdConnectOptions oidcOptions,
+    TOptions oidcOptions,
     OpenIdConnectConfiguration oidcConfiguration,
-    NonceCookieBuilder nonceCookieBuilder,
+    OpenIdConnectProtocolValidator protocolValidator,
+    NonceCookieBuilder cookieBuilder,
     PropertiesDataFormat propertiesDataFormat,
     StringDataFormat stringDataFormat,
-    OpenIdConnectProtocolValidator protocolValidator,
     DateTimeOffset currentUtc)
+  where TOptions : OpenIdConnectOptions
   {
-    var authRequest = CreateChallengeOpenIdConnectMessage(context, authProperties, oidcOptions, oidcConfiguration);
+    var authMessage = CreateOpenIdConnectMessage();
 
     UseCorrelationCookie(context, GenerateCorrelationId(), oidcOptions, currentUtc);
 
-    if (ShouldUseNonceCookie(oidcOptions))
-      UseNonceCookie(context, nonceCookieBuilder, stringDataFormat, protocolValidator, currentUtc);
-
-    SetChallengeAuthenticationProperties(authProperties, authRequest, GetRequestUrl(context.Request));
     if (ShouldUseCodeChallenge(oidcOptions))
-      SetAuthenticationPropertiesCodeVerifier(authProperties, GenerateCodeVerifier());
+      UseCodeChallenge(authProperties, authMessage.Parameters, GenerateCodeVerifier());
 
-    SetChallengeOpenIdConnectMessage(authRequest, authProperties, oidcOptions, propertiesDataFormat);
-    if (ShouldUseCodeChallenge(oidcOptions))
-      SetAuthorizationParamsCodeChallenge(authRequest.Parameters, authProperties);
+    if (ShouldUseNonce(oidcOptions))
+      UseNonce(context, GenerateNonce(protocolValidator), authMessage, cookieBuilder, stringDataFormat, currentUtc);
 
-    if (IsRedirectGetOpenIdConnectAuthenticationMethod(oidcOptions))
-      SetResponseRedirect(context.Response, authRequest.CreateAuthenticationRequestUrl());
+    SetChallengeAuthenticationProperties(authProperties, GetRequestUrl(context.Request), authMessage.RedirectUri, authMessage.State);
+    SetChallengeOpenIdConnectMessage(authMessage, context, authProperties, oidcOptions, oidcConfiguration, propertiesDataFormat.Protect(authProperties));
 
-    if (IsFormPostOpenIdConnectAuthenticationMethod(oidcOptions))
-    {
-      ResetResponseCacheHeaders(context.Response);
-      await WriteResponseHtmlContent(context.Response, authRequest.BuildFormPost());
-    }
-
+    var authUri = await SetChallengeResponse(context, authMessage, oidcOptions, oidcConfiguration);
     SanitizeChallengeResponse(context.Response);
-    var authUri = GetAuthorizationUri(context.Response, oidcConfiguration);
 
-    LogChallengedRemote(Logger, oidcOptions.SchemeName, authUri, context.TraceIdentifier);
+    LogChallengedRemote(Logger, oidcOptions.SchemeName, authUri!, context.TraceIdentifier);
     return authUri;
   }
 
-  public static ValueTask<string?> ChallengeRemoteOidc(
+  public static ValueTask<string?> ChallengeRemoteOidc<TOptions>(
     HttpContext context,
-    AuthenticationProperties authProperties) =>
+    AuthenticationProperties authProperties)
+  where TOptions : OpenIdConnectOptions =>
       ChallengeRemoteOidc(
         context,
         authProperties,
-        ResolveService<OpenIdConnectOptions>(context),
+        ResolveService<TOptions>(context),
         ResolveService<OpenIdConnectConfiguration>(context),
-        ResolveService<NonceCookieBuilder>(context) ?? new NonceCookieBuilder(ResolveService<OpenIdConnectOptions>(context)),
+        ResolveService<OpenIdConnectProtocolValidator>(context),
+        ResolveService<NonceCookieBuilder>(context),
         ResolveService<PropertiesDataFormat>(context),
         ResolveService<StringDataFormat>(context),
-        ResolveService<OpenIdConnectProtocolValidator>(context) ?? new OpenIdConnectProtocolValidator(),
         ResolveService<TimeProvider>(context).GetUtcNow()
       );
 }

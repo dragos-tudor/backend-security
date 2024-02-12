@@ -1,30 +1,85 @@
+
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static void SetOpenIdConnectMessageResponseMode(OpenIdConnectMessage oidcMessage, string responseMode) =>
+  static string SetOpenIdConnectMessageAuthorizationCode(OpenIdConnectMessage oidcMessage, string authCode) =>
+    oidcMessage.Code = authCode;
+
+  static string SetOpenIdConnectMessageClientId(OpenIdConnectMessage oidcMessage, string clientId) =>
+    oidcMessage.ClientId = clientId;
+
+  static string SetOpenIdConnectMessageClientSecret(OpenIdConnectMessage oidcMessage, string clientSecret) =>
+    oidcMessage.ClientSecret = clientSecret;
+
+  static string SetOpenIdConnectMessageCodeVerifier(OpenIdConnectMessage oidcMessage, string codeVerifier)
+    { oidcMessage.Parameters.Add(OAuthConstants.CodeVerifierKey, codeVerifier); return codeVerifier; }
+
+  static bool SetOpenIdConnectMessageEnableTelemetry(OpenIdConnectMessage oidcMessage, bool enableTelemetry) =>
+    oidcMessage.EnableTelemetryParameters = enableTelemetry;
+
+  static string SetOpenIdConnectMessageGrantType(OpenIdConnectMessage oidcMessage, string grantType) =>
+    oidcMessage.GrantType = grantType;
+
+  static string SetOpenIdConnectMessageIssuerAddress(OpenIdConnectMessage oidcMessage, string issuerAddress) =>
+    oidcMessage.IssuerAddress = issuerAddress;
+
+  static string? SetOpenIdConnectMessageMaxAge(OpenIdConnectMessage oidcMessage, string? maxAge) =>
+    oidcMessage.MaxAge = maxAge;
+
+  static string SetOpenIdConnectMessageNonce(OpenIdConnectMessage oidcMessage, string nonce) =>
+    oidcMessage.Nonce = nonce;
+
+  static string? SetOpenIdConnectMessagePrompt(OpenIdConnectMessage oidcMessage, string? prompt) =>
+    oidcMessage.Prompt = prompt;
+
+  static string? SetOpenIdConnectMessageResource(OpenIdConnectMessage oidcMessage, string? resource) =>
+    oidcMessage.Resource = resource;
+
+  static string SetOpenIdConnectMessageRedirectUri(OpenIdConnectMessage oidcMessage, string redirectUri) =>
+    oidcMessage.RedirectUri = redirectUri;
+
+  static string SetOpenIdConnectMessageResponseMode(OpenIdConnectMessage oidcMessage, string responseMode) =>
     oidcMessage.ResponseMode = responseMode;
 
-  static void SetOpenIdConnectMessageState(OpenIdConnectMessage oidcMessage, string state) =>
-    oidcMessage.State = state;
+  static string SetOpenIdConnectMessageResponseType(OpenIdConnectMessage oidcMessage, string responseType) =>
+    oidcMessage.ResponseType = responseType;
 
-  static void ResetOpenIdConnectMessageState(OpenIdConnectMessage oidcMessage, string state) =>
-    SetOpenIdConnectMessageState(oidcMessage, state);
+  static string? SetOpenIdConnectMessageScope(OpenIdConnectMessage oidcMessage, string? scope) =>
+    oidcMessage.Scope = scope;
+
+  static string SetOpenIdConnectMessageState(OpenIdConnectMessage oidcMessage, string state) =>
+    oidcMessage.State = state;
 
   static OpenIdConnectMessage SetChallengeOpenIdConnectMessage(
     OpenIdConnectMessage oidcMessage,
+    HttpContext context,
     AuthenticationProperties authProperties,
     OpenIdConnectOptions oidcOptions,
-    PropertiesDataFormat propertiesDataFormat)
+    OpenIdConnectConfiguration oidcConfiguration,
+    string state)
   {
-    SetOpenIdConnectMessageState(oidcMessage, propertiesDataFormat.Protect(authProperties));
-
-    if (ShouldSetOpenIdConnectResponseMode(oidcOptions))
+    SetOpenIdConnectMessageClientId(oidcMessage, oidcOptions.ClientId);
+    SetOpenIdConnectMessageEnableTelemetry(oidcMessage, !oidcOptions.DisableTelemetry);
+    SetOpenIdConnectMessageMaxAge(oidcMessage, GetOpenIdConnectMessageMaxAge(authProperties, oidcOptions));
+    SetOpenIdConnectMessageIssuerAddress(oidcMessage, oidcConfiguration?.AuthorizationEndpoint ?? string.Empty);
+    SetOpenIdConnectMessageRedirectUri(oidcMessage, GetOpenIdConnectMessageRedirectUri(context, oidcOptions));
+    SetOpenIdConnectMessageResource(oidcMessage, oidcOptions.Resource);
+    SetOpenIdConnectMessageResponseType(oidcMessage, oidcOptions.ResponseType);
+    SetOpenIdConnectMessagePrompt(oidcMessage, GetOpenIdConnectMessagePrompt(authProperties, oidcOptions));
+    SetOpenIdConnectMessageScope(oidcMessage, GetOpenIdConnectMessageScope(authProperties, oidcOptions));
+    SetOpenIdConnectMessageState(oidcMessage, state);
+    if (IsResponseModeOpenIdConnectSettable(oidcOptions))
       SetOpenIdConnectMessageResponseMode(oidcMessage, oidcOptions.ResponseMode);
-
     return oidcMessage;
   }
+
+  static string SetPostAuthorizeOpenIdConnectMessage(OpenIdConnectMessage authMessage, AuthenticationProperties authProperties) =>
+    SetOpenIdConnectMessageState(authMessage, GetAuthenticationPropertiesUserState(authProperties)!);
+
 }

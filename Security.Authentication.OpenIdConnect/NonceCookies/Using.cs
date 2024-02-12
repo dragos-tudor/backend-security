@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Security.Authentication.OpenIdConnect;
 
@@ -7,15 +6,13 @@ partial class OpenIdConnectFuncs
 {
   static string UseNonceCookie(
     HttpContext context,
-    NonceCookieBuilder nonceCookieBuilder,
-    StringDataFormat stringDataFormat,
-    OpenIdConnectProtocolValidator protocolValidator,
+    string cookieContent,
+    NonceCookieBuilder cookieBuilder,
     DateTimeOffset currentUtc)
   {
-    var nonce = protocolValidator.GenerateNonce();
-    var nonceCookieName = GetNonceCookieName(nonceCookieBuilder.Name, stringDataFormat.Protect(nonce));
-    var nonceCookieOptions = nonceCookieBuilder.Build(context, currentUtc);
-    AppendNonceCookie(context.Response, nonceCookieName, nonceCookieOptions);
-    return nonceCookieName;
+    var cookieName = BuildNonceCookieName(cookieBuilder.Name, cookieContent);
+    var cookieOptions = cookieBuilder.Build(context, currentUtc);
+    AppendNonceCookie(context.Response, cookieName, cookieOptions);
+    return cookieName;
   }
 }

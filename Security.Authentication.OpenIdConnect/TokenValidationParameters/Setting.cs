@@ -16,4 +16,21 @@ partial class OpenIdConnectFuncs
     IEnumerable<SecurityKey> signingKeys) =>
       validationParameters.IssuerSigningKeys = signingKeys;
 
+  static bool SetValidationParametersRequireSignedTokens(
+    TokenValidationParameters validationParameters,
+    bool requredSignedTokens) =>
+      validationParameters.RequireSignedTokens = requredSignedTokens;
+
+  static void SetValidationParametersForIdTokenValidation(
+    TokenValidationParameters validationParameters,
+    OpenIdConnectConfiguration oidcConfiguration)
+  {
+    string[] issuers = [oidcConfiguration.Issuer];
+    SetValidationParametersValidIssuers(validationParameters,
+      ConcatValidationParametersValidIssuers(validationParameters, issuers) ?? issuers);
+
+    SetValidationParametersIssuerSigningKeys(validationParameters,
+      ConcatValidationParametersIssuerSigningKeys(validationParameters, oidcConfiguration.SigningKeys) ?? oidcConfiguration.SigningKeys);
+  }
+
 }

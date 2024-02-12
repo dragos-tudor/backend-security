@@ -1,52 +1,69 @@
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static void SetAuthenticationPropertiesCheckSessionIFrame(AuthenticationProperties authProperties, string CheckSessionIframe) =>
-    authProperties.Items.Add(OpenIdConnectSessionProperties.CheckSessionIFrame, CheckSessionIframe);
+  const string IdToken = "IdToken";
+  const string AuthorizationCode = "AuthorizationCode";
 
-  static void SetAuthenticationPropertiesRedirectUriForCode(AuthenticationProperties authProperties, string redirectUri) =>
-    authProperties.Items.Add(OpenIdConnectDefaults.RedirectUriForCodePropertiesKey, redirectUri);
+  static string? SetAuthenticationPropertiesAuthorizationCode(AuthenticationProperties authProperties, string? code) =>
+    SetAuthenticationPropertiesParam(authProperties, AuthorizationCode, code);
 
-  static string SetAuthenticationPropertiesRedirectUri(AuthenticationProperties authProperties, string redirectUri) =>
-    authProperties.RedirectUri = redirectUri;
+  static string SetAuthenticationPropertiesCheckSessionIFrame(AuthenticationProperties authProperties, string checkSessionIframe) =>
+      SetAuthenticationPropertiesItem(authProperties, OpenIdConnectSessionProperties.CheckSessionIFrame, checkSessionIframe!);
 
-  static void SetAuthenticationPropertiesSessionState(AuthenticationProperties authProperties, string sessionState) =>
-    authProperties.Items.Add(OpenIdConnectSessionProperties.SessionState, sessionState);
+  static string? SetAuthenticationPropertiesIdToken(AuthenticationProperties authProperties, string? idToken) =>
+    SetAuthenticationPropertiesParam(authProperties, IdToken, idToken);
 
-  static void SetAuthenticationPropertiesUserState(AuthenticationProperties authProperties, string state) =>
-    authProperties.Items.Add(OpenIdConnectDefaults.UserStatePropertiesKey, state);
+  static string SetAuthenticationPropertiesRedirectUriForCode(AuthenticationProperties authProperties, string redirectUri) =>
+    SetAuthenticationPropertiesItem(authProperties, OpenIdConnectDefaults.RedirectUriForCodePropertiesKey, redirectUri);
 
-  static AuthenticationProperties SetAuthenticationPropertiesSession(
+  static string SetAuthenticationPropertiesSessionState(AuthenticationProperties authProperties, string sessionState) =>
+      SetAuthenticationPropertiesItem(authProperties, OpenIdConnectSessionProperties.SessionState, sessionState!);
+
+  static string SetAuthenticationPropertiesUserState(AuthenticationProperties authProperties, string state) =>
+    SetAuthenticationPropertiesItem(authProperties, OpenIdConnectDefaults.UserStatePropertiesKey, state!);
+
+  static AuthenticationProperties SetAuthenticationPropertiesTokenLifetime(
     AuthenticationProperties authProperties,
-    OpenIdConnectOptions oidcOptions,
-    OpenIdConnectMessage oidcMessage)
+    SecurityToken securityToken
+    )
   {
-    if (!IsEmptyString(oidcMessage.SessionState))
-      SetAuthenticationPropertiesSessionState(authProperties, oidcMessage.SessionState);
-
-    if (!IsEmptyString(oidcOptions.CheckSessionIframe))
-      SetAuthenticationPropertiesCheckSessionIFrame(authProperties, oidcOptions.CheckSessionIframe!);
-
+    if (securityToken.ValidFrom > DateTime.MinValue)
+      SetAuthenticationPropertiesIssued(authProperties, securityToken.ValidFrom);
+    if (securityToken.ValidTo > DateTime.MinValue)
+      SetAuthenticationPropertiesExpires(authProperties, securityToken.ValidTo);
     return authProperties;
   }
 
   static AuthenticationProperties SetChallengeAuthenticationProperties(
     AuthenticationProperties authProperties,
-    OpenIdConnectMessage oidcMessage,
-    string requestUrl)
+    string requestUrl,
+    string redirectUri,
+    string state)
   {
-    if (IsEmptyString(authProperties.RedirectUri))
-      SetAuthenticationPropertiesRedirectUri(authProperties, requestUrl);
+    SetAuthenticationPropertiesRedirectUri(authProperties, requestUrl);
+    SetAuthenticationPropertiesRedirectUriForCode(authProperties, redirectUri);
+    if (IsNotEmptyString(state))
+      SetAuthenticationPropertiesUserState(authProperties, state);
+    return authProperties;
+  }
 
-    if (!IsEmptyString(oidcMessage.State))
-      SetAuthenticationPropertiesUserState(authProperties, oidcMessage.State);
-
-    SetAuthenticationPropertiesRedirectUriForCode(authProperties, oidcMessage.RedirectUri);
+  static AuthenticationProperties SetPostAuthorizeAuthenticationProperties(
+    AuthenticationProperties authProperties,
+    OpenIdConnectMessage oidcMessage,
+    OpenIdConnectOptions oidcOptions)
+  {
+    if(IsNotEmptyString(oidcMessage.SessionState))
+      SetAuthenticationPropertiesSessionState(authProperties, oidcMessage.SessionState!);
+    if (IsNotEmptyString(oidcOptions.CheckSessionIframe))
+      SetAuthenticationPropertiesCheckSessionIFrame(authProperties, oidcOptions.CheckSessionIframe!);
+    SetAuthenticationPropertiesIdToken(authProperties, oidcMessage.IdToken);
+    SetAuthenticationPropertiesAuthorizationCode(authProperties, oidcMessage.Code);
     return authProperties;
   }
 }

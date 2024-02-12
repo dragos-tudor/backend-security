@@ -6,7 +6,6 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-
   public static string ChallengeOidc<TOptions> (
     HttpContext context,
     AuthenticationProperties authProperties,
@@ -24,7 +23,7 @@ partial class OpenIdConnectFuncs
     HttpContext context,
     AuthenticationProperties authProperties)
   where TOptions : OpenIdConnectOptions =>
-    ChallengeOidc(
+     ChallengeOidc(
       context,
       authProperties,
       ResolveService<TOptions>(context));

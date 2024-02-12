@@ -15,7 +15,7 @@ public sealed class NonceCookieBuilder(OpenIdConnectOptions oidcOptions): Reques
     var cookieOptions = base.Build(context, expiresFrom);
 
     if (Expiration is null || cookieOptions.Expires is null)
-      SetCookieOptionsExpires(cookieOptions, expiresFrom.Add(oidcOptions.NonceLifetime));
+      SetNonceCookieOptionsExpires(cookieOptions, expiresFrom.Add(oidcOptions.NonceLifetime));
 
     return cookieOptions;
   }
