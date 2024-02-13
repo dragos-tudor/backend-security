@@ -79,7 +79,7 @@ partial class OpenIdConnectFuncs
     return oidcMessage;
   }
 
-  static string SetPostAuthorizeOpenIdConnectMessage(OpenIdConnectMessage authMessage, AuthenticationProperties authProperties) =>
+  static string SetPostAuthorizationOpenIdConnectMessage(OpenIdConnectMessage authMessage, AuthenticationProperties authProperties) =>
     SetOpenIdConnectMessageState(authMessage, GetAuthenticationPropertiesUserState(authProperties)!);
 
 }

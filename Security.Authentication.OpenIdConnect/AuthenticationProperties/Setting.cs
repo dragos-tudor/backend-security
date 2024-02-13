@@ -53,7 +53,7 @@ partial class OpenIdConnectFuncs
     return authProperties;
   }
 
-  static AuthenticationProperties SetPostAuthorizeAuthenticationProperties(
+  static AuthenticationProperties SetPostAuthorizationAuthenticationProperties(
     AuthenticationProperties authProperties,
     OpenIdConnectMessage oidcMessage,
     OpenIdConnectOptions oidcOptions)

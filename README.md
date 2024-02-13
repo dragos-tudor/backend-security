@@ -36,7 +36,7 @@
   - when called, the *challenge endpoint* [eg. registered with *MapFacebook*] build and send an authorization request to authorization server.
   - after processing the authorization request the authorization server redirect response to *callback endpoint* [eg. registered with *MapFacebook*]. That endpoint receive authorization server response and call *callback func* [eg. *ChallengeFacebook*]. The *callback func* has 2 steps:
     - authentication: *AuthenticateOAuth* oauth authentication func has 3 substeps:
-      * *PostAuthorize* - validate the authorization code and the request from the authorization server [local].
+      * *PostAuthorization* - validate the authorization code and the request from the authorization server [local].
       * *ExchangeCodeForTokens* - exchange with the authorization server the authorization code for the access [and refresh] tokens [remote].
       * *AccessUserInfo* - using access token gets from the authorization server the user informations [remote].
       * The authentication step transform user informations received from authorization server into security claims, add them to the claims identity, create an authentication ticket and return the *AuthenticationResult*.

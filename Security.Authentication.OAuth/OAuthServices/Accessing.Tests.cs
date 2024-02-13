@@ -19,8 +19,8 @@ partial class OAuthTests {
     MapJsonClaim(authOptions, "parameter");
     var result = await AccessUserInfo(authOptions, "token_abc", httpClient);
 
-    Assert.AreEqual("Bearer", GetSecurityClaim(result.Principal, "scheme").Value);
-    Assert.AreEqual("token_abc", GetSecurityClaim(result.Principal, "parameter").Value);
+    Assert.AreEqual("Bearer", GetSecurityClaim(GetClaimsPrincipal(result), "scheme").Value);
+    Assert.AreEqual("token_abc", GetSecurityClaim(GetClaimsPrincipal(result), "parameter").Value);
   }
 
   [TestMethod]
@@ -30,7 +30,7 @@ partial class OAuthTests {
     MapJsonClaim(authOptions, "test");
 
     var result = await AccessUserInfo(authOptions, string.Empty, httpClient);
-    Assert.AreEqual(authOptions.SchemeName, GetSecurityClaim(result.Principal, "test").Issuer);
+    Assert.AreEqual(authOptions.SchemeName, GetSecurityClaim(GetClaimsPrincipal(result), "test").Issuer);
   }
 
   [TestMethod]
@@ -40,7 +40,7 @@ partial class OAuthTests {
     MapJsonClaim(authOptions, "test");
 
     var result = await AccessUserInfo(authOptions, string.Empty, httpClient);
-    Assert.AreEqual("issuer", GetSecurityClaim(result.Principal, "test").Issuer);
+    Assert.AreEqual("issuer", GetSecurityClaim(GetClaimsPrincipal(result), "test").Issuer);
   }
 
   [TestMethod]

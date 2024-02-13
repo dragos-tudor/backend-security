@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.OAuth;
 
-public delegate (AuthenticationProperties?, string?) PostAuthorizeFunc<TOptions>(
+public delegate PostAuthorizationResult PostAuthorizationFunc<TOptions>(
   HttpContext context,
   TOptions authOptions,
   PropertiesDataFormat propertiesDataFormat)

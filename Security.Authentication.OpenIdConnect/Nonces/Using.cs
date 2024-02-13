@@ -8,14 +8,14 @@ partial class OpenIdConnectFuncs
   static string UseNonce(
     HttpContext context,
     string nonce,
-    OpenIdConnectMessage authMessage,
-    NonceCookieBuilder cookieBuilder,
+    OpenIdConnectMessage oidcMessage,
+    OpenIdConnectOptions oidcOptions,
     StringDataFormat stringDataFormat,
     DateTimeOffset currentUtc)
   {
     var protectedNonce = stringDataFormat.Protect(nonce);
-    SetOpenIdConnectMessageNonce(authMessage, nonce);
-    UseNonceCookie(context, protectedNonce, cookieBuilder, currentUtc);
+    SetOpenIdConnectMessageNonce(oidcMessage, nonce);
+    UseNonceCookie(context, oidcOptions, protectedNonce, currentUtc);
     return protectedNonce;
   }
 }

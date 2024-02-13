@@ -18,7 +18,7 @@ partial class FacebookTests {
     MapJsonClaim(authOptions, "query");
 
     var result = await AccessFacebookUserInfo(authOptions, "token", httpClient);
-    StringAssert.Contains(GetSecurityClaim(result.Principal, "query")?.Value, "access_token=token");
+    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "query")?.Value, "access_token=token");
   }
 
   [TestMethod]
@@ -28,7 +28,7 @@ partial class FacebookTests {
     MapJsonClaim(authOptions, "secret_proof");
 
     var result = await AccessFacebookUserInfo(authOptions, string.Empty, httpClient);
-    StringAssert.Contains(GetSecurityClaim(result.Principal, "secret_proof")?.Value, "appsecret_proof=");
+    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "secret_proof")?.Value, "appsecret_proof=");
   }
 
   [TestMethod]
@@ -38,7 +38,7 @@ partial class FacebookTests {
     MapJsonClaim(authOptions, "fields");
 
     var result = await AccessFacebookUserInfo(authOptions, string.Empty, httpClient);
-    StringAssert.Contains(GetSecurityClaim(result.Principal, "fields")?.Value, "fields=name,email");
+    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "fields")?.Value, "fields=name,email");
   }
 
   static Claim GetSecurityClaim(ClaimsPrincipal principal, string claimType) =>

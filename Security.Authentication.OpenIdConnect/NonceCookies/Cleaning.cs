@@ -6,11 +6,14 @@ partial class OpenIdConnectFuncs
 {
   public static string CleanNonceCookie(
     HttpContext context,
-    NonceCookieBuilder cookieBuilder,
-    string cookieName)
+    OpenIdConnectOptions oidcOptions)
   {
-    var cookieOptions = cookieBuilder.Build(context, DateTimeOffset.MinValue);
-    DeleteNonceCookie(context.Response, cookieName, cookieOptions);
-    return cookieName;
+    var cookieBuilder = CreateNonceCookieBuilder(context.Request, oidcOptions);
+    var cookieOptions = BuildNonceCookieOptions(context, cookieBuilder);
+    var cookieName = GetNonceCookieName(context.Request.Cookies);
+
+    SetNonceCookieOptionsExpires(cookieOptions, DateTimeOffset.MinValue);
+    DeleteNonceCookie(context.Response, cookieName!, cookieOptions);
+    return cookieName!;
   }
 }

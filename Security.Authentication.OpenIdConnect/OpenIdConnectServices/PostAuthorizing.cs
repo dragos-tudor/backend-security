@@ -1,76 +1,69 @@
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  const string InvalidAuthorizationMessageState = "Invalid oidc authorization message state.";
-  const string NoAuthorizationMessage = "No oidc authorization message.";
-  const string NoAuthorizationMessageState = "No oidc authorization message state.";
-  const string UnexpectedAuthorizationTokens = "Oidc authorization message cannot contain an identity token or an access token when using query response mode";
+  const string InvalidPostAuthorizationMessageState = "Invalid oidc authorization message state.";
+  const string NoPostAuthorizationMessage = "No oidc authorization message.";
+  const string NoPostAuthorizationMessageState = "No oidc authorization message state.";
+  const string UnexpectedPostAuthorizationTokens = "Oidc authorization message cannot contain an identity token or an access token when using query response mode";
 
-  public static async Task<PostAuthorizeResult> PostAuthorize<TOptions>(
+  public static async Task<PostAuthorizationResult> PostAuthorization<TOptions>(
     HttpContext context,
     TOptions oidcOptions,
     OpenIdConnectConfiguration oidcConfiguration,
-    OpenIdConnectProtocolValidator protocolValidator,
-    JsonWebTokenHandler tokenHandler,
-    NonceCookieBuilder cookieBuilder,
     PropertiesDataFormat propertiesDataFormat,
     StringDataFormat stringDataFormat)
   where TOptions : OpenIdConnectOptions
   {
-    var authParams = await GetPostAuthorizeParams(context.Request, context.RequestAborted);
-    if (authParams is null) return NoAuthorizationMessage;
+    var authParams = await GetPostAuthorizationParams(context.Request, context.RequestAborted);
+    if (authParams is null) return NoPostAuthorizationMessage;
 
     var authMessage = CreateOpenIdConnectMessage(authParams);
-    if (IsGetRequest(context.Request) && !IsSafePostAuthorizeResponse(authMessage)) return UnexpectedAuthorizationTokens;
-    if (IsEmptyString(authMessage.State)) return NoAuthorizationMessageState;
+    if (IsGetRequest(context.Request) && !IsSafePostAuthorizationMessage(authMessage)) return UnexpectedPostAuthorizationTokens;
+    if (IsEmptyString(authMessage.State)) return NoPostAuthorizationMessageState;
 
-    var authError = ValidatePostAuthorizeResponse(authMessage);
+    var authError = ValidatePostAuthorizationMessage(authMessage);
     if (authError is not null) return authError;
 
     var authProperties = UnprotectAuthenticationProperties(authMessage.State, propertiesDataFormat);
-    if (authProperties is null) return InvalidAuthorizationMessageState;
+    if (authProperties is null) return InvalidPostAuthorizationMessageState;
 
     var correlationError = ValidateCorrelationCookie(context.Request, authProperties);
     if (correlationError is not null) return correlationError;
 
-    SetPostAuthorizeOpenIdConnectMessage(authMessage, authProperties);
-    SetPostAuthorizeAuthenticationProperties(authProperties, authMessage, oidcOptions);
+    SetPostAuthorizationOpenIdConnectMessage(authMessage, authProperties);
+    SetPostAuthorizationAuthenticationProperties(authProperties, authMessage, oidcOptions);
 
     if (!IsOpenIdConnectImplicitOrHybridFlow(authMessage))
     {
-      ValidatePostAuthorizeResponseProtocol(authMessage, oidcOptions, protocolValidator);
-      return CreatePostAuthorizeSuccess(authProperties);
+      ValidatePostAuthorizationMessageProtocol(authMessage, oidcOptions);
+      return authProperties;
     }
 
-    var validationResult = await UseImplicitOrHybridFlowIdToken(authMessage.IdToken, authProperties, oidcOptions, oidcConfiguration, tokenHandler);
+    var validationResult = await UseImplicitOrHybridFlowIdToken(authMessage.IdToken, authProperties, oidcOptions, oidcConfiguration);
     if (validationResult.Exception is not null)
-      return validationResult.Exception.Message;
+      return GetTokenValidationResultError(validationResult);
 
     var securityToken = ToJwtSecurityToken(validationResult.SecurityToken);
     var tokenNonce = GetSecurityTokenNonce(securityToken);
-    ValidatePostAuthorizeResponseProtocol(authMessage, oidcOptions, protocolValidator, securityToken,
-      IsValidNonce(context.Request, tokenNonce, cookieBuilder, oidcOptions, stringDataFormat)? tokenNonce: default);
+    ValidatePostAuthorizationMessageProtocol(authMessage, oidcOptions, securityToken,
+      IsValidNonce(context.Request, tokenNonce, oidcOptions, stringDataFormat)? tokenNonce: default);
 
-    return CreatePostAuthorizeSuccess(authProperties, authMessage.Code, authMessage.IdToken, validationResult.ClaimsIdentity);
+    return CreatePostAuthorizationSuccess(authProperties, authMessage.Code, authMessage.IdToken, validationResult.ClaimsIdentity);
   }
 
-  public static Task<PostAuthorizeResult> PostAuthorize<TOptions>(
+  public static Task<PostAuthorizationResult> PostAuthorization<TOptions>(
     HttpContext context)
   where TOptions : OpenIdConnectOptions =>
-      PostAuthorize(
+      PostAuthorization(
         context,
         ResolveService<TOptions>(context),
         ResolveService<OpenIdConnectConfiguration>(context),
-        ResolveService<OpenIdConnectProtocolValidator>(context),
-        ResolveService<JsonWebTokenHandler>(context),
-        ResolveService<NonceCookieBuilder>(context),
         ResolveService<PropertiesDataFormat>(context),
         ResolveService<StringDataFormat>(context)
       );

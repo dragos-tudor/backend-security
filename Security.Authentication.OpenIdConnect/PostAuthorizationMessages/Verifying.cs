@@ -4,9 +4,9 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static bool IsSafePostAuthorizeResponse(OpenIdConnectMessage oidcMessage) =>
+  static bool IsSafePostAuthorizationMessage(OpenIdConnectMessage oidcMessage) =>
     IsEmptyString(oidcMessage.AccessToken) && IsEmptyString(oidcMessage.IdToken);
 
-  static bool IsSucceddedPostAuthorizeResponse(OpenIdConnectMessage oidcMessage) =>
+  static bool IsSucceddedPostAuthorizationMessage(OpenIdConnectMessage oidcMessage) =>
     oidcMessage.Error is null;
 }

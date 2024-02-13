@@ -5,7 +5,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs {
 
-  static StringBuilder AddAuthorizationErrorDetail (this StringBuilder builder, string name, string? message) =>
+  static StringBuilder AddErrorDetail (this StringBuilder builder, string name, string? message) =>
     !IsEmptyString(message)?
       builder.Append($";{name}={message}"):
       builder;

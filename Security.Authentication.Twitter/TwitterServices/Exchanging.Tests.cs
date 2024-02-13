@@ -21,7 +21,7 @@ partial class TwitterTests {
     var authProperties = new AuthenticationProperties();
     var result = await ExchangeTwitterCodeForTokens(authOptions, authProperties, string.Empty, authClient);
 
-    Assert.AreEqual("Basic " + GetTwitterCredentials("id", "secret"), result.TokenInfo!.TokenType);
+    Assert.AreEqual("Basic " + GetTwitterCredentials("id", "secret"), result.Success!.TokenType);
   }
 
 }

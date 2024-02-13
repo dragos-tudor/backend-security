@@ -7,16 +7,16 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static IEnumerable<KeyValuePair<string, string[]>> GetFormPostAuthorizeParams(IFormCollection form) =>
-    form.Select(SkipPostAuthorizeParam);
+  static IEnumerable<KeyValuePair<string, string[]>> GetFormPostAuthorizationParams(IFormCollection form) =>
+    form.Select(SkipPostAuthorizationParam);
 
-  static IEnumerable<KeyValuePair<string, string[]>> GetQueryPostAuthorizeParams(HttpRequest request) =>
-    request.Query.Select(SkipPostAuthorizeParam);
+  static IEnumerable<KeyValuePair<string, string[]>> GetQueryPostAuthorizationParams(HttpRequest request) =>
+    request.Query.Select(SkipPostAuthorizationParam);
 
-  static async Task<IEnumerable<KeyValuePair<string, string[]>>?> GetPostAuthorizeParams(HttpRequest request, CancellationToken cancellationToken = default)
+  static async Task<IEnumerable<KeyValuePair<string, string[]>>?> GetPostAuthorizationParams(HttpRequest request, CancellationToken cancellationToken = default)
   {
-    if(IsGetRequest(request)) return GetQueryPostAuthorizeParams(request);
-    if(IsFormPostRequest(request)) return GetFormPostAuthorizeParams(await ReadRequestForm(request, cancellationToken));
+    if(IsGetRequest(request)) return GetQueryPostAuthorizationParams(request);
+    if(IsFormPostRequest(request)) return GetFormPostAuthorizationParams(await ReadRequestForm(request, cancellationToken));
     return default;
   }
 }

@@ -4,8 +4,8 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  internal const string AccessDeniedAuthorizationError = "access_denied";
+  internal const string AccessDeniedToken = "access_denied";
 
-  static bool IsAccessDeniedAuthorizationError (OpenIdConnectMessage oidcMessage) =>
-    string.Equals(oidcMessage.Error, AccessDeniedAuthorizationError, StringComparison.Ordinal);
+  static bool IsAccessDeniedError (OpenIdConnectMessage oidcMessage) =>
+    string.Equals(oidcMessage.Error, AccessDeniedToken, StringComparison.Ordinal);
 }

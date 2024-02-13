@@ -1,3 +1,4 @@
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
@@ -5,12 +6,13 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
+  readonly static JsonWebTokenHandler TokenHandler = new () { MapInboundClaims = JwtSecurityTokenHandler.DefaultMapInboundClaims };
+
   static async Task<TokenValidationResult> ValidateIdToken(
     string idToken,
-    JsonWebTokenHandler tokenHandler,
     TokenValidationParameters validationParameters)
   {
-    var validationResult = await tokenHandler.ValidateTokenAsync(idToken, validationParameters);
+    var validationResult = await TokenHandler.ValidateTokenAsync(idToken, validationParameters);
     if (!IsTokenValidationResultSuccedded(validationResult))
       return validationResult;
 

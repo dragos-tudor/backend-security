@@ -13,17 +13,18 @@ partial class OAuthFuncs {
     TOptions authOptions,
     PropertiesDataFormat propertiesDataFormat,
     HttpClient httpClient,
-    PostAuthorizeFunc<TOptions> postAuthorize,
+    PostAuthorizationFunc<TOptions> postAuthorize,
     ExchangeCodeForTokensFunc<TOptions> exchangeCodeForTokens,
     AccessUserInfoFunc<TOptions> accessUserInfo)
   where TOptions: OAuthOptions
   {
-    var (authProperties, authError) = postAuthorize(context, authOptions, propertiesDataFormat);
-    if(authError is not null) LogPostAuthorizeWithFailure(Logger, authOptions.SchemeName, authError, context.TraceIdentifier);
-    if(authError is not null) return Fail(authError);
-    LogPostAuthorize(Logger, authOptions.SchemeName, context.TraceIdentifier);
+    var authResult = postAuthorize(context, authOptions, propertiesDataFormat);
+    if(authResult.Failure is not null) LogPostAuthorizationWithFailure(Logger, authOptions.SchemeName, authResult.Failure, context.TraceIdentifier);
+    if(authResult.Failure is not null) return Fail(authResult.Failure);
+    LogPostAuthorization(Logger, authOptions.SchemeName, context.TraceIdentifier);
 
-    var authorizationCode = GetAuthorizationCode(context.Request)!;
+    var authProperties = GetAutheticationProperties(authResult);
+    var authorizationCode = GetPostAuthorizationCode(context.Request)!;
     var tokenResult = await exchangeCodeForTokens(authOptions, authProperties!, authorizationCode, httpClient, context.RequestAborted);
     if (tokenResult.Failure is not null) LogExchangeCodeForTokensWithFailure(Logger, authOptions.SchemeName, tokenResult.Failure, context.TraceIdentifier);
     if (tokenResult.Failure is not null) return Fail(tokenResult.Failure);
@@ -38,14 +39,15 @@ partial class OAuthFuncs {
     if (ShouldCleanCodeChallenge(authOptions))
       RemoveAuthenticationPropertiesCodeVerifier(authProperties!);
 
-    LogAuthenticated(Logger, authOptions.SchemeName, GetPrincipalNameId(userInfoResult.Principal)!, context.TraceIdentifier);
-    return Success(CreateAuthenticationTicket(userInfoResult.Principal!, authProperties, authOptions.SchemeName));
+    var principal = GetClaimsPrincipal(userInfoResult)!;
+    LogAuthenticated(Logger, authOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
+    return Success(CreateAuthenticationTicket(principal, authProperties, authOptions.SchemeName));
   }
 
 
   public static Task<AuthenticateResult> AuthenticateOAuth<TOptions> (
     HttpContext context,
-    PostAuthorizeFunc<TOptions> postAuthorize,
+    PostAuthorizationFunc<TOptions> postAuthorize,
     ExchangeCodeForTokensFunc<TOptions> exchangeCodeForTokens,
     AccessUserInfoFunc<TOptions> accessUserInfo)
   where TOptions: OAuthOptions =>

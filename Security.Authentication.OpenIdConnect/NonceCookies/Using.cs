@@ -6,12 +6,15 @@ partial class OpenIdConnectFuncs
 {
   static string UseNonceCookie(
     HttpContext context,
-    string cookieContent,
-    NonceCookieBuilder cookieBuilder,
+    OpenIdConnectOptions oidcOptions,
+    string nonce,
     DateTimeOffset currentUtc)
   {
-    var cookieName = BuildNonceCookieName(cookieBuilder.Name, cookieContent);
-    var cookieOptions = cookieBuilder.Build(context, currentUtc);
+    var cookieName = BuildNonceCookieName(nonce);
+    var cookieBuilder = CreateNonceCookieBuilder(context.Request, oidcOptions);
+    var cookieOptions = BuildNonceCookieOptions(context, cookieBuilder);
+
+    SetNonceCookieOptionsExpires(cookieOptions, currentUtc.Add(oidcOptions.NonceLifetime));
     AppendNonceCookie(context.Response, cookieName, cookieOptions);
     return cookieName;
   }

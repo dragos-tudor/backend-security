@@ -1,5 +1,5 @@
+
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
@@ -11,10 +11,9 @@ partial class OpenIdConnectFuncs
     string idToken,
     AuthenticationProperties authProperties,
     TOptions oidcOptions,
-    TokenValidationParameters validationParameters,
-    JsonWebTokenHandler tokenHandler) where TOptions : OpenIdConnectOptions
+    TokenValidationParameters validationParameters) where TOptions : OpenIdConnectOptions
   {
-    var validationResult = await ValidateIdToken(idToken, tokenHandler, validationParameters);
+    var validationResult = await ValidateIdToken(idToken, validationParameters);
     if (validationResult.Exception is not null)
       return validationResult;
 
@@ -29,26 +28,24 @@ partial class OpenIdConnectFuncs
     string idToken,
     AuthenticationProperties authProperties,
     TOptions oidcOptions,
-    OpenIdConnectConfiguration oidcConfiguration,
-    JsonWebTokenHandler tokenHandler) where TOptions : OpenIdConnectOptions
+    OpenIdConnectConfiguration oidcConfiguration) where TOptions : OpenIdConnectOptions
   {
     var validationParameters = CreateTokenValidationParameters(oidcOptions);
     SetValidationParametersForIdTokenValidation(validationParameters, oidcConfiguration);
 
-    return UseIdToken(idToken, authProperties, oidcOptions, validationParameters, tokenHandler);
+    return UseIdToken(idToken, authProperties, oidcOptions, validationParameters);
   }
 
   static Task<TokenValidationResult> UseCodeOrHybridFlowIdToken<TOptions>(
     string idToken,
     AuthenticationProperties authProperties,
     TOptions oidcOptions,
-    OpenIdConnectConfiguration oidcConfiguration,
-    JsonWebTokenHandler tokenHandler) where TOptions : OpenIdConnectOptions
+    OpenIdConnectConfiguration oidcConfiguration) where TOptions : OpenIdConnectOptions
   {
     var validationParameters = CreateTokenValidationParameters(oidcOptions);
     SetValidationParametersForIdTokenValidation(validationParameters, oidcConfiguration);
     SetValidationParametersRequireSignedTokens(validationParameters, false);
 
-    return UseIdToken(idToken, authProperties, oidcOptions, validationParameters, tokenHandler);
+    return UseIdToken(idToken, authProperties, oidcOptions, validationParameters);
   }
 }

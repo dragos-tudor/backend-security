@@ -4,8 +4,8 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  private const string NonceContent = "N";
+  const string NonceCookieContent = "N";
 
   static void AppendNonceCookie(HttpResponse response, string cookieName, CookieOptions cookieOptions) =>
-    response.Cookies.Append(cookieName, NonceContent, cookieOptions);
+    response.Cookies.Append(cookieName, NonceCookieContent, cookieOptions);
 }

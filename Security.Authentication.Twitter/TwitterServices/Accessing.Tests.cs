@@ -18,7 +18,7 @@ partial class TwitterTests {
     MapJsonClaim(authOptions, "query");
 
     var result = await AccessTwitterUserInfo(authOptions, string.Empty, httpClient);
-    StringAssert.Contains(GetSecurityClaim(result.Principal, "query")?.Value, "user.fields=field1");
+    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "query")?.Value, "user.fields=field1");
   }
 
   static Claim GetSecurityClaim(ClaimsPrincipal principal, string claimType) =>

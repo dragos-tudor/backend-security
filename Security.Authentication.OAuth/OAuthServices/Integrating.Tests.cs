@@ -1,7 +1,6 @@
 
 using System.Net;
 using System.Text.Json;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -10,8 +9,8 @@ using static Security.Testing.Funcs;
 
 namespace Security.Authentication.OAuth;
 
-partial class OAuthTests {
-
+partial class OAuthTests
+{
   [TestMethod]
   public async Task User_challenge_authentication__execute_authentication_flow__authentication_succedded () {
     using var authServer = CreateHttpServer();
@@ -26,7 +25,7 @@ partial class OAuthTests {
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
     using var appServer = CreateHttpServer();
     appServer.MapGet("/challenge", (HttpContext context) => ChallengeRemoteOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.UtcNow));
-    appServer.MapGet("/callback", async delegate (HttpContext context) { return (await AuthenticateOAuth(context, authOptions, propertiesDataFormat, authClient, PostAuthorize, ExchangeCodeForTokens, AccessUserInfo)).Succeeded; });
+    appServer.MapGet("/callback", async delegate (HttpContext context) { return (await AuthenticateOAuth(context, authOptions, propertiesDataFormat, authClient, PostAuthorization, ExchangeCodeForTokens, AccessUserInfo)).Succeeded; });
     await appServer.StartAsync();
     using var appClient = appServer.GetTestClient();
 
@@ -41,7 +40,6 @@ partial class OAuthTests {
     var authenticationResponse = await appClient.GetAsync(authenticateUrl, GetRequestMessageCookieHeader(challengeResponse));
     Assert.AreEqual("true", await ReadResponseMessageContent(authenticationResponse));
   }
-
 
 
   static string GetCallbackLocation(HttpRequest request) =>

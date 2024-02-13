@@ -18,7 +18,7 @@ partial class OAuthTests {
     var authProperties = new AuthenticationProperties();
     var result = await ExchangeCodeForTokens(authOptions, authProperties, "abc", httpClient);
 
-    StringAssert.Contains(result.TokenInfo!.TokenType, "code=abc");
+    StringAssert.Contains(GetTokenType(result), "code=abc");
   }
 
   [TestMethod]
@@ -28,7 +28,7 @@ partial class OAuthTests {
     var authProperties = new AuthenticationProperties(new Dictionary<string, string?>() { {CallbackUri, "http://localhost/callback"} });
     var result = await ExchangeCodeForTokens(authOptions, authProperties, string.Empty, httpClient);
 
-    StringAssert.Contains(result.TokenInfo!.TokenType, "redirect_uri=" + Uri.EscapeDataString("http://localhost/callback"));
+    StringAssert.Contains(GetTokenType(result), "redirect_uri=" + Uri.EscapeDataString("http://localhost/callback"));
   }
 
   [TestMethod]
@@ -38,7 +38,7 @@ partial class OAuthTests {
     var authProperties = new AuthenticationProperties();
     var result = await ExchangeCodeForTokens(authOptions, authProperties, "abc", httpClient);
 
-    StringAssert.Contains(result.TokenInfo!.TokenType, "client_id=client+id");
+    StringAssert.Contains(GetTokenType(result), "client_id=client+id");
   }
 
   [TestMethod]
@@ -48,7 +48,7 @@ partial class OAuthTests {
     var authProperties = new AuthenticationProperties();
     var result = await ExchangeCodeForTokens(authOptions, authProperties, "abc", httpClient);
 
-    StringAssert.Contains(result.TokenInfo!.TokenType, "client_secret=client+secret");
+    StringAssert.Contains(GetTokenType(result), "client_secret=client+secret");
   }
 
   [TestMethod]
@@ -58,7 +58,7 @@ partial class OAuthTests {
     var authProperties = new AuthenticationProperties();
     var result = await ExchangeCodeForTokens(authOptions, authProperties, string.Empty, httpClient);
 
-    Assert.AreEqual("access token", result.TokenInfo!.AccessToken);
+    Assert.AreEqual(GetAccessToken(result), "access token");
   }
 
   [TestMethod]
@@ -68,7 +68,7 @@ partial class OAuthTests {
     var authProperties = new AuthenticationProperties();
     var result = await ExchangeCodeForTokens(authOptions, authProperties, string.Empty, httpClient);
 
-    Assert.AreEqual("3600", result.TokenInfo!.ExpiresIn);
+    Assert.AreEqual(GetExpiresIn(result), "3600");
   }
 
   [TestMethod]
@@ -116,7 +116,7 @@ partial class OAuthTests {
     SetAuthenticationPropertiesCodeVerifier(authProperties, "code verifier");
     var result = await ExchangeCodeForTokens(authOptions, authProperties, string.Empty, authClient);
 
-    Assert.AreEqual("code verifier", result.TokenInfo!.TokenType);
+    Assert.AreEqual(GetTokenType(result), "code verifier");
   }
 
 }

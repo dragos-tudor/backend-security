@@ -6,32 +6,33 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs {
 
-  public static (AuthenticationProperties?, string?) PostAuthorize<TOptions> (
+  public static PostAuthorizationResult PostAuthorization<TOptions> (
     HttpContext context,
     TOptions authOptions,
     PropertiesDataFormat propertiesDataFormat)
   where TOptions: OAuthOptions
   {
-    var authError = ValidateAuthorizationResult(context);
+    var authError = ValidatePostAuthorizationRequest(context);
     if (IsAccessDeniedError(authError)) SetResponseRedirect(context.Response, authOptions.AccessDeniedPath);
-    if (authError is not null) return (default, authError);
+    if (authError is not null) return authError;
 
-    var authProperties = UnprotectAuthenticationProperties(GetAuthorizationState(context.Request), propertiesDataFormat);
-    if (authProperties is null) return (default, UnprotectAuthorizationStateFailed);
+    var authProperties = UnprotectAuthenticationProperties(GetPostAuthorizationState(context.Request), propertiesDataFormat);
+    if (authProperties is null) return UnprotectAuthorizationStateFailed;
 
     var correlationError = ValidateCorrelationCookie(context.Request, authProperties);
-    if (correlationError is not null) return (default, correlationError);
+    if (correlationError is not null) return correlationError;
 
     var correlationId = GetAuthenticationPropertiesCorrelationId(authProperties);
     CleanCorrelationCookie(context, authOptions, correlationId);
     RemoveAuthenticationPropertiesCorrelationId(authProperties);
 
-    return (authProperties, default);
+    return authProperties;
   }
 
-  public static (AuthenticationProperties?, string?) PostAuthorize<TOptions> (HttpContext context)
+  public static PostAuthorizationResult PostAuthorization<TOptions> (
+    HttpContext context)
   where TOptions: OAuthOptions =>
-    PostAuthorize(
+    PostAuthorization(
       context,
       ResolveService<TOptions>(context),
       ResolveService<PropertiesDataFormat>(context)

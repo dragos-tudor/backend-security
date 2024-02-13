@@ -12,8 +12,6 @@ partial class OpenIdConnectFuncs
     AuthenticationProperties authProperties,
     TOptions oidcOptions,
     OpenIdConnectConfiguration oidcConfiguration,
-    OpenIdConnectProtocolValidator protocolValidator,
-    NonceCookieBuilder cookieBuilder,
     PropertiesDataFormat propertiesDataFormat,
     StringDataFormat stringDataFormat,
     DateTimeOffset currentUtc)
@@ -27,7 +25,7 @@ partial class OpenIdConnectFuncs
       UseCodeChallenge(authProperties, authMessage.Parameters, GenerateCodeVerifier());
 
     if (ShouldUseNonce(oidcOptions))
-      UseNonce(context, GenerateNonce(protocolValidator), authMessage, cookieBuilder, stringDataFormat, currentUtc);
+      UseNonce(context, GenerateNonce(), authMessage, oidcOptions, stringDataFormat, currentUtc);
 
     SetChallengeAuthenticationProperties(authProperties, GetRequestUrl(context.Request), authMessage.RedirectUri, authMessage.State);
     SetChallengeOpenIdConnectMessage(authMessage, context, authProperties, oidcOptions, oidcConfiguration, propertiesDataFormat.Protect(authProperties));
@@ -48,8 +46,6 @@ partial class OpenIdConnectFuncs
         authProperties,
         ResolveService<TOptions>(context),
         ResolveService<OpenIdConnectConfiguration>(context),
-        ResolveService<OpenIdConnectProtocolValidator>(context),
-        ResolveService<NonceCookieBuilder>(context),
         ResolveService<PropertiesDataFormat>(context),
         ResolveService<StringDataFormat>(context),
         ResolveService<TimeProvider>(context).GetUtcNow()
