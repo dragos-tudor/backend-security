@@ -7,38 +7,27 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static async Task<TokenValidationResult> UseIdToken<TOptions>(
+  static Task<TokenValidationResult> UseIdToken<TOptions>(
     string idToken,
-    AuthenticationProperties authProperties,
     TOptions oidcOptions,
-    TokenValidationParameters validationParameters) where TOptions : OpenIdConnectOptions
-  {
-    var validationResult = await ValidateIdToken(idToken, validationParameters);
-    if (validationResult.Exception is not null)
-      return validationResult;
+    TokenValidationParameters validationParameters)
+  where TOptions : OpenIdConnectOptions =>
+    ValidateIdToken(idToken, validationParameters);
 
-    var securityToken = validationResult.SecurityToken;
-    if (ShouldUseTokenLifetime(oidcOptions))
-      SetAuthenticationPropertiesTokenLifetime(authProperties, securityToken!);
-
-    return validationResult;
-  }
 
   static Task<TokenValidationResult> UseImplicitOrHybridFlowIdToken<TOptions>(
     string idToken,
-    AuthenticationProperties authProperties,
     TOptions oidcOptions,
     OpenIdConnectConfiguration oidcConfiguration) where TOptions : OpenIdConnectOptions
   {
     var validationParameters = CreateTokenValidationParameters(oidcOptions);
     SetValidationParametersForIdTokenValidation(validationParameters, oidcConfiguration);
 
-    return UseIdToken(idToken, authProperties, oidcOptions, validationParameters);
+    return UseIdToken(idToken, oidcOptions, validationParameters);
   }
 
   static Task<TokenValidationResult> UseCodeOrHybridFlowIdToken<TOptions>(
     string idToken,
-    AuthenticationProperties authProperties,
     TOptions oidcOptions,
     OpenIdConnectConfiguration oidcConfiguration) where TOptions : OpenIdConnectOptions
   {
@@ -46,6 +35,6 @@ partial class OpenIdConnectFuncs
     SetValidationParametersForIdTokenValidation(validationParameters, oidcConfiguration);
     SetValidationParametersRequireSignedTokens(validationParameters, false);
 
-    return UseIdToken(idToken, authProperties, oidcOptions, validationParameters);
+    return UseIdToken(idToken, oidcOptions, validationParameters);
   }
 }

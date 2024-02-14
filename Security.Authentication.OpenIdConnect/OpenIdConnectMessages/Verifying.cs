@@ -7,9 +7,6 @@ partial class OpenIdConnectFuncs
   static bool IsOpenIdConnectCodeFlow(OpenIdConnectMessage oidcMessage) =>
     IsNotEmptyString(oidcMessage.Code);
 
-  static bool IsOpenIdConnectCodeOrHybridFlow(OpenIdConnectMessage oidcMessage) =>
-    IsOpenIdConnectCodeFlow(oidcMessage) || IsOpenIdConnectHybridFlow(oidcMessage);
-
   static bool IsOpenIdConnectHybridFlow(OpenIdConnectMessage oidcMessage) =>
     IsNotEmptyString(oidcMessage.IdToken) && IsNotEmptyString(oidcMessage.Code);
 

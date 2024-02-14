@@ -25,6 +25,24 @@ partial class OpenIdConnectFuncs
     if(authResult.Failure is not null) return Fail(authResult.Failure);
     LogPostAuthorization(Logger, oidcOptions.SchemeName, context.TraceIdentifier);
 
+    var authInfo = GetPostAuthorizationInfo(authResult)!;
+    var authProperties = authInfo.AuthProperties;
+
+    var tokenResult = ExistsPostAuthorizationCode(authInfo) && !ExistsPostAuthorizationIdentity(authInfo)? // skip hybrid flow
+      await exchangeCodeForTokens(authInfo.Code!, authProperties,
+        oidcOptions, oidcConfiguration, stringDataFormat, httpClient, GetRequestCookies(context.Request), context.RequestAborted):
+      default;
+    if(tokenResult?.Failure is not null) LogExchangeCodeForTokensWithFailure(Logger, oidcOptions.SchemeName, tokenResult.Failure, context.TraceIdentifier);
+    if(tokenResult?.Failure is not null) return Fail(tokenResult.Failure);
+    LogExchangeCodeForTokens(Logger, oidcOptions.SchemeName, context.TraceIdentifier);
+
+    var tokenInfo = GetTokenInfo(tokenResult);
+    var identity = tokenInfo?.Identity ?? authInfo.Identity;
+
+    // save tokens on authentication properties
+    // access user info
+    // clean nonce cookie and authetication properties [code verifier]
+
     return default!;
   }
 

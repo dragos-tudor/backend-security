@@ -7,5 +7,5 @@ partial class OpenIdConnectFuncs
   internal const string AccessDeniedToken = "access_denied";
 
   static bool IsAccessDeniedError (OpenIdConnectMessage oidcMessage) =>
-    string.Equals(oidcMessage.Error, AccessDeniedToken, StringComparison.Ordinal);
+    string.Equals(oidcMessage.Error, AccessDeniedToken, StringComparison.OrdinalIgnoreCase);
 }

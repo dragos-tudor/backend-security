@@ -1,49 +1,45 @@
 using System.Net.Http;
 using System.Threading;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static async Task<TokenResult> HandleTokenResponse(
+  static async Task<TokenResult> HandleTokenResponse<TOptions>(
     HttpResponseMessage response,
-    string authCode,
+    AuthenticationProperties authProperties,
+    TOptions oidcOptions,
+    OpenIdConnectConfiguration oidcConfiguration,
+    StringDataFormat stringDataFormat,
+    IRequestCookieCollection cookies,
     CancellationToken cancellationToken = default)
+  where TOptions : OpenIdConnectOptions
   {
-    // var contentMediaType = responseMessage.Content.Headers.ContentType?.MediaType;
-    // if (Logger.IsEnabled(LogLevel.Debug))
-    // {
-    //     if (string.IsNullOrEmpty(contentMediaType))
-    //     {
-    //         Logger.LogDebug($"Unexpected token response format. Status Code: {(int)responseMessage.StatusCode}. Content-Type header is missing.");
-    //     }
-    //     else if (!string.Equals(contentMediaType, "application/json", StringComparison.OrdinalIgnoreCase))
-    //     {
-    //         Logger.LogDebug($"Unexpected token response format. Status Code: {(int)responseMessage.StatusCode}. Content-Type {responseMessage.Content.Headers.ContentType}.");
-    //     }
-    // }
-
-    // // Error handling:
-    // // 1. If the response body can't be parsed as json, throws.
-    // // 2. If the response's status code is not in 2XX range, throw OpenIdConnectProtocolException. If the body is correct parsed,
-    // //    pass the error information from body to the exception.
-    // OpenIdConnectMessage message;
-    // try
-    // {
-    //     var responseContent = await responseMessage.Content.ReadAsStringAsync(Context.RequestAborted);
-    //     message = new OpenIdConnectMessage(responseContent);
-    // }
-    // catch (Exception ex)
-    // {
-    //     throw new OpenIdConnectProtocolException($"Failed to parse token response body as JSON. Status Code: {(int)responseMessage.StatusCode}. Content-Type: {responseMessage.Content.Headers.ContentType}", ex);
-    // }
-
-    // if (!responseMessage.IsSuccessStatusCode)
-    // {
-    //     throw CreateOpenIdConnectProtocolException(message, responseMessage);
-    // }
+    var tokenError = ValidateTokenResponse(response);
+    if(tokenError is not null) return tokenError;
 
     var responseContent = await ReadTokenResponseContent(response, cancellationToken);
-    return default!;
+    var tokenMessage = CreateOpenIdConnectMessage(responseContent);
+
+    var messageError = ValidateTokenMessage(tokenMessage);
+    if (messageError is not null) return messageError;
+
+    var validationResult = await UseCodeOrHybridFlowIdToken(tokenMessage.IdToken, oidcOptions, oidcConfiguration);
+    if (validationResult.Exception is not null)
+      return GetTokenValidationResultError(validationResult);
+
+    if (ShouldUseTokenLifetime(oidcOptions))
+      SetAuthenticationPropertiesTokenLifetime(authProperties, validationResult.SecurityToken!);
+
+    var securityToken = ToJwtSecurityToken(validationResult.SecurityToken);
+    var tokenNonce = GetSecurityTokenNonce(securityToken);
+
+    ValidatePostAuthorizationMessageProtocol(tokenMessage, oidcOptions, securityToken,
+      IsValidNonce(cookies, tokenNonce, oidcOptions, stringDataFormat)? tokenNonce: default);
+
+    return CreateTokenInfo(tokenMessage, validationResult);
   }
 }

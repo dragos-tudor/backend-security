@@ -5,6 +5,9 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
+  public static IRequestCookieCollection GetRequestCookies (HttpRequest request) =>
+    request.Cookies;
+
   public static string GetRequestPathBase (HttpRequest request) =>
     request.PathBase;
 
@@ -15,4 +18,5 @@ partial class AuthenticationFuncs
 
   public static string GetRequestUrl (HttpRequest request) =>
     $"{request.PathBase}{request.Path}{request.QueryString}";
+
 }

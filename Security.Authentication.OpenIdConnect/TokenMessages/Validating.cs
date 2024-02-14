@@ -5,20 +5,19 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static string? ValidatePostAuthorizationMessage(OpenIdConnectMessage oidcMessage)
+  static string? ValidateTokenMessage(OpenIdConnectMessage oidcMessage)
   {
-    if (IsAccessDeniedError(oidcMessage)) return AccessDeniedToken;
-    if (!IsSucceddedPostAuthorizationMessage(oidcMessage)) return BuildGenericError(oidcMessage);
+    if (!IsSucceddedTokenMessage(oidcMessage)) return BuildGenericError(oidcMessage);
     return default;
   }
 
-  static void ValidatePostAuthorizationMessageProtocol(
+  static void ValidateTokenMessageProtocol(
     OpenIdConnectMessage oidcMessage,
     OpenIdConnectOptions oidcOptions,
     JwtSecurityToken? securityToken = default,
     string? nonce = default) =>
       CreateOpenIdConnectProtocolValidator()
-        .ValidateAuthenticationResponse(new OpenIdConnectProtocolValidationContext() {
+        .ValidateTokenResponse(new OpenIdConnectProtocolValidationContext() {
           ProtocolMessage = oidcMessage,
           ClientId = oidcOptions.ClientId,
           ValidatedIdToken = securityToken,

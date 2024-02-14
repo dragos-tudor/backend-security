@@ -2,4 +2,4 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.OpenIdConnect;
 
-public record class PostAuthorizationInfo(AuthenticationProperties AuthenticationProperties, string? AuthorizationCode, string? IdToken, ClaimsIdentity? Identity);
+public record class PostAuthorizationInfo(AuthenticationProperties AuthProperties, string? Code, string? IdToken, ClaimsIdentity? Identity);

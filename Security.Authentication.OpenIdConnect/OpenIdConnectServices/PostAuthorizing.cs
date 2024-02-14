@@ -42,19 +42,23 @@ partial class OpenIdConnectFuncs
     if (!IsOpenIdConnectImplicitOrHybridFlow(authMessage))
     {
       ValidatePostAuthorizationMessageProtocol(authMessage, oidcOptions);
-      return authProperties;
+      return CreatePostAuthorizationInfo(authProperties);
     }
 
-    var validationResult = await UseImplicitOrHybridFlowIdToken(authMessage.IdToken, authProperties, oidcOptions, oidcConfiguration);
+    var validationResult = await UseImplicitOrHybridFlowIdToken(authMessage.IdToken, oidcOptions, oidcConfiguration);
     if (validationResult.Exception is not null)
       return GetTokenValidationResultError(validationResult);
 
+    if (ShouldUseTokenLifetime(oidcOptions))
+      SetAuthenticationPropertiesTokenLifetime(authProperties, validationResult.SecurityToken!);
+
     var securityToken = ToJwtSecurityToken(validationResult.SecurityToken);
     var tokenNonce = GetSecurityTokenNonce(securityToken);
-    ValidatePostAuthorizationMessageProtocol(authMessage, oidcOptions, securityToken,
-      IsValidNonce(context.Request, tokenNonce, oidcOptions, stringDataFormat)? tokenNonce: default);
 
-    return CreatePostAuthorizationSuccess(authProperties, authMessage.Code, authMessage.IdToken, validationResult.ClaimsIdentity);
+    ValidatePostAuthorizationMessageProtocol(authMessage, oidcOptions, securityToken,
+      IsValidNonce(GetRequestCookies(context.Request), tokenNonce, oidcOptions, stringDataFormat)? tokenNonce: default);
+
+    return CreatePostAuthorizationInfo(authProperties, authMessage, validationResult);
   }
 
   public static Task<PostAuthorizationResult> PostAuthorization<TOptions>(
