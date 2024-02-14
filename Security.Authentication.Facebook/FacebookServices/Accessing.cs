@@ -10,8 +10,8 @@ namespace Security.Authentication.Facebook;
 partial class FacebookFuncs {
 
   public static async Task<UserInfoResult> AccessFacebookUserInfo (
-    FacebookOptions facebookOptions,
     string accessToken,
+    FacebookOptions facebookOptions,
     HttpClient httpClient,
     CancellationToken cancellationToken = default)
   {
@@ -25,12 +25,12 @@ partial class FacebookFuncs {
 
   public static Task<UserInfoResult> AccessFacebookUserInfo (
     HttpContext context,
-    FacebookOptions facebookOptions,
     string accessToken,
+    FacebookOptions facebookOptions,
     CancellationToken cancellationToken = default) =>
       AccessFacebookUserInfo(
-        facebookOptions,
         accessToken,
+        facebookOptions,
         ResolveService<HttpClient>(context),
         cancellationToken
       );

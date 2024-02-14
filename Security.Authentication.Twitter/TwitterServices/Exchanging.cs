@@ -13,9 +13,9 @@ partial class TwitterFuncs
   const string BasicSchema = "Basic";
 
   public static async Task<TokenResult> ExchangeTwitterCodeForTokens (
-    TwitterOptions twitterOptions,
-    AuthenticationProperties authProperties,
     string authCode,
+    AuthenticationProperties authProperties,
+    TwitterOptions twitterOptions,
     HttpClient httpClient,
     CancellationToken cancellationToken = default)
   {
@@ -28,13 +28,13 @@ partial class TwitterFuncs
 
   public static Task<TokenResult> ExchangeTwitterCodeForTokens (
     HttpContext context,
-    AuthenticationProperties authProperties,
     string authCode,
+    AuthenticationProperties authProperties,
     CancellationToken cancellationToken = default) =>
       ExchangeCodeForTokens(
-        ResolveService<TwitterOptions>(context),
-        authProperties,
         authCode,
+        authProperties,
+        ResolveService<TwitterOptions>(context),
         ResolveService<HttpClient>(context),
         cancellationToken
       );

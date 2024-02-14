@@ -32,7 +32,7 @@ partial class OAuthTests
     var postAuthorize = Substitute.For<PostAuthorizationFunc<OAuthOptions>>();
     var exchangeCodeForTokens = Substitute.For<ExchangeCodeForTokensFunc<OAuthOptions>>();
     postAuthorize(default!, default!, default!).ReturnsForAnyArgs(new AuthenticationProperties());
-    exchangeCodeForTokens(default!, default!, "code", default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(default, "stop exec")));
+    exchangeCodeForTokens("code", default!, default!, default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(default, "stop exec")));
 
     await AuthenticateOAuth(context, authOptions, propertiesDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, default!);
     exchangeCodeForTokens.Received(1);
@@ -48,8 +48,8 @@ partial class OAuthTests
     var exchangeCodeForTokens = Substitute.For<ExchangeCodeForTokensFunc<OAuthOptions>>();
     var accessUserInfo = Substitute.For<AccessUserInfoFunc<OAuthOptions>>();
     postAuthorize(default!, default!, default!).ReturnsForAnyArgs(new AuthenticationProperties());
-    exchangeCodeForTokens(default!, default!, "code", default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(new TokenInfo(AccessToken: "token"), default)));
-    accessUserInfo(default!, "token", default!)!.ReturnsForAnyArgs(ToTask(new UserInfoResult(default, "stop exec")));
+    exchangeCodeForTokens("code", default!, default!, default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(new TokenInfo(AccessToken: "token"), default)));
+    accessUserInfo("token", default!, default!)!.ReturnsForAnyArgs(ToTask(new UserInfoResult(default, "stop exec")));
 
     await AuthenticateOAuth(context, authOptions, propertiesDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, accessUserInfo);
     accessUserInfo.Received(1);
@@ -66,8 +66,8 @@ partial class OAuthTests
     var exchangeCodeForTokens = Substitute.For<ExchangeCodeForTokensFunc<OAuthOptions>>();
     var accessUserInfo = Substitute.For<AccessUserInfoFunc<OAuthOptions>>();
     postAuthorize(default!, default!, default!).ReturnsForAnyArgs(new AuthenticationProperties());
-    exchangeCodeForTokens(default!, default!, "code", default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(new TokenInfo(AccessToken: "token"), default)));
-    accessUserInfo(default!, "token", default!)!.ReturnsForAnyArgs(ToTask(new UserInfoResult(principal, default)));
+    exchangeCodeForTokens("code", default!, default!, default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(new TokenInfo(AccessToken: "token"), default)));
+    accessUserInfo("token", default!, default!)!.ReturnsForAnyArgs(ToTask(new UserInfoResult(principal, default)));
 
     var result = await AuthenticateOAuth(context, authOptions, propertiesDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, accessUserInfo);
     Assert.AreSame(principal, result.Principal);

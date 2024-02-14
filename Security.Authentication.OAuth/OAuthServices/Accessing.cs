@@ -8,8 +8,8 @@ namespace Security.Authentication.OAuth;
 partial class OAuthFuncs {
 
   public static async Task<UserInfoResult> AccessUserInfo<TOptions> (
-    TOptions authOptions,
     string accessToken,
+    TOptions authOptions,
     HttpClient httpClient,
     CancellationToken cancellationToken = default) where TOptions: OAuthOptions
   {
@@ -20,13 +20,13 @@ partial class OAuthFuncs {
 
   public static Task<UserInfoResult> AccessUserInfo<TOptions> (
     HttpContext context,
-    TOptions authOptions,
     string accessToken,
+    TOptions authOptions,
     CancellationToken cancellationToken = default)
   where TOptions: OAuthOptions =>
     AccessUserInfo(
-      authOptions,
       accessToken,
+      authOptions,
       ResolveHttpClient<TOptions>(context),
       cancellationToken
     );

@@ -9,9 +9,9 @@ namespace Security.Authentication.OAuth;
 partial class OAuthFuncs {
 
   public static async Task<TokenResult> ExchangeCodeForTokens<TOptions> (
-    TOptions authOptions,
-    AuthenticationProperties authProperties,
     string authCode,
+    AuthenticationProperties authProperties,
+    TOptions authOptions,
     HttpClient httpClient,
     CancellationToken cancellationToken = default)
   where TOptions: OAuthOptions
@@ -24,14 +24,14 @@ partial class OAuthFuncs {
 
   public static Task<TokenResult> ExchangeCodeForTokens<TOptions> (
     HttpContext context,
-    AuthenticationProperties authProperties,
     string authCode,
+    AuthenticationProperties authProperties,
     CancellationToken cancellationToken = default)
   where TOptions: OAuthOptions =>
     ExchangeCodeForTokens(
-      ResolveService<TOptions>(context),
-      authProperties,
       authCode,
+      authProperties,
+      ResolveService<TOptions>(context),
       ResolveHttpClient<TOptions>(context),
       cancellationToken
     );

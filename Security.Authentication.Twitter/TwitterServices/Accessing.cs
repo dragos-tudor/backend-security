@@ -10,8 +10,8 @@ namespace Security.Authentication.Twitter;
 partial class TwitterFuncs {
 
   public static async Task<UserInfoResult> AccessTwitterUserInfo (
-    TwitterOptions twitterOptions,
     string accessToken,
+    TwitterOptions twitterOptions,
     HttpClient httpClient,
     CancellationToken cancellationToken = default)
   {
@@ -26,8 +26,8 @@ partial class TwitterFuncs {
     string accessToken,
     CancellationToken cancellationToken = default) =>
       AccessTwitterUserInfo(
-        ResolveService<TwitterOptions>(context),
         accessToken,
+        ResolveService<TwitterOptions>(context),
         ResolveService<HttpClient>(context),
         cancellationToken
       );

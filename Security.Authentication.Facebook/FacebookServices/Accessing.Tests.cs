@@ -17,7 +17,7 @@ partial class FacebookTests {
     var authOptions = CreateFacebookOptions("", "secret") with { UserInformationEndpoint = "http://oauth/userinfo" };
     MapJsonClaim(authOptions, "query");
 
-    var result = await AccessFacebookUserInfo(authOptions, "token", httpClient);
+    var result = await AccessFacebookUserInfo("token", authOptions, httpClient);
     StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "query")?.Value, "access_token=token");
   }
 
@@ -27,7 +27,7 @@ partial class FacebookTests {
     var authOptions = CreateFacebookOptions("", "secret") with { UserInformationEndpoint = "http://oauth/userinfo" };
     MapJsonClaim(authOptions, "secret_proof");
 
-    var result = await AccessFacebookUserInfo(authOptions, string.Empty, httpClient);
+    var result = await AccessFacebookUserInfo(string.Empty, authOptions, httpClient);
     StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "secret_proof")?.Value, "appsecret_proof=");
   }
 
@@ -37,7 +37,7 @@ partial class FacebookTests {
     var authOptions = CreateFacebookOptions("", "secret") with { UserInformationEndpoint = "http://oauth/userinfo" };
     MapJsonClaim(authOptions, "fields");
 
-    var result = await AccessFacebookUserInfo(authOptions, string.Empty, httpClient);
+    var result = await AccessFacebookUserInfo(string.Empty, authOptions, httpClient);
     StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "fields")?.Value, "fields=name,email");
   }
 
