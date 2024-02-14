@@ -54,8 +54,8 @@ partial class OAuthFuncs {
     AuthenticateOAuth(
       context,
       ResolveService<TOptions>(context),
-      ResolveService<PropertiesDataFormat>(context),
-      ResolveService<HttpClient>(context),
+      ResolvePropertiesDataFormat<TOptions>(context),
+      ResolveHttpClient<TOptions>(context),
       postAuthorize,
       exchangeCodeForTokens,
       accessUserInfo);

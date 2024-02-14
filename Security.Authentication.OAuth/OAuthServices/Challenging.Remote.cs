@@ -37,8 +37,8 @@ partial class OAuthFuncs
     ChallengeRemoteOAuth(
       context,
       ResolveService<TOptions>(context),
-      ResolveService<PropertiesDataFormat>(context),
-      ResolveService<TimeProvider>(context).GetUtcNow()
+      ResolvePropertiesDataFormat<TOptions>(context),
+      ResolveTimeProvider<TOptions>(context).GetUtcNow()
     );
 
 }

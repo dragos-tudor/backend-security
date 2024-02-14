@@ -35,7 +35,7 @@ partial class OAuthFuncs {
     PostAuthorization(
       context,
       ResolveService<TOptions>(context),
-      ResolveService<PropertiesDataFormat>(context)
+      ResolvePropertiesDataFormat<TOptions>(context)
     );
 
 }

@@ -1,17 +1,16 @@
+using System.Net.Http;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Security.Authentication.Facebook;
 
-partial class FacebookFuncs {
-
+partial class FacebookFuncs
+{
   public static IServiceCollection AddFacebook(
     this IServiceCollection services,
     FacebookOptions facebookOptions,
-    IDataProtectionProvider? dataProtectionProvider = default) =>
-      services
-        .AddSingleton(facebookOptions)
-        .AddSingleton((services) =>
-          CreatePropertiesDataFormat(dataProtectionProvider ?? ResolveService<IDataProtectionProvider>(services), facebookOptions.SchemeName))
-        .AddSingleton(TimeProvider.System);
+    HttpClient? httpClient = default,
+    IDataProtectionProvider? dataProtectionProvider = default,
+    TimeProvider? timeProvider = default) =>
+      services.AddOAuth(facebookOptions, httpClient, dataProtectionProvider, timeProvider);
 }
