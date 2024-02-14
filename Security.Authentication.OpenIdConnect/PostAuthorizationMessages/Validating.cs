@@ -5,8 +5,6 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  readonly static OpenIdConnectProtocolValidator ProtocolValidator = new ();
-
   static string? ValidatePostAuthorizationMessage(OpenIdConnectMessage oidcMessage)
   {
     if (IsSucceddedPostAuthorizationMessage(oidcMessage)) return default;
@@ -19,10 +17,11 @@ partial class OpenIdConnectFuncs
     OpenIdConnectOptions oidcOptions,
     JwtSecurityToken? securityToken = default,
     string? nonce = default) =>
-    ProtocolValidator.ValidateAuthenticationResponse(new OpenIdConnectProtocolValidationContext() {
-      ProtocolMessage = oidcMessage,
-      ClientId = oidcOptions.ClientId,
-      ValidatedIdToken = securityToken,
-      Nonce = nonce
-    });
+      CreateOpenIdConnectProtocolValidator()
+        .ValidateAuthenticationResponse(new OpenIdConnectProtocolValidationContext() {
+          ProtocolMessage = oidcMessage,
+          ClientId = oidcOptions.ClientId,
+          ValidatedIdToken = securityToken,
+          Nonce = nonce
+        });
 }

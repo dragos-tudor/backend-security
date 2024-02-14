@@ -1,3 +1,4 @@
+using System.Net.Http;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -11,6 +12,7 @@ partial class OpenIdConnectFuncs
     HttpContext context,
     TOptions oidcOptions,
     OpenIdConnectConfiguration oidcConfiguration,
+    HttpClient httpClient,
     PropertiesDataFormat propertiesDataFormat,
     StringDataFormat stringDataFormat,
     PostAuthorizationFunc<TOptions> postAuthorize,
@@ -25,4 +27,19 @@ partial class OpenIdConnectFuncs
 
     return default!;
   }
+
+  static Task<AuthenticateResult> AuthenticateOidc<TOptions> (
+    HttpContext context)
+  where TOptions: OpenIdConnectOptions =>
+    AuthenticateOidc(
+      context,
+      ResolveService<TOptions>(context),
+      ResolveService<OpenIdConnectConfiguration>(context),
+      ResolveHttpClient<TOptions>(context),
+      ResolvePropertiesDataFormat<TOptions>(context),
+      ResolveStringDataFormat<TOptions>(context),
+      PostAuthorization,
+      ExchangeCodeForTokens,
+      default!
+    );
 }

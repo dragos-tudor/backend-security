@@ -10,8 +10,8 @@ namespace Security.Authentication.OpenIdConnect;
 partial class OpenIdConnectFuncs {
 
   public static async Task<TokenResult> ExchangeCodeForTokens<TOptions> (
-    AuthenticationProperties authProperties,
     string authCode,
+    AuthenticationProperties authProperties,
     TOptions oidcOptions,
     OpenIdConnectConfiguration oidcConfiguration,
     HttpClient httpClient,
@@ -26,16 +26,16 @@ partial class OpenIdConnectFuncs {
 
   public static Task<TokenResult> ExchangeCodeForTokens<TOptions> (
     HttpContext context,
-    AuthenticationProperties authProperties,
     string authCode,
+    AuthenticationProperties authProperties,
     CancellationToken cancellationToken = default)
   where TOptions: OpenIdConnectOptions =>
       ExchangeCodeForTokens(
-        authProperties,
         authCode,
+        authProperties,
         ResolveService<TOptions>(context),
         ResolveService<OpenIdConnectConfiguration>(context),
-        ResolveService<HttpClient>(context),
+        ResolveHttpClient<TOptions>(context),
         cancellationToken
       );
 

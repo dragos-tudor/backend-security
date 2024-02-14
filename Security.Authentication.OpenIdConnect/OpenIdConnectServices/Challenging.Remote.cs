@@ -46,8 +46,8 @@ partial class OpenIdConnectFuncs
         authProperties,
         ResolveService<TOptions>(context),
         ResolveService<OpenIdConnectConfiguration>(context),
-        ResolveService<PropertiesDataFormat>(context),
-        ResolveService<StringDataFormat>(context),
-        ResolveService<TimeProvider>(context).GetUtcNow()
+        ResolvePropertiesDataFormat<TOptions>(context),
+        ResolveStringDataFormat<TOptions>(context),
+        ResolveTimeProvider<TOptions>(context).GetUtcNow()
       );
 }
