@@ -12,10 +12,8 @@ partial class OAuthFuncs {
     CancellationToken cancellationToken = default)
   {
     var responseContent = await ReadUserInfoResponseContent(response, cancellationToken);
-
-    return response.IsSuccessStatusCode ?
-      CreateSuccessUserInfoResult(AddClaimsPrincipalClaims(CreatePrincipal(authOptions.SchemeName), authOptions, responseContent)) :
-      CreateFailureUserInfoResult(BuildUserInfoError(response, responseContent));
+    return IsSuccessUserInfoResponse(response)?
+      BuildClaimsPrincipal(authOptions, responseContent):
+      BuildUserInfoError(response, responseContent);
   }
-
 }

@@ -12,13 +12,13 @@ partial class OAuthFuncs {
     CancellationToken cancellationToken = default)
   {
     var responseContent = await ReadTokenResponseContent(response, cancellationToken);
-    using var responseJson = Parse(responseContent);
+    using var tokensData = Parse(responseContent);
 
     return response.IsSuccessStatusCode ?
-      ValidateTokenResult(CreateSuccessTokenResult(responseJson.RootElement)):
-      IsJsonTokenError(responseJson) ?
-        CreateFailureTokenResult(BuildTokenErrorFromJson(responseJson.RootElement)) :
-        CreateFailureTokenResult(BuildTokenErrorFromResponse(response, responseContent));
+      ValidateTokenResult(tokensData.RootElement):
+      IsJsonTokenError(tokensData) ?
+        BuildTokenErrorFromJson(tokensData.RootElement) :
+        BuildTokenErrorFromResponse(response, responseContent);
   }
 
 }

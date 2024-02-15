@@ -68,7 +68,7 @@ partial class OAuthTests {
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
     var authorizationPath = ChallengeRemoteOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now);
     var stateParam = GetQueryStateParam(authorizationPath);
-    var properties = UnprotectAuthenticationProperties(stateParam.Value, propertiesDataFormat);
+    var properties = UnprotectAuthenticationProperties(stateParam.Value!, propertiesDataFormat);
 
     StringAssert.Contains(properties!.RedirectUri,"/index");
   }
@@ -80,7 +80,7 @@ partial class OAuthTests {
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
     var authorizationPath = ChallengeRemoteOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now);
     var stateParam = GetQueryStateParam(authorizationPath);
-    var properties = UnprotectAuthenticationProperties(stateParam.Value, propertiesDataFormat)!;
+    var properties = UnprotectAuthenticationProperties(stateParam.Value!, propertiesDataFormat)!;
 
     SetRequestCookiesHeader(context.Request, context.Response);
     var errors = ValidateCorrelationCookie(context.Request, properties);

@@ -1,13 +1,12 @@
 
 using Microsoft.AspNetCore.Authentication;
 
-namespace Security.Authentication.OAuth;
+namespace Security.Authentication.Remote;
 
-partial class OAuthFuncs {
-
-  internal static string ProtectAuthenticationProperties (
+partial class RemoteFuncs
+{
+  public static string ProtectAuthenticationProperties(
     AuthenticationProperties authProperties,
     PropertiesDataFormat propertiesDataFormat) =>
       propertiesDataFormat.Protect(authProperties);
-
 }

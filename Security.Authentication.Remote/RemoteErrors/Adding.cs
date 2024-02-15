@@ -1,13 +1,12 @@
 
 using System.Text;
 
-namespace Security.Authentication.OAuth;
+namespace Security.Authentication.Remote;
 
-partial class OAuthFuncs {
-
+partial class RemoteFuncs
+{
   static StringBuilder AddErrorDetail (this StringBuilder builder, string name, string? message) =>
     !IsEmptyString(message)?
       builder.Append($";{name}={message}"):
       builder;
-
 }

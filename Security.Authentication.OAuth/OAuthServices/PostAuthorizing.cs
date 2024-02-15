@@ -16,7 +16,7 @@ partial class OAuthFuncs {
     if (IsAccessDeniedError(authError)) SetResponseRedirect(context.Response, authOptions.AccessDeniedPath);
     if (authError is not null) return authError;
 
-    var authProperties = UnprotectAuthenticationProperties(GetPostAuthorizationState(context.Request), propertiesDataFormat);
+    var authProperties = UnprotectAuthenticationProperties(GetPostAuthorizationState(context.Request)!, propertiesDataFormat);
     if (authProperties is null) return UnprotectAuthorizationStateFailed;
 
     var correlationError = ValidateCorrelationCookie(context.Request, authProperties);

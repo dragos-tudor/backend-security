@@ -13,6 +13,9 @@ partial class RemoteFuncs {
   public static T? GetAuthenticationPropertiesParam<T>(AuthenticationProperties authProperties, string key) =>
     authProperties.GetParameter<T>(key);
 
+  public static string? GetAuthenticationPropertiesCallbackUri (AuthenticationProperties authProperties) =>
+    GetAuthenticationPropertiesItem(authProperties, CallbackUri);
+
   public static string? GetAuthenticationPropertiesCodeVerifier (AuthenticationProperties authProperties) =>
     GetAuthenticationPropertiesItem(authProperties, CodeVerifier);
 

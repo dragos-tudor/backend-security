@@ -1,4 +1,4 @@
 
 namespace Security.Authentication.OAuth;
 
-public record class UserInfoResult(ClaimsPrincipal? Success, string? Failure);
+public partial record class UserInfoResult(ClaimsPrincipal? Success, string? Failure);

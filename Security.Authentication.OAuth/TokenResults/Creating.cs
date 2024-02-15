@@ -4,17 +4,17 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.OAuth;
 
-partial class OAuthFuncs {
-
+partial class OAuthFuncs
+{
   const string AccessToken = "access_token";
   const string ExpiresIn = "expires_in";
   const string RefreshToken = "refresh_token";
   const string TokenType = "token_type";
 
-  static TokenResult CreateFailureTokenResult (string error) =>
+  internal static TokenResult CreateFailureTokenResult (string error) =>
     new (default, error);
 
-  static TokenResult CreateSuccessTokenResult (JsonElement elem) =>
+  internal static TokenResult CreateSuccessTokenResult (JsonElement elem) =>
     new (
       new TokenInfo(
         elem.GetString(AccessToken),
@@ -23,5 +23,4 @@ partial class OAuthFuncs {
         elem.GetString(ExpiresIn)),
       default
     );
-
 }

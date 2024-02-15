@@ -1,4 +1,4 @@
 
 namespace Security.Authentication.OAuth;
 
-public record class TokenResult (TokenInfo? Success, string? Failure);
+public partial record class TokenResult (TokenInfo? Success, string? Failure);

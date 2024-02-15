@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.Remote;
 
-partial class RemoteFuncs {
-
+partial class RemoteFuncs
+{
   public static bool RemoveAuthenticationPropertiesItem (AuthenticationProperties authProperties, string key) =>
     authProperties.Items.Remove(key);
 
@@ -13,5 +13,4 @@ partial class RemoteFuncs {
 
   public static bool RemoveAuthenticationPropertiesCorrelationId (AuthenticationProperties authProperties) =>
     RemoveAuthenticationPropertiesItem(authProperties, CorrelationIdKey);
-
 }
