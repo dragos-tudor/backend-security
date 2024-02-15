@@ -7,7 +7,7 @@ partial class OpenIdConnectFuncs
 {
   static string? ValidateTokenMessage(OpenIdConnectMessage oidcMessage)
   {
-    if (!IsSucceddedTokenMessage(oidcMessage)) return BuildGenericError(oidcMessage);
+    if (!IsSuccessTokenMessage(oidcMessage)) return BuildGenericError(oidcMessage);
     return default;
   }
 

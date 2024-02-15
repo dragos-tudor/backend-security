@@ -19,6 +19,12 @@ partial class OpenIdConnectFuncs
   static bool IsResponseModeOpenIdConnectSettable(OpenIdConnectOptions oidcOptions) =>
     !IsCodeOpenIdConnectResponseType(oidcOptions) || !IsQueryOpenIdConnectResponseMode(oidcOptions);
 
+  static bool ShouldSaveTokens(OpenIdConnectOptions oidcOptions) =>
+    oidcOptions.SaveTokens;
+
+  static bool ShouldCleanNonce(OpenIdConnectOptions oidcOptions) =>
+    oidcOptions.RequireNonce;
+
   static bool ShouldUseNonce(OpenIdConnectOptions oidcOptions) =>
     oidcOptions.RequireNonce;
 

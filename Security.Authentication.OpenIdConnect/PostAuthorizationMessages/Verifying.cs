@@ -7,6 +7,6 @@ partial class OpenIdConnectFuncs
   static bool IsSafePostAuthorizationMessage(OpenIdConnectMessage oidcMessage) =>
     IsEmptyString(oidcMessage.AccessToken) && IsEmptyString(oidcMessage.IdToken);
 
-  static bool IsSucceddedPostAuthorizationMessage(OpenIdConnectMessage oidcMessage) =>
+  static bool IsSuccessPostAuthorizationMessage(OpenIdConnectMessage oidcMessage) =>
     oidcMessage.Error is null;
 }

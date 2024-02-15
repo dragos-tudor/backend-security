@@ -8,7 +8,7 @@ partial class OpenIdConnectFuncs
   static string? ValidatePostAuthorizationMessage(OpenIdConnectMessage oidcMessage)
   {
     if (IsAccessDeniedError(oidcMessage)) return AccessDeniedToken;
-    if (!IsSucceddedPostAuthorizationMessage(oidcMessage)) return BuildGenericError(oidcMessage);
+    if (!IsSuccessPostAuthorizationMessage(oidcMessage)) return BuildGenericError(oidcMessage);
     return default;
   }
 

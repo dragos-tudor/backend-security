@@ -28,15 +28,46 @@ partial class OpenIdConnectFuncs
   static string SetAuthenticationPropertiesUserState(AuthenticationProperties authProperties, string state) =>
     SetAuthenticationPropertiesItem(authProperties, OpenIdConnectDefaults.UserStatePropertiesKey, state!);
 
+  static string CreateAuthenticationPropertiesAccessToken(AuthenticationProperties authProperties, string accessToken) =>
+    SetAuthenticationPropertiesItem(authProperties, OpenIdConnectParameterNames.AccessToken, accessToken);
+
+  static string CreateAuthenticationPropertiesIdToken(AuthenticationProperties authProperties, string idToken) =>
+    SetAuthenticationPropertiesItem(authProperties, OpenIdConnectParameterNames.IdToken, idToken);
+
+  static string CreateAuthenticationPropertiesRefreshToken(AuthenticationProperties authProperties, string refreshToken) =>
+    SetAuthenticationPropertiesItem(authProperties, OpenIdConnectParameterNames.RefreshToken, refreshToken);
+
+  static string CreateAuthenticationPropertiesTokenType(AuthenticationProperties authProperties, string tokenType) =>
+    SetAuthenticationPropertiesItem(authProperties, OpenIdConnectParameterNames.TokenType, tokenType);
+
   static AuthenticationProperties SetAuthenticationPropertiesTokenLifetime(
     AuthenticationProperties authProperties,
-    SecurityToken securityToken
-    )
+    SecurityToken securityToken)
   {
-    if (securityToken.ValidFrom > DateTime.MinValue)
+    if (IsSetSecurityTokenValidFrom(securityToken))
       SetAuthenticationPropertiesIssued(authProperties, securityToken.ValidFrom);
-    if (securityToken.ValidTo > DateTime.MinValue)
+    if (IsSetSecurityTokenValidTo(securityToken))
       SetAuthenticationPropertiesExpires(authProperties, securityToken.ValidTo);
+    return authProperties;
+  }
+
+  static AuthenticationProperties SetAuthenticationPropertiesTokens(
+    AuthenticationProperties authProperties,
+    string? idToken,
+    TokenInfo? tokenInfo) =>
+      SetAuthenticationPropertiesTokens(authProperties, idToken, tokenInfo?.TokenType, tokenInfo?.AccessToken, tokenInfo?.RefreshToken);
+
+  static AuthenticationProperties SetAuthenticationPropertiesTokens(
+    AuthenticationProperties authProperties,
+    string? idToken,
+    string? tokenType = default,
+    string? accessToken = default,
+    string? refreshToken =  default)
+  {
+    if(IsNotEmptyString(idToken)) CreateAuthenticationPropertiesIdToken(authProperties, idToken!);
+    if(IsNotEmptyString(tokenType)) CreateAuthenticationPropertiesTokenType(authProperties, tokenType!);
+    if(IsNotEmptyString(accessToken)) CreateAuthenticationPropertiesAccessToken(authProperties, accessToken!);
+    if(IsNotEmptyString(refreshToken)) CreateAuthenticationPropertiesRefreshToken(authProperties, refreshToken!);
     return authProperties;
   }
 

@@ -27,23 +27,36 @@ partial class OpenIdConnectFuncs
 
     var authInfo = GetPostAuthorizationInfo(authResult)!;
     var authProperties = authInfo.AuthProperties;
-
-    var tokenResult = ExistsPostAuthorizationCode(authInfo) && !ExistsPostAuthorizationIdentity(authInfo)? // skip hybrid flow
-      await exchangeCodeForTokens(authInfo.Code!, authProperties,
-        oidcOptions, oidcConfiguration, stringDataFormat, httpClient, GetRequestCookies(context.Request), context.RequestAborted):
-      default;
-    if(tokenResult?.Failure is not null) LogExchangeCodeForTokensWithFailure(Logger, oidcOptions.SchemeName, tokenResult.Failure, context.TraceIdentifier);
-    if(tokenResult?.Failure is not null) return Fail(tokenResult.Failure);
-    LogExchangeCodeForTokens(Logger, oidcOptions.SchemeName, context.TraceIdentifier);
+    var tokenResult = default(TokenResult);
+    if(ShouldExchangeCodeForTokens(authInfo)) {
+      tokenResult = await exchangeCodeForTokens(authInfo.Code!, authProperties, oidcOptions,
+        oidcConfiguration, stringDataFormat, httpClient, GetRequestCookies(context.Request), context.RequestAborted);
+      if(tokenResult.Failure is not null) LogExchangeCodeForTokensWithFailure(Logger, oidcOptions.SchemeName, tokenResult.Failure, context.TraceIdentifier);
+      if(tokenResult.Failure is not null) return Fail(tokenResult.Failure);
+      LogExchangeCodeForTokens(Logger, oidcOptions.SchemeName, context.TraceIdentifier);
+    }
 
     var tokenInfo = GetTokenInfo(tokenResult);
-    var identity = tokenInfo?.Identity ?? authInfo.Identity;
+    var idToken = GetIdToken(authInfo, tokenInfo);
+    if (ShouldCleanNonce(oidcOptions)) CleanNonceCookie(context, oidcOptions);
+    if (ShouldCleanCodeChallenge(oidcOptions)) RemoveAuthenticationPropertiesCodeVerifier(authProperties);
+    if (ShouldSaveTokens(oidcOptions)) SetAuthenticationPropertiesTokens(authProperties, idToken, tokenInfo);
 
-    // save tokens on authentication properties
-    // access user info
-    // clean nonce cookie and authetication properties [code verifier]
+    var identity = GetClaimsIdentity(authInfo, tokenInfo);
+    var securityToken = GetSecurityToken(authInfo, tokenInfo);
+    var userInfoResult = default(UserInfoResult);
+    if (ShouldAccessUserInfo(oidcOptions, oidcConfiguration, tokenInfo)) {
+      userInfoResult = await accessUserInfo(tokenInfo!.AccessToken!, securityToken, identity, oidcOptions, oidcConfiguration, httpClient, context.RequestAborted);
+      if (userInfoResult.Failure is not null) LogAccessUserInfoWithFailure(Logger, oidcOptions.SchemeName, userInfoResult.Failure, context.TraceIdentifier);
+      if (userInfoResult.Failure is not null) return Fail(userInfoResult.Failure);
+      LogAccessUserInfo(Logger, oidcOptions.SchemeName, context.TraceIdentifier);
+    }
 
-    return default!;
+    var principal = userInfoResult is not null?
+      GetUserInfoResultPrincipal(userInfoResult):
+      BuildClaimsPrincipal(oidcOptions, identity, "{}");
+    LogAuthenticated(Logger, oidcOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
+    return Success(CreateAuthenticationTicket(principal, authProperties, oidcOptions.SchemeName));
   }
 
   static Task<AuthenticateResult> AuthenticateOidc<TOptions> (

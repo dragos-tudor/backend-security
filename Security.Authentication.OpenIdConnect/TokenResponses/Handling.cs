@@ -31,15 +31,14 @@ partial class OpenIdConnectFuncs
     if (validationResult.Exception is not null)
       return GetTokenValidationResultError(validationResult);
 
+    var securityToken = ToJwtSecurityToken(validationResult.SecurityToken);
+    var tokenNonce = GetSecurityTokenNonce(securityToken);
+    var validNonce = IsValidNonce(cookies, tokenNonce, oidcOptions, stringDataFormat)? tokenNonce: default;
+    ValidateTokenMessageProtocol(tokenMessage, oidcOptions, securityToken, validNonce);
+
     if (ShouldUseTokenLifetime(oidcOptions))
       SetAuthenticationPropertiesTokenLifetime(authProperties, validationResult.SecurityToken!);
 
-    var securityToken = ToJwtSecurityToken(validationResult.SecurityToken);
-    var tokenNonce = GetSecurityTokenNonce(securityToken);
-
-    ValidatePostAuthorizationMessageProtocol(tokenMessage, oidcOptions, securityToken,
-      IsValidNonce(cookies, tokenNonce, oidcOptions, stringDataFormat)? tokenNonce: default);
-
-    return CreateTokenInfo(tokenMessage, validationResult);
+    return CreateTokenInfo(tokenMessage, validationResult, securityToken);
   }
 }

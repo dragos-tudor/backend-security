@@ -28,7 +28,8 @@ partial class OpenIdConnectFuncs
       UseNonce(context, GenerateNonce(), authMessage, oidcOptions, stringDataFormat, currentUtc);
 
     SetChallengeAuthenticationProperties(authProperties, GetRequestUrl(context.Request), authMessage.RedirectUri, authMessage.State);
-    SetChallengeOpenIdConnectMessage(authMessage, context, authProperties, oidcOptions, oidcConfiguration, propertiesDataFormat.Protect(authProperties));
+    SetChallengeOpenIdConnectMessage(authMessage, context, authProperties, oidcOptions, oidcConfiguration,
+      ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
 
     var authUri = await SetChallengeResponse(context, authMessage, oidcOptions, oidcConfiguration);
     SanitizeChallengeResponse(context.Response);

@@ -11,10 +11,10 @@ partial class OpenIdConnectFuncs
   {
     var tokenHandler = CreateJsonWebTokenHandler();
     var validationResult = await tokenHandler.ValidateTokenAsync(idToken, validationParameters);
-    if (!IsTokenValidationResultSuccedded(validationResult))
+    if (!IsSuccessTokenValidationResult(validationResult))
       return validationResult;
 
-    if (!IsTokenValidationResultValid(validationResult))
+    if (!IsValidTokenValidationResult(validationResult))
       return SetTokenValidationResultException(validationResult, $"Id token is invalid: '{idToken}'.");
 
     var securityToken = validationResult.SecurityToken;

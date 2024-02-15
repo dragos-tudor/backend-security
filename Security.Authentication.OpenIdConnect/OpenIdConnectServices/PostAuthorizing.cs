@@ -49,16 +49,15 @@ partial class OpenIdConnectFuncs
     if (validationResult.Exception is not null)
       return GetTokenValidationResultError(validationResult);
 
+    var securityToken = ToJwtSecurityToken(validationResult.SecurityToken);
+    var tokenNonce = GetSecurityTokenNonce(securityToken);
+    var validNonce = IsValidNonce(GetRequestCookies(context.Request), tokenNonce, oidcOptions, stringDataFormat)? tokenNonce: default;
+    ValidatePostAuthorizationMessageProtocol(authMessage, oidcOptions, securityToken, validNonce);
+
     if (ShouldUseTokenLifetime(oidcOptions))
       SetAuthenticationPropertiesTokenLifetime(authProperties, validationResult.SecurityToken!);
 
-    var securityToken = ToJwtSecurityToken(validationResult.SecurityToken);
-    var tokenNonce = GetSecurityTokenNonce(securityToken);
-
-    ValidatePostAuthorizationMessageProtocol(authMessage, oidcOptions, securityToken,
-      IsValidNonce(GetRequestCookies(context.Request), tokenNonce, oidcOptions, stringDataFormat)? tokenNonce: default);
-
-    return CreatePostAuthorizationInfo(authProperties, authMessage, validationResult);
+    return CreatePostAuthorizationInfo(authProperties, authMessage, validationResult, securityToken);
   }
 
   public static Task<PostAuthorizationResult> PostAuthorization<TOptions>(

@@ -4,9 +4,9 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static bool IsTokenValidationResultSuccedded(TokenValidationResult validationResult) =>
+  static bool IsSuccessTokenValidationResult(TokenValidationResult validationResult) =>
     validationResult.Exception is not null;
 
-  static bool IsTokenValidationResultValid(TokenValidationResult validationResult) =>
+  static bool IsValidTokenValidationResult(TokenValidationResult validationResult) =>
     validationResult.IsValid;
 }

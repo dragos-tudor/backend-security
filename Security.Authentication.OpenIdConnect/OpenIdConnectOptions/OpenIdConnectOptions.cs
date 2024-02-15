@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.AspNetCore.Http;
 using Security.Authentication.Remote;
 
@@ -15,7 +14,6 @@ public record OpenIdConnectOptions : RemoteAuthenticationOptions
   public required string ClientId { get; init; }
   public required string ClientSecret { get; init; }
 
-  public required ClaimActionCollection ClaimActions { get; init; }
   public string? CheckSessionIframe { get; init; }
   public bool GetClaimsFromUserInfoEndpoint { get; init; }
 
@@ -36,6 +34,5 @@ public record OpenIdConnectOptions : RemoteAuthenticationOptions
   public required string SignedOutRedirectUri { get; init; }
   public string? SignOutScheme { get; init; }
 
-  public required bool UsePkce { get; init; }
   public bool UseTokenLifetime { get; init; }
 }

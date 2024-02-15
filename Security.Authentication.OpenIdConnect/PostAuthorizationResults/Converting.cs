@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.OpenIdConnect;
 

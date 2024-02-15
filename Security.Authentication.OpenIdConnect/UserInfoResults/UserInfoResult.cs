@@ -1,4 +1,4 @@
 
 namespace Security.Authentication.OpenIdConnect;
 
-public record class UserInfoResult(ClaimsPrincipal? Principal, string? Failure);
+public partial record class UserInfoResult(ClaimsPrincipal? Success, string? Failure);

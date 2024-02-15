@@ -7,4 +7,10 @@ partial class OpenIdConnectFuncs
 {
   static bool IsJsonWebToken(SecurityToken securityToken) =>
     securityToken is JsonWebToken;
+
+  static bool IsSetSecurityTokenValidFrom(SecurityToken securityToken) =>
+    securityToken.ValidFrom > DateTime.MinValue;
+
+  static bool IsSetSecurityTokenValidTo(SecurityToken securityToken) =>
+    securityToken.ValidTo > DateTime.MinValue;
 }

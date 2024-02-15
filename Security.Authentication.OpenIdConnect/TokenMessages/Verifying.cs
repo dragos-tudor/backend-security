@@ -4,6 +4,6 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static bool IsSucceddedTokenMessage(OpenIdConnectMessage oidcMessage) =>
+  static bool IsSuccessTokenMessage(OpenIdConnectMessage oidcMessage) =>
     oidcMessage.Error is null;
 }
