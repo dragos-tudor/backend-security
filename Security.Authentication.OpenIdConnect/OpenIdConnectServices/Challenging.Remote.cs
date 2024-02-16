@@ -17,22 +17,21 @@ partial class OpenIdConnectFuncs
     DateTimeOffset currentUtc)
   where TOptions : OpenIdConnectOptions
   {
-    var authMessage = CreateOpenIdConnectMessage();
-
+    var challengeMessage = CreateOpenIdConnectMessage();
     UseCorrelationCookie(context, GenerateCorrelationId(), oidcOptions, currentUtc);
 
     if (ShouldUseCodeChallenge(oidcOptions))
-      UseCodeChallenge(authProperties, authMessage.Parameters, GenerateCodeVerifier());
+      UseCodeChallenge(authProperties, challengeMessage.Parameters, GenerateCodeVerifier());
 
     if (ShouldUseNonce(oidcOptions))
-      UseNonce(context, GenerateNonce(), authMessage, oidcOptions, stringDataFormat, currentUtc);
+      UseNonce(context, GenerateNonce(), challengeMessage, oidcOptions, stringDataFormat, currentUtc);
 
-    SetChallengeAuthenticationProperties(authProperties, GetRequestUrl(context.Request), authMessage.RedirectUri, authMessage.State);
-    SetChallengeOpenIdConnectMessage(authMessage, context, authProperties, oidcOptions, oidcConfiguration,
+    SetChallengeRemoteAuthenticationProperties(authProperties, GetRequestUrl(context.Request), challengeMessage.RedirectUri, challengeMessage.State);
+    SetChallengeRemoteOpenIdConnectMessage(challengeMessage, context, authProperties, oidcOptions, oidcConfiguration,
       ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
 
-    var authUri = await SetChallengeResponse(context, authMessage, oidcOptions, oidcConfiguration);
-    SanitizeChallengeResponse(context.Response);
+    var authUri = await SetChallengeRemoteResponse(context, challengeMessage, oidcOptions, oidcConfiguration);
+    SanitizeResponse(context.Response);
 
     LogChallengedRemote(Logger, oidcOptions.SchemeName, authUri!, context.TraceIdentifier);
     return authUri;

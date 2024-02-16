@@ -6,6 +6,6 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  public static PropertiesDataFormat CreatePropertiesDataFormat (IDataProtectionProvider dataProtectionProvider, string? name) =>
-    new (CreateDataProtector(dataProtectionProvider, typeof(OpenIdConnectFuncs).FullName!, name!, "v1"));
+  public static PropertiesDataFormat CreatePropertiesDataFormat (IDataProtectionProvider dataProtectionProvider, string name) =>
+    new (CreateDataProtector(dataProtectionProvider, typeof(OpenIdConnectFuncs).FullName!, name, "v1"));
 }

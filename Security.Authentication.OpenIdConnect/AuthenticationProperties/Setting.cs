@@ -71,14 +71,14 @@ partial class OpenIdConnectFuncs
     return authProperties;
   }
 
-  static AuthenticationProperties SetChallengeAuthenticationProperties(
+  static AuthenticationProperties SetChallengeRemoteAuthenticationProperties(
     AuthenticationProperties authProperties,
-    string requestUrl,
     string redirectUri,
+    string redirectUriForCode,
     string state)
   {
-    SetAuthenticationPropertiesRedirectUri(authProperties, requestUrl);
-    SetAuthenticationPropertiesRedirectUriForCode(authProperties, redirectUri);
+    SetAuthenticationPropertiesRedirectUri(authProperties, redirectUri);
+    SetAuthenticationPropertiesRedirectUriForCode(authProperties, redirectUriForCode);
     if (IsNotEmptyString(state))
       SetAuthenticationPropertiesUserState(authProperties, state);
     return authProperties;
@@ -95,6 +95,17 @@ partial class OpenIdConnectFuncs
       SetAuthenticationPropertiesCheckSessionIFrame(authProperties, oidcOptions.CheckSessionIframe!);
     SetAuthenticationPropertiesIdToken(authProperties, oidcMessage.IdToken);
     SetAuthenticationPropertiesAuthorizationCode(authProperties, oidcMessage.Code);
+    return authProperties;
+  }
+
+  static AuthenticationProperties SetSignoutRemoteAuthenticationProperties(
+    AuthenticationProperties authProperties,
+    string redirectUri,
+    string alternateRedirectUri)
+  {
+    SetAuthenticationPropertiesRedirectUri(authProperties, redirectUri);
+    if (IsEmptyUri(GetAuthenticationPropertiesRedirectUri(authProperties)))
+      SetAuthenticationPropertiesRedirectUri(authProperties, alternateRedirectUri);
     return authProperties;
   }
 }

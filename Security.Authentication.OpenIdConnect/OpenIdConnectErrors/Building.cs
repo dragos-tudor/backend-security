@@ -5,7 +5,7 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static string? BuildAccessDeniedErrorPath(AuthenticationProperties authProperties, OpenIdConnectOptions oidcOptions) =>
+  static string? BuildAccessDeniedErrorPath (AuthenticationProperties authProperties, OpenIdConnectOptions oidcOptions) =>
     AddQueryString(oidcOptions.AccessDeniedPath, oidcOptions.ReturnUrlParameter, authProperties.RedirectUri);
 
   static string BuildGenericError (OpenIdConnectMessage oidcMessage) =>

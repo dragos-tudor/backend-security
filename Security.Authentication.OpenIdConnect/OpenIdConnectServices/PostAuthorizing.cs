@@ -20,44 +20,44 @@ partial class OpenIdConnectFuncs
     StringDataFormat stringDataFormat)
   where TOptions : OpenIdConnectOptions
   {
-    var authParams = await GetPostAuthorizationParams(context.Request, context.RequestAborted);
-    if (authParams is null) return NoPostAuthorizationMessage;
+    var postAuthParams = await GetRequestParams(context.Request, context.RequestAborted);
+    if (postAuthParams is null) return NoPostAuthorizationMessage;
 
-    var authMessage = CreateOpenIdConnectMessage(authParams);
-    if (IsGetRequest(context.Request) && !IsSafePostAuthorizationMessage(authMessage)) return UnexpectedPostAuthorizationTokens;
-    if (IsEmptyString(authMessage.State)) return NoPostAuthorizationMessageState;
+    var postAuthMessage = CreateOpenIdConnectMessage(postAuthParams);
+    if (IsGetRequest(context.Request) && !IsSafePostAuthorizationMessage(postAuthMessage)) return UnexpectedPostAuthorizationTokens;
+    if (IsEmptyString(postAuthMessage.State)) return NoPostAuthorizationMessageState;
 
-    var authError = ValidatePostAuthorizationMessage(authMessage);
-    if (authError is not null) return authError;
+    var postAuthError = ValidatePostAuthorizationMessage(postAuthMessage);
+    if (postAuthError is not null) return postAuthError;
 
-    var authProperties = UnprotectAuthenticationProperties(authMessage.State, propertiesDataFormat);
+    var authProperties = UnprotectAuthenticationProperties(postAuthMessage.State, propertiesDataFormat);
     if (authProperties is null) return InvalidPostAuthorizationMessageState;
 
     var correlationError = ValidateCorrelationCookie(context.Request, authProperties);
     if (correlationError is not null) return correlationError;
 
-    SetPostAuthorizationOpenIdConnectMessage(authMessage, authProperties);
-    SetPostAuthorizationAuthenticationProperties(authProperties, authMessage, oidcOptions);
+    SetPostAuthorizationOpenIdConnectMessage(postAuthMessage, authProperties);
+    SetPostAuthorizationAuthenticationProperties(authProperties, postAuthMessage, oidcOptions);
 
-    if (!IsOpenIdConnectImplicitOrHybridFlow(authMessage))
+    if (!IsOpenIdConnectImplicitOrHybridFlow(postAuthMessage))
     {
-      ValidatePostAuthorizationMessageProtocol(authMessage, oidcOptions);
+      ValidatePostAuthorizationMessageProtocol(postAuthMessage, oidcOptions);
       return CreatePostAuthorizationInfo(authProperties);
     }
 
-    var validationResult = await UseImplicitOrHybridFlowIdToken(authMessage.IdToken, oidcOptions, oidcConfiguration);
+    var validationResult = await UseImplicitOrHybridFlowIdToken(postAuthMessage.IdToken, oidcOptions, oidcConfiguration);
     if (validationResult.Exception is not null)
       return GetTokenValidationResultError(validationResult);
 
     var securityToken = ToJwtSecurityToken(validationResult.SecurityToken);
     var tokenNonce = GetSecurityTokenNonce(securityToken);
     var validNonce = IsValidNonce(GetRequestCookies(context.Request), tokenNonce, oidcOptions, stringDataFormat)? tokenNonce: default;
-    ValidatePostAuthorizationMessageProtocol(authMessage, oidcOptions, securityToken, validNonce);
+    ValidatePostAuthorizationMessageProtocol(postAuthMessage, oidcOptions, securityToken, validNonce);
 
     if (ShouldUseTokenLifetime(oidcOptions))
       SetAuthenticationPropertiesTokenLifetime(authProperties, validationResult.SecurityToken!);
 
-    return CreatePostAuthorizationInfo(authProperties, authMessage, validationResult, securityToken);
+    return CreatePostAuthorizationInfo(authProperties, postAuthMessage, validationResult, securityToken);
   }
 
   public static Task<PostAuthorizationResult> PostAuthorization<TOptions>(
