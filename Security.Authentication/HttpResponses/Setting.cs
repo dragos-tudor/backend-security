@@ -5,6 +5,12 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
+  public static long? SetResponseContentLength (HttpResponse response, int length) =>
+    response.Headers.ContentLength = length;
+
+  public static string? SetResponseContentType (HttpResponse response, string mimeType) =>
+    response.Headers.ContentType = mimeType;
+
   public static string? SetResponseLocation (HttpResponse response, string location) =>
     response.Headers.Location = location;
 

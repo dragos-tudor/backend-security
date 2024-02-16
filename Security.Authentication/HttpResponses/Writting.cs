@@ -1,12 +1,13 @@
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Security.Authentication.OpenIdConnect;
+namespace Security.Authentication;
 
-partial class OpenIdConnectFuncs
+partial class AuthenticationFuncs
 {
-  static ValueTask WriteResponseTextContent(
+  public static ValueTask WriteResponseTextContent(
     HttpResponse response,
     string content,
     CancellationToken cancellationToken = default)

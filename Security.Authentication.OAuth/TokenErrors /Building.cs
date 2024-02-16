@@ -7,19 +7,18 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.OAuth;
 
-partial class OAuthFuncs {
-
+partial class OAuthFuncs
+{
   const string TokenErrorDescription = "error_description";
   const string TokenErrorUri = "error_uri";
   internal const string TokenEndpointError = "Token endpoint failure";
 
   static string BuildTokenErrorFromJson (JsonElement elem) =>
     new StringBuilder(TokenEndpointError)
-      .AddTokenErrorDetail("Description", elem.GetString(TokenErrorDescription))
-      .AddTokenErrorDetail("Uri", elem.GetString(TokenErrorUri))
+      .AddErrorDetail("Description", elem.GetString(TokenErrorDescription))
+      .AddErrorDetail("Uri", elem.GetString(TokenErrorUri))
       .ToString();
 
   static string BuildTokenErrorFromResponse (HttpResponseMessage response, string responseContent) =>
     $"{TokenEndpointError}. Status: {response.StatusCode}. Headers: {response.Headers}. Body: {responseContent};";
-
 }

@@ -15,5 +15,4 @@ partial class RemoteFuncs
       .AddErrorDetail("Description", request.Query[ErrorDescriptionToken])
       .AddErrorDetail("Uri", request.Query[ErrorUriToken])
       .ToString();
-
 }

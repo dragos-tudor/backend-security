@@ -5,9 +5,8 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  const string primaryPurpose = "Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationMiddleware";
+  const string CookiePurpose = "Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationMiddleware";
 
-  internal static IDataProtector CreateDataProtector (IDataProtectionProvider dataProtectionProvider, string schemeName) =>
-    dataProtectionProvider.CreateProtector(primaryPurpose, schemeName, "v2");
-
+  static IDataProtector CreateDataProtector (IDataProtectionProvider dataProtectionProvider, string schemeName) =>
+    dataProtectionProvider.CreateProtector(CookiePurpose, schemeName, "v2");
 }

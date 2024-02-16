@@ -5,7 +5,7 @@ namespace Security.Authentication.Remote;
 
 partial class RemoteFuncs
 {
-  static StringBuilder AddErrorDetail (this StringBuilder builder, string name, string? message) =>
+  public static StringBuilder AddErrorDetail (this StringBuilder builder, string name, string? message) =>
     !IsEmptyString(message)?
       builder.Append($";{name}={message}"):
       builder;
