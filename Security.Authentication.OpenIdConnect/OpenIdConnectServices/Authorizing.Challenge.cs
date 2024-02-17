@@ -7,7 +7,7 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  public static async ValueTask<string?> AuthorizeRemoteOidc<TOptions>(
+  public static async ValueTask<string?> AuthorizeChallengeOidc<TOptions>(
     HttpContext context,
     AuthenticationProperties authProperties,
     TOptions oidcOptions,
@@ -33,15 +33,15 @@ partial class OpenIdConnectFuncs
     var authUri = await SetAuthorizationResponse(context, challengeMessage, oidcOptions, oidcConfiguration);
     SanitizeResponse(context.Response);
 
-    LogAuthorizeRemote(Logger, oidcOptions.SchemeName, authUri!, context.TraceIdentifier);
+    LogAuthorizeChallenge(Logger, oidcOptions.SchemeName, authUri!, context.TraceIdentifier);
     return authUri;
   }
 
-  public static ValueTask<string?> AuthorizeRemoteOidc<TOptions>(
+  public static ValueTask<string?> AuthorizeChallengeOidc<TOptions>(
     HttpContext context,
     AuthenticationProperties authProperties)
   where TOptions : OpenIdConnectOptions =>
-      AuthorizeRemoteOidc(
+      AuthorizeChallengeOidc(
         context,
         authProperties,
         ResolveService<TOptions>(context),

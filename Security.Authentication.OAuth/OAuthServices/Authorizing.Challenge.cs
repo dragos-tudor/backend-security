@@ -6,7 +6,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs
 {
-  public static string AuthorizeRemoteOAuth<TOptions> (
+  public static string AuthorizeChallengeOAuth<TOptions> (
     HttpContext context,
     TOptions authOptions,
     PropertiesDataFormat propertiesDataFormat,
@@ -28,13 +28,13 @@ partial class OAuthFuncs
       ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
 
     var authUri = GetAuthorizationUri(authOptions, authParams);
-    LogAuthorizeRemote(Logger, authOptions.SchemeName, authUri, context.TraceIdentifier);
+    LogAuthorizeChallenge(Logger, authOptions.SchemeName, authUri, context.TraceIdentifier);
 
     return SetResponseRedirect(context.Response, authUri)!;
   }
 
-  public static string AuthorizeRemoteOAuth<TOptions> (HttpContext context) where TOptions: OAuthOptions =>
-    AuthorizeRemoteOAuth(
+  public static string AuthorizeChallengeOAuth<TOptions> (HttpContext context) where TOptions: OAuthOptions =>
+    AuthorizeChallengeOAuth(
       context,
       ResolveService<TOptions>(context),
       ResolvePropertiesDataFormat<TOptions>(context),

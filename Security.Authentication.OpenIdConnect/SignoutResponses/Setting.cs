@@ -6,7 +6,7 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static async ValueTask<string> SetSignoutRemoteResponse(
+  static async ValueTask<string> SetSignoutChallengeResponse(
     HttpContext context,
     OpenIdConnectMessage oidcMessage,
     OpenIdConnectOptions oidcOptions,

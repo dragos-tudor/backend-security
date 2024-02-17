@@ -21,9 +21,9 @@ partial class OpenIdConnectFuncs
       RequireNonce = true,
       Scope =  ["openid", "profile"],
 
-      CallbackPath = new PathString("/signin-oidc"),
+      CallbackPath = new PathString("/callback-oidc"),
       ChallengePath = new PathString("/challenge-oidc"),
-      SignOutRemotePath = new PathString("/signout-oidc"),
+      SignOutChallengePath = new PathString("/signout-challenge-oidc"),
       SignedOutCallbackPath = new PathString("/signout-callback-oidc"),
       SignedOutRedirectUri = "/",
 

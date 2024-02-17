@@ -14,6 +14,6 @@ partial class OpenIdConnectFuncs
   [LoggerMessage(35, LogLevel.Information, "AuthenticationScheme: {SchemeName} is callback sign out. Redirect to: {RedirectUri}. [{RequestId}].", EventName = "SignOutCallback")]
   public static partial void LogSignOutCallback (ILogger logger, string schemeName, string redirectUri, string requestId);
 
-  [LoggerMessage(36, LogLevel.Information, "AuthenticationScheme: {SchemeName} is remote sign out. Redirect to: {RedirectUri}. [{RequestId}].", EventName = "SignOutRemote")]
-  public static partial void LogSignOutRemote (ILogger logger, string schemeName, string redirectUri, string requestId);
+  [LoggerMessage(36, LogLevel.Information, "AuthenticationScheme: {SchemeName} is remote sign out. Redirect to: {RedirectUri}. [{RequestId}].", EventName = "SignOutChallenge")]
+  public static partial void LogSignOutChallenge (ILogger logger, string schemeName, string redirectUri, string requestId);
 }

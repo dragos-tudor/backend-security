@@ -98,7 +98,7 @@ partial class OpenIdConnectFuncs
     return authProperties;
   }
 
-  static AuthenticationProperties SetSignoutRemoteAuthenticationProperties(
+  static AuthenticationProperties SetSignoutChallengeAuthenticationProperties(
     AuthenticationProperties authProperties,
     string redirectUri,
     string alternateRedirectUri)

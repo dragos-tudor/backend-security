@@ -29,7 +29,7 @@ public record OpenIdConnectOptions : RemoteAuthenticationOptions
   public string? Resource { get; init; }
   public required ICollection<string> Scope { get; init; }
 
-  public required PathString SignOutRemotePath { get; init; }
+  public required PathString SignOutChallengePath { get; init; }
   public required PathString SignedOutCallbackPath { get; init; }
   public required string SignedOutRedirectUri { get; init; }
   public string? SignOutScheme { get; init; }

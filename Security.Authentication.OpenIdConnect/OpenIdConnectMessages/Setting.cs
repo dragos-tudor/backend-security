@@ -93,7 +93,7 @@ partial class OpenIdConnectFuncs
     return oidcMessage;
   }
 
-  static async Task<OpenIdConnectMessage> SetSignoutRemoteOpenIdConnectMessage(
+  static async Task<OpenIdConnectMessage> SetSignoutChallengeOpenIdConnectMessage(
     OpenIdConnectMessage oidcMessage,
     HttpContext context,
     OpenIdConnectOptions oidcOptions,

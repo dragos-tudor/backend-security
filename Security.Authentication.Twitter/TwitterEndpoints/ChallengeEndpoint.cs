@@ -6,5 +6,5 @@ namespace Security.Authentication.Twitter;
 partial class TwitterFuncs
 {
   public readonly static Func<HttpContext, string?> ChallengeTwitterEndpoint =
-    AuthorizeRemoteOAuth<TwitterOptions>;
+    AuthorizeChallengeOAuth<TwitterOptions>;
 }

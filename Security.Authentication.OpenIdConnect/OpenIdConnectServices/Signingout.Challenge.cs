@@ -6,7 +6,7 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  public static async Task<string?> SignoutRemoteOidc<TOptions>(
+  public static async Task<string?> SignoutChallengeOidc<TOptions>(
     HttpContext context,
     AuthenticationProperties authProperties,
     TOptions oidcOptions,
@@ -16,22 +16,22 @@ partial class OpenIdConnectFuncs
   {
     var signoutMessage = CreateOpenIdConnectMessage();
 
-    SetSignoutRemoteAuthenticationProperties(authProperties, oidcOptions.SignedOutRedirectUri, GetRequestUrl(context.Request));
-    await SetSignoutRemoteOpenIdConnectMessage(signoutMessage, context, oidcOptions, oidcConfiguration,
+    SetSignoutChallengeAuthenticationProperties(authProperties, oidcOptions.SignedOutRedirectUri, GetRequestUrl(context.Request));
+    await SetSignoutChallengeOpenIdConnectMessage(signoutMessage, context, oidcOptions, oidcConfiguration,
       ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
 
     if(IsEmptyString(signoutMessage.IssuerAddress)) return default;
 
-    var redirectUri = await SetSignoutRemoteResponse(context, signoutMessage, oidcOptions, oidcConfiguration);
-    LogSignOutRemote(Logger, oidcOptions.SchemeName, redirectUri!, context.TraceIdentifier);
+    var redirectUri = await SetSignoutChallengeResponse(context, signoutMessage, oidcOptions, oidcConfiguration);
+    LogSignOutChallenge(Logger, oidcOptions.SchemeName, redirectUri!, context.TraceIdentifier);
     return redirectUri;
   }
 
-  public static Task<string?> SignoutRemoteOidc<TOptions>(
+  public static Task<string?> SignoutChallengeOidc<TOptions>(
     HttpContext context,
     AuthenticationProperties? authProperties = default)
   where TOptions : OpenIdConnectOptions =>
-    SignoutRemoteOidc(
+    SignoutChallengeOidc(
       context,
       authProperties ?? CreateAuthenticationProperties(),
       ResolveService<TOptions>(context),
