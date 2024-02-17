@@ -18,7 +18,7 @@ partial class OpenIdConnectFuncs
       true => GetResponseLocation(context.Response),
       false => SetResponseRedirect(context.Response, BuildErrorPath(oidcOptions, authResult.Failure!))
     };
-    return redirectUri ?? GetDefaultCallbackRedirectUri(authResult.Properties!);
+    return redirectUri ?? GetCallbackRedirectUri(authResult.Properties!);
   }
 
   public static Task<string?> CallbackOidc<TOptions> (

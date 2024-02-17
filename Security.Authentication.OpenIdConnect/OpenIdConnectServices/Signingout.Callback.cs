@@ -15,9 +15,7 @@ partial class OpenIdConnectFuncs
     var callbackMessage = CreateOpenIdConnectMessage(callbackParams);
 
     var authProperties = UnprotectAuthenticationProperties(callbackMessage.State, propertiesDataFormat);
-    var redirectUri = authProperties is not null?
-      SetResponseRedirect(context.Response, GetAuthenticationPropertiesRedirectUri(authProperties)):
-      default;
+    var redirectUri = SetResponseRedirect(context.Response, GetCallbackRedirectUri(authProperties));
 
     LogSignOutCallback(Logger, oidcOptions.SchemeName, redirectUri!, context.TraceIdentifier);
     return redirectUri;

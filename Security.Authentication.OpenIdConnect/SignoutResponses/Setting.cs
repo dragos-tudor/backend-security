@@ -6,14 +6,14 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static async ValueTask<string?> SetSignoutRemoteResponse(
+  static async ValueTask<string> SetSignoutRemoteResponse(
     HttpContext context,
     OpenIdConnectMessage oidcMessage,
     OpenIdConnectOptions oidcOptions,
     OpenIdConnectConfiguration oidcConfiguration)
   {
     if (IsRedirectGetOpenIdConnectAuthenticationMethod(oidcOptions))
-      return SetResponseRedirect(context.Response, oidcMessage.CreateLogoutRequestUrl());
+      return SetResponseRedirect(context.Response, oidcMessage.CreateLogoutRequestUrl())!;
 
     if (IsFormPostOpenIdConnectAuthenticationMethod(oidcOptions))
     {
@@ -22,6 +22,6 @@ partial class OpenIdConnectFuncs
       return oidcConfiguration.EndSessionEndpoint;
     }
 
-    return default;
+    return HomeUri;
   }
 }
