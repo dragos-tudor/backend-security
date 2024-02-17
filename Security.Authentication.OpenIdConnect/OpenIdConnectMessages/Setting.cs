@@ -62,7 +62,7 @@ partial class OpenIdConnectFuncs
   static string SetOpenIdConnectMessageState(OpenIdConnectMessage oidcMessage, string state) =>
     oidcMessage.State = state;
 
-  static OpenIdConnectMessage SetChallengeRemoteOpenIdConnectMessage(
+  static OpenIdConnectMessage SetAuthorizationOpenIdConnectMessage(
     OpenIdConnectMessage oidcMessage,
     HttpContext context,
     AuthenticationProperties authProperties,

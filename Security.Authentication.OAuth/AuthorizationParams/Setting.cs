@@ -26,7 +26,7 @@ partial class OAuthFuncs
   static string SetAuthorizationParamState (IDictionary<string, string> authParams, string state) =>
     SetRemoteParam(authParams, State, state);
 
-  static IDictionary<string, string> SetChallengeAuthorizationParams<TOptions>(
+  static IDictionary<string, string> SetAuthorizationParams<TOptions>(
     IDictionary<string, string> authParams,
     TOptions authOptions,
     string callbackUrl,

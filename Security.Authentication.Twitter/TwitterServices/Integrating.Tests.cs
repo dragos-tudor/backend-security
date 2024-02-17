@@ -15,7 +15,7 @@ namespace Security.Authentication.Twitter;
 partial class TwitterTests {
 
   [TestMethod]
-  public async Task User_challenge_authentication__execute_twitter_authentication_flow__authentication_succedded () {
+  public async Task Twitter_authentication__execute_authentication_flow__authentication_succedded () {
     using var authServer = CreateHttpServer();
     authServer.MapGet("/authorize", (HttpContext context) => SetResponseRedirect(context.Response, GetCallbackLocation(context.Request)) );
     authServer.MapPost("/token", (HttpContext request) => JsonSerializer.Serialize(new { access_token = "token" }));

@@ -12,7 +12,7 @@ namespace Security.Authentication.OAuth;
 partial class OAuthTests
 {
   [TestMethod]
-  public async Task User_challenge_authentication__execute_authentication_flow__authentication_succedded () {
+  public async Task OAuth_authentication__execute_authentication_flow__authentication_succedded () {
     using var authServer = CreateHttpServer();
     authServer.MapGet("/authorize", (HttpContext context) => SetResponseRedirect(context.Response, GetCallbackLocation(context.Request)) );
     authServer.MapPost("/token", (HttpContext request) => JsonSerializer.Serialize(new { access_token = "token" }));
@@ -24,7 +24,7 @@ partial class OAuthTests
     var authOptions = CreateOAuthOptions() with { AuthorizationEndpoint = "http://oauth/authorize" };
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
     using var appServer = CreateHttpServer();
-    appServer.MapGet("/challenge", (HttpContext context) => ChallengeRemoteOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.UtcNow));
+    appServer.MapGet("/challenge", (HttpContext context) => AuthorizeRemoteOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.UtcNow));
     appServer.MapGet("/callback", async delegate (HttpContext context) { return (await AuthenticateOAuth(context, authOptions, propertiesDataFormat, authClient, PostAuthorization, ExchangeCodeForTokens, AccessUserInfo)).Succeeded; });
     await appServer.StartAsync();
     using var appClient = appServer.GetTestClient();

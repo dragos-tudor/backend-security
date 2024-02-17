@@ -1,14 +1,14 @@
 using Microsoft.AspNetCore.Http;
 
-namespace Security.Authentication.OpenIdConnect;
+namespace Security.Authentication.OAuth;
 
-partial class OpenIdConnectFuncs
+partial class OAuthFuncs
 {
-  public static async Task<string?> CallbackOidc<TOptions> (
+  public static async Task<string?> AuthorizeCallbackOAuth<TOptions> (
     HttpContext context,
-    TOptions oidcOptions,
+    TOptions authOptions,
     AuthenticateFunc authenticate,
-    SignInFunc signin) where TOptions : OpenIdConnectOptions
+    SignInFunc signin) where TOptions : OAuthOptions
   {
     var authResult = await authenticate(context);
     if (authResult.Succeeded)
@@ -16,16 +16,17 @@ partial class OpenIdConnectFuncs
 
     var redirectUri = authResult.Succeeded switch {
       true => GetResponseLocation(context.Response),
-      false => SetResponseRedirect(context.Response, BuildErrorPath(oidcOptions, authResult.Failure!))
+      false => SetResponseRedirect(context.Response, BuildErrorPath(authOptions, authResult.Failure!))
     };
     return redirectUri ?? GetCallbackRedirectUri(authResult.Properties!);
   }
 
-  public static Task<string?> CallbackOidc<TOptions> (
+
+  public static Task<string?> AuthorizeCallbackOAuth<TOptions> (
     HttpContext context,
     AuthenticateFunc authenticate,
-    SignInFunc signin) where TOptions : OpenIdConnectOptions =>
-      CallbackOidc(
+    SignInFunc signin) where TOptions : OAuthOptions =>
+      AuthorizeCallbackOAuth(
         context,
         ResolveService<TOptions>(context),
         authenticate,

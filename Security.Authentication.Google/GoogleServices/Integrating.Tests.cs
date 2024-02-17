@@ -15,7 +15,7 @@ namespace Security.Authentication.Google;
 partial class GoogleTests {
 
   [TestMethod]
-  public async Task User_challenge_authentication__execute_google_authentication_flow__authentication_succedded () {
+  public async Task Google_authentication__execute_authentication_flow__authentication_succedded () {
     using var authServer = CreateHttpServer();
     authServer.MapGet("/authorize", (HttpContext context) => SetResponseRedirect(context.Response, GetCallbackLocation(context.Request)) );
     authServer.MapPost("/token", (HttpContext request) => JsonSerializer.Serialize(new { access_token = "token" }));

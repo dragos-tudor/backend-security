@@ -14,7 +14,7 @@ namespace Security.Authentication.Facebook;
 partial class FacebookTests {
 
   [TestMethod]
-  public async Task User_challenge_authentication__execute_facebook_authentication_flow__authentication_succedded () {
+  public async Task Facebook_authentication__execute_authentication_flow__authentication_succedded () {
     using var authServer = CreateHttpServer();
     authServer.MapGet("/authorize", (HttpContext context) => SetResponseRedirect(context.Response, GetCallbackLocation(context.Request)) );
     authServer.MapPost("/token", (HttpContext request) => JsonSerializer.Serialize(new { access_token = "token" }));

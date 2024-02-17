@@ -71,7 +71,7 @@ partial class OpenIdConnectFuncs
     return authProperties;
   }
 
-  static AuthenticationProperties SetChallengeRemoteAuthenticationProperties(
+  static AuthenticationProperties SetAuthorizationAuthenticationProperties(
     AuthenticationProperties authProperties,
     string redirectUri,
     string redirectUriForCode,

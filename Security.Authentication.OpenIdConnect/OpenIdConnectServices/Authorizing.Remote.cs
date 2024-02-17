@@ -7,7 +7,7 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  public static async ValueTask<string?> ChallengeRemoteOidc<TOptions>(
+  public static async ValueTask<string?> AuthorizeRemoteOidc<TOptions>(
     HttpContext context,
     AuthenticationProperties authProperties,
     TOptions oidcOptions,
@@ -26,22 +26,22 @@ partial class OpenIdConnectFuncs
     if (ShouldUseNonce(oidcOptions))
       UseNonce(context, GenerateNonce(), challengeMessage, oidcOptions, stringDataFormat, currentUtc);
 
-    SetChallengeRemoteAuthenticationProperties(authProperties, GetRequestUrl(context.Request), challengeMessage.RedirectUri, challengeMessage.State);
-    SetChallengeRemoteOpenIdConnectMessage(challengeMessage, context, authProperties, oidcOptions, oidcConfiguration,
+    SetAuthorizationAuthenticationProperties(authProperties, GetRequestUrl(context.Request), challengeMessage.RedirectUri, challengeMessage.State);
+    SetAuthorizationOpenIdConnectMessage(challengeMessage, context, authProperties, oidcOptions, oidcConfiguration,
       ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
 
-    var authUri = await SetChallengeRemoteResponse(context, challengeMessage, oidcOptions, oidcConfiguration);
+    var authUri = await SetAuthorizationResponse(context, challengeMessage, oidcOptions, oidcConfiguration);
     SanitizeResponse(context.Response);
 
-    LogChallengedRemote(Logger, oidcOptions.SchemeName, authUri!, context.TraceIdentifier);
+    LogAuthorizeRemote(Logger, oidcOptions.SchemeName, authUri!, context.TraceIdentifier);
     return authUri;
   }
 
-  public static ValueTask<string?> ChallengeRemoteOidc<TOptions>(
+  public static ValueTask<string?> AuthorizeRemoteOidc<TOptions>(
     HttpContext context,
     AuthenticationProperties authProperties)
   where TOptions : OpenIdConnectOptions =>
-      ChallengeRemoteOidc(
+      AuthorizeRemoteOidc(
         context,
         authProperties,
         ResolveService<TOptions>(context),

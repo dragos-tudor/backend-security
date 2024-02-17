@@ -4,7 +4,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs
 {
-  static AuthenticationProperties SetChallengeAuthenticationProperties(
+  static AuthenticationProperties SetAuthorizationAuthenticationProperties(
     AuthenticationProperties authProperties,
     string callbackUrl,
     string correlationId,
