@@ -7,12 +7,6 @@ partial class RemoteFuncs {
 
   internal const string CorrelationIdKey = ".xsrf";
 
-  public static string? GetAuthenticationPropertiesItem (AuthenticationProperties authProperties, string key) =>
-    authProperties.GetString(key);
-
-  public static T? GetAuthenticationPropertiesParam<T>(AuthenticationProperties authProperties, string key) =>
-    authProperties.GetParameter<T>(key);
-
   public static string? GetAuthenticationPropertiesCallbackUri (AuthenticationProperties authProperties) =>
     GetAuthenticationPropertiesItem(authProperties, CallbackUri);
 
@@ -21,7 +15,4 @@ partial class RemoteFuncs {
 
   public static string? GetAuthenticationPropertiesCorrelationId (AuthenticationProperties authProperties) =>
     GetAuthenticationPropertiesItem(authProperties, CorrelationIdKey);
-
-  public static string? GetAuthenticationPropertiesRedirectUri (AuthenticationProperties? authProperties) =>
-    authProperties?.RedirectUri;
 }

@@ -23,7 +23,7 @@ partial class BearerTokenFuncs
       tokenOptions, bearerTokenProtector, refreshTokenProtector);
 
     var tokenJsonTypeInfo = ResolveAccessTokenResponseJsonTypeInfo(context);
-    await WriteJsonHttpResponse(context, token, tokenJsonTypeInfo);
+    await WriteResponseJsonContent(context.Response, token, tokenJsonTypeInfo, context.RequestAborted);
 
     LogSignInBearerToken(Logger, tokenOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
     return bearerTokenTicket;

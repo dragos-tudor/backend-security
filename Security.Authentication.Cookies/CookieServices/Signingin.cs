@@ -50,7 +50,7 @@ partial class CookiesFuncs
       SignInCookie(
         context,
         principal,
-        authProperties ?? CreateAuthenticationProperties(),
+        authProperties ?? CreateCookieAuthenticationProperties(),
         ResolveService<CookieAuthenticationOptions>(context),
         ResolveService<CookieBuilder>(context),
         ResolveService<ICookieManager>(context),

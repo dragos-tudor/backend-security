@@ -4,6 +4,6 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  internal static AuthenticationProperties CreateAuthenticationProperties() =>
+  internal static AuthenticationProperties CreateCookieAuthenticationProperties() =>
     new () { AllowRefresh = true, IsPersistent = true };
 }

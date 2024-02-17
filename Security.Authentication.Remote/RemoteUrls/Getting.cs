@@ -5,11 +5,13 @@ namespace Security.Authentication.Remote;
 
 partial class RemoteFuncs
 {
-  const string DefaultRedirectUri = "/";
+  public const string HomeUri = "/";
+
+  public static string GetCallbackRedirectUri (AuthenticationProperties? authProperties) =>
+    authProperties is not null?
+      GetAuthenticationPropertiesRedirectUri(authProperties) ?? HomeUri:
+      HomeUri;
 
   public static string GetChallengeReturnUri (HttpRequest request, AuthenticationProperties authProperties) =>
     GetAuthenticationPropertiesRedirectUri(authProperties) ?? BuildRelativeUri(request);
-
-  public static string GetDefaultCallbackRedirectUri (AuthenticationProperties authProperties) =>
-    authProperties.RedirectUri ?? DefaultRedirectUri;
 }

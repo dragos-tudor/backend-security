@@ -1,9 +1,9 @@
 
 using Microsoft.AspNetCore.DataProtection;
 
-namespace Security.Authentication.Remote;
+namespace Security.Authentication;
 
-partial class RemoteFuncs
+partial class AuthenticationFuncs
 {
   public static IDataProtector CreateDataProtector (
     IDataProtectionProvider dataProtectionProvider,

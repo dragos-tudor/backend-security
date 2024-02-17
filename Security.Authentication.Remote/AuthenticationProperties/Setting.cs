@@ -3,15 +3,9 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.Remote;
 
-partial class RemoteFuncs {
-
+partial class RemoteFuncs
+{
   public const string CallbackUri = "callbackUri";
-
-  public static string SetAuthenticationPropertiesItem (AuthenticationProperties authProperties, string key, string value)
-    { authProperties.SetString(key, value); return value; }
-
-  public static T SetAuthenticationPropertiesParam<T> (AuthenticationProperties authProperties, string key, T value)
-    { authProperties.SetParameter(key, value); return value; }
 
   public static string SetAuthenticationPropertiesCallbackUri (AuthenticationProperties authProperties, string callbackUri) =>
     SetAuthenticationPropertiesItem(authProperties, CallbackUri, callbackUri);
@@ -21,14 +15,4 @@ partial class RemoteFuncs {
 
   public static string SetAuthenticationPropertiesCorrelationId (AuthenticationProperties authProperties, string correlationId) =>
     SetAuthenticationPropertiesItem(authProperties, CorrelationIdKey, correlationId);
-
-  public static DateTimeOffset? SetAuthenticationPropertiesExpires (AuthenticationProperties authProperties, DateTimeOffset expires) =>
-    authProperties.ExpiresUtc = expires;
-
-  public static DateTimeOffset? SetAuthenticationPropertiesIssued (AuthenticationProperties authProperties, DateTimeOffset issued) =>
-    authProperties.IssuedUtc = issued;
-
-  public static string SetAuthenticationPropertiesRedirectUri (AuthenticationProperties authProperties, string redirectUri) =>
-    authProperties.RedirectUri ??= redirectUri;
-
 }

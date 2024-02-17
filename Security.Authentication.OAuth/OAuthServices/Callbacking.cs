@@ -18,7 +18,7 @@ partial class OAuthFuncs
       true => GetResponseLocation(context.Response),
       false => SetResponseRedirect(context.Response, BuildErrorPath(authOptions, authResult.Failure!))
     };
-    return redirectUri ?? GetDefaultCallbackRedirectUri(authResult.Properties!);
+    return redirectUri ?? GetCallbackRedirectUri(authResult.Properties!);
   }
 
 

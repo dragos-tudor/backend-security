@@ -36,7 +36,7 @@ partial class CookiesFuncs
     AuthenticationProperties? authProperties = default) =>
       SignOutCookie(
         context,
-        authProperties ?? CreateAuthenticationProperties(),
+        authProperties ?? CreateCookieAuthenticationProperties(),
         ResolveService<CookieAuthenticationOptions>(context),
         ResolveService<CookieBuilder>(context),
         ResolveService<ICookieManager>(context),

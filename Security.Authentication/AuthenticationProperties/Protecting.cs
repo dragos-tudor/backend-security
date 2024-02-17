@@ -1,9 +1,9 @@
 
 using Microsoft.AspNetCore.Authentication;
 
-namespace Security.Authentication.Remote;
+namespace Security.Authentication;
 
-partial class RemoteFuncs
+partial class AuthenticationFuncs
 {
   public static string ProtectAuthenticationProperties(
     AuthenticationProperties authProperties,
