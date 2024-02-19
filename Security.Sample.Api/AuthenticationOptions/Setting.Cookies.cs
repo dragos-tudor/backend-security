@@ -1,9 +1,8 @@
 
-namespace Security.Samples;
+namespace Security.Sample.Api;
 
-partial class SampleFuncs {
-
+partial class SampleFuncs
+{
   static CookieAuthenticationOptions SetCookieOptions() =>
     CreateCookieAuthenticationOptions();
-
 }

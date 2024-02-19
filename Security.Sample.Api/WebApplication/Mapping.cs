@@ -1,9 +1,9 @@
 
-namespace Security.Samples;
+namespace Security.Sample.Api;
 
-partial class SampleFuncs {
-
-  internal static WebApplication MapEndpoints (WebApplication app)
+partial class SampleFuncs
+{
+  static WebApplication MapEndpoints (WebApplication app)
   {
     app.MapPost("/api/accounts/signin", (Delegate)SignInEndpoint);
     app.MapPost("/api/accounts/signout", SignOutEndpoint);
@@ -12,5 +12,4 @@ partial class SampleFuncs {
     app.MapTwitter(ResolveService<TwitterOptions>(app.Services), SignInCookie);
     return app;
   }
-
 }

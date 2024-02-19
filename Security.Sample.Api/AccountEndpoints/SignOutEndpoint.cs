@@ -1,7 +1,7 @@
 
 using System.Threading.Tasks;
 
-namespace Security.Samples;
+namespace Security.Sample.Api;
 
 partial class SampleFuncs
 {

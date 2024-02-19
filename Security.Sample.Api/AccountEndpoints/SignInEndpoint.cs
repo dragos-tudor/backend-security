@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Security.Samples;
+namespace Security.Sample.Api;
 
 partial class SampleFuncs
 {
@@ -16,5 +16,4 @@ partial class SampleFuncs
       CreateUserClaimsPrincipal(context),
       CreateAuthenticationProperties()
     )).AuthenticationScheme;
-
 }

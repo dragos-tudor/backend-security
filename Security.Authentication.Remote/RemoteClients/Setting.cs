@@ -3,9 +3,12 @@ using System.Net.Http;
 
 namespace Security.Authentication.Remote;
 
-partial class RemoteFuncs {
-
-  public static HttpClient ConfigureRemoteClient (HttpClient client, string schemeName, TimeSpan? timeout = default)
+partial class RemoteFuncs
+{
+  public static HttpClient SetRemoteClient (
+    HttpClient client,
+    string schemeName,
+    TimeSpan? timeout = default)
   {
     SetRemoteClientAuthenticationScheme(client, schemeName);
     SetRemoteClientMaxResponseBufferSize(client);
@@ -13,5 +16,4 @@ partial class RemoteFuncs {
     SetRemoteClientUserAgent(client);
     return client;
   }
-
 }

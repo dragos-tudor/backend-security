@@ -1,11 +1,10 @@
 
 using Microsoft.Extensions.Configuration;
 
-namespace Security.Samples;
+namespace Security.Sample.Api;
 
-partial class SampleFuncs {
-
-  internal static IConfigurationBuilder AddConfigurationProviders (WebApplicationBuilder app) =>
+partial class SampleFuncs
+{
+  static IConfigurationBuilder AddConfigurations (WebApplicationBuilder app) =>
     app.Configuration.AddJsonFile("./settings.json");
-
 }

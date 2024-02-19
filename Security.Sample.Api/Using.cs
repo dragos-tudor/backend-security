@@ -14,9 +14,7 @@ global using static Security.Authentication.Google.GoogleFuncs;
 global using static Security.Authentication.Facebook.FacebookFuncs;
 global using static Security.Authentication.Twitter.TwitterFuncs;
 global using static Security.Authorization.AuthorizationFuncs;
-global using static Security.Samples.SampleFuncs;
 
-
-namespace Security.Samples;
+namespace Security.Sample.Api;
 
 public static partial class SampleFuncs { }

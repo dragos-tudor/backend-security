@@ -1,16 +1,13 @@
 
-namespace Security.Samples;
+namespace Security.Sample.Api;
 
 partial class SampleFuncs
 {
-  internal static WebApplication UseMiddlewares (WebApplication app)
-  {
+  static IApplicationBuilder UseMiddlewares (WebApplication app) =>
     app.UseDeveloperExceptionPage()
       .UseHttpsRedirection()
       .UseStaticFiles()
       .UseRouting()
       .UseAuthentication(AuthenticateCookie)
       .UseAuthorization(ChallengeGoogle, ForbidCookie);
-    return app;
-  }
 }
