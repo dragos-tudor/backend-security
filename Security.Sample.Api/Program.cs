@@ -5,10 +5,11 @@ partial class SampleFuncs
 {
   public static void Main(string[] args)
   {
-    // Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "Development");
     var appBuilder = CreateWebApplicationBuilder(args);
+    var keysPath = Environment.CurrentDirectory + "/bin/keys";
     AddConfigurations(appBuilder);
-    AddServices(appBuilder, Environment.CurrentDirectory + "/bin/keys");
+    AddSecrets(appBuilder);
+    AddServices(appBuilder, keysPath);
 
     var app = appBuilder.Build();
     UseMiddlewares(app);
