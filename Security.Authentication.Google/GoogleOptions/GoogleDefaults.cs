@@ -7,7 +7,7 @@ public static class GoogleDefaults
 {
   public const string AuthenticationScheme = "Google";
   public const string ChallengePath = "/challenge-google";
-  public const string CallbackPath = "/signin-google";
+  public const string CallbackPath = "/callback-google";
 
   internal const string AuthorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
   internal const string TokenEndpoint = "https://oauth2.googleapis.com/token";

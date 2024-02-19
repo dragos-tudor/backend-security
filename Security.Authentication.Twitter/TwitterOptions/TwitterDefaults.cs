@@ -7,7 +7,7 @@ public static class TwitterDefaults
 {
   public const string AuthenticationScheme = "Twitter";
   public static readonly string ChallengePath = "/challenge-twitter";
-  public static readonly string CallbackPath = "/signin-twitter";
+  public static readonly string CallbackPath = "/callback-twitter";
 
   internal static readonly string AuthorizationEndpoint = "https://twitter.com/i/oauth2/authorize";
   internal static readonly string TokenEndpoint = "https://api.twitter.com/2/oauth2/token";

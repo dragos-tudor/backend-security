@@ -30,8 +30,8 @@ public record OpenIdConnectOptions : RemoteAuthenticationOptions
   public required ICollection<string> Scope { get; init; }
 
   public required PathString SignOutChallengePath { get; init; }
-  public required PathString SignedOutCallbackPath { get; init; }
-  public required string SignedOutRedirectUri { get; init; }
+  public required PathString SignOutCallbackPath { get; init; }
+  public required string SignOutRedirectUri { get; init; }
   public string? SignOutScheme { get; init; }
 
   public bool UseTokenLifetime { get; init; }

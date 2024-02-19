@@ -7,7 +7,7 @@ public static class FacebookDefaults
 {
   public const string AuthenticationScheme = "Facebook";
   public const string ChallengePath = "/challenge-facebook";
-  public const string CallbackPath = "/signin-facebook";
+  public const string CallbackPath = "/callback-facebook";
 
   internal const string AuthorizationEndpoint = "https://www.facebook.com/v11.0/dialog/oauth";
   internal const string TokenEndpoint = "https://graph.facebook.com/v11.0/oauth/access_token";

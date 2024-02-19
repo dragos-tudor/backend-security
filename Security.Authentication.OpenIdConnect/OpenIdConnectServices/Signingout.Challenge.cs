@@ -16,7 +16,7 @@ partial class OpenIdConnectFuncs
   {
     var signoutMessage = CreateOpenIdConnectMessage();
 
-    SetSignoutChallengeAuthenticationProperties(authProperties, oidcOptions.SignedOutRedirectUri, GetRequestUrl(context.Request));
+    SetSignoutChallengeAuthenticationProperties(authProperties, oidcOptions.SignOutRedirectUri, GetRequestUrl(context.Request));
     await SetSignoutChallengeOpenIdConnectMessage(signoutMessage, context, oidcOptions, oidcConfiguration,
       ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
 
