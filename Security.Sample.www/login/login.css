@@ -1,0 +1,15 @@
+
+.login {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.login form>* {
+  margin: 0.3rem;
+}
+
+.login .social-logins * {
+  display: block;
+  margin: 0.3rem;
+}

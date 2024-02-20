@@ -1,0 +1,8 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.header ul {
+  list-style: none;
+}
