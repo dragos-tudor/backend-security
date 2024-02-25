@@ -40,3 +40,22 @@
   }
 }
 ```
+
+### Sample.Api
+- add `secrets.json` file to project.
+```json
+{
+  "google": {
+    "clientid": "id.google",
+    "clientsecret": "secret.google"
+  },
+  "facebook": {
+    "appid": "id.facebook",
+    "appsecret": "secret.facebook"
+  },
+  "twitter": {
+    "consumerkey": "id.twitter",
+    "consumersecret": "secret.twitter"
+  }
+}
+```
