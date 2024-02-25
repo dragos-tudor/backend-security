@@ -194,7 +194,7 @@ const filesMiddleware = (compilers = [])=>(next)=>async (request, context = {})=
         };
 const isGetRequest = (request)=>request.method.toUpperCase() === "GET";
 const isFileCacheRequest = (request)=>isFileRequest(request) && isGetRequest(request);
-const removeETagWeakValidator = (etag)=>etag?.replace("/W", "");
+const removeETagWeakValidator = (etag)=>etag?.replace("W/", "");
 const isFileModified = (fileETag, ifNoneMatchHeader)=>removeETagWeakValidator(fileETag) !== removeETagWeakValidator(ifNoneMatchHeader);
 const cacheMiddleware = (next)=>async (request, context = {})=>{
         const { cwd, logEnabled } = context;
@@ -203,9 +203,9 @@ const cacheMiddleware = (next)=>async (request, context = {})=>{
         if (!existsLastModifiedDate(fileInfo.mtime)) return next(request.context);
         const fileEtag = await getFileEtag(fileInfo.mtime, fileInfo.size);
         const ifNoneMatchHeader = getIfNoneMatchHeader(request.headers);
-        const fileModified = isFileModified(fileEtag, ifNoneMatchHeader);
-        if (!fileModified) logInfo(logEnabled, "cache middleware:", getUrlPath(request));
-        if (!fileModified) return createNotModifiedResponse();
+        const isModified = isFileModified(fileEtag, ifNoneMatchHeader);
+        if (!isModified) logInfo(logEnabled, "cache middleware:", getUrlPath(request));
+        if (!isModified) return createNotModifiedResponse();
         const response = await next(request, context);
         setETagHeader(response.headers, fileEtag);
         return response;
