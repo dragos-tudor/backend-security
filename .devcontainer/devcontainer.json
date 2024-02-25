@@ -14,7 +14,7 @@
     "ghcr.io/dragos-tudor/devcontainer-features/debian-packages": "",
     "ghcr.io/dragos-tudor/devcontainer-features/debian-user-group": "",
     "ghcr.io/dragos-tudor/devcontainer-features/debian-dotnet-sdk": "",
-    "ghcr.io/dragos-tudor/devcontainer-features/debian-deno": ""
+    "ghcr.io/dragos-tudor/devcontainer-features/debian-deno": {"deno_version": "v1.41.0"}
   },
   "containerEnv": { "DATA_PROTECTION_KEY": "HFm8fYbLyEarjjlGBj5r9Q==" },
   "mounts": [
