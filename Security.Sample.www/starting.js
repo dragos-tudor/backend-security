@@ -1,4 +1,4 @@
-import { startHmrServer } from "./serving.js"
+import { startLiveServer } from "./serving.js"
 
 const cwd = `${import.meta.dirname}`
-startHmrServer({hostname: "localhost", port: 5500, context: {cwd}});
+startLiveServer({hostname: "localhost", port: 5500, context: {cwd, logEnabled: true}});

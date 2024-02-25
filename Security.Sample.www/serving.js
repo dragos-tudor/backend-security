@@ -232,16 +232,18 @@ const errorsMiddleware = (next)=>async (request, context = {})=>{
 const CONTENT_LENGTH1 = "content-length";
 const setContentLengthHeader = (headers, length)=>headers.set(CONTENT_LENGTH1, length);
 const connectWebSocket = (location, logger)=>{
-    const isReloadMessage = (msg)=>msg.name === "reload";
-    const reloadLocation = ()=>location.href = `${location.origin}${location.pathname}${location.search}`;
-    const server = location.origin.replace("http", "ws");
-    const socketClient = new WebSocket(server + "/watch");
+    const getWebSocketServerUrl = (location)=>location.origin.replace("http", "ws");
+    const isReloadMessage = (msg)=>toJsonObject(msg.data).name === "reload";
+    const reloadLocation = (location)=>location.reload();
+    const toJsonObject = (data)=>JSON.parse(data ?? "{}");
+    const sockerServerUrl = getWebSocketServerUrl(location);
+    const socketClient = new WebSocket(sockerServerUrl + "/watch");
     socketClient.onopen = ()=>logger.info("[serving]", "client websocket is open");
     socketClient.onclose = ()=>logger.info("[serving]", "client websocket is closed");
     socketClient.onerror = (ex)=>logger.error("[serving]", "client websocket error", ex);
     socketClient.onmessage = (msg)=>{
         logger.info("[serving]", "client websocket message", msg.data);
-        isReloadMessage(msg) && reloadLocation();
+        isReloadMessage(msg) && reloadLocation(location);
     };
     socketClient.beforeunload = ()=>socketClient.close();
     return socketClient;
@@ -265,7 +267,7 @@ const upgradeWebSocket = (request, resource, context = {})=>{
     };
 };
 const ReloadScript = `
-  <!-- injected by hmr middlware -->
+  <!-- injected by watch middlware -->
   <script type="text/javascript">
     const ${connectWebSocket.name} = ${connectWebSocket.toString()};
     ${connectWebSocket.name}(location, console)
@@ -310,7 +312,7 @@ const upgradeWatchFilesSocket = (request, context)=>{
     watchFiles(watcher, sendReloadMessage(socket, cwd));
     return response;
 };
-const hmrMiddleware = (next)=>(request, context = {})=>isIndexFileRequest(request) && createIndexFileResponse(next, request, context) || isWatchRequest(request) && upgradeWatchFilesSocket(request, context) || isRouteRequest(request) && createIndexFileResponse(next, {
+const watchMiddleware = (next)=>(request, context = {})=>isIndexFileRequest(request) && createIndexFileResponse(next, request, context) || isWatchRequest(request) && upgradeWatchFilesSocket(request, context) || isRouteRequest(request) && createIndexFileResponse(next, {
             ...request,
             url: IndexHtml
         }, context) || next(request, context);
@@ -356,21 +358,20 @@ const filesRequestHandler = chainMiddlewares([
         createCompiler(transpileTsFile, tsExtensions)
     ])
 ]);
-const hmrRequestHandler = chainMiddlewares([
+const liveServerRequestHandler = chainMiddlewares([
     errorsMiddleware,
     cacheMiddleware,
-    hmrMiddleware,
+    watchMiddleware,
     filesMiddleware([
         createCompiler(transpileTsFile, tsExtensions)
     ])
 ]);
 const startFileServer = (options)=>startServer(filesRequestHandler, options);
-const startHmrServer = (options)=>startServer(hmrRequestHandler, options);
+const startLiveServer = (options)=>startServer(liveServerRequestHandler, options);
 export { chainMiddlewares as chainMiddlewares };
 export { cacheMiddleware as cacheMiddleware };
 export { errorsMiddleware as errorsMiddleware };
 export { filesMiddleware as filesMiddleware };
-export { hmrMiddleware as hmrMiddleware };
+export { watchMiddleware as watchMiddleware };
 export { startFileServer as startFileServer };
-export { startHmrServer as startHmrServer };
-
+export { startLiveServer as startLiveServer };
