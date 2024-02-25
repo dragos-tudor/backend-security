@@ -2,7 +2,12 @@
 	"image": "ubuntu:22.04",
   "customizations": {
     "vscode": {
-	    "extensions": [ "ms-dotnettools.csharp", "icsharpcode.ilspy-vscode", "denoland.vscode-deno" ]
+	    "extensions": [
+        "ms-dotnettools.csharp",
+        "icsharpcode.ilspy-vscode",
+        "denoland.vscode-deno",
+        "appulate.filewatcher"
+      ]
 	  }
 	},
   "features": {
