@@ -1,12 +1,11 @@
 
-export const Footer = () => {
-  return (<>
+export const Footer = () =>
+  <>
     <style css={css}></style>
     <div class="footer">
       Dragos Tudor. Copywright &#64;2024.
     </div>
-  </>)
-}
+  </>
 
 const css = `
 .footer{

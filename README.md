@@ -56,10 +56,52 @@
 - even *OAuth2* is an authorization protocol the process is named *remote authentication* because when succedded the authenticated principal is signed in.
 - even *OpenIdConnect* protocol is more secure and robust than *OAuth2* protocol is still not largely adopted by the community. The *OpenIdConnect* protocol seems to be overengineered, overcomplicated then the *OAuth2* protocol. The *OpenIdConnect* client implementation is more complicated than the *OAuth2* implementation. The *OpenIdConnect* protocol was implemented to increase the understanding level of *OAuth2* protocol! making some parallels between both protocols. *OpenIdConnect* implementation needs to be tested, refined, internal used so.
 
+### dev settings
+- run `./certificates.sh`
+- automatically insert css into js [css-in-js]:
+```json
+// .vscode/settings.json
+{
+  // set appulate.filewatcher extensions commands
+  "filewatcher.commands": [
+    {
+      "event": "onFileChange",
+      "match": "\\.css",
+      "vscodeTask": ["workbench.action.tasks.runTask", "inject-css"],
+    }
+  ]
+}
+```
+```json
+// .vscode/tasks.json
+{
+  {
+    "label": "inject-css",
+    "command": "deno",
+    "type": "shell",
+    "args": [
+      "run",
+      "--allow-read",
+      "--allow-write",
+      "https://gist.githubusercontent.com/dragos-tudor/715285df10a1a10928599c88ab591a1f/raw/cb9ef3b2c58565e39a6ef6784bcee9ea9c4c1572/inject-css.js",
+      "${file}"
+    ],
+    "options": {
+      "cwd": "${workspaceFolder}/Security.Sample.www"
+    },
+    "presentation": {
+      "reveal": "silent",
+      "revealProblems": "onProblem",
+      "close": true
+    }
+  }
+}
+```
+
 ### Project goals
 - to untangle/demystify the ASPNET authentication/authorization mechanisms and local/remote processes.
 - to simplify authentication/authorization mechanisms [ASPNET schema-based free mechanism].
-- to demonstrate a practical functional programming implementation.
+- to demonstrate a functional programming implementation.
 - to demonstrate a practical alternative to OOP.
 
 [wip OpenIdConnect, Sample.Api, Sample.www]

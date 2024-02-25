@@ -1,36 +1,27 @@
+import { NavLink } from "../scripts/routing.js"
+import { Logout } from "../logout/logout.jsx"
 
-const clickLogout = (event) =>{
-  event.preventDefault();
-  event.target.parentElement.submit();
-}
-
-export const Header = (_, elem) => {
-  const user = useContext(elem, "user")
-  return (
-    <div class="header">
-      <style css={css} ></style>
-      <h4>Security sample</h4>
-      <nav>{
-        user?
-          <ul>
-            <li><a href="/index">Home</a></li>
-            <li><a href="/account">Account</a></li>
-            <li>
-              <form name="logout" method="post" action="/api/account/logout?returnUrl=/index" >
-                <a href="/" onclick={clickLogout}>Logout</a>
-              </form>
-            </li>
-          </ul>:
-          <ul>
-            <li><a href="/api/account/login?redirectUrl=/index">Login</a></li>
-          </ul>
-        }
-      </nav>
+export const Header = ({user}) =>
+  <div class="header">
+    <style css={css} ></style>
+    <h4>Security sample</h4>
+    <nav>{
+      user?
+        <ul>
+          <li><NavLink href="/home">Home</NavLink></li>
+          <li><NavLink href="/account">Account</NavLink></li>
+          <li><Logout></Logout></li>
+        </ul>:
+        <ul>
+          <li><NavLink href="/account/login">Login</NavLink></li>
+        </ul>
+      }
+    </nav>
   </div>
-  )
-}
 
-const css = `.header {
+
+const css = `
+.header {
   display: flex;
   justify-content: space-between;
 }

@@ -1,33 +1,49 @@
+import { update, useState } from "../scripts/rendering.js"
 
-const clickLogin = (event) => {
-  event.preventDefault();
-  event.target.parentElement.submit()
+const loginUser = async (credentials, fetchJson) => {
+  const response = await fetchJson("POST", credentials)
+
 }
 
-export const Login = (props) => {
-  const queryString = props.queryString
-  return (<>
+const updateState = (setState, elem) => (event) => {
+  setState(event.target.value)
+  return update(elem)
+}
+
+export const Login = ({fetchJson, returnUrl}, elem) =>
+{
+  const [userName, setUserName] = useState(elem, "userName", "", [])
+  const [password, setPassword] = useState(elem, "password", "", [])
+  const [confirmPassword, setConfirmPassword] = useState(elem, "confirmPassword", "", [])
+  const credentials = {userName, password, confirmPassword}
+
+  return <>
     <h3>Login</h3>
+    <style css={css}></style>
     <div class="login">
-      <style css={css}></style>
-      <form name="login" method="post" action={"/login" + queryString} >
+      <div class="cookie-login">`
         <div>
-          <label for="user"></label>
-          <input type="text" name="user" value="user" placeholder="user name" />
+          <label for="userName"></label>
+          <input type="text" name="userName" value={userName} onchange={updateState(setUserName, elem)} placeholder="user name" />
         </div>
         <div>
           <label for="password"></label>
-          <input type="password" name="password" value="password" placeholder="password" />
+          <input type="password" name="password" value={password} onchange={updateState(setPassword, elem)} placeholder="password" />
         </div>
-        <a href="/" onclick={clickLogin}>Login</a>
-      </form>
+        <div>
+          <label for="confirmPassword"></label>
+          <input type="password" name="confirmPassword" value={confirmPassword} onchange={updateState(setConfirmPassword, elem)} placeholder="confirm password" />
+        </div>
+        <div class="error"></div>
+        <a href="/" onclick={() => loginUser(credentials, fetchJson)}>Login</a>
+      </div>
       <div class="social-logins">
-        <a href={"/challenge-google" + queryString}>Connect with Google</a>
-        <a href={"/challenge-facebook" + queryString}>Connect with Facebook</a>
-        <a href={"/challenge-twitter" + queryString}>Connect with Twitter</a>
+        <a href={"/challenge-google" + returnUrl}>Connect with Google</a>
+        <a href={"/challenge-facebook" + returnUrl}>Connect with Facebook</a>
+        <a href={"/challenge-twitter" + returnUrl}>Connect with Twitter</a>
       </div>
     </div>
-  </>)
+  </>
 }
 
 const css = `
@@ -37,7 +53,7 @@ const css = `
   gap: 1rem;
 }
 
-.login form>* {
+.login .cookie-login>* {
   margin: 0.3rem;
 }
 

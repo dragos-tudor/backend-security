@@ -5,7 +5,7 @@
   gap: 1rem;
 }
 
-.login form>* {
+.login .cookie-login>* {
   margin: 0.3rem;
 }
 

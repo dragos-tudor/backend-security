@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/index.css">
+  <link rel="shortcut icon" href="data:" type="image/x-icon">
+  <script src="/scripts/rendering.js" type="module" async></script>
+  <script src="/scripts/routing.js" type="module" async></script>
+  <script src="/scripts/states.js" type="module" async></script>
+  <script src="/scripts/fetching.js" type="module" async></script>
+  <script src="/scripts/validating.js" type="module" async></script>
+  <title>Security sample</title>
+</head>
+<body>
+  <script type="module" async>
+    import { App } from "/app/app.jsx"
+    import { fetchJson } from "/scripts/fetching.js"
+    import { render } from "/scripts/rendering.js"
+
+    render(React.createElement(App, { fetchJson, apiBaseUrl: "https://localhost:5000" }), document.body)
+  </script>
+</body>
+</html>

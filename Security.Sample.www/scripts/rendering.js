@@ -1,5 +1,4 @@
 // deno-lint-ignore-file no-control-regex
-/// <reference types="./rendering.d.ts"/>
 const createHtmlElement = (document, tagName)=>document.createElement(tagName);
 const getHtmlName = (elem)=>elem.tagName?.toLowerCase() || "text";
 const getHtmlOwnerDocument = (elem)=>elem?.ownerDocument;

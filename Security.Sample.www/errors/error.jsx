@@ -1,14 +1,10 @@
 
-export const Error = (props) => {
-  const errorName = props.errorName;
-  const errorDescription = props.errorDescription;
-  return (
-    <>
-      <h3>Error</h3>
-      <p>An error occurred while processing your request.</p>
+export const Error = ({name, description}) =>
+  <>
+    <h3>Error</h3>
+    <p>An error occurred while processing your request.</p>
 
-      <h4>{errorName}</h4>
-      <p>{errorDescription}</p>
-    </>
-  )
-}
+    <h4>{name}</h4>
+    <p>{description}</p>
+  </>
+
