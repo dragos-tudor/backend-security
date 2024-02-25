@@ -9,13 +9,13 @@ partial class SampleFuncs
     var keysPath = Environment.CurrentDirectory + "/bin/keys";
     AddConfigurations(appBuilder);
     AddSecrets(appBuilder);
-    AddServices(appBuilder, keysPath);
+    AddServices(appBuilder, keysPath, GetCorsOrigins(appBuilder));
 
     var app = appBuilder.Build();
     UseMiddlewares(app);
     MapEndpoints(app);
 
-    LogAppInfo(appBuilder);
+    LogAppStart(appBuilder);
     app.Run();
   }
 }

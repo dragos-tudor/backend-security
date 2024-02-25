@@ -5,7 +5,7 @@ namespace Security.Sample.Api;
 
 partial class SampleFuncs
 {
-  static WebApplicationBuilder LogAppInfo(WebApplicationBuilder appBuilder)
+  static WebApplicationBuilder LogAppStart(WebApplicationBuilder appBuilder)
   {
     WriteLine($"Server started: {appBuilder.WebHost.GetSetting("Kestrel:Endpoints:Https:Url")}");
     WriteLine($"  Environment: {appBuilder.Environment.EnvironmentName}");
