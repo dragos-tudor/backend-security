@@ -1,5 +1,5 @@
 ### Certificates
-- generate certificates: `./certificates.sh # chmod 777 ./certificates.sh `.
+- generate certificates: `./certificates.sh # chmod 755 ./certificates.sh `.
 
 ### Css-in-js
 - `.vscode/settings.json`
