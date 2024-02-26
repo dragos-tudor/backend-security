@@ -5,8 +5,8 @@ partial class SampleFuncs
 {
   static IApplicationBuilder UseMiddlewares (WebApplication app) =>
     app
-      .UseExceptionHandler() // TODO: problem details support
       .UseHttpsRedirection()
+      .UseExceptionHandler()
       .UseCors()
       .UseRouting()
       .UseAuthentication(AuthenticateCookie)
