@@ -5,6 +5,44 @@
   ./certificates.sh
 ```
 
+### Secrets
+- using `Security.Sample.Api/secrets.json`.
+```json
+{
+  "Secrets": {
+    "google": {
+      "clientid": "<google id>",
+      "clientsecret": "<google secret>"
+    },
+    "facebook": {
+      "appid": "<facebook id>",
+      "appsecret": "<facebook secret>"
+    },
+    "twitter": {
+      "consumerkey": "<twitter id>",
+      "consumersecret": "<twitter secret>"
+    }
+  }
+}
+```
+- using environment variables.
+```sh
+export Secrets__google__clientid=google_id
+export Secrets__google__clientsecret=google_secret
+...
+```
+- using command line args.
+```sh
+dotnet run --no-restore --no-build --Secrets:google:clientid=google_id ...
+```
+- using dotnet user-secrets tool.
+```sh
+cd Security.Sample.Api
+dotnet user-secrets init
+dotnet user-secrets set "Secrets:google:clientid" "google_id"
+dotnet user-secrets set "Secrets:google:clientsecret" "google_secret"
+```
+
 ### Css-in-js
 - `.vscode/settings.json`
 ```json
@@ -40,27 +78,6 @@
       "reveal": "silent",
       "revealProblems": "onProblem",
       "close": true
-    }
-  }
-}
-```
-
-### Secrets
-- `Security.Sample.Api/secrets.json`.
-```json
-{
-  "Secrets": {
-    "google": {
-      "clientid": "<google id>",
-      "clientsecret": "<google secret>"
-    },
-    "facebook": {
-      "appid": "<facebook id>",
-      "appsecret": "<facebook secret>"
-    },
-    "twitter": {
-      "consumerkey": "<twitter id>",
-      "consumersecret": "<twitter secret>"
     }
   }
 }
