@@ -1,5 +1,9 @@
 ### Certificates
-- generate certificates: `./certificates.sh # chmod 755 ./certificates.sh `.
+- generate certificates:
+```sh
+  chmod 755 ./certificates.sh
+  ./certificates.sh
+```
 
 ### Css-in-js
 - `.vscode/settings.json`
@@ -41,21 +45,23 @@
 }
 ```
 
-### Sample.Api
-- add `secrets.json` file to project.
+### Secrets
+- `Security.Sample.Api/secrets.json`.
 ```json
 {
-  "google": {
-    "clientid": "id.google",
-    "clientsecret": "secret.google"
-  },
-  "facebook": {
-    "appid": "id.facebook",
-    "appsecret": "secret.facebook"
-  },
-  "twitter": {
-    "consumerkey": "id.twitter",
-    "consumersecret": "secret.twitter"
+  "Secrets": {
+    "google": {
+      "clientid": "<google id>",
+      "clientsecret": "<google secret>"
+    },
+    "facebook": {
+      "appid": "<facebook id>",
+      "appsecret": "<facebook secret>"
+    },
+    "twitter": {
+      "consumerkey": "<twitter id>",
+      "consumersecret": "<twitter secret>"
+    }
   }
 }
 ```

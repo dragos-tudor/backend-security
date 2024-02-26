@@ -16,9 +16,10 @@ partial class SampleFuncs
         .AddGoogle(SetGoogleOptions(builder), SetRemoteClient(CreateRemoteClient(), GoogleDefaults.AuthenticationScheme))
         .AddFacebook(SetFacebookOptions(builder), SetRemoteClient(CreateRemoteClient(), FacebookDefaults.AuthenticationScheme))
         .AddTwitter(SetTwitterOptions(builder), SetRemoteClient(CreateRemoteClient(), TwitterDefaults.AuthenticationScheme))
-        .AddAuthorizationCore()
+        .AddAuthorization()
         .AddLogging(o => o.SetMinimumLevel(LogLevel.Warning))
         .AddCors(o => o.AddDefaultPolicy(BuildCorsPolicy(origins)))
+        .AddProblemDetails()
         .AddDataProtection()
         .PersistKeysToFileSystem(new (keysPath))
         .Services;
