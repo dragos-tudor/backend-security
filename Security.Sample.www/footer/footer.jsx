@@ -3,7 +3,7 @@ export const Footer = () =>
   <>
     <style css={css}></style>
     <div class="footer">
-      Dragos Tudor. Copywright &#64;2024.
+      Dragos Tudor. Copyright &#64;2024.
     </div>
   </>
 

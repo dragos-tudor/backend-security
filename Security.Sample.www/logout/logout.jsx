@@ -1,7 +1,11 @@
+const { getService } = await import("../scripts/rendering.js")
 
-const logoutApi = async (userName, fetchApi) => {
-  await fetchApi("POST", "/account/signout", {userName})
+const logoutApi = (apiFetch) => apiFetch("POST", "/account/signout")
+
+const logoutUser = (apiFetch) => (event) => {
+  event.preventDefault();
+  return logoutApi(apiFetch);
 }
 
-export const Logout = ({userName, fetchApi}) =>
-  <a href="/account/login" onclick={async (event) => { event.preventDefault(); await logoutApi(userName, fetchApi); }}>Logout</a>
+export const Logout = (props, elem) =>
+  <a href="/" onclick={logoutUser(getService(elem, "api-fetch"))}>Logout</a>

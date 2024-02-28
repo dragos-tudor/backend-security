@@ -1,8 +1,12 @@
-import { update, useState } from "../scripts/rendering.js"
+import { useState } from "../extensions/states.js"
+const { HttpMethods } = await import("../scripts/fetching.js")
+const { getService, update } = await import("../scripts/rendering.js")
+const { navigate } = await import("../scripts/routing.js")
 
-const loginUser = async (credentials, fetchJson) => {
-  const response = await fetchJson("POST", credentials)
 
+const loginUser = async (credentials, apiFetch, elem) => {
+  const user = await apiFetch("/account/login", credentials, { method: HttpMethods.POST })
+  return user && navigate(elem, "/home")
 }
 
 const updateState = (setState, elem) => (event) => {
@@ -10,12 +14,12 @@ const updateState = (setState, elem) => (event) => {
   return update(elem)
 }
 
-export const Login = ({fetchJson, returnUrl}, elem) =>
+export const Login = ({returnUrl}, elem) =>
 {
+  const apiFetch = getService(elem, "api-fetch")
   const [userName, setUserName] = useState(elem, "userName", "", [])
   const [password, setPassword] = useState(elem, "password", "", [])
   const [confirmPassword, setConfirmPassword] = useState(elem, "confirmPassword", "", [])
-  const credentials = {userName, password, confirmPassword}
 
   return <>
     <h3>Login</h3>
@@ -35,7 +39,7 @@ export const Login = ({fetchJson, returnUrl}, elem) =>
           <input type="password" name="confirmPassword" value={confirmPassword} onchange={updateState(setConfirmPassword, elem)} placeholder="confirm password" />
         </div>
         <div class="error"></div>
-        <a href="/" onclick={() => loginUser(credentials, fetchJson)}>Login</a>
+        <a href="/" onclick={() => loginUser({userName, password, confirmPassword}, apiJson)}>Login</a>
       </div>
       <div class="social-logins">
         <a href={"/challenge-google" + returnUrl}>Connect with Google</a>

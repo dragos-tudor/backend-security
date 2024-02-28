@@ -1,9 +1,9 @@
 
-.header {
+header {
   display: flex;
   justify-content: space-between;
 }
 
-.header ul {
+header ul {
   list-style: none;
 }

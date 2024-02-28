@@ -1,31 +1,20 @@
-import { NavLink } from "../scripts/routing.js"
-import { Logout } from "../logout/logout.jsx"
+import { getContext } from "../extensions/contexts.js"
+import { renderNavLinks } from "./rendering.jsx"
 
-export const Header = ({user}) =>
-  <div class="header">
+export const Header = (_, elem) =>
+  <>
     <style css={css} ></style>
     <h4>Security sample</h4>
-    <nav>{
-      user?
-        <ul>
-          <li><NavLink href="/home">Home</NavLink></li>
-          <li><NavLink href="/account">Account</NavLink></li>
-          <li><Logout></Logout></li>
-        </ul>:
-        <ul>
-          <li><NavLink href="/account/login">Login</NavLink></li>
-        </ul>
-      }
-    </nav>
-  </div>
+    {renderNavLinks(getContext(elem, "user"))}
+  </>
 
 
 const css = `
-.header {
+header {
   display: flex;
   justify-content: space-between;
 }
 
-.header ul {
+header ul {
   list-style: none;
 }`
