@@ -24,7 +24,6 @@ const allowRequestBody = (method)=>!(isGetMethod(method) || isHeadMethod(method)
 const allowRequestSearchParams = (method)=>isGetMethod(method) || isHeadMethod(method);
 const existsResponseContent = (response)=>response.status !== 204 && response.body != null;
 const isResponseOk = (response)=>response.ok;
-const isResponseError = (response)=>response instanceof Error;
 const getTextResponse = async (response)=>await response.text() || response.statusText;
 const getJsonResponse = (response)=>existsResponseContent(response) ? response.json() : Promise.resolve(null);
 const getSearchParam = (field, value)=>`${encodeURIComponent(field)}=${encodeURIComponent(value)}`;
@@ -64,9 +63,20 @@ const createNetworkError = (error)=>Object.assign(Error(error.message), {
 const fetchData = async (fetch, url, request)=>{
     try {
         const response = await fetch(url, request);
-        return isResponseOk(response) ? response : createHttpError(response, await getTextResponse(response));
+        return isResponseOk(response) ? [
+            response
+        ] : [
+            ,
+            createHttpError(response, await getTextResponse(response))
+        ];
     } catch (error) {
-        return error.name === "AbortError" ? createAbortError(error) : createNetworkError(error);
+        return error.name === "AbortError" ? [
+            ,
+            createAbortError(error)
+        ] : [
+            ,
+            createNetworkError(error)
+        ];
     }
 };
 const fetchJson = async (fetch, url, data, request = {})=>{
@@ -76,8 +86,13 @@ const fetchJson = async (fetch, url, data, request = {})=>{
         setJsonContentTypeHeader(request.headers);
         setRequestBody(request, toJsonRequestBody(data));
     }
-    const response = allowRequestSearchParams(request.method) ? await fetchData(fetch, encodeSearchParams(url, data), request) : await fetchData(fetch, url, request);
-    return !isResponseError(response) ? await getJsonResponse(response) : response;
+    const [result, error] = allowRequestSearchParams(request.method) ? await fetchData(fetch, encodeSearchParams(url, data), request) : await fetchData(fetch, url, request);
+    return result ? [
+        await getJsonResponse(result)
+    ] : [
+        ,
+        error
+    ];
 };
 export { fetchJson as fetchJson, fetchData as fetchData };
 const waitTimeout = (timeout)=>new Promise((resolve)=>{
