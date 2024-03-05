@@ -1,6 +1,8 @@
+
 ## ASPNET Security libraries
 - simplified ASPNET Security-like libraries.
 - "light" functional-style libraries [90% OOP-free].
+- **samples projects wip**
 
 ### Security libraries
 - [Authentication.Cookies](/Security.Authentication.Cookies/).
@@ -61,5 +63,3 @@
 - to simplify authentication/authorization mechanisms [ASPNET schema-based free mechanism].
 - to demonstrate a functional programming implementation.
 - to demonstrate a practical alternative to OOP.
-
-[wip OpenIdConnect, Sample.Api, Sample.www]
