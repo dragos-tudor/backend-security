@@ -3,8 +3,8 @@ const { expBackoff, fetchJson } = await import("/scripts/fetching.js")
 export const apiFetch = (baseUrl, fetch, navigateToAccessDenied, navigateToLogin) => async (url, data, request) => {
   const result = await fetchJson(fetch, baseUrl + url, data, request)
   const success = result[0]
-  if (success?.status === 401) return navigateToLogin()
-  if (success?.status === 403) return navigateToAccessDenied()
+  if (success?.status === 401) navigateToLogin()
+  if (success?.status === 403) navigateToAccessDenied()
   return result
 }
 
