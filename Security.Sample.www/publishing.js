@@ -1,5 +1,5 @@
-import { bundle } from  "https://deno.land/x/emit@0.38.1/mod.ts";
-import { encodeHex } from "https://deno.land/std@0.207.0/encoding/hex.ts";
+import { bundle } from  "/emit.ts"
+import { encodeHex } from "/hex.ts";
 
 const cleanWWWRoot = (wwwroot) => {
   for (const dirEntry of Deno.readDirSync(wwwroot))
