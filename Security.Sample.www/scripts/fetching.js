@@ -107,7 +107,7 @@ const expBackoff = async (intervals, fetch, ...args)=>{
     for (const [index, interval] of intervals.entries()){
         if (!isFirstIndex(index)) await waitTimeout(interval);
         const result = await fetch(...args);
-        const failure = result[0];
+        const failure = result[1];
         if (!failure) return result;
         if (isLastIndex(index, intervals)) return result;
     }
