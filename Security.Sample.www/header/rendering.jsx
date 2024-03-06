@@ -1,5 +1,5 @@
 import { Logout } from "../logout/logout.jsx"
-const { NavLink } = await import("../scripts/routing.js")
+const { NavLink } = await import("/scripts/routing.js")
 
 export const renderNavLinks = (user) =>
   user?

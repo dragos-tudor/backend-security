@@ -1,6 +1,6 @@
 import { assertExists } from "/asserts.ts"
-import { render, update, Services } from "../scripts/rendering.js"
-import { navigate, Router, Route } from "../scripts/routing.js"
+import { render, update, Services } from "/scripts/rendering.js"
+import { navigate, Router, Route } from "/scripts/routing.js"
 import { User } from "./user.jsx"
 
 Deno.test("user component", async t => {

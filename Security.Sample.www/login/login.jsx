@@ -1,7 +1,7 @@
 import { useState } from "../extensions/states.js"
-const { HttpMethods } = await import("../scripts/fetching.js")
-const { getService, update } = await import("../scripts/rendering.js")
-const { navigate } = await import("../scripts/routing.js")
+const { HttpMethods } = await import("/scripts/fetching.js")
+const { getService, update } = await import("/scripts/rendering.js")
+const { navigate } = await import("/scripts/routing.js")
 
 
 const loginUser = async (credentials, apiFetch, elem) => {

@@ -1,10 +1,15 @@
 import { getUser } from "./getting.js"
-import { navigateUser } from "./navigating.js"
-const { update }  = await import("../scripts/rendering.js")
+const { update }  = await import("/scripts/rendering.js")
+const { navigate } = await import("/scripts/routing.js")
 
 export const loadUser = async (apiFetch, setUser, elem) => {
-  const user = await getUser(apiFetch)
+  const [user, failure] = await getUser(apiFetch)
+  if (failure) {
+    console.error(failure)
+    return navigate(elem, "/login")
+  }
+
   setUser(user)
   update(elem)
-  return navigateUser(elem, user)
+  return navigate(elem, "/home")
 }

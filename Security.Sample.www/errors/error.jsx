@@ -1,5 +1,5 @@
 import { getErrorDescription, getErrorName } from "./getting.js"
-const { NavLink } = await import("../scripts/routing.js")
+const { NavLink } = await import("/scripts/routing.js")
 
 export const Error = ({location}) =>
   <>

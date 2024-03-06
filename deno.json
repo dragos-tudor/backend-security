@@ -2,7 +2,7 @@
   "importMap": "./deps.map.json",
   "tasks": {
     "test": "deno test --allow-all --no-check --parallel",
-    "start": "deno run --allow-all --no-check /workspaces/backend-security/Security.Sample.www/starting.js"
+    "start": "deno run --allow-all --no-check /starting.js"
   },
   "compilerOptions": {
     "lib": [

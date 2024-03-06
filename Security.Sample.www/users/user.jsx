@@ -1,8 +1,7 @@
 import { useEffect } from "../extensions/effects.js"
 import { useState } from "../extensions/states.js"
 import { loadUser } from "./loading.js"
-const { getService, Context }  = await import("../scripts/rendering.js")
-
+const { getService, Context }  = await import("/scripts/rendering.js")
 
 export const User = (props, elem) =>
 {

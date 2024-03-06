@@ -5,8 +5,8 @@ import { Header } from "../header/header.jsx"
 import { loadHome } from "../home/loading.jsx";
 import { Login } from "../login/login.jsx"
 import { User } from "../users/user.jsx"
-const { Services } = await import("../scripts/rendering.js")
-const { Route, Router } = await import("../scripts/routing.js")
+const { Services } = await import("/scripts/rendering.js")
+const { Route, Router } = await import("/scripts/routing.js")
 
 
 export const App = (props) =>

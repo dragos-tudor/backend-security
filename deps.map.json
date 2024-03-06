@@ -1,6 +1,11 @@
 {
   "imports": {
     "/asserts.ts": "https://deno.land/std@0.204.0/assert/mod.ts",
-    "/mock.ts": "https://deno.land/std@0.204.0/testing/mock.ts"
+    "/mock.ts": "https://deno.land/std@0.204.0/testing/mock.ts",
+    "/scripts/rendering.js": "./Security.Sample.www/scripts/rendering.js",
+    "/scripts/routing.js": "./Security.Sample.www/scripts/routing.js",
+    "/scripts/fetching.js": "./Security.Sample.www/scripts/fetching.js",
+    "/serving.js": "./Security.Sample.www/serving.js",
+    "/starting.js": "./Security.Sample.www/starting.js"
   }
 }

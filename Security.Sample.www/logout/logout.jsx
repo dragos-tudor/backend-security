@@ -1,4 +1,4 @@
-const { getService } = await import("../scripts/rendering.js")
+const { getService } = await import("/scripts/rendering.js")
 
 const logoutApi = (apiFetch) => apiFetch("POST", "/account/signout")
 
