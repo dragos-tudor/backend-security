@@ -5,8 +5,8 @@ import { App } from "./app.jsx"
 
 Deno.test("app component", async t => {
 
-  const getNoUser = (url) => Promise.resolve(url === "/user"? null: {})
-  const getUser = (url) => Promise.resolve(url === "/user"? {}: null)
+  const getNoUser = (url) => Promise.resolve(url === "/user" && [, {}])
+  const getUser = (url) => Promise.resolve(url === "/user" && [{}])
 
   await t.step("user unauthenticated [user api return nothing] => render user => navigate to login", async () =>
   {
