@@ -114,8 +114,8 @@ const RootPaths = [
     "",
     RootPath
 ];
-const isRootPath = (request)=>RootPaths.includes(new URL(request.url).pathname);
-const getUrlPathName = (url)=>new URL(url).pathname;
+const getUrlPathName = (url)=>url.startsWith("http") ? new URL(url).pathname : url;
+const isRootPath = (request)=>RootPaths.includes(getUrlPathName(request.url));
 const getUrlPath = (request)=>isRootPath(request) ? IndexHtml : getUrlPathName(request.url);
 const { dirname, extname } = await import("https://deno.land/std@0.204.0/path/mod.ts");
 const { red, green } = await import("https://deno.land/std@0.204.0/fmt/colors.ts");
@@ -224,7 +224,7 @@ const errorsMiddleware = (next)=>async (request, context = {})=>{
             if (response.status === 500) logError(logEnabled, response.headers.get(SERVER_ERROR_HEADER1));
             return response;
         } catch (error) {
-            logError(logEnabled, error);
+            logError(true, error);
             const errorType = getErrorType(error) || "serverError";
             return createErrorResponse[errorType](error.message);
         }
