@@ -103,19 +103,21 @@ const waitTimeout = (timeout)=>new Promise((resolve)=>{
     });
 const isFirstIndex = (index)=>index === 0;
 const isLastIndex = (index, intervals)=>index === intervals.length - 1;
-const expBackoff = async (intervals, func, ...args)=>{
+const expBackoff = async (intervals, fetch, ...args)=>{
     for (const [index, interval] of intervals.entries()){
         if (!isFirstIndex(index)) await waitTimeout(interval);
-        const result = await func(...args);
-        if (!(result instanceof Error)) return result;
+        const result = await fetch(...args);
+        const failure = result[0];
+        if (!failure) return result;
         if (isLastIndex(index, intervals)) return result;
     }
 };
 export { expBackoff as expBackoff };
-const retry = async (retries, func, ...args)=>{
+const retry = async (retries, fetch, ...args)=>{
     do {
-        const result = await func(...args);
-        if (!(result instanceof Error)) return result;
+        const result = await fetch(...args);
+        const failure = result[1];
+        if (!failure) return result;
         if (!retries) return result;
     }while (retries--)
 };
