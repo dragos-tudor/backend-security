@@ -5,9 +5,18 @@ namespace Security.Sample.Api;
 
 partial class SampleFuncs
 {
-  static IConfigurationBuilder AddConfigurations (WebApplicationBuilder appBuilder) =>
-    appBuilder.Configuration.AddJsonFile("./settings.json");
+  static IConfigurationBuilder AddCommandLine (WebApplicationBuilder appBuilder, string[] args) =>
+    appBuilder.Configuration.AddCommandLine(args);
 
-  static string[] GetCorsOrigins (WebApplicationBuilder appBuilder) =>
-    appBuilder.Configuration.GetValue<string[]>("Cors:origins") ?? [];
+  static IConfigurationBuilder AddEnvironmentVariables (WebApplicationBuilder appBuilder) =>
+    appBuilder.Configuration.AddEnvironmentVariables();
+
+  static IConfigurationBuilder AddSecrets (WebApplicationBuilder app) =>
+    app.Configuration
+      .AddJsonFile("./secrets.json")
+      .AddUserSecrets(typeof(SampleFuncs).Assembly, true);
+
+  static IConfigurationBuilder AddSettings (WebApplicationBuilder appBuilder) =>
+    appBuilder.Configuration
+      .AddJsonFile("./settings.json");
 }

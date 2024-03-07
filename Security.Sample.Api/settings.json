@@ -18,19 +18,5 @@
     "origins": [
       "https://localhost:5500"
     ]
-  },
-  "Secrets": {
-    "google": {
-      "clientid": "google.id",
-      "clientsecret": "google.secret"
-    },
-    "facebook": {
-      "appid": "facebook.id",
-      "appsecret": "facebook.secret"
-    },
-    "twitter": {
-      "consumerkey": "twitter.key",
-      "consumersecret": "twitter.secret"
-    }
   }
 }

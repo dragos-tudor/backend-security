@@ -7,8 +7,11 @@ partial class SampleFuncs
   {
     var appBuilder = CreateWebApplicationBuilder(args);
     var keysPath = Environment.CurrentDirectory + "/bin/keys";
-    AddConfigurations(appBuilder);
-    AddSecrets(appBuilder, args);
+    AddSecrets(appBuilder);
+    AddSettings(appBuilder);
+    AddEnvironmentVariables(appBuilder);
+    AddCommandLine(appBuilder, args);
+
     AddServices(appBuilder, keysPath, GetCorsOrigins(appBuilder));
 
     var app = appBuilder.Build();
