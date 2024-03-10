@@ -8,4 +8,4 @@ const settings = {
     "intervals": [3, 9, 27, 81, 273]
   }
 }
-render(App(createAppProps(document, settings)), document.body)
+render(React.createElement(App, createAppProps(document, settings)), document.body)

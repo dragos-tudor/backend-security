@@ -1,5 +1,7 @@
 // deno-lint-ignore-file no-control-regex
+/// <reference types="./index.d.ts"/>
 const createHtmlElement = (document, tagName)=>document.createElement(tagName);
+const createHtmlElementNS = (document, ns, tagName)=>document.createElementNS(ns, tagName);
 const getHtmlName = (elem)=>elem.tagName?.toLowerCase() || "text";
 const getHtmlOwnerDocument = (elem)=>elem?.ownerDocument;
 const getHtmlParentElement = (elem)=>elem?.parentElement;
@@ -120,6 +122,9 @@ const registerDOMParser = async (url = DOMLibraryUrl, global = globalThis)=>{
     global.CustomEvent = dom.CustomEvent;
     return global.DOMParser;
 };
+const isFunctionAttrValue = (attrValue)=>typeof attrValue === "function";
+const isNamespaceAttrName = (attrName)=>attrName === "xmlns";
+const setAttribute = (elem, attrName, attrValue)=>isFunctionAttrValue(attrValue) || isNamespaceAttrName(attrName) || elem.setAttributeNS?.(null, attrName, attrValue);
 const toCamelCaseName = (attrName)=>`aria${attrName[5].toUpperCase()}${attrName.substring(6)}`;
 const mapPropName = (propName)=>isSpecialPropName(propName) && SpecialPropMappings[propName] || isAriaPropName(propName) && (AriaPropMappings[propName] || toCamelCaseName(propName)) || propName;
 const EncodingCharsRegex = /[^\w. ]/gi;
@@ -137,16 +142,26 @@ const isEmptyPropValue = (propValue)=>propValue == undefined || propValue === ""
 const isTogglePropName = (propName)=>togglePropNames.includes(propName);
 const getTogglePropValue = (propValue)=>isEmptyPropValue(propValue) || propValue;
 const resolvePropValue = (props, propName)=>isDangerouslyHtmlPropName(propName) && encodeHtml(props[propName]) || isTogglePropName(propName, props[propName]) && getTogglePropValue(props[propName]) || props[propName];
+const isSVGPropValue = (elem, propName)=>elem[propName]?.constructor?.name.startsWith("SVG");
 const isHtmlPropName = (elem, propName)=>propName in elem || propName.startsWith("__");
+const isWritableHtmlProp = (elem, propName)=>{
+    const descriptor = Object.getOwnPropertyDescriptor(elem, propName);
+    if (descriptor && "writable" in descriptor) return descriptor.writable;
+    if (descriptor && "set" in descriptor) return true;
+    if (isSVGPropValue(elem, propName)) return false;
+    return true;
+};
 const setHtmlProperty = (props)=>(elem, propName)=>{
         const htmlPropName = mapPropName(propName);
-        if (isHtmlPropName(elem, htmlPropName)) elem[htmlPropName] = resolvePropValue(props, propName);
+        const htmlPropValue = resolvePropValue(props, propName);
+        isHtmlPropName(elem, htmlPropName) && isWritableHtmlProp(elem, propName) ? elem[htmlPropName] = htmlPropValue : setAttribute(elem, htmlPropName, htmlPropValue);
         return elem;
     };
 const setHtmlProperties = (elem, props)=>getValidPropNames(elem, props).reduce(setHtmlProperty(props), elem);
+const unsetAttribute = (elem, attrName)=>elem.setAttribute?.(attrName, undefined);
 const unsetHtmlProperty = (elem, propName)=>{
     const htmlPropName = mapPropName(propName);
-    if (isHtmlPropName(elem, htmlPropName)) elem[htmlPropName] = undefined;
+    isHtmlPropName(elem, htmlPropName) && isWritableHtmlProp(elem, propName) ? elem[htmlPropName] = undefined : unsetAttribute(elem, htmlPropName);
     return elem;
 };
 const unsetHtmlProperties = (elem, props)=>getValidPropNames(elem, props).reduce(unsetHtmlProperty, elem);
@@ -447,6 +462,9 @@ const enableIgnoring = ($elem, $parent)=>isIgnoreArray($parent) && ($elem.__igno
         ...$parent.__ignore
     ]);
 const storeInternals = ($elem, elem)=>storeJsxElement($elem, elem);
+const getElementNS = (elem)=>getJsxElementProps(elem).xmlns;
+const getHtmlElementNS = ($elem)=>$elem && getJsxElement($elem) && getJsxElementProps(getJsxElement($elem)).xmlns;
+const getHtmlPropNames = ($elem)=>Object.getOwnPropertyNames($elem);
 const setHtmlElement = ($elem, elem)=>{
     setHtmlProperties($elem, getJsxElementProps(elem));
     setEventHandlers($elem, getJsxElementProps(elem));
@@ -458,7 +476,6 @@ const updateHtmlElement = (elem, $elem)=>{
     storeInternals($elem, elem);
     return $elem;
 };
-const getHtmlPropNames = ($elem)=>Object.getOwnPropertyNames($elem);
 const isInternalName = (name)=>name.startsWith("__");
 const unstoreInternal = (elem, propName)=>{
     delete elem[propName];
@@ -513,7 +530,8 @@ const resolveJsxChildren = (elem, $elem)=>isJsxFactory(elem) && buildJsxFactoryC
 const renderHtmlElement = (elem, $parent)=>{
     throwError(validateHtmlTagName(getJsxName(elem)));
     const document = getHtmlOwnerDocument($parent);
-    const $elem = createHtmlElement(document, getJsxName(elem));
+    const ns = getElementNS(elem) || getHtmlElementNS($parent);
+    const $elem = ns ? createHtmlElementNS(document, ns, getJsxName(elem)) : createHtmlElement(document, getJsxName(elem));
     setHtmlElement($elem, elem);
     appendHtmlNode($elem, $parent);
     enableIgnoring($elem, $parent);

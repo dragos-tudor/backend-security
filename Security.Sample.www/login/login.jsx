@@ -1,4 +1,5 @@
 import { useState } from "../extensions/states.js"
+import { google, facebook, twitter } from "../images/icons.jsx"
 const { HttpMethods } = await import("/scripts/fetching.js")
 const { getService, update } = await import("/scripts/rendering.js")
 const { navigate } = await import("/scripts/routing.js")
@@ -14,54 +15,77 @@ const updateState = (setState, elem) => (event) => {
   return update(elem)
 }
 
-export const Login = ({returnUrl}, elem) =>
+export const Login = (props, elem) =>
 {
   const apiFetch = getService(elem, "api-fetch")
   const [userName, setUserName] = useState(elem, "userName", "", [])
   const [password, setPassword] = useState(elem, "password", "", [])
-  const [confirmPassword, setConfirmPassword] = useState(elem, "confirmPassword", "", [])
 
   return <>
-    <h3>Login</h3>
     <style css={css}></style>
-    <div class="login">
-      <div class="cookie-login">`
-        <div>
-          <label for="userName"></label>
-          <input type="text" name="userName" value={userName} onchange={updateState(setUserName, elem)} placeholder="user name" />
-        </div>
-        <div>
-          <label for="password"></label>
-          <input type="password" name="password" value={password} onchange={updateState(setPassword, elem)} placeholder="password" />
-        </div>
-        <div>
-          <label for="confirmPassword"></label>
-          <input type="password" name="confirmPassword" value={confirmPassword} onchange={updateState(setConfirmPassword, elem)} placeholder="confirm password" />
-        </div>
-        <div class="error"></div>
-        <a href="/" onclick={() => loginUser({userName, password, confirmPassword}, apiJson)}>Login</a>
+    <signin-form>
+      <div>
+        <label for="userName">User name</label>
+        <input id="userName" type="text" placeholder="user name here" tabindex="1"/>
       </div>
-      <div class="social-logins">
-        <a href={"/challenge-google" + returnUrl}>Connect with Google</a>
-        <a href={"/challenge-facebook" + returnUrl}>Connect with Facebook</a>
-        <a href={"/challenge-twitter" + returnUrl}>Connect with Twitter</a>
+      <div>
+        <label for="password">Password</label>
+        <input id="password" type="password" placeholder="password here" tabindex="2"/>
       </div>
-    </div>
+      <div>
+        <button tabindex="4">Signin with credentials</button>
+      </div>
+    </signin-form>
+    <or>or</or>
+    <external-auth>
+      <a class="auth-provider" tabindex="5">
+        {google}
+        <span>Signin with Google</span>
+      </a>
+      <a class="auth-provider" tabindex="6">
+        {facebook}
+        <span>Signin with Facebook</span>
+      </a>
+      <a class="auth-provider" tabindex="7">
+        {twitter}
+        <span>Signin with Twitter</span>
+      </a>
+    </external-auth>
   </>
 }
 
 const css = `
-.login {
+login {
   display: flex;
+  flex-direction: row;
   justify-content: center;
-  gap: 1rem;
+  align-items: center;
+  height: 100%;
 }
 
-.login .cookie-login>* {
-  margin: 0.3rem;
+signin-form {
+  display: grid;
+  justify-items: end;
+  row-gap: 0.5em;
 }
 
-.login .social-logins * {
+signin-form, external-auth {
+  padding: 1em;
+  border-radius: var(--default-radius);
+  border: 3px solid var(--dark-primary-color);
+}
+
+or {
+  margin: 1em;
+  color: var(--light-primary-color);
+}
+
+external-auth .auth-provider {
   display: block;
-  margin: 0.3rem;
+}
+
+@media screen and (max-width: 800px) {
+  login {
+    flex-direction: column;
+  }
 }`

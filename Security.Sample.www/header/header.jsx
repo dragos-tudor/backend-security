@@ -4,17 +4,27 @@ import { renderNavLinks } from "./rendering.jsx"
 export const Header = (_, elem) =>
   <>
     <style css={css} ></style>
-    <h4>Security sample</h4>
-    {renderNavLinks(getContext(elem, "user"))}
+    <h1 class="logo">
+      <a href="/">security sample</a>
+    </h1>
+    {/* {renderNavLinks(getContext(elem, "user"))} */}
   </>
 
 
 const css = `
 header {
-  display: flex;
-  justify-content: space-between;
+  padding: 1em;
+  background-color: var(--dark-primary-color);
 }
 
-header ul {
-  list-style: none;
-}`
+header .logo {
+  font-family: var(--ff-serif);
+  text-transform: uppercase;
+}
+
+header .logo a {
+  margin: 0;
+  padding: 0;
+  color: var(--text-color);
+}
+`

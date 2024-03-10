@@ -1,11 +1,34 @@
 :root {
   --ff-serif: Georgia, 'Times New Roman', Times, serif;
   --ff-sans-serif: Arial, Helvetica, sans-serif;
+
+  --light-primary-color: rgb(168, 166, 166);
+  --primary-color: rgb(49, 46, 46);
+  --dark-primary-color: rgb(41, 39, 39);
+
+  --light-secondary-color: rgb(250, 221, 169);
+  --secondary-color: rgb(255, 192, 74);
+  --dark-secondary-color: rgb(255, 153, 0);
+
+  --ligth-text-color: rgb(203, 250, 203);
+  --text-color: rgb(140, 231, 140);
+
+  --default-radius: 0px;
+  --default-padding: 0.5em;
+  --default-font-size: 1em;
+  --default-transition: 0.3s;
+  --flex-direction: row;
 }
 
 html {
   font-size: 62.5%;
   font-family: var(--ff-sans-serif);
+}
+
+body {
+  font-size: 1.6em;
+  background-color: var(--primary-color);
+  color: var(--text-color);
 }
 
 * {
@@ -14,20 +37,72 @@ html {
   padding: 0;
 }
 
-body {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0
-}
 
 a {
+  display: inline-block;
+  padding: var(--default-padding);
+  font-size: var(--default-font-size);
   text-decoration: none;
-  color: inherit;
+  outline: none;
+  cursor: pointer;
+  transition: color var(--default-transition) ease-in-out;
+  border: 0;
+  border-radius: var(--default-radius);
+  color: var(--secondary-color);
 }
 
-a:hover, a:active {
-  color: initial;
+a:hover, a:focus {
+  color: var(--dark-secondary-color);
+}
+
+a * {
+  vertical-align: middle;
 }
 
 
+input {
+  padding: var(--default-padding);
+  font-size: var(--default-font-size);
+  outline: 0;
+  transition: border-color var(--default-transition) ease-in-out;
+  border: 1px solid var(--dark-primary-color);
+  background-color: var(--dark-primary-color);
+  color: var(--light-primary-color);
+}
+
+input:hover, input:focus {
+  border-color: var(--text-color);
+}
+
+
+button {
+  padding: var(--default-padding);
+  font-size: var(--default-font-size);
+  outline: 0;
+  cursor: pointer;
+  transition: color var(--default-transition) ease-in-out, border-color var(--default-transition);
+  border: 1px solid var(--secondary-color);
+  border-radius: var(--default-radius);
+  color: var(--secondary-color);
+  background-color: var(--dark-primary-color);
+}
+
+button:hover , button:focus {
+  color: var(--dark-secondary-color);
+  border-color: var(--dark-secondary-color);
+}
+
+
+label {
+  margin: 0 0.3em 0 0;
+  font-size: var(--default-font-size);
+  cursor: pointer;
+  opacity: 75%;
+  color: var(--text-color);
+}
+
+
+svg {
+  height: 1.5em;
+}
 

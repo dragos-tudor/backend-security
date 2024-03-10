@@ -1,5 +1,21 @@
 
-.footer{
+footer {
+  padding: 1em;
   text-align: center;
-  font-size: 0.75em;
+  vertical-align: middle;
+  background-color: var(--dark-primary-color);
+}
+
+footer .social-icons {
+  display: inline-block;
+}
+
+footer .social-icon {
+  height: 2em;
+  padding: 0.1em;
+  border-color: transparent;
+}
+
+footer .me {
+  color: var(--light-primary-color);
 }

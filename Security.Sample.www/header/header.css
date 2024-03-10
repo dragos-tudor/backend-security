@@ -1,9 +1,16 @@
 
 header {
-  display: flex;
-  justify-content: space-between;
+  padding: 1em;
+  background-color: var(--dark-primary-color);
 }
 
-header ul {
-  list-style: none;
+header .logo {
+  font-family: var(--ff-serif);
+  text-transform: uppercase;
+}
+
+header .logo a {
+  margin: 0;
+  padding: 0;
+  color: var(--text-color);
 }

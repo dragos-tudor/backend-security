@@ -17,7 +17,8 @@ const MediaTypes = {
     ".sass": "text/css",
     ".woff": "font/woff",
     ".woff2": "font/woff2",
-    ".ico": "image/x-icon"
+    ".ico": "image/x-icon",
+    ".svg": "image/svg+xml"
 };
 const BAD_REQUEST = "Bad Request";
 const createBadRequestResponse = ()=>new Response(BAD_REQUEST, {

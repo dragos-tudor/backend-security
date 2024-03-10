@@ -1,0 +1,17 @@
+
+app {
+  height: 100vh;
+}
+
+layout {
+  display: grid;
+  grid-template-rows: min-content 1fr min-content;
+  height: inherit;
+}
+
+router, user, context {
+  display: block;
+  height: inherit;
+}
+
+
