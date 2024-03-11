@@ -1,3 +1,4 @@
+import { getRouter } from "../router/getting.js"
 import { navigateToAccessDenied, navigateToLogin } from "../router/navigating.js"
 const { expBackoff, fetchJson } = await import("/scripts/fetching.js")
 
@@ -15,6 +16,6 @@ const resilientFetch = (intervals, fetch) =>
 export const resilientApiFetch = (settings, fetch, document) =>
   resilientFetch(
     settings.expBackoff?.intervals,
-    apiFetch(settings.apiUrl, fetch, getAppRouter(document))
+    apiFetch(settings.apiUrl, fetch, getRouter(document))
   )
 

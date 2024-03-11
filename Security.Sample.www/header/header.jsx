@@ -1,5 +1,5 @@
 import { getContext } from "../scripts/extending.js"
-import { renderNavLinks } from "./rendering.jsx"
+import { NavLinks } from "./navlinks.jsx"
 
 export const Header = (_, elem) =>
   <>
@@ -7,24 +7,44 @@ export const Header = (_, elem) =>
     <h1 class="logo">
       <a href="/">security sample</a>
     </h1>
-    {/* {renderNavLinks(getContext(elem, "user"))} */}
+    <NavLinks user={getContext(elem, "user")}></NavLinks>
   </>
 
 
 const css = `
 header {
-  padding: 1em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: var(--dark-primary-color);
 }
 
 header .logo {
+  margin: 1rem;
   font-family: var(--ff-serif);
   text-transform: uppercase;
 }
 
 header .logo a {
-  margin: 0;
-  padding: 0;
   color: var(--text-color);
 }
-`
+
+header navlinks {
+  margin: 1rem 2rem;
+}
+
+header navlink a {
+  font-size: 1.3em;
+}
+
+header navlink a::after {
+  content: "";
+  display: block;
+  width: 0.5em;
+  transition: border-bottom-color var(--default-transition);
+  border-bottom: 1px solid transparent;
+}
+
+header navlink a:hover::after {
+  border-bottom-color: var(--dark-secondary-color);
+}`

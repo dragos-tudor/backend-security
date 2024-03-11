@@ -66,7 +66,7 @@ login {
 signin-form {
   display: grid;
   justify-items: end;
-  row-gap: 0.5em;
+  row-gap: var(--default-margin);
 }
 
 signin-form, external-auth {
@@ -82,6 +82,11 @@ or {
 
 external-auth .auth-provider {
   display: block;
+  margin: 0.5em 0;
+}
+
+external-auth .auth-provider span {
+  margin-left: var(--default-margin);
 }
 
 @media screen and (max-width: 800px) {
