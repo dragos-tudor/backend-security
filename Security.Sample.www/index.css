@@ -1,3 +1,4 @@
+
 :root {
   --ff-serif: Georgia, 'Times New Roman', Times, serif;
   --ff-sans-serif: Arial, Helvetica, sans-serif;
@@ -13,9 +14,11 @@
   --ligth-text-color: rgb(203, 250, 203);
   --text-color: rgb(140, 231, 140);
 
+  --default-font-size: 1.6em;
   --default-radius: 0px;
-  --default-padding: 0.5em;
-  --default-transition: 0.3s;
+  --default-padding: 0.8rem;
+  --default-margin: 0.5rem;
+  --default-transition: 0.5s;
 }
 
 html {
@@ -24,7 +27,7 @@ html {
 }
 
 body {
-  font-size: 1.6em;
+  font-size: var(--default-font-size);
   background-color: var(--primary-color);
   color: var(--text-color);
 }
@@ -38,8 +41,7 @@ body {
 
 a {
   display: inline-block;
-  padding: var(--default-padding);
-  font-size: var(--default-font-size);
+  margin: var(--default-margin);
   text-decoration: none;
   outline: none;
   cursor: pointer;
@@ -60,7 +62,7 @@ a * {
 
 input {
   padding: var(--default-padding);
-  font-size: var(--default-font-size);
+  font-size: 1em;
   outline: 0;
   transition: border-color var(--default-transition) ease-in-out;
   border: 1px solid var(--dark-primary-color);
@@ -75,7 +77,7 @@ input:hover, input:focus {
 
 button {
   padding: var(--default-padding);
-  font-size: var(--default-font-size);
+  font-size: 1em;
   outline: 0;
   cursor: pointer;
   transition: color var(--default-transition) ease-in-out, border-color var(--default-transition);
@@ -92,8 +94,7 @@ button:hover , button:focus {
 
 
 label {
-  margin: 0 0.3em 0 0;
-  font-size: var(--default-font-size);
+  margin-right: var(--default-margin);
   cursor: pointer;
   opacity: 75%;
   color: var(--text-color);
