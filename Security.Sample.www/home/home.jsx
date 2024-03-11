@@ -1,4 +1,4 @@
-import { getContext } from "../extensions/contexts.js"
+import { getContext } from "../scripts/extending.js"
 
 export const Home = (props, elem) =>
   <>

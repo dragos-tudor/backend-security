@@ -1,5 +1,5 @@
-import { useState } from "../extensions/states.js"
 import { google, facebook, twitter } from "../images/icons.jsx"
+import { useState } from "../scripts/extending.js"
 const { HttpMethods } = await import("/scripts/fetching.js")
 const { getService, update } = await import("/scripts/rendering.js")
 const { navigate } = await import("/scripts/routing.js")

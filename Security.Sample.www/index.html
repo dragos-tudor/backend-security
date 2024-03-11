@@ -13,11 +13,11 @@
     <title>Security sample</title>
   </head>
   <body>
-    <script src="/bootstrapping.js" type="module" async></script>
-    <!-- <script type="module" async>
-      import {Footer} from "/footer/footer.jsx"
-      import {render} from "/scripts/rendering.js"
-      render(React.createElement(Footer, {}), document.body)
-    </script> -->
+    <!-- <script src="/bootstrapping.js" type="module" async></script> -->
+    <script type="module" async>
+      import { Header } from "/header/header.jsx"
+      import { render } from "/scripts/rendering.js"
+      render(React.createElement(Header, {}), document.body)
+    </script>
   </body>
 </html>

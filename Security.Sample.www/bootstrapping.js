@@ -1,11 +1,6 @@
-import { createAppProps } from "./app/app.props.js"
 import { App } from "./app/app.jsx"
+import { createAppProps } from "./app/creating.js"
+import { settings } from "./settings.js"
 const { render }  = await import("/scripts/rendering.js")
 
-const settings = {
-  apiUrl: "https://localhost:5000",
-  expBackoff: {
-    "intervals": [3, 9, 27, 81, 273]
-  }
-}
-render(React.createElement(App, createAppProps(document, settings)), document.body)
+render(React.createElement(App, createAppProps(settings, document)), document.body)

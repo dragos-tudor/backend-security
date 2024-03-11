@@ -15,9 +15,7 @@
 
   --default-radius: 0px;
   --default-padding: 0.5em;
-  --default-font-size: 1em;
   --default-transition: 0.3s;
-  --flex-direction: row;
 }
 
 html {

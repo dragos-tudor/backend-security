@@ -1,4 +1,4 @@
-import { getContext } from "../extensions/contexts.js"
+import { getContext } from "../scripts/extending.js"
 import { renderNavLinks } from "./rendering.jsx"
 
 export const Header = (_, elem) =>

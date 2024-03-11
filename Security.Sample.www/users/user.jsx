@@ -1,5 +1,4 @@
-import { useEffect } from "../extensions/effects.js"
-import { useState } from "../extensions/states.js"
+import { useEffect, useState } from "../scripts/extending.js"
 import { loadUser } from "./loading.js"
 const { getService, Context }  = await import("/scripts/rendering.js")
 
