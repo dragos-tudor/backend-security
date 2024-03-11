@@ -1,19 +1,21 @@
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Security.Sample.Api;
 
 partial class SampleFuncs
 {
-  static ClaimsPrincipal CreateUserClaimsPrincipal(HttpContext context) =>
-    CreatePrincipal(
-      ResolveService<CookieAuthenticationOptions>(context).SchemeName,
-      [ CreateNameClaim(context.Request.Form["user"]) ]);
+  static async Task<UserInfoDto?> SignInEndpoint(
+    HttpContext context,
+    CookieAuthenticationOptions authOptions,
+    CredentialsDto credentials)
+  {
+    if (!CheckCredentials(credentials))
+      return default;
 
-  static async Task<string?> SignInEndpoint(HttpContext context) =>
-    (await SignInCookie(
-      context,
-      CreateUserClaimsPrincipal(context),
-      CreateAuthenticationProperties()
-    )).AuthenticationScheme;
+    var principal = CreatePrincipal(authOptions.SchemeName, [CreateNameClaim(credentials.UserName)]);
+    var authTicket = await SignInCookie(context, principal, CreateAuthenticationProperties());
+
+    return CreateUserInfo(authTicket.Principal);
+  }
+
 }

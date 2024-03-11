@@ -5,6 +5,6 @@ namespace Security.Sample.Api;
 
 partial class SampleFuncs
 {
-  static ValueTask<string?> SignOutEndpoint(HttpContext context) =>
-    SignOutCookie(context, CreateAuthenticationProperties());
+  static async ValueTask<string> SignOutEndpoint(HttpContext context) =>
+    (await SignOutCookie(context, CreateAuthenticationProperties())) ?? string.Empty;
 }

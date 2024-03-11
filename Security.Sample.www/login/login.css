@@ -10,7 +10,7 @@ login {
 signin-form {
   display: grid;
   justify-items: end;
-  row-gap: var(--default-margin);
+  row-gap: 1rem;
 }
 
 signin-form, external-auth {
