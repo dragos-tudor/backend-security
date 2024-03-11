@@ -13,8 +13,8 @@ namespace Security.Authorization;
 
 partial class AuthorizationTests {
 
-  static readonly ChallengeFunc challegeFunc = (context, schemeName) => (context.Response.StatusCode = StatusCodes.Status401Unauthorized).ToString();
-  static readonly ForbidFunc forbidFunc = (context, schemeName) => (context.Response.StatusCode = StatusCodes.Status403Forbidden).ToString();
+  static readonly ChallengeFunc challegeFunc = (context, authProperties) => (context.Response.StatusCode = StatusCodes.Status401Unauthorized).ToString();
+  static readonly ForbidFunc forbidFunc = (context, authProperties) => (context.Response.StatusCode = StatusCodes.Status403Forbidden).ToString();
 
   [TestMethod]
   public async Task Authenticated_user__access_private_resource__user_authorized()
@@ -60,6 +60,20 @@ partial class AuthorizationTests {
     using var response = await client.GetAsync("/resource");
 
     Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+    Assert.AreEqual(string.Empty, await ReadResponseMessageContent(response));
+  }
+
+  [TestMethod]
+  public async Task Unauthenticated_user__challenge_user_access_authentication_properties__dont_throw_error()
+  {
+    using var server = CreateHttpServer(services => services.AddAuthorization() );
+    server.UseAuthorization((context, authProperties) => authProperties.RedirectUri, forbidFunc);
+    server.MapGet("/resource", (HttpContext context) => "not accesible" ).RequireAuthorization();
+    await server.StartAsync();
+
+    using var client = server.GetTestClient();
+    using var response = await client.GetAsync("/resource");
+
     Assert.AreEqual(string.Empty, await ReadResponseMessageContent(response));
   }
 

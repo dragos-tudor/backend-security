@@ -25,8 +25,8 @@ partial class AuthorizationFuncs {
     if (IsAnonymousEndpoint(endpoint)) return (default, authResult.Principal);
 
     var authorizationResult = await AuthorizePolicy(policy, authResult, authorizationService, context, endpoint);
-    if (authorizationResult.Forbidden) forbid(context, authResult.Properties!);
-    if (authorizationResult.Challenged) challenge(context, authResult.Properties!);
+    if (authorizationResult.Forbidden) forbid(context, authResult.Properties ?? CreateAuthenticationProperties());
+    if (authorizationResult.Challenged) challenge(context, authResult.Properties ?? CreateAuthenticationProperties()!);
 
     return (authorizationResult, authResult.Principal);
   }

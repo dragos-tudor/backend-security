@@ -4,12 +4,8 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authorization;
 
-partial class AuthorizationFuncs {
-
-  internal static AuthenticationTicket CreateAuthenticationTicket (ClaimsPrincipal principal) =>
-    new (principal, string.Empty);
-
+partial class AuthorizationFuncs
+{
   static AuthenticationTicket CreateAuthenticationTicket (ClaimsPrincipal principal, string schemeName, DateTimeOffset? expiresUtc = default) =>
     new (principal, new AuthenticationProperties() { ExpiresUtc = expiresUtc }, schemeName);
-
 }
