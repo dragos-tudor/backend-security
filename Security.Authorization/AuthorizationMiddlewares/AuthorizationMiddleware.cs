@@ -13,11 +13,12 @@ partial class AuthorizationFuncs {
     HttpContext context,
     RequestDelegate next)
   {
-    var (authorizationResult, authorizedPrincipal) =
+    var (authResult, principal) =
       await Authorize(context, challenge, forbid);
 
-    SetContextUser(context, authorizedPrincipal);
-    if (IsSuccessfulAuthorization(authorizationResult)) await next(context);
+    SetContextUser(context, principal);
+    if (IsSuccessfulAuthorization(authResult)) await next(context);
+    if (!IsSuccessfulAuthorization(authResult)) await WriteResponse(context,string.Empty);
   }
 
 }
