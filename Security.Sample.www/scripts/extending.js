@@ -3,6 +3,9 @@ const { getContexts, getEffects, getStates, useState: usingState , useEffect: us
 export const getContext = (elem, name, initialValue) =>
   useContext(getContexts(elem), name, initialValue, elem)[0]
 
+export const setContext = (elem, name) =>
+  useContext(getContexts(elem), name, null, elem)[1]
+
 export const useEffect = (elem, name, func, deps) =>
   usingEffect(getEffects(elem), name, func, deps)
 

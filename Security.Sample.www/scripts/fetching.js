@@ -49,15 +49,27 @@ const encodeSearchParams = (url, obj)=>{
     return searchParams ? `${url}?${searchParams}` : url;
 };
 export { encodeSearchParams as encodeSearchParams };
+const AbortError = "AbortError";
+const NetworkError = "NetworkError";
+const HttpError = "HttpError";
+const isAbortError = (error)=>error?.type === AbortError;
+const isHttpError = (error)=>error?.type === HttpError;
+const isNetworkError = (error)=>error?.type === NetworkError;
+export { AbortError as AbortError };
+export { NetworkError as NetworkError };
+export { HttpError as HttpError };
+export { isAbortError as isAbortError };
+export { isHttpError as isHttpError };
+export { isNetworkError as isNetworkError };
 const createAbortError = (error)=>Object.assign(Error(error.code), {
-        type: "AbortError"
+        type: AbortError
     });
 const createHttpError = (response, message)=>Object.assign(Error(message), {
-        type: "HttpError",
+        type: HttpError,
         status: response.status
     });
 const createNetworkError = (error)=>Object.assign(Error(error.message), {
-        type: "NetworkError",
+        type: NetworkError,
         stack: error.stack
     });
 const fetchData = async (fetch, url, request)=>{
