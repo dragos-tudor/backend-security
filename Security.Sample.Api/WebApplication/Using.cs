@@ -10,5 +10,5 @@ partial class SampleFuncs
       .UseCors()
       .UseRouting()
       .UseAuthentication(AuthenticateCookie)
-      .UseAuthorization(ChallengeGoogle, ForbidCookie);
+      .UseAuthorization(ChallengeCookie, ForbidCookie);
 }

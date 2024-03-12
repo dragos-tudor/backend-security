@@ -4,8 +4,8 @@ namespace Security.Sample.Api;
 partial class SampleFuncs
 {
   static FacebookOptions SetFacebookOptions(WebApplicationBuilder app) =>
-    CreateFacebookOptions(app.Configuration["Secrets:facebook:appid"]!, app.Configuration["Secrets:facebook:appsecret"]!) with {
-      CallbackPath = $"/api{FacebookDefaults.CallbackPath}",
-      ChallengePath = $"/api{FacebookDefaults.ChallengePath}"
+    CreateFacebookOptions(app.Configuration["Secrets:Facebook:AppId"]!, app.Configuration["Secrets:Facebook:AppSecret"]!) with {
+      CallbackPath = $"/accounts{FacebookDefaults.CallbackPath}",
+      ChallengePath = $"/accounts{FacebookDefaults.ChallengePath}"
     };
 }

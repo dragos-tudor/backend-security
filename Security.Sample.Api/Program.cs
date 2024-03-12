@@ -5,14 +5,15 @@ partial class SampleFuncs
 {
   public static void Main(string[] args)
   {
-    var appBuilder = CreateWebApplicationBuilder(args);
+    var appBuilder = WebApplication.CreateBuilder(args);
     AddSecrets(appBuilder);
-    AddSettings(appBuilder);
+    AddSettings(appBuilder).Build();
     AddEnvironmentVariables(appBuilder);
     AddCommandLine(appBuilder, args);
 
-    var keysPath = Environment.CurrentDirectory + "/bin/keys";
-    AddServices(appBuilder, keysPath, GetCorsOrigins(appBuilder));
+    var keysPath = GetKeysPath(Environment.CurrentDirectory);
+    var corsOrigin = GetCorsOrigins(appBuilder);
+    AddServices(appBuilder, keysPath, corsOrigin);
 
     var app = appBuilder.Build();
     UseMiddlewares(app);
