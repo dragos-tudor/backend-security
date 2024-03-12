@@ -1,11 +1,12 @@
-const { getService } = await import("/scripts/rendering.js")
+import { getApiFetchService } from "../services/getting.js"
+import { signoutUser } from "./signingout.js"
+const { NavLink } = await import("/scripts/routing.js")
 
-const logoutApi = (apiFetch) => apiFetch("POST", "/account/signout")
+export const Logout = (_, elem) => {
+  const apiFetch = getApiFetchService(elem)
 
-const logoutUser = (apiFetch) => (event) => {
-  event.preventDefault();
-  return logoutApi(apiFetch);
+  return (
+    <NavLink href="/" onclick={signoutUser(apiFetch)}>
+      Signout
+    </NavLink>)
 }
-
-export const Logout = (props, elem) =>
-  <a href="/" onclick={logoutUser(getService(elem, "api-fetch"))}>Logout</a>

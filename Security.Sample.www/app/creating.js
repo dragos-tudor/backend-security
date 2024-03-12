@@ -1,5 +1,6 @@
-import { resilientApiFetch } from "./fetching.js"
+import { getRouter } from "../router/getting.js";
+import { apiFetch } from "../fetch/fetching.js"
 
 export const createAppProps = (settings, document) => Object.freeze({
-  ["api-fetch"]: resilientApiFetch(settings, fetch, document)
+  ["api-fetch"]: apiFetch(settings.apiUrl, fetch, getRouter(document))
 })

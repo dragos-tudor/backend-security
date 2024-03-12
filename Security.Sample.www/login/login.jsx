@@ -1,15 +1,16 @@
+import { getApiFetchService } from "../services/getting.js"
 import { google, facebook, twitter } from "../images/icons.jsx"
-import { useState } from "../scripts/extending.js"
+import { setContext, useState } from "../scripts/extending.js"
 import { signinUser } from "./signingin.js"
 import { updateState } from "./updating.js"
-const { getService } = await import("/scripts/rendering.js")
 
 
-export const Login = (props, elem) =>
+export const Login = (_, elem) =>
 {
-  const apiFetch = getService(elem, "api-fetch")
   const [userName, setUserName] = useState(elem, "userName", "", [])
   const [password, setPassword] = useState(elem, "password", "", [])
+  const apiFetch = getApiFetchService(elem)
+  const setUser = setContext(elem, "user")
   const credentials = Object.freeze({userName, password})
 
   return <>
@@ -17,27 +18,27 @@ export const Login = (props, elem) =>
     <signin-form>
       <div>
         <label for="userName">User name</label>
-        <input id="userName" type="text" onchange={updateState(setUserName, elem)} placeholder="user name here" tabindex="1"/>
+        <input id="userName" type="text" onchange={updateState(setUserName, elem)} placeholder="user name here"/>
       </div>
       <div>
         <label for="password">Password</label>
-        <input id="password" type="password" onchange={updateState(setPassword, elem)} placeholder="password here" tabindex="2"/>
+        <input id="password" type="password" onchange={updateState(setPassword, elem)} placeholder="password here"/>
       </div>
       <div>
-        <button onlick={() => signinUser(credentials, apiFetch, elem)} tabindex="4">Signin with credentials</button>
+        <button onclick={() => signinUser(credentials, apiFetch, setUser, elem)}>Signin with credentials</button>
       </div>
     </signin-form>
     <or>or</or>
     <external-auth>
-      <a class="auth-provider" tabindex="5">
+      <a class="auth-provider">
         {google}
         <span>Signin with Google</span>
       </a>
-      <a class="auth-provider" tabindex="6">
+      <a class="auth-provider">
         {facebook}
         <span>Signin with Facebook</span>
       </a>
-      <a class="auth-provider" tabindex="7">
+      <a class="auth-provider">
         {twitter}
         <span>Signin with Twitter</span>
       </a>
