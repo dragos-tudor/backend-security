@@ -1,11 +1,17 @@
-### Certificates
+### Generate certificates
 - generate certificates:
 ```sh
   chmod 755 ./certificates.sh
   ./certificates.sh
 ```
 
-### Certificates
+### Import CA certificate
+- import container CA certificate into host browsers [firefox, chrome, edge].
+```sh
+  echo $ROOT_CERT # /home/vscode/.local/share/mkcert/rootCA.pem
+```
+
+### Using certificates
 - using `Security.Sample.Api/settings.json`.
 - using environment variables.
 ```sh
@@ -16,7 +22,6 @@ export Kestrel__Endpoints__Https__Url=https://*:80443
 ```sh
 dotnet run --no-restore --no-build --Kestrel:Endpoints:Https:Url="https://*:80443" ...
 ```
-
 
 ### Secrets
 - using `Security.Sample.Api/secrets.json`.

@@ -33,7 +33,7 @@
 - there are 2 different security processes: *local authentication* and *remote authentication*.
 - *local authentication process* [cookie]:
   - each request [when use authentication middlware] call *authentication func* [eg. *AuthenticateCookie*]. Based on authorization result the middleware set *HttpContext.User* prop.
-  - then each request [when use authentication middlware] call *authorization func* [eg. *Authorize*]. Based on authorization policies result is decided if the request is allowed, unauthenticated/challenged or unauthorized/forbidden.
+  - then each request [when use authorization middlware] call *authorization func* [eg. *Authorize*]. Based on authorization policies result is decided if the request is allowed, unauthenticated/challenged or unauthorized/forbidden.
   - signin/signout funcs are used on specific endpoints/controller actions implememted by devs.
 - *remote authentication process* [OAuth2 protocol]:
   - when called, the *challenge endpoint* [eg. registered with *MapFacebook*] build and send an authorization request to authorization server.
@@ -56,7 +56,7 @@
   - to encapsulate and carry on those services through the authentication process [reducing the number of parameters so].
 - *AuthenticateOAuth* oauth authentication func use template method design pattern allowing oauth libraries to override/decorate when neccessary *postAuthenticate*, *exchangeCodeForTokens* or *accessUserInfo* authentication substeps [eg. *AuthenticateTwitter*, *AuthenticateFacebook*].
 - even *OAuth2* is an authorization protocol the process is named *remote authentication* because when succedded the authenticated principal is signed in.
-- even *OpenIdConnect* protocol is more secure and robust than *OAuth2* protocol is still not largely adopted by the community. The *OpenIdConnect* protocol seems to be overengineered, overcomplicated than the *OAuth2* protocol. The *OpenIdConnect* client implementation is more complicated than the *OAuth2* implementation [see *OpenIdConnectHandler.cs*]. The *OpenIdConnect* protocol was implemented to increase the understanding level of *OAuth2* protocol! making some parallels between both protocols. *OpenIdConnect* implementation needs to be tested, refined, internal used so.
+- even *OpenIdConnect* protocol is more secure and robust than *OAuth2* protocol is still not largely adopted by the community. The *OpenIdConnect* protocol seems to be overengineered, overcomplicated than the *OAuth2* protocol. The *OpenIdConnect* client implementation is more complicated than the *OAuth2* implementation [see *OpenIdConnectHandler.cs*]. The *OpenIdConnect* protocol was implemented to increase the understanding level of *OAuth2* protocol! making some parallels between both protocols. *OpenIdConnect* implementation needs to be tested, refined, internally used so.
 
 ### Project goals
 - to untangle/demystify the ASPNET authentication/authorization mechanisms and local/remote processes.
