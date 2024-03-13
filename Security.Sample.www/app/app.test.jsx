@@ -1,12 +1,12 @@
 import { assertExists } from "/asserts.ts"
-import { render } from "/scripts/rendering.js"
 import { waitForAsyncs } from "/testing.js"
+import { render } from "/scripts/rendering.js"
 import { App } from "./app.jsx"
 
 Deno.test("app component", async t => {
 
-  const getNoUser = (url) => Promise.resolve(url === "/user" && [, {}])
-  const getUser = (url) => Promise.resolve(url === "/user" && [{}])
+  const getNoUser = (url) => Promise.resolve([, {}])
+  const getUser = (url) => Promise.resolve([{}])
 
   await t.step("user unauthenticated [user api return nothing] => render user => navigate to login", async () =>
   {
