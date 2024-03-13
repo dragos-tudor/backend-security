@@ -1,14 +1,5 @@
 import { bundle } from  "/emit.ts"
-import { encodeHex } from "/hex.ts";
-
-const cleanWWWRoot = (wwwroot) => {
-  for (const dirEntry of Deno.readDirSync(wwwroot))
-    dirEntry.isFile && Deno.removeSync(wwwroot + dirEntry.name)
-}
-
-const ensureWWWRoot = (wwwroot) => {
-  try { Deno.mkdirSync(wwwroot, { recursive: true }); } catch { ; }
-}
+import { encodeHex } from "/hex.ts"
 
 const bundleApp = async (homeName) => {
   const { code: appBundle } = await bundle("./bootstrapping.js");
@@ -29,39 +20,69 @@ const bundleHome = async () => {
   return { homeName, encodedHome };
 }
 
-const refreshIndexCss = async () => {
+const compileIndexCss = async () => {
   const encodedIndexCss = Deno.readFileSync("./index.css");
   const hashIndexCss = await crypto.subtle.digest("SHA-256", encodedIndexCss);
   const indexCssName = `index.${encodeHex(hashIndexCss)}.css`;
   return { indexCssName, encodedIndexCss };
 }
 
-const refreshIndexHtml = (indexCssName, appName) => {
+const compileIndexHtml = (indexCssName, appName) => {
   const indexHtml = Deno.readTextFileSync("./index.html");
-  const encodedIndex = new TextEncoder().encode(
+  const encodedIndexHtml = new TextEncoder().encode(
     indexHtml
       .replace("/index.css", indexCssName)
       .replace("/bootstrapping.js", appName)
   );
-  return { indexName: "index.html", encodedIndex };
+  return { indexHtmlName: "index.html", encodedIndexHtml };
 }
 
-const wwwroot = Deno.args[0] ?? "/workspaces/backend-security/Security.Sample/wwwroot/";
+const copyFiles = (source, target) =>
+  Deno.readDirSync(source)
+    .filter(entry => entry.isFile)
+    .forEach(moveFile(source, target))
 
-(ensureWWWRoot(wwwroot), console.log("[publishing]", "ensure wwwroot directory"));
-(cleanWWWRoot(wwwroot), console.log("[publishing]", "clean wwwroot files"));
+const moveFile = (source, target) => (file) =>
+  Deno.writeTextFileSync(
+    target + "/" + file.name,
+    Deno.readTextFileSync(source + "/" + file.name))
+
+const makeDirectories = (...dirs) =>
+  dirs.forEach(dir => Deno.mkdirSync(dir, { recursive: true }))
+
+const removeDirectories = (...dirs) =>
+  dirs.forEach(dir => { try { Deno.removeSync(dir, { recursive: true })} catch {;} })
+
+
+const target = "/workspaces/backend-security/Security.Sample/wwwroot";
+const targetScripts = target + "/scripts";
+const targetImages = target + "/images";
+
+console.log("[publishing]", "make scripts and images wwwroot directories")
+removeDirectories(target)
+makeDirectories(targetScripts, targetImages)
+
+
+const source = import.meta.dirname
+const sourceScripts = source + "/scripts";
+const sourceImages = source + "/images";
+
+console.log("[publishing]", "copy scripts and images files to wwwroot directories")
+copyFiles(sourceScripts, targetScripts)
+copyFiles(sourceImages, targetImages)
 
 console.log("[publishing]", "bundle home and app files")
 const { homeName, encodedHome } = await bundleHome();
 const { appName, encodedApp } = await bundleApp(homeName);
 
-console.log("[publishing]", "refresh index css and html files")
-const { indexCssName, encodedIndexCss } = await refreshIndexCss();
-const { indexName, encodedIndex } = refreshIndexHtml(indexCssName, appName);
+console.log("[publishing]", "compile index css and html files")
+const { indexCssName, encodedIndexCss } = await compileIndexCss();
+const { indexHtmlName, encodedIndexHtml } = compileIndexHtml(indexCssName, appName);
 
-console.log("[publishing]", "publish files")
-Deno.writeFileSync(wwwroot + homeName, encodedHome)
-Deno.writeFileSync(wwwroot + appName, encodedApp)
-Deno.writeFileSync(wwwroot + indexCssName, encodedIndexCss)
-Deno.writeFileSync(wwwroot + indexName, encodedIndex)
-console.log("[publishing]", "published files at", wwwroot)
+
+console.log("[publishing]", "copy bundled and compiled files to wwwroot directory")
+Deno.writeFileSync(target + "/" + homeName, encodedHome)
+Deno.writeFileSync(target + "/" + appName, encodedApp)
+Deno.writeFileSync(target + "/" + indexCssName, encodedIndexCss)
+Deno.writeFileSync(target + "/" + indexHtmlName, encodedIndexHtml)
+console.log("[publishing]", "published files at", target)
