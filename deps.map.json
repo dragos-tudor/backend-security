@@ -7,8 +7,8 @@
     "/scripts/rendering.js": "./Security.Sample.www/scripts/rendering.js",
     "/scripts/routing.js": "./Security.Sample.www/scripts/routing.js",
     "/scripts/fetching.js": "./Security.Sample.www/scripts/fetching.js",
-    "/serving.js": "./Security.Sample.www/scripts/serving.js",
-    "/testing.js": "./Security.Sample.www/scripts/testing.js",
+    "/serving.js": "./.deno/serving.js",
+    "/testing.js": "./.deno/testing.js",
     "/starting.js": "./Security.Sample.www/starting.js"
   }
 }
