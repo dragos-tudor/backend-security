@@ -7,6 +7,7 @@ global using Security.Authentication.Google;
 global using Security.Authentication.Facebook;
 global using Security.Authentication.Twitter;
 global using Security.Authentication;
+global using static Microsoft.AspNetCore.Http.TypedResults;
 
 global using static Security.Authentication.AuthenticationFuncs;
 global using static Security.Authentication.Cookies.CookiesFuncs;
