@@ -1,9 +1,4 @@
-
-const toLocationUrl = (location) =>
-  typeof location === "string"? new URL(location): location
-
-export const getErrorName = (location) =>
-  toLocationUrl(location).searchParams?.get("name")
+import { toLocationUrl } from "../locations/converting.js"
 
 export const getErrorDescription = (location) =>
-  toLocationUrl(location).searchParams?.get("description")
+  toLocationUrl(location)?.searchParams?.get("description")

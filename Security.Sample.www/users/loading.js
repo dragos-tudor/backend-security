@@ -1,12 +1,13 @@
+import { navigate, update } from "../deps.js"
+import { routes } from "../routes/routes.jsx"
 import { getUser } from "./getting.js"
-const { update }  = await import("/scripts/rendering.js")
-const { navigate } = await import("/scripts/routing.js")
 
-export const loadUser = async (apiFetch, setUser, elem) => {
-  const [user, failure] = await getUser(apiFetch)
-  if (failure) return navigate(elem, "/login")
+export const loadUser = async (fetchApi, setUser, elem) =>
+{
+  const [user, error] = await getUser(fetchApi)
+  if (error) return navigate(elem, routes.login)
 
   setUser(user)
   update(elem)
-  return navigate(elem, "/home")
+  return navigate(elem, routes.home)
 }

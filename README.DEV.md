@@ -28,17 +28,17 @@ dotnet run --no-restore --no-build --Kestrel:Endpoints:Https:Url="https://*:8044
 ```json
 {
   "Secrets": {
-    "google": {
-      "clientid": "<google id>",
-      "clientsecret": "<google secret>"
+    "Google": {
+      "ClientId": "<google id>",
+      "ClientSecret": "<google secret>"
     },
-    "facebook": {
-      "appid": "<facebook id>",
-      "appsecret": "<facebook secret>"
+    "Facebook": {
+      "AppId": "<facebook id>",
+      "AppSecret": "<facebook secret>"
     },
-    "twitter": {
-      "consumerkey": "<twitter id>",
-      "consumersecret": "<twitter secret>"
+    "Twitter": {
+      "ConsumerKey": "<twitter id>",
+      "ConsumerSecret": "<twitter secret>"
     }
   }
 }

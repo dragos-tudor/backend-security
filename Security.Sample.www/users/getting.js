@@ -1,2 +1,3 @@
 
-export const getUser = (apiFetch) => apiFetch("/users")
+export const getUser = (fetchApi) =>
+  fetchApi("/users", null)

@@ -1,11 +1,10 @@
+import { NavLink } from "../deps.js"
 import { Logout } from "../logout/logout.jsx"
-const { NavLink } = await import("/scripts/routing.js")
 
 export const NavLinks = ({user}) =>
   user?
     <nav>
       <NavLink href="/home">Home</NavLink>
-      <NavLink href="/contact">Contact</NavLink>
       <Logout></Logout>
     </nav>:
     <nav>

@@ -11,8 +11,9 @@
   --secondary-color: rgb(255, 192, 74);
   --dark-secondary-color: rgb(255, 153, 0);
 
-  --ligth-text-color: rgb(203, 250, 203);
-  --text-color: rgb(140, 231, 140);
+  --text-color: rgb(235, 235, 235);
+  --label-color: rgb(140, 231, 140);
+  --error-color: rgb(253, 50, 50);
 
   --default-font-size: 1.6em;
   --default-radius: 0px;
@@ -97,7 +98,7 @@ label {
   margin-right: var(--default-margin);
   cursor: pointer;
   opacity: 75%;
-  color: var(--text-color);
+  color: var(--label-color);
 }
 
 

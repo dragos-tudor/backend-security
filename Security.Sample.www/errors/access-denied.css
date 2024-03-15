@@ -1,0 +1,9 @@
+
+access-denied {
+  display: block;
+  margin: 3rem;
+}
+
+access-denied h3 {
+  color: var(--error-color)
+}

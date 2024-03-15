@@ -1,12 +1,11 @@
-import { getApiFetchService } from "../services/getting.js"
+import { getFetchApi } from "../services/getting.js"
 import { signoutUser } from "./signingout.js"
-const { NavLink } = await import("/scripts/routing.js")
 
-export const Logout = (_, elem) => {
-  const apiFetch = getApiFetchService(elem)
-
+export const Logout = (_, elem) =>
+{
+  const fetchApi = getFetchApi(elem)
   return (
-    <NavLink href="/" onclick={signoutUser(apiFetch)}>
+    <button onclick={signoutUser(fetchApi)}>
       Signout
-    </NavLink>)
+    </button>)
 }

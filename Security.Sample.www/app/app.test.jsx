@@ -1,16 +1,16 @@
 import { assertExists } from "/asserts.ts"
 import { waitForAsyncs } from "/testing.js"
-import { render } from "/scripts/rendering.js"
+import { render } from "../deps.js"
 import { App } from "./app.jsx"
 
 Deno.test("app component", async t => {
 
-  const getNoUser = (url) => Promise.resolve([, {}])
-  const getUser = (url) => Promise.resolve([{}])
+  const getNoUser = () => Promise.resolve([, {}])
+  const getUser = () => Promise.resolve([{}])
 
   await t.step("user unauthenticated [user api return nothing] => render user => navigate to login", async () =>
   {
-    const elem = render(<App api-fetch={getNoUser}></App>)
+    const elem = render(<App fetch-api={getNoUser}></App>)
     await waitForAsyncs()
 
     assertExists(elem.querySelector("login"))
@@ -19,7 +19,7 @@ Deno.test("app component", async t => {
 
   await t.step("user authenticated [user api return user] => render user => navigate to home", async () =>
   {
-    const elem = render(<App api-fetch={getUser}></App>)
+    const elem = render(<App fetch-api={getUser}></App>)
     await waitForAsyncs()
 
     assertExists(elem.querySelector("home"))

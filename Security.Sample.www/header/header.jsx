@@ -1,4 +1,4 @@
-import { getContext } from "../scripts/extending.js"
+import { getContext } from "../deps.js"
 import { NavLinks } from "./navlinks.jsx"
 
 export const Header = (_, elem) =>
@@ -26,7 +26,7 @@ header .logo {
 }
 
 header .logo a {
-  color: var(--text-color);
+  color: var(--label-color);
 }
 
 header navlinks {
@@ -34,17 +34,7 @@ header navlinks {
 }
 
 header navlink a {
+  padding-right: 0.7rem;
   font-size: 1.3em;
-}
-
-header navlink a::after {
-  content: "";
-  display: block;
-  width: 0.5em;
-  transition: border-bottom-color var(--default-transition);
-  border-bottom: 1px solid transparent;
-}
-
-header navlink a:hover::after {
-  border-bottom-color: var(--dark-secondary-color);
+  border-right: 1px solid var(--secondary-color);
 }`

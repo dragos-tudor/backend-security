@@ -1,3 +1,6 @@
 
 export const setFetchRedirect = (request, redirect) =>
-  request? Object.assign(request, {redirect}): {redirect}
+  Object.assign(request, {redirect})
+
+export const setFetchSignal = (request, signal) =>
+  Object.assign(request, {signal})

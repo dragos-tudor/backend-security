@@ -31,8 +31,8 @@ const findHtmlDescendants = (elem, func, elems = [])=>{
     for(let index = 0; index < elem.children.length; index++)findHtmlDescendants(elem.children[index], func, elems);
     return elems;
 };
-const hideHtmlElement = (elem)=>elem.setAttribute("hidden", true);
-const showHtmlElement = (elem)=>elem.removeAttribute("hidden");
+const hideHtmlElement = (elem)=>(elem.style.display = "none", elem);
+const showHtmlElement = (elem)=>(elem.style.display = "block", elem);
 const isHtmlElement = (elem)=>elem.nodeType === 1;
 const validateHtmlElement = (elem)=>isHtmlElement(elem) ? "" : "Element type should be HTML element.";
 const getEventName = (handlerName)=>handlerName.replace("on", "");
@@ -208,8 +208,8 @@ const findSiblingRoutes = (elem)=>getHtmlChildren(getHtmlParentElement(elem)).fi
 const pipe = (firstArg, ...funcs)=>funcs.reduce((arg, func)=>arg != undefined ? func(arg) : arg, firstArg);
 const findDescendantRoute = (elem)=>findHtmlDescendant(elem, isRoute);
 const findRoute = (elem, urlPart)=>pipe(elem, findDescendantRoute, findSiblingRoutes, findSiblingRoute(urlPart));
-const toggleRoute = (elem, showElem)=>elem === showElem ? showHtmlElement(showElem) : hideHtmlElement(elem);
-const toggleRoutes = (elems, showElem)=>elems.map((elem)=>toggleRoute(elem, showElem));
+const toggleRoute = (routeElem, showElem)=>routeElem === showElem ? showHtmlElement(showElem) : hideHtmlElement(routeElem);
+const toggleRoutes = (routeElems, showElem)=>routeElems.map((routeElem)=>toggleRoute(routeElem, showElem));
 const changeRoute = async (elem, url, routes = [])=>{
     const route = findRoute(elem, url);
     if (!existsRoute(route) && isEmptyPath(url)) return [

@@ -1,24 +1,24 @@
 import { assertExists } from "/asserts.ts"
-import { render, update, Services } from "/scripts/rendering.js"
-import { navigate, Router, Route } from "/scripts/routing.js"
+import { waitForAsyncs } from "/testing.js"
+import { render, navigate, update, Router, Route, Services } from "../deps.js"
 import { User } from "./user.jsx"
 
 Deno.test("user component", async t => {
 
-  const getNoUser = (url) => Promise.resolve([, {}])
-  const getUser = (url) => Promise.resolve([{}])
+  const getNoUser = () => Promise.resolve([, {}])
+  const getUser = () => Promise.resolve([{}])
 
   await t.step("user unauthenticated [user api return nothing] => render user => navigate to login", async () =>
   {
     const elem = render(
       <Router>
-        <Services api-fetch={getNoUser}></Services>
+        <Services fetch-api={getNoUser}></Services>
         <User>
           <Route path="/login" child={<login></login>}></Route>
           <Route path="/home" child={<home></home>}></Route>
         </User>
       </Router>)
-    await Promise.resolve()
+    await waitForAsyncs()
 
     assertExists(elem.querySelector("login"))
     assertExists(!elem.querySelector("home"))
@@ -28,13 +28,13 @@ Deno.test("user component", async t => {
   {
     const elem = render(
       <Router>
-        <Services api-fetch={getUser}></Services>
+        <Services fetch-api={getUser}></Services>
         <User>
           <Route path="/login" child={<login></login>}></Route>
           <Route path="/home" child={<home></home>}></Route>
         </User>
       </Router>)
-    await Promise.resolve()
+    await waitForAsyncs()
 
     assertExists(elem.querySelector("home"))
     assertExists(!elem.querySelector("login"))
@@ -44,13 +44,13 @@ Deno.test("user component", async t => {
   {
     const elem = render(
       <Router>
-        <Services api-fetch={getNoUser}></Services>
+        <Services fetch-api={getNoUser}></Services>
         <User>
           <Route path="/login" child={<login></login>}></Route>
           <Route path="/home" child={<home></home>}></Route>
         </User>
       </Router>)
-    await Promise.resolve()
+    await waitForAsyncs()
     navigate(elem, "/home")
 
     update(elem.querySelector("user"),
@@ -58,7 +58,7 @@ Deno.test("user component", async t => {
         <Route path="/login" child={<login></login>}></Route>
         <Route path="/home" child={<home></home>}></Route>
       </User>)
-    await Promise.resolve()
+    await waitForAsyncs()
 
     assertExists(elem.querySelector("home"))
     assertExists(!elem.querySelector("login"))

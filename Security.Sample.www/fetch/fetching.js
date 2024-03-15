@@ -1,14 +1,24 @@
-import { navigateToAccessDenied, navigateToLogin } from "../router/navigating.js"
-import { setFetchRedirect } from "./setting.js"
-const { fetchJson } = await import("/scripts/fetching.js")
+import { fetchJson } from "../deps.js"
+import { routes } from "../routes/routes.jsx"
+import { getAbortSignal, getResponseLocation } from "./getting.js"
+import { logResponseError } from "./logging.js"
+import { setFetchRedirect, setFetchSignal } from "./setting.js"
+import { isResponseUnauthorized, isResponseForbidden, isResponseRedirect } from "./verifying.js"
 
-export const apiFetch = (baseUrl, fetch, router) => async (url, data, request) => {
-  const requestInit = setFetchRedirect(request, "manual")
-  const result = await fetchJson(fetch, baseUrl + url, data, requestInit)
-  const success = result[0]
-  if (success?.status === 401) navigateToLogin(router)
-  if (success?.status === 403) navigateToAccessDenied(router)
+
+export const getFetchJson = (fetch, navigate, timeout = 2000) => async (url, data, request = {}) =>
+{
+  const { signal, timeoutId } = getAbortSignal(timeout)
+  setFetchRedirect(request, "manual")
+  setFetchSignal(request, signal)
+  const result = await fetchJson(fetch, url, data, request)
+  const error = result[1]
+
+  clearTimeout(timeoutId)
+  if (error) logResponseError(error.type, error)
+  if (isResponseForbidden(error)) navigate(routes.accessdenied)
+  if (isResponseRedirect(error)) navigate(getResponseLocation(response))
+  if (isResponseUnauthorized(error)) navigate(routes.login)
+
   return result
 }
-
-

@@ -1,5 +1,4 @@
 // deno-lint-ignore-file no-control-regex
-/// <reference types="./index.d.ts"/>
 const createHtmlElement = (document, tagName)=>document.createElement(tagName);
 const createHtmlElementNS = (document, ns, tagName)=>document.createElementNS(ns, tagName);
 const getHtmlName = (elem)=>elem.tagName?.toLowerCase() || "text";
@@ -275,22 +274,12 @@ const throwError = (message)=>{
 };
 const getEffect = (effects, name)=>effects[name];
 const getEffects = (elem)=>elem.__effects;
-export { getEffect as getEffect };
-export { getEffects as getEffects };
 const runInitialFunc = (effect)=>effect.initialFunc?.();
 const runInitialEffects = (effects)=>Object.values(effects).map(runInitialFunc);
-export { runInitialFunc as runInitialFunc };
-export { runInitialEffects as runInitialEffects };
 const setEffectDeps = (effect, deps)=>effect.deps = deps;
 const setEffectInitialFunc = (effect, func)=>effect.initialFunc = func;
 const setEffect = (effects, effect)=>effects[effect.name] = effect;
 const setEffects = (elem, effects = {})=>elem.__effects = effects;
-const setInitialEffect = (effects, name, func)=>setEffectInitialFunc(getEffect(effects, name), func);
-export { setEffectDeps as setEffectDeps };
-export { setEffectInitialFunc as setEffectInitialFunc };
-export { setEffect as setEffect };
-export { setEffects as setEffects };
-export { setInitialEffect as setInitialEffect };
 const equalPrimitives = (value1, value2)=>value1 === value2;
 const falsy = ()=>false;
 const truthy = ()=>true;
@@ -333,7 +322,6 @@ const useEffect = (effects, name, func, deps)=>{
     setEffectDeps(effect, deps);
     return func();
 };
-export { useEffect as useEffect };
 const createMemo = (name, value, deps)=>({
         name,
         value,
@@ -360,24 +348,16 @@ const useMemo = (states, name, func, deps)=>{
     setMemoValue(memo, func());
     return getMemoUsage(memo);
 };
-export { useMemo as useMemo };
 const setState = (states, state)=>states[state.name] = state;
 const setStateDeps = (state, deps)=>state.deps = deps;
 const setStateValue = (state, value)=>state.value = value;
 const setStates = (elem, states = {})=>elem.__states = states;
-export { setState as setState };
-export { setStateDeps as setStateDeps };
-export { setStateValue as setStateValue };
-export { setStates as setStates };
 const getState = (states, name)=>states[name];
 const getStates = (elem)=>elem.__states;
 const getStateUsage = (state)=>[
         state.value,
         (value)=>setStateValue(state, value)
     ];
-export { getState as getState };
-export { getStates as getStates };
-export { getStateUsage as getStateUsage };
 const createState = (name, value, deps)=>({
         name,
         value,
@@ -396,7 +376,6 @@ const useState = (states, name, value, deps)=>{
     setStateValue(state, value);
     return getStateUsage(state);
 };
-export { useState as useState };
 const isFunctionLazyLoader = (loader)=>typeof loader === "function";
 const validateLazyLoader = (loader)=>isFunctionLazyLoader(loader) ? "" : "Lazy loader should be function.";
 const getErrorPath = (boundary, elem, names = [])=>{
@@ -434,9 +413,10 @@ const existsContext = (contexts, name)=>name in contexts;
 const isContextConsumer = (elem, name)=>getHtmlName(elem) !== "context" && existsContext(getContexts(elem), name);
 const isContextProducer = (elem, name)=>getHtmlName(elem) === "context" && existsContext(getContexts(elem), name);
 const findProducer = (elem, name)=>findHtmlAscendant(elem, (elem)=>isContextProducer(elem, name));
-const getInitialContextValue = (name, initialValue, elem)=>{
+const getContextValue = (contexts, name)=>getContext(contexts, name).value;
+const getProducerContextValue = (name, fallbackValue, elem)=>{
     const producer = findProducer(elem, name);
-    if (!producer) return initialValue;
+    if (!producer) return fallbackValue;
     const contexts = getContexts(producer);
     const context = getContext(contexts, name);
     return context.value;
@@ -614,12 +594,12 @@ const updateContexts = (name, value, elem)=>{
 };
 const useContext = (contexts, name, initialValue, elem)=>{
     if (!existsContext(contexts, name)) {
-        const context = createContext(name, getInitialContextValue(name, initialValue, elem));
+        const contextValue = getProducerContextValue(name, initialValue, elem);
+        const context = createContext(name, contextValue);
         setContext(contexts, context);
     }
-    const context = getContext(contexts, name);
     return [
-        context.value,
+        getContextValue(contexts, name),
         (value)=>updateContexts(name, value, elem)
     ];
 };
@@ -702,3 +682,5 @@ try {
     console.error(error);
     throw error;
 }
+export { useEffect as useEffect, getEffects as getEffects };
+export { useMemo as useMemo, useState as useState, getStates as getStates };

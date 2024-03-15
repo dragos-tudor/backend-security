@@ -1,5 +1,6 @@
 
 app {
+  display: block;
   height: 100vh;
 }
 
@@ -9,9 +10,11 @@ layout {
   height: inherit;
 }
 
-router, user, context {
+main {
+  height: 100%;
+}
+
+router, user, context, routes, route {
   display: block;
   height: inherit;
 }
-
-

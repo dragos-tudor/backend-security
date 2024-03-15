@@ -2,7 +2,8 @@
   "importMap": "./deps.map.json",
   "tasks": {
     "test": "deno test --allow-all --no-check --parallel",
-    "start": "deno run --allow-all --no-check /starting.js"
+    "start": "deno run --allow-all --no-check /starting.js",
+    "publish": "deno run --allow-all --no-check /publishing.js"
   },
   "compilerOptions": {
     "lib": [

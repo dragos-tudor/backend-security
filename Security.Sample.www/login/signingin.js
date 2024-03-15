@@ -1,5 +1,4 @@
-const { HttpMethods } = await import("/scripts/fetching.js")
-const { navigate } = await import("/scripts/routing.js")
+import { navigate, HttpMethods } from "../deps.js"
 
 const signinApi = (credentials, apiFetch) =>
   apiFetch("/accounts/signin", credentials, { method: HttpMethods.POST })

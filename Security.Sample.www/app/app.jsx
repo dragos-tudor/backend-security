@@ -1,28 +1,22 @@
-import { AccessDeniedError } from "../errors/access-denied-error.jsx"
-import { Error } from "../errors/error.jsx"
+import { Router, Services } from "../deps.js"
 import { Footer } from "../footer/footer.jsx"
 import { Header } from "../header/header.jsx"
-import { loadHome } from "../home/loading.jsx";
-import { Login } from "../login/login.jsx"
+import { Routes } from "../routes/routes.jsx"
 import { User } from "../users/user.jsx"
-const { Services } = await import("/scripts/rendering.js")
-const { Route, Router } = await import("/scripts/routing.js")
+import { services } from "../services/services.js"
+
 
 
 export const App = (props) =>
   <>
     <style css={css}></style>
     <Router>
-      <Services api-fetch={props["api-fetch"]}></Services>
+      <Services fetch-api={props[services.fetchApi]} api-url={props[services.apiUrl]}></Services>
       <User>
         <layout>
           <Header></Header>
           <main>
-            <Route path="/" child={<></>}></Route>
-            <Route path="/home" load={loadHome}></Route>
-            <Route path="/login" child={<Login></Login>}></Route>
-            <Route path="/accessdenied" child={<AccessDeniedError></AccessDeniedError>}></Route>
-            <Route path="/error" child={<Error></Error>}></Route>
+            <Routes></Routes>
           </main>
           <Footer></Footer>
         </layout>
@@ -32,6 +26,7 @@ export const App = (props) =>
 
 const css = `
 app {
+  display: block;
   height: 100vh;
 }
 
@@ -41,10 +36,11 @@ layout {
   height: inherit;
 }
 
-router, user, context {
-  display: block;
-  height: inherit;
+main {
+  height: 100%;
 }
 
-
-`
+router, user, context, routes, route {
+  display: block;
+  height: inherit;
+}`
