@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Cookies;
 
-partial class CookiesFuncs {
-
-  static CookieBuilder CreateCookieBuilder() => new () {
+partial class CookiesFuncs
+{
+  public static CookieBuilder CreateCookieBuilder() => new () {
     // "Cookie.Expiration is ignored, use ExpireTimeSpan instead."
     HttpOnly = true,
     IsEssential = true,
