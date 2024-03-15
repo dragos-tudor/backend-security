@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using static Security.Authentication.Remote.RemoteFuncs;
 
 namespace Security.Sample.Api;
@@ -12,12 +11,12 @@ partial class SampleFuncs
     string keysPath,
     string[] origins) =>
       builder.Services
-        .AddCookies(SetCookieOptions())
+        .AddCookies(SetCookieOptions(), cookieBuilder: SetCookieBuilderSameSite(CreateCookieBuilder(), SameSiteMode.None))
         .AddGoogle(SetGoogleOptions(builder), SetRemoteClient(CreateRemoteClient(), GoogleDefaults.AuthenticationScheme))
         .AddFacebook(SetFacebookOptions(builder), SetRemoteClient(CreateRemoteClient(), FacebookDefaults.AuthenticationScheme))
         .AddTwitter(SetTwitterOptions(builder), SetRemoteClient(CreateRemoteClient(), TwitterDefaults.AuthenticationScheme))
         .AddAuthorization()
-        .AddLogging(o => o.SetMinimumLevel(LogLevel.Warning))
+        .AddLogging()
         .AddCors(o => o.AddDefaultPolicy(BuildCorsPolicy(origins)))
         .AddProblemDetails()
         .AddDataProtection()
