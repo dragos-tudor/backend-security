@@ -1,4 +1,7 @@
 
+export const setFetchCredentials = (request, value = "omit") =>
+  Object.assign(request, {credentials: value})
+
 export const setFetchRedirect = (request, redirect) =>
   Object.assign(request, {redirect})
 

@@ -2,7 +2,7 @@ import { fetchJson } from "../deps.js"
 import { routes } from "../routes/routes.jsx"
 import { getAbortSignal, getResponseLocation } from "./getting.js"
 import { logResponseError } from "./logging.js"
-import { setFetchRedirect, setFetchSignal } from "./setting.js"
+import { setFetchCredentials, setFetchRedirect, setFetchSignal } from "./setting.js"
 import { isResponseUnauthorized, isResponseForbidden, isResponseRedirect } from "./verifying.js"
 
 
@@ -11,6 +11,7 @@ export const getFetchJson = (fetch, navigate, timeout = 2000) => async (url, dat
   const { signal, timeoutId } = getAbortSignal(timeout)
   setFetchRedirect(request, "manual")
   setFetchSignal(request, signal)
+  setFetchCredentials(request, "include")
   const result = await fetchJson(fetch, url, data, request)
   const error = result[1]
 

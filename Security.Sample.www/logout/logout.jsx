@@ -5,7 +5,16 @@ export const Logout = (_, elem) =>
 {
   const fetchApi = getFetchApi(elem)
   return (
-    <button onclick={signoutUser(fetchApi)}>
-      Signout
-    </button>)
+    <>
+      <style css={css}></style>
+      <button class="signout" onclick={signoutUser(fetchApi, elem)}>
+        Signout
+      </button>
+    </>)
 }
+
+const css = `
+logout .signout {
+  font-size: 1.8rem;
+  border: 1px solid transparent;
+}`

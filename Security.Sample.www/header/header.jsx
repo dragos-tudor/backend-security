@@ -1,5 +1,5 @@
 import { getContext } from "../deps.js"
-import { NavLinks } from "./navlinks.jsx"
+import { NavLinks } from "../navlinks/navlinks.jsx"
 
 export const Header = (_, elem) =>
   <>
@@ -27,14 +27,4 @@ header .logo {
 
 header .logo a {
   color: var(--label-color);
-}
-
-header navlinks {
-  margin: 1rem 2rem;
-}
-
-header navlink a {
-  padding-right: 0.7rem;
-  font-size: 1.3em;
-  border-right: 1px solid var(--secondary-color);
 }`
