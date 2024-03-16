@@ -1,4 +1,5 @@
-﻿
+﻿using Microsoft.Extensions.Logging;
+
 namespace Security.Sample.Api;
 
 partial class SampleFuncs
@@ -16,6 +17,9 @@ partial class SampleFuncs
     AddServices(appBuilder, keysPath, corsOrigin);
 
     var app = appBuilder.Build();
+    var loggerFactory = ResolveService<ILoggerFactory>(app.Services)!;
+
+    SetLoggerFactory(loggerFactory);
     UseMiddlewares(app);
     MapEndpoints(app);
 

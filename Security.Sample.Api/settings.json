@@ -2,9 +2,9 @@
   "$schema": "https://json.schemastore.org/appsettings",
   "Logging": {
     "LogLevel": {
-      "Microsoft.AspNetCore": "Warning",
+      "Microsoft.AspNetCore": "Information",
       "Microsoft.Hosting": "Warning",
-      "Security.Authentication": "Debug"
+      "Security.Authentication": "Information"
     }
   },
   "Kestrel": {
