@@ -1,6 +1,15 @@
 import { bundle } from  "/emit.ts"
 import { encodeHex } from "/hex.ts"
 
+/* WEBPACK, PARCEL, ROLLUP bundlers-free! */
+/*
+  - hash-based modules versioning.
+  - lazy loading module [eg. home module].
+  - multiple bundled root modules.
+  - css-in-js modules.
+  - pure script, 100% control.
+*/
+
 const bundleApp = async (cwd, homeName) => {
   const { code: appBundle } = await bundle(cwd + "/bootstrapping.js");
   const encodedApp = new TextEncoder().encode(
