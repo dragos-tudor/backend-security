@@ -1,4 +1,4 @@
-import { getParentElement } from "./getting.js"
+
 
 export const findAscendantElement = (elem, func) => {
   if(func(elem)) return elem

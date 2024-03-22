@@ -1,5 +1,4 @@
 import { signInAccountApi } from "../support/api/accounts.js"
-import { getApp } from "../app/getting.js"
 import { createSetUserAction } from "../support/store/actions.js"
 import { RoutePaths } from "../routes/paths.js"
 const { navigate } = await import("/scripts/routing.js")
@@ -11,7 +10,7 @@ export const signInUser = async (credentials, fetchApi, elem) =>
   const [user, error] = result
   if (error) return result
 
-  dispatchAction(getApp(elem), createSetUserAction(user))
+  dispatchAction(elem, createSetUserAction(user))
   navigate(elem, RoutePaths.home)
 
   return result

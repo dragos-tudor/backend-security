@@ -21,12 +21,20 @@ const throwErrors = (messages)=>{
     if (!messages.length) return false;
     throw new Error(messages.join(","));
 };
+const getHtmlBody = (elem)=>elem.ownerDocument.body;
 const getHtmlName = (elem)=>elem.tagName?.toLowerCase();
+const getHtmlParentElement = (elem)=>elem.parentElement;
+const findHtmlAscendant = (elem, func)=>{
+    if (func(elem)) return elem;
+    if (!getHtmlParentElement(elem)) return undefined;
+    return findHtmlAscendant(getHtmlParentElement(elem), func);
+};
 const findHtmlDescendants = (elem, func, elems = [])=>{
     if (func(elem)) elems.push(elem);
     for(let index = 0; index < elem.children.length; index++)findHtmlDescendants(elem.children[index], func, elems);
     return elems;
 };
+const findHtmlRoot = (elem)=>globalThis["Deno"] ? findHtmlAscendant(elem, (elem)=>!getHtmlParentElement(elem)) : getHtmlBody(elem);
 const isHtmlElement = (elem)=>elem.nodeType === 1;
 const validateHtmlElement = (elem)=>isHtmlElement(elem) ? "" : "Element type should be HTML element.";
 const isLogLibraryEnabled = (elem, libraryName)=>elem.__log.includes(libraryName);
@@ -180,7 +188,8 @@ const dispatchAction = (elem, action)=>{
     if (states === reducedStates) return [];
     setStates(elem, reducedStates);
     logInfo(elem, "end dispatch action", action, "states", states, "reduces states", reducedStates);
-    return updateConsumers(elem);
+    const root = findHtmlRoot(elem);
+    return updateConsumers(root);
 };
 export { dispatchAction as dispatchAction };
 const Store = (props, elem)=>{

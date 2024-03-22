@@ -6,6 +6,7 @@ const NavLink = (props)=>React.createElement("a", {
         onclick: handleNavLinkClick,
         ...props
     }, props.children);
+const getHtmlBody = (elem)=>elem.ownerDocument.body;
 const getHtmlChildren = (elem)=>Array.from(elem.children);
 const getHtmlName = (elem)=>elem.tagName.toLowerCase();
 const getHtmlParentElement = (elem)=>elem.parentElement;
@@ -31,6 +32,7 @@ const findHtmlDescendants = (elem, func, elems = [])=>{
     for(let index = 0; index < elem.children.length; index++)findHtmlDescendants(elem.children[index], func, elems);
     return elems;
 };
+const findHtmlRoot = (elem)=>globalThis["Deno"] ? findHtmlAscendant(elem, (elem)=>!getHtmlParentElement(elem)) : getHtmlBody(elem);
 const hideHtmlElement = (elem)=>(elem.style.display = "none", elem);
 const showHtmlElement = (elem)=>(elem.style.display = "block", elem);
 const isHtmlElement = (elem)=>elem.nodeType === 1;
@@ -43,10 +45,6 @@ const setEventHandler = (elem, handlerName, handler)=>{
     addEventListener(elem, handlerName, handler);
     return elem;
 };
-const isHtmlRouter = (elem)=>getHtmlName(elem) === "router";
-const isValidRouterReroute = (reroute)=>typeof reroute === "function" || reroute == null;
-const findRouter = (elem)=>findHtmlAscendant(elem, isHtmlRouter);
-const getRouterReroute = (elem)=>elem.__reroute;
 const isLogLibraryEnabled = (elem, libraryName)=>elem.__log.includes(libraryName);
 const isLogMounted = (elem)=>elem.__log instanceof Array;
 const isLogEnabled = (elem, libraryName)=>isLogMounted(elem) && isLogLibraryEnabled(elem, libraryName);
@@ -88,12 +86,6 @@ const matchUrlPath = (url, path)=>{
 };
 const getRouteData = (elem)=>elem.__routeData;
 const existsRoute = (elem)=>elem;
-const isAllowedRoute = (elem)=>{
-    const routeData = getRouteData(elem);
-    if (typeof routeData.allow === "function") return routeData.allow();
-    if (typeof routeData.allow === "boolean") return routeData.allow;
-    return true;
-};
 const isMatchedRoute = (urlPart)=>(elem)=>matchUrlPath(urlPart, getRouteData(elem).path);
 const isRouteElement = (elem)=>getHtmlName(elem) === "route";
 const isConsumer = (elem)=>elem.__history || elem.__location || elem.__routeParams || elem.__searchParams;
@@ -189,15 +181,12 @@ const throwErrors = (messages)=>{
     if (!messages.length) return false;
     throw new Error(messages.join(","));
 };
-const MissingRouterError = "Router is missing.";
 const NavigationError = "Navigation error: ";
 const RouteNotFound = "Route #url not found.";
-const RouteNotAllowed = "Route not allowed.";
-const createRouteData = (path, child, loadChild, allow, index = false)=>Object.freeze({
+const createRouteData = (path, child, loadChild, index = false)=>Object.freeze({
         path,
         child,
         loadChild,
-        allow,
         index
     });
 const getRouteChild = (elem)=>elem.children[0];
@@ -233,10 +222,6 @@ const changeRoute = async (elem, url, routes = [])=>{
         ,
         RouteNotFound.replace("#url", url)
     ];
-    if (!isAllowedRoute(route)) return [
-        ,
-        RouteNotAllowed
-    ];
     logInfo(elem, "Route to: ", url);
     const routeData = getRouteData(route);
     const routeParams = resolveRouteParams(url, routeData.path);
@@ -254,18 +239,15 @@ const NavigateTo = "Navigate to:";
 const navigateFromHistory = async (elem, url)=>{
     logInfo(elem, NavigateTo, url);
     throwError(validateHtmlElement(elem));
-    const router = findRouter(elem);
-    if (!router) logError(elem, MissingRouterError);
-    if (!router) return MissingRouterError;
-    setLocation(router, url);
-    setRouteParams(router, {});
-    setSearchParams(router, resolveSearchParams(url));
+    const root = findHtmlRoot(elem);
+    setLocation(root, url);
+    setRouteParams(root, {});
+    setSearchParams(root, resolveSearchParams(url));
     const urlPathName = skipQueryString(getUrlPathName(url));
-    const [routes, changeRouteError] = await changeRoute(router, urlPathName);
-    if (changeRouteError) logError(router, NavigationError, changeRouteError);
-    if (changeRouteError === RouteNotAllowed) return getRouterReroute(router)?.(router, url);
+    const [routes, changeRouteError] = await changeRoute(root, urlPathName);
+    if (changeRouteError) logError(elem, NavigationError, changeRouteError);
     if (changeRouteError) return NavigationError + changeRouteError;
-    const consumers = updateConsumers(router);
+    const consumers = updateConsumers(root);
     return [
         routes,
         consumers
@@ -275,24 +257,18 @@ const navigateFromUser = (elem, url)=>{
     addToHistory(getHistory(elem), url);
     return navigateFromHistory(elem, url);
 };
+const isHtmlRouter = (elem)=>getHtmlName(elem) === "router";
 const setNavigateHandler = (elem, navigate)=>setEventHandler(elem, "onclick", (event)=>event.isNavigate && navigate(event.target, event.target.href));
 const setPopStateHandler = (window1, navigate)=>setEventHandler(window1, "onpopstate", ()=>navigate(findHtmlDescendant(window1.document.body, isHtmlRouter), window1.location.href, true));
-const setRouterReroute = (elem, reroute)=>elem.__reroute = reroute;
-const validateReRoute = (props)=>isValidRouterReroute(props.reroute) ? "" : "Router reroute should be function.";
-const validateRouterProps = (props)=>[
-        validateReRoute(props)
-    ].filter((error)=>error);
 const Router = (props, elem)=>{
-    throwErrors(validateRouterProps(props));
-    setRouterReroute(elem, props.reroute);
     setHistory(elem);
     setNavigateHandler(elem, navigateFromUser);
     setPopStateHandler(window, navigateFromHistory);
     return props.children;
 };
 const Route = (props, elem)=>{
-    const { path, child, load, allow } = props;
-    const routeData = createRouteData(path, child, load, allow, "index" in props);
+    const { path, child, load } = props;
+    const routeData = createRouteData(path, child, load, "index" in props);
     throwErrors(validateRouteData(routeData));
     setRouteData(elem, routeData);
     return React.createElement(React.Fragment, null);

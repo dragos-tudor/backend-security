@@ -1,5 +1,4 @@
 import { signOutAccoutApi } from "../support/api/accounts.js"
-import { getApp } from "../app/getting.js"
 import { createSetUserAction } from "../support/store/actions.js"
 import { RoutePaths } from "../routes/paths.js"
 const { navigate } = await import("/scripts/routing.js")
@@ -11,8 +10,8 @@ export const signOutUser = async (fetchApi, elem) =>
   const [, error] = result
   if (error) return result
 
+  dispatchAction(elem, createSetUserAction(null))
   navigate(elem, RoutePaths.login)
-  dispatchAction(getApp(elem), createSetUserAction(null))
 
   return result
 }
