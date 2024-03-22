@@ -1,4 +1,4 @@
-import { toLocationUrl } from "../locations/converting.js"
+import { toUrl } from "../support/locations/converting.js"
 
 export const getErrorDescription = (location) =>
-  toLocationUrl(location)?.searchParams?.get("description")
+  toUrl(location)?.searchParams?.get("description")

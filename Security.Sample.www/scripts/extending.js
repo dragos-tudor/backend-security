@@ -1,0 +1,16 @@
+const { getStoreStates, setSelectors, useSelector: _useSelector, dispatchAction: _dispatchAction } = await import("/scripts/states.js")
+const { setEffects, setStates, update, useEffect: _useEffect, useState: _useState } = await import("/scripts/rendering.js")
+
+export const useEffect = (elem, name, func, deps) =>
+  _useEffect(setEffects(elem), name, func, deps)
+
+export const useSelector = (elem, name, func) =>
+  _useSelector(setSelectors(elem), name, func, getStoreStates(elem))
+
+export const useState = (elem, name, value, deps) =>
+  _useState(setStates(elem), name, value, deps)
+
+export const updateState = (setState, elem) => (event) => {
+  setState(event.target.value)
+  return update(elem)
+}

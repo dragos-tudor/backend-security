@@ -1,15 +1,18 @@
-import { navigate, HttpMethods } from "../deps.js"
+import { signInAccountApi } from "../support/api/accounts.js"
+import { getApp } from "../app/getting.js"
+import { createSetUserAction } from "../support/store/actions.js"
+import { RoutePaths } from "../routes/paths.js"
+const { navigate } = await import("/scripts/routing.js")
+const { dispatchAction } = await import("/scripts/states.js")
 
-const signinApi = (credentials, apiFetch) =>
-  apiFetch("/accounts/signin", credentials, { method: HttpMethods.POST })
-
-export const signinUser = async (credentials, apiFetch, setUser, elem) =>
+export const signInUser = async (credentials, fetchApi, elem) =>
 {
-  const [user, failure] = await signinApi(credentials, apiFetch)
-  if (failure) return failure
+  const result = await signInAccountApi(credentials, fetchApi)
+  const [user, error] = result
+  if (error) return result
 
-  setUser(user)
-  navigate(elem, "/home")
+  dispatchAction(getApp(elem), createSetUserAction(user))
+  navigate(elem, RoutePaths.home)
 
-  return user
+  return result
 }

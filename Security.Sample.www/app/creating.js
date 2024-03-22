@@ -1,12 +1,6 @@
-import { navigate } from "../deps.js"
-import { getFetchJson } from "../fetch/fetching.js"
-import { services } from "../services/services.js"
+import { ServiceNames } from "../support/services/names.js"
 
-export const createAppProps = (settings, router) => Object.freeze({
-  [services.fetchApi]: getFetchJson(
-    (url, request) => fetch(settings.apiUrl + url, request),
-    (url) => navigate(router, url),
-    3000
-  ),
-  [services.apiUrl]: settings.apiUrl
+export const createAppProps = (fetchApi, apiUrl) => Object.freeze({
+  [ServiceNames.fetchApi]: fetchApi,
+  [ServiceNames.apiUrl]: apiUrl
 })

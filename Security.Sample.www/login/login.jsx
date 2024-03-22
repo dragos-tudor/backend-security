@@ -1,25 +1,22 @@
 import { google, facebook, twitter } from "../images/icons.jsx"
-import { getLocationOrigin } from "../locations/getting.js"
-import { setContext, useState } from "../deps.js"
-import { getFetchApi, getApiUrl } from "../services/getting.js"
-import { signinUser } from "./signingin.js"
-import { updateState } from "./updating.js"
-
+import { encodeLocationUrl } from "../support/locations/encoding.js"
+import { getLocationUrl } from "../support/locations/getting.js"
+import { updateState, useState } from "../scripts/extending.js"
+import { getFetchApiService, getApiUrlService } from "../support/services/getting.js"
+import { signInUser } from "./signingin.js"
 
 export const Login = (props, elem) =>
 {
-  const apiUrl = getApiUrl(elem)
-  const apiFetch = getFetchApi(elem)
-  const appOrigin = getLocationOrigin(props.location)
-  const returnUrl = encodeURIComponent(appOrigin)
-  const setUser = setContext(elem, "user")
-
+  const apiUrl = getApiUrlService(elem)
+  const fetchApi = getFetchApiService(elem)
+  const currentUrl = getLocationUrl(props.location)
+  const returnUrl = encodeLocationUrl(currentUrl)
   const [userName, setUserName] = useState(elem, "userName", "", [])
   const [password, setPassword] = useState(elem, "password", "", [])
 
   return <>
     <style css={css}></style>
-    <signin-form>
+    <section class="local-authentication">
       <div>
         <label for="userName">User name</label>
         <input id="userName" type="text" onchange={updateState(setUserName, elem)} placeholder="user name here"/>
@@ -29,11 +26,11 @@ export const Login = (props, elem) =>
         <input id="password" type="password" onchange={updateState(setPassword, elem)} placeholder="password here"/>
       </div>
       <div>
-        <button onclick={() => signinUser({userName, password}, apiFetch, setUser, elem)}>Signin with credentials</button>
+        <button onclick={() => signInUser({userName, password}, fetchApi, elem)}>Signin with credentials</button>
       </div>
-    </signin-form>
-    <or>or</or>
-    <external-auth>
+    </section>
+    <div class="or">or</div>
+    <section class="remote-authentication">
       <a class="auth-provider" href={`${apiUrl}/accounts/challenge-google?returnUrl=${returnUrl}`}>
         {google}
         <span>Signin with Google</span>
@@ -46,7 +43,7 @@ export const Login = (props, elem) =>
         {twitter}
         <span>Signin with Twitter</span>
       </a>
-    </external-auth>
+    </section>
   </>
 }
 
@@ -59,29 +56,30 @@ login {
   height: 100%;
 }
 
-signin-form {
+login .local-authentication {
   display: grid;
   justify-items: end;
   row-gap: 1rem;
 }
 
-signin-form, external-auth {
+login .local-authentication,
+login .remote-authentication {
   padding: 1em;
   border-radius: var(--default-radius);
   border: 3px solid var(--dark-primary-color);
 }
 
-or {
+login .or {
   margin: 1em;
   color: var(--light-primary-color);
 }
 
-external-auth .auth-provider {
+login .remote-authentication .auth-provider {
   display: block;
   margin: 0.5em 0;
 }
 
-external-auth .auth-provider span {
+login .remote-authentication .auth-provider span {
   margin-left: var(--default-margin);
 }
 

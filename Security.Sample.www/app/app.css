@@ -14,7 +14,7 @@ main {
   height: 100%;
 }
 
-router, user, context, routes, route {
+router, routes, route {
   display: block;
   height: inherit;
 }

@@ -1,28 +1,39 @@
-import { Router, Services } from "../deps.js"
-import { Footer } from "../footer/footer.jsx"
+import { createAppReducer, createAppState } from "../support/store/creating.js";
 import { Header } from "../header/header.jsx"
+import { Footer } from "../footer/footer.jsx"
 import { Routes } from "../routes/routes.jsx"
-import { User } from "../users/user.jsx"
-import { services } from "../services/services.js"
+import { useEffect } from "../scripts/extending.js"
+import { getApiUrl, getFetchApi } from "./getting.js";
+import { startApp } from "./starting.js"
+
+const { Services } = await import("/scripts/rendering.js")
+const { Router } = await import("/scripts/routing.js")
+const { Store } = await import("/scripts/states.js")
 
 
+export const App = (props, elem) =>
+{
+  const appState = createAppState()
+  const appReducer = createAppReducer()
+  const apiUrl = getApiUrl(props)
+  const fetchApi = getFetchApi(props)
 
-export const App = (props) =>
-  <>
+  useEffect(elem, "startapp", () => startApp(fetchApi, elem), [])
+  return <>
     <style css={css}></style>
     <Router>
-      <Services fetch-api={props[services.fetchApi]} api-url={props[services.apiUrl]}></Services>
-      <User>
-        <layout>
-          <Header></Header>
-          <main>
-            <Routes></Routes>
-          </main>
-          <Footer></Footer>
-        </layout>
-      </User>
+      <Services fetch-api={fetchApi} api-url={apiUrl}></Services>
+      <Store state={appState} reducer={appReducer}></Store>
+      <layout>
+        <Header></Header>
+        <main>
+          <Routes></Routes>
+        </main>
+        <Footer></Footer>
+      </layout>
     </Router>
   </>
+}
 
 const css = `
 app {
@@ -40,7 +51,7 @@ main {
   height: 100%;
 }
 
-router, user, context, routes, route {
+router, routes, route {
   display: block;
   height: inherit;
 }`

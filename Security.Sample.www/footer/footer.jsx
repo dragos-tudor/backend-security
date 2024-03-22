@@ -14,7 +14,7 @@ export const Footer = () =>
         {youtube}
       </a>
     </div>
-    <span class="me">dragos.tudor [2024]</span>
+    <div class="me">dragos.tudor - 2024</div>
   </>
 
 const css = `
@@ -25,15 +25,15 @@ footer {
 }
 
 footer .social-icons {
-  display: inline-block;
-  margin: 1rem;
+  margin: 0.5rem;
 }
 
-footer .social-icon {
+footer .social-icons .social-icon {
   border-color: transparent;
 }
 
 footer .me {
+  margin: 0.5rem;
   color: var(--light-primary-color);
 }
 `

@@ -1,9 +1,10 @@
-import { getContext } from "../deps.js"
+import { selectUser } from "../support/store/selecting.js"
+import { useSelector } from "../scripts/extending.js"
 import { concatClaim } from "./concating.js"
 
 export const Home = (props, elem) =>
 {
-  const user = getContext(elem, "user")
+  const user = props.user ?? useSelector(elem, "user", selectUser)
   return <>
     <style css={css}></style>
     <div class="user-detail">

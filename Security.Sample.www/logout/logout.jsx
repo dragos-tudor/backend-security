@@ -1,13 +1,13 @@
-import { getFetchApi } from "../services/getting.js"
-import { signoutUser } from "./signingout.js"
+import { getFetchApiService } from "../support/services/getting.js"
+import { signOutUser } from "./signingout.js"
 
 export const Logout = (_, elem) =>
 {
-  const fetchApi = getFetchApi(elem)
+  const fetchApi = getFetchApiService(elem)
   return (
     <>
       <style css={css}></style>
-      <button class="signout" onclick={signoutUser(fetchApi, elem)}>
+      <button class="signout" onclick={() => signOutUser(fetchApi, elem)}>
         Signout
       </button>
     </>)

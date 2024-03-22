@@ -1,11 +1,16 @@
-import { NavLink } from "../deps.js"
+import { selectUserAuthenticated } from "../support/store/selecting.js";
 import { Logout } from "../logout/logout.jsx"
+import { useSelector } from "../scripts/extending.js"
+const { NavLink } = await import("/scripts/routing.js")
 
-export const NavLinks = ({user}) =>
-  <>
+
+export const NavLinks = (props, elem) =>
+{
+  const authenticated = props.authenticated ?? useSelector(elem, "authenticated", selectUserAuthenticated)
+  return <>
     <style css={css}></style>
     {
-      user?
+      authenticated?
         <nav>
           <NavLink href="/home">Home</NavLink>
           <Logout></Logout>
@@ -15,6 +20,7 @@ export const NavLinks = ({user}) =>
         </nav>
     }
   </>
+}
 
 const css = `
 navlinks {

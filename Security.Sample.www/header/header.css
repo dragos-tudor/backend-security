@@ -9,9 +9,6 @@ header {
 header .logo {
   margin: 1rem;
   font-family: var(--ff-serif);
-  text-transform: uppercase;
-}
-
-header .logo a {
   color: var(--label-color);
+  text-transform: uppercase;
 }

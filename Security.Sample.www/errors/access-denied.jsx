@@ -1,5 +1,5 @@
-import { NavLink } from "../deps.js"
 import { getErrorDescription } from "./getting.js"
+const { NavLink } = await import("/scripts/routing.js")
 
 export const AccessDenied = ({location}) =>
   <>
@@ -11,6 +11,7 @@ export const AccessDenied = ({location}) =>
 
     <NavLink href="/login">Go to login</NavLink>
   </>
+
 const css = `
 access-denied {
   display: block;

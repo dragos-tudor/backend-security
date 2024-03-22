@@ -6,14 +6,14 @@ footer {
 }
 
 footer .social-icons {
-  display: inline-block;
-  margin: 1rem;
+  margin: 0.5rem;
 }
 
-footer .social-icon {
+footer .social-icons .social-icon {
   border-color: transparent;
 }
 
 footer .me {
+  margin: 0.5rem;
   color: var(--light-primary-color);
 }

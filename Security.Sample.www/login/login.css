@@ -7,29 +7,30 @@ login {
   height: 100%;
 }
 
-signin-form {
+login .local-authentication {
   display: grid;
   justify-items: end;
   row-gap: 1rem;
 }
 
-signin-form, external-auth {
+login .local-authentication,
+login .remote-authentication {
   padding: 1em;
   border-radius: var(--default-radius);
   border: 3px solid var(--dark-primary-color);
 }
 
-or {
+login .or {
   margin: 1em;
   color: var(--light-primary-color);
 }
 
-external-auth .auth-provider {
+login .remote-authentication .auth-provider {
   display: block;
   margin: 0.5em 0;
 }
 
-external-auth .auth-provider span {
+login .remote-authentication .auth-provider span {
   margin-left: var(--default-margin);
 }
 

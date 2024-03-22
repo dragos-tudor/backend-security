@@ -36,12 +36,12 @@ const LibraryName = "states";
 const LogHeader = "[states]";
 const logInfo = (elem, ...args)=>isLogEnabled(elem, LibraryName) && console.info(LogHeader, ...args);
 const countObjectProps = (obj)=>Object.getOwnPropertyNames(obj).length;
-const reservedPropNames = [
+const ReservedPropNames = Object.freeze([
     "children"
-];
+]);
 const existsObject = (obj)=>obj != null;
 const isObjectType = (value)=>typeof value === "object" && value !== null;
-const isValidObjectPropName = (propName)=>!reservedPropNames.includes(propName);
+const isValidObjectPropName = (propName)=>!ReservedPropNames.includes(propName);
 const getObjectPropNames = (obj)=>Object.getOwnPropertyNames(obj).filter(isValidObjectPropName);
 const equalArraysLength = (arr1, arr2)=>arr1.length === arr2.length;
 const existsArray = (arr)=>arr != null;
@@ -97,6 +97,7 @@ const getState = (states, name)=>states[name];
 const getStates = (elem)=>elem.ownerDocument.__states;
 const setState = (states, state)=>states[state.name] = state.data;
 const setStates = (elem, states = {})=>elem.ownerDocument.__states = states;
+const existsState = (states, name)=>!!getState(states, name);
 const isStateType = (reducers)=>reducers.$type === StateType;
 const validateStateType = (state)=>isStateType(state) ? "" : "State type should be state [use createState].";
 const validateState = (state)=>validateStateType(state);
@@ -118,6 +119,7 @@ const getMiddleware = (middlewares, name)=>middlewares.find((middleware)=>middle
 const getMiddlewares = (elem)=>elem.ownerDocument.__middlewares;
 const setMiddleware = (middlewares, middleware)=>(middlewares.push(middleware), middleware);
 const setMiddlewares = (elem, middlewares = [])=>elem.ownerDocument.__middlewares = middlewares;
+const existsMiddleware = (middlewares, name)=>!!getMiddleware(middlewares, name);
 const isFunctionMiddlewareFunc = (middleware)=>typeof middleware.func === "function";
 const isMiddlewareType = (middleware)=>middleware.$type === MiddlewareType;
 const isStringMiddlewareName = (middleware)=>typeof middleware.name === "string";
@@ -139,6 +141,7 @@ const getReducer = (elem, name)=>elem[name];
 const getReducers = (elem)=>elem.ownerDocument.__reducers;
 const setReducer = (reducers, reducer)=>reducers[reducer.name] = reducer.funcs;
 const setReducers = (elem, reducers = {})=>elem.ownerDocument.__reducers = reducers;
+const existsReducer = (reducers, name)=>!!getReducer(reducers, name);
 const isFunctionsReducerFuncs = (reducers)=>Object.values(reducers.funcs ?? {}).every((func)=>typeof func === "function");
 const isReducerType = (reducers)=>reducers.$type === ReducerType;
 const isStringReducerName = (reducers)=>typeof reducers.name === "string";
@@ -182,20 +185,20 @@ const dispatchAction = (elem, action)=>{
 export { dispatchAction as dispatchAction };
 const Store = (props, elem)=>{
     const { reducer, state, middleware } = props;
-    getMiddlewares(elem) || setMiddlewares(elem);
-    getReducers(elem) || setReducers(elem);
-    getStates(elem) || setStates(elem);
+    const middlewares = getMiddlewares(elem) || setMiddlewares(elem);
+    const reducers = getReducers(elem) || setReducers(elem);
+    const states = getStates(elem) || setStates(elem);
     if (reducer) {
         throwErrors(validateReducer(reducer));
-        if (!getReducer(getReducers(elem), reducer.name)) setReducer(getReducers(elem), reducer);
+        existsReducer(reducers, reducer.name) || setReducer(reducers, reducer);
     }
     if (state) {
         throwErrors(validateState(state));
-        if (!getState(getStates(elem), state.name)) setState(getStates(elem), state);
+        existsState(states, state.name) || setState(states, state);
     }
     if (middleware) {
         throwErrors(validateMiddleware(middleware));
-        if (!getMiddleware(getMiddlewares(elem), middleware.name)) setMiddleware(getMiddlewares(elem), middleware);
+        existsMiddleware(middlewares, middleware.name) || setMiddleware(middlewares, middleware);
     }
     return props.children;
 };
@@ -205,5 +208,5 @@ export { createMiddleware as createMiddleware };
 export { createReducer as createReducer };
 export { setSelectors as setSelectors };
 export { useSelector as useSelector };
-export { createState as createGlobalState };
-export { getStates as getGlobalStates };
+export { createState as createStoreState };
+export { getStates as getStoreStates };

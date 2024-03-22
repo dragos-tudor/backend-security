@@ -1,12 +1,18 @@
-import { navigate } from "../deps.js";
-import { logResponseError } from "../fetch/logging.js"
-import { routes } from "../routes/routes.jsx"
+import { signOutAccoutApi } from "../support/api/accounts.js"
+import { getApp } from "../app/getting.js"
+import { createSetUserAction } from "../support/store/actions.js"
+import { RoutePaths } from "../routes/paths.js"
+const { navigate } = await import("/scripts/routing.js")
+const { dispatchAction } = await import("/scripts/states.js")
 
-export const signoutUser = (fetchApi, elem) => async () =>
+export const signOutUser = async (fetchApi, elem) =>
 {
-  const result = await fetchApi("/accounts/signout", null, { method: "POST" })
-  const error = result[1]
-  if (error) logResponseError(error)
+  const result = await signOutAccoutApi(fetchApi)
+  const [, error] = result
+  if (error) return result
 
-  navigate(elem, routes.login)
+  navigate(elem, RoutePaths.login)
+  dispatchAction(getApp(elem), createSetUserAction(null))
+
+  return result
 }

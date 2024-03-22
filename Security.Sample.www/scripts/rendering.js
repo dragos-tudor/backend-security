@@ -129,7 +129,7 @@ const mapPropName = (propName)=>isSpecialPropName(propName) && SpecialPropMappin
 const EncodingCharsRegex = /[^\w. ]/gi;
 const getHtmlEntity = (__char)=>`&#${__char.charCodeAt(0)};`;
 const encodeHtml = (string)=>string.replace(EncodingCharsRegex, getHtmlEntity);
-const togglePropNames = Object.freeze([
+const TogglePropNames = Object.freeze([
     "checked",
     "disabled",
     "hidden",
@@ -138,7 +138,7 @@ const togglePropNames = Object.freeze([
 ]);
 const isDangerouslyHtmlPropName = (propName)=>propName === "html";
 const isEmptyPropValue = (propValue)=>propValue == undefined || propValue === "";
-const isTogglePropName = (propName)=>togglePropNames.includes(propName);
+const isTogglePropName = (propName)=>TogglePropNames.includes(propName);
 const getTogglePropValue = (propValue)=>isEmptyPropValue(propValue) || propValue;
 const resolvePropValue = (props, propName)=>isDangerouslyHtmlPropName(propName) && encodeHtml(props[propName]) || isTogglePropName(propName, props[propName]) && getTogglePropValue(props[propName]) || props[propName];
 const isSVGPropValue = (elem, propName)=>elem[propName]?.constructor?.name.startsWith("SVG");
@@ -248,6 +248,10 @@ export { jsx as jsx };
 export { jsxs as jsxs };
 export { createElement as createElement };
 export { FragmentType as Fragment };
+const throwError = (message)=>{
+    if (!message) return false;
+    throw new Error(message);
+};
 const replaceJsxFragments = (elems, firstElem = elems[0])=>isJsxFragment(firstElem) ? getJsxPropsChildren(firstElem.props) : elems;
 const sanitizeJsxChildren = (elem)=>sanitizeJsxElements(getJsxPropsChildren(elem.props));
 const sanitizeJsxElements = (elems)=>replaceJsxFragments(elems).filter((elem)=>isValidJsxText(elem) && isSafeJsxElement(elem));
@@ -266,123 +270,6 @@ const buildJsxFactoryChildren = (elem, $elem)=>{
         factoryElems
     ]);
 };
-const Suspense = ({ suspending = true, fallback, children })=>suspending ? fallback : children;
-const isSuspenseElement = (elem)=>getHtmlName(elem) === "suspense";
-const throwError = (message)=>{
-    if (!message) return false;
-    throw new Error(message);
-};
-const getEffect = (effects, name)=>effects[name];
-const getEffects = (elem)=>elem.__effects;
-const runInitialFunc = (effect)=>effect.initialFunc?.();
-const runInitialEffects = (effects)=>Object.values(effects).map(runInitialFunc);
-const setEffectDeps = (effect, deps)=>effect.deps = deps;
-const setEffectInitialFunc = (effect, func)=>effect.initialFunc = func;
-const setEffect = (effects, effect)=>effects[effect.name] = effect;
-const setEffects = (elem, effects = {})=>elem.__effects = effects;
-const equalPrimitives = (value1, value2)=>value1 === value2;
-const falsy = ()=>false;
-const truthy = ()=>true;
-const getObjectPropNames = (obj)=>Object.getOwnPropertyNames(obj);
-const countObjectProps = (obj)=>Object.getOwnPropertyNames(obj).length;
-const ReservedPropNames1 = Object.freeze([
-    "children"
-]);
-const equalObjectsPropsCount = (obj1, obj2)=>countObjectProps(obj1) === countObjectProps(obj2);
-const existsObject = (obj)=>obj != null;
-const existsObjects = (obj1, obj2)=>existsObject(obj1) && existsObject(obj2);
-const isObjectType = (value)=>typeof value === "object" && value !== null;
-const isReservedObjectPropName = (propName)=>ReservedPropNames1.includes(propName);
-const equalArraysLength = (arr1, arr2)=>arr1.length === arr2.length;
-const existsArray = (arr)=>arr != null;
-const existsArrays = (arr1, arr2)=>existsArray(arr1) && existsArray(arr2);
-const isArrayType = (value)=>value instanceof Array;
-const isFunctionType = (value)=>typeof value === "function";
-const equalArrayItems = (arr1, arr2)=>arr1.every((_, index)=>equalValues(arr1[index], arr2[index]));
-const equalArrays = (arr1, arr2)=>(!existsArrays(arr1, arr2) && equalPrimitives || !equalArraysLength(arr1, arr2) && falsy || equalArrayItems)(arr1, arr2);
-const equalValues = (value1, value2)=>(isFunctionType(value1) && isFunctionType(value2) && truthy || isArrayType(value1) && isArrayType(value2) && equalArrays || isObjectType(value1) && isObjectType(value2) && equalObjects || equalPrimitives)(value1, value2);
-const equalObjectsProp = (obj1, obj2, propName)=>isReservedObjectPropName(propName) || equalValues(obj1[propName], obj2[propName]);
-const equalObjectsProps = (obj1, obj2)=>getObjectPropNames(obj1).every((propName)=>equalObjectsProp(obj1, obj2, propName));
-const equalObjects = (obj1, obj2)=>(!existsObjects(obj1, obj2) && equalPrimitives || !equalObjectsPropsCount(obj1, obj2) && falsy || equalObjectsProps)(obj1, obj2);
-const createEffect = (name, deps)=>({
-        name,
-        deps
-    });
-const existsEffect = (effects, name)=>effects[name];
-const isDefaultDeps = (deps)=>deps === undefined;
-const useEffect = (effects, name, func, deps)=>{
-    if (!existsEffect(effects, name)) {
-        setEffect(effects, createEffect(name, deps));
-        return func();
-    }
-    const effect = getEffect(effects, name);
-    runInitialFunc(effect);
-    setEffectInitialFunc(effect, undefined);
-    if (equalArrays(effect.deps, deps) && !isDefaultDeps(deps)) return;
-    setEffectDeps(effect, deps);
-    return func();
-};
-const createMemo = (name, value, deps)=>({
-        name,
-        value,
-        deps
-    });
-const setMemo = (states, memo)=>states[memo.name] = memo;
-const setMemoDeps = (memo, deps)=>memo.deps = deps;
-const setMemoValue = (memo, value)=>memo.value = value;
-const getMemo = (memos, name)=>memos[name];
-const getMemoUsage = (memo)=>[
-        memo.value,
-        (func)=>setMemoValue(memo, func())
-    ];
-const existsMemo = (states, name)=>states[name];
-const isDefaultDeps1 = (deps)=>deps === undefined;
-const useMemo = (states, name, func, deps)=>{
-    if (!existsMemo(states, name)) {
-        const memo = setMemo(states, createMemo(name, func(), deps));
-        return getMemoUsage(memo);
-    }
-    const memo = getMemo(states, name);
-    if (equalArrays(memo.deps, deps) && !isDefaultDeps1(deps)) return getMemoUsage(memo);
-    setMemoDeps(memo, deps);
-    setMemoValue(memo, func());
-    return getMemoUsage(memo);
-};
-const setState = (states, state)=>states[state.name] = state;
-const setStateDeps = (state, deps)=>state.deps = deps;
-const setStateValue = (state, value)=>state.value = value;
-const setStates = (elem, states = {})=>elem.__states = states;
-const getState = (states, name)=>states[name];
-const getStates = (elem)=>elem.__states;
-const getStateUsage = (state)=>[
-        state.value,
-        (value)=>setStateValue(state, value)
-    ];
-const createState = (name, value, deps)=>({
-        name,
-        value,
-        deps
-    });
-const existsState = (states, name)=>states[name];
-const isDefaultDeps2 = (deps)=>deps === undefined;
-const useState = (states, name, value, deps)=>{
-    if (!existsState(states, name)) {
-        const state = setState(states, createState(name, value, deps));
-        return getStateUsage(state);
-    }
-    const state = getState(states, name);
-    if (equalArrays(state.deps, deps) && !isDefaultDeps2(deps)) return getStateUsage(state);
-    setStateDeps(state, deps);
-    setStateValue(state, value);
-    return getStateUsage(state);
-};
-const isFunctionLazyLoader = (loader)=>typeof loader === "function";
-const validateLazyLoader = (loader)=>isFunctionLazyLoader(loader) ? "" : "Lazy loader should be function.";
-const getErrorPath = (boundary, elem, names = [])=>{
-    if (!elem) return;
-    names.push(getHtmlName(elem));
-    return boundary === elem ? names.reverse().join("/") : getErrorPath(boundary, elem.parentElement, names);
-};
 const isLogLibraryEnabled = (elem, libraryName)=>elem.__log.includes(libraryName);
 const isLogMounted = (elem)=>elem.__log instanceof Array;
 const isLogEnabled = (elem, libraryName)=>isLogMounted(elem) && isLogLibraryEnabled(elem, libraryName);
@@ -394,48 +281,6 @@ const LibraryName = "rendering";
 const LogHeader = "[rendering]";
 const logError = (elem, ...args)=>isLogEnabled(elem, LibraryName) && console.error(LogHeader, ...args);
 const logInfo = (elem, ...args)=>isLogEnabled(elem, LibraryName) && console.info(LogHeader, ...args);
-const dispatchError = (elem, error)=>dispatchEvent(elem, "error", {
-        error
-    });
-const handleError = (func, elem)=>{
-    try {
-        return func();
-    } catch (error) {
-        logError(elem, error.message, error.stack);
-        dispatchError(elem, error);
-        throw error;
-    }
-};
-const getMaxLengthElements = (elems, $elems)=>elems.length > $elems.length ? elems : $elems;
-const getContext = (contexts, name)=>contexts[name];
-const getContexts = (elem)=>elem.__contexts;
-const existsContext = (contexts, name)=>name in contexts;
-const isContextConsumer = (elem, name)=>getHtmlName(elem) !== "context" && existsContext(getContexts(elem), name);
-const isContextProducer = (elem, name)=>getHtmlName(elem) === "context" && existsContext(getContexts(elem), name);
-const findProducer = (elem, name)=>findHtmlAscendant(elem, (elem)=>isContextProducer(elem, name));
-const getContextValue = (contexts, name)=>getContext(contexts, name).value;
-const getProducerContextValue = (name, fallbackValue, elem)=>{
-    const producer = findProducer(elem, name);
-    if (!producer) return fallbackValue;
-    const contexts = getContexts(producer);
-    const context = getContext(contexts, name);
-    return context.value;
-};
-const findConsumer = (elem, name)=>findHtmlDescendants(elem, (elem)=>isContextConsumer(elem, name));
-const setContext = (contexts, context)=>contexts[context.name] = context;
-const setContexts = (elem, contexts = {})=>elem.__contexts = contexts;
-const setContextValue = (context, value)=>(context.value = value, context);
-const createContext = (name, value)=>({
-        name,
-        value
-    });
-const setServices = (elem, services)=>elem.ownerDocument.__services = services;
-const Services = (props, elem)=>{
-    setServices(elem, props);
-    return props.children;
-};
-const getService = (elem, name, fallback)=>getServices(elem)?.[name] ?? fallback;
-const getServices = (elem)=>elem.ownerDocument.__services;
 const isIgnoreArray = (elem)=>elem.__ignore instanceof Array;
 const isIgnoredElement = ($elem)=>$elem.__ignore?.includes(getHtmlName($elem));
 const enableIgnoring = ($elem, $parent)=>isIgnoreArray($parent) && ($elem.__ignore = [
@@ -448,6 +293,18 @@ const getHtmlPropNames = ($elem)=>Object.getOwnPropertyNames($elem);
 const setHtmlElement = ($elem, elem)=>{
     setHtmlProperties($elem, getJsxElementProps(elem));
     setEventHandlers($elem, getJsxElementProps(elem));
+    return $elem;
+};
+const renderHtmlElement = (elem, $parent)=>{
+    throwError(validateHtmlTagName(getJsxName(elem)));
+    const document = getHtmlOwnerDocument($parent);
+    const ns = getElementNS(elem) || getHtmlElementNS($parent);
+    const $elem = ns ? createHtmlElementNS(document, ns, getJsxName(elem)) : createHtmlElement(document, getJsxName(elem));
+    setHtmlElement($elem, elem);
+    appendHtmlNode($elem, $parent);
+    enableIgnoring($elem, $parent);
+    enableLogging($elem, $parent);
+    storeInternals($elem, elem);
     return $elem;
 };
 const updateHtmlElement = (elem, $elem)=>{
@@ -500,28 +357,54 @@ const updateHtmlText = (text, $elem)=>{
 const unrenderHtmlText = ($elem)=>getHtmlParentElement($elem) ? removeHtmlNode($elem) : $elem;
 const getLogger = ($elem)=>isHtmlText($elem) ? logHtmlText : logHtmlElement;
 const logElement = ($elem, message)=>getLogger($elem)($elem, getHtmlParentElement($elem), message);
+const dispatchError = (elem, error)=>dispatchEvent(elem, "error", {
+        error
+    });
+const handleError = (func, elem)=>{
+    try {
+        return func();
+    } catch (error) {
+        logError(elem, error.message, error.stack);
+        dispatchError(elem, error);
+        throw error;
+    }
+};
+const resolveJsxChildren = (elem, $elem)=>isJsxFactory(elem) && buildJsxFactoryChildren(elem, $elem) || isJsxElement(elem) && sanitizeJsxChildren(elem) || [];
+const resolveHtmlChildren = ($elem, children)=>existsElement(children[0]) && isJsxKeyElement(children[0]) ? orderElementKeys(children, getHtmlChildNodes($elem), $elem) : getHtmlChildNodes($elem);
+const equalPrimitives = (value1, value2)=>value1 === value2;
+const falsy = ()=>false;
+const truthy = ()=>true;
+const getObjectPropNames = (obj)=>Object.getOwnPropertyNames(obj);
+const countObjectProps = (obj)=>Object.getOwnPropertyNames(obj).length;
+const ReservedPropNames1 = Object.freeze([
+    "children"
+]);
+const equalObjectsPropsCount = (obj1, obj2)=>countObjectProps(obj1) === countObjectProps(obj2);
+const existsObject = (obj)=>obj != null;
+const existsObjects = (obj1, obj2)=>existsObject(obj1) && existsObject(obj2);
+const isObjectType = (value)=>typeof value === "object" && value !== null;
+const isReservedObjectPropName = (propName)=>ReservedPropNames1.includes(propName);
+const equalArraysLength = (arr1, arr2)=>arr1.length === arr2.length;
+const existsArray = (arr)=>arr != null;
+const existsArrays = (arr1, arr2)=>existsArray(arr1) && existsArray(arr2);
+const isArrayType = (value)=>value instanceof Array;
+const isFunctionType = (value)=>typeof value === "function";
+const equalArrayItems = (arr1, arr2)=>arr1.every((_, index)=>equalValues(arr1[index], arr2[index]));
+const equalArrays = (arr1, arr2)=>(!existsArrays(arr1, arr2) && equalPrimitives || !equalArraysLength(arr1, arr2) && falsy || equalArrayItems)(arr1, arr2);
+const equalValues = (value1, value2)=>(isFunctionType(value1) && isFunctionType(value2) && truthy || isArrayType(value1) && isArrayType(value2) && equalArrays || isObjectType(value1) && isObjectType(value2) && equalObjects || equalPrimitives)(value1, value2);
+const equalObjectsProp = (obj1, obj2, propName)=>isReservedObjectPropName(propName) || equalValues(obj1[propName], obj2[propName]);
+const equalObjectsProps = (obj1, obj2)=>getObjectPropNames(obj1).every((propName)=>equalObjectsProp(obj1, obj2, propName));
+const equalObjects = (obj1, obj2)=>(!existsObjects(obj1, obj2) && equalPrimitives || !equalObjectsPropsCount(obj1, obj2) && falsy || equalObjectsProps)(obj1, obj2);
 const equalElementNames = (elem, $elem)=>getJsxName(elem) === getHtmlName($elem);
 const equalElementProps = (elem, $elem)=>equalObjects(getJsxElementProps(elem), getJsxElementProps(getJsxElement($elem)));
 const equalElementTexts = (elem, $elem)=>getJsxText(elem) === getHtmlText($elem);
 const isStyleElement = (elem)=>getHtmlName(elem) === "style";
 const isUpdatedElement = ($elem)=>isHtmlElement($elem);
 const shouldRenderChildren = ($elem)=>!isStyleElement($elem) && !isIgnoredElement($elem) && !isHtmlText($elem);
-const resolveJsxChildren = (elem, $elem)=>isJsxFactory(elem) && buildJsxFactoryChildren(elem, $elem) || isJsxElement(elem) && sanitizeJsxChildren(elem) || [];
-const renderHtmlElement = (elem, $parent)=>{
-    throwError(validateHtmlTagName(getJsxName(elem)));
-    const document = getHtmlOwnerDocument($parent);
-    const ns = getElementNS(elem) || getHtmlElementNS($parent);
-    const $elem = ns ? createHtmlElementNS(document, ns, getJsxName(elem)) : createHtmlElement(document, getJsxName(elem));
-    setHtmlElement($elem, elem);
-    appendHtmlNode($elem, $parent);
-    enableIgnoring($elem, $parent);
-    enableLogging($elem, $parent);
-    storeInternals($elem, elem);
-    setStates($elem);
-    setEffects($elem);
-    setContexts($elem);
-    return $elem;
-};
+const shouldRenderElement = ($elem)=>!existsElement($elem);
+const shouldReplaceElement = (elem, $elem)=>!equalElementNames(elem, $elem);
+const shouldUnrenderElement = (elem)=>!existsElement(elem);
+const shouldUpdateElement = (elem, $elem)=>equalElementNames(elem, $elem) && (isJsxElement(elem) || isJsxFactory(elem) && !equalElementProps(elem, $elem) || isJsxText(elem) && !equalElementTexts(elem, $elem));
 const renderElement = (elem, $parent)=>(isJsxText(elem) ? renderHtmlText : renderHtmlElement)(elem, $parent);
 const renderElements = (elem, $parent = parseHtml("<main></main>"))=>{
     isJsxText(elem) || throwError(validateHtmlElement($parent));
@@ -535,10 +418,33 @@ const renderElements = (elem, $parent = parseHtml("<main></main>"))=>{
     }
     return rendered;
 };
-const resolveHtmlChildren = ($elem, children)=>existsElement(children[0]) && isJsxKeyElement(children[0]) ? orderElementKeys(children, getHtmlChildNodes($elem), $elem) : getHtmlChildNodes($elem);
-const shouldRenderElement = ($elem)=>!existsElement($elem);
-const shouldReplaceElement = (elem, $elem)=>!equalElementNames(elem, $elem);
-const shouldUnrenderElement = (elem)=>!existsElement(elem);
+const replaceElement = ($elem, $oldElem)=>(logElement($oldElem, "replace"), isHtmlText($oldElem) ? replaceHtmlNode($elem, $oldElem) : replaceHtmlNode($elem, $oldElem), $elem);
+const getEffect = (effects, name)=>effects[name];
+const getEffects = (elem)=>elem.__effects;
+const runInitialFunc = (effect)=>effect.initialFunc?.();
+const runInitialEffects = (effects)=>effects ? Object.values(effects).map(runInitialFunc) : [];
+const setEffectDeps = (effect, deps)=>effect.deps = deps;
+const setEffectInitialFunc = (effect, func)=>effect.initialFunc = func;
+const setEffect = (effects, effect)=>effects[effect.name] = effect;
+const setEffects = (elem, effects = {})=>elem.__effects = elem.__effects ?? effects;
+const createEffect = (name, deps)=>({
+        name,
+        deps
+    });
+const existsEffect = (effects, name)=>effects[name];
+const isDefaultDeps = (deps)=>deps === undefined;
+const useEffect = (effects, name, func, deps)=>{
+    if (!existsEffect(effects, name)) {
+        setEffect(effects, createEffect(name, deps));
+        return func();
+    }
+    const effect = getEffect(effects, name);
+    runInitialFunc(effect);
+    setEffectInitialFunc(effect, undefined);
+    if (equalArrays(effect.deps, deps) && !isDefaultDeps(deps)) return;
+    setEffectDeps(effect, deps);
+    return func();
+};
 const unrenderElement = ($elem)=>(logElement($elem, "unrender"), isHtmlText($elem) ? unrenderHtmlText($elem) : (runInitialEffects(getEffects($elem)), unrenderHtmlElement($elem)));
 const unrenderElements = ($elem)=>{
     isHtmlText($elem) || throwError(validateHtmlElement($elem));
@@ -548,9 +454,8 @@ const unrenderElements = ($elem)=>{
     for (const $elem of unrendered)shouldRenderChildren($elem) && getHtmlChildNodes($elem).forEach(($child)=>unrendered.push(unrenderElement($child)));
     return unrendered;
 };
-const shouldUpdateElement = (elem, $elem)=>equalElementNames(elem, $elem) && (isJsxElement(elem) || isJsxFactory(elem) && !equalElementProps(elem, $elem) || isJsxText(elem) && !equalElementTexts(elem, $elem));
+const getMaxLengthElements = (elems, $elems)=>elems.length > $elems.length ? elems : $elems;
 const updateElement = (elem, $elem)=>(logElement($elem, "update"), (isJsxText(elem) ? updateHtmlText : updateHtmlElement)(elem, $elem));
-const replaceElement = ($elem, $oldElem)=>(logElement($oldElem, "replace"), isHtmlText($oldElem) ? replaceHtmlNode($elem, $oldElem) : replaceHtmlNode($elem, $oldElem), $elem);
 const reconcileElement = (elem, $elem, $parent)=>shouldRenderElement($elem) && renderElements(elem, $parent) || shouldUnrenderElement(elem) && unrenderElements($elem) || shouldUpdateElement(elem, $elem) && updateElement(elem, $elem) || shouldReplaceElement(elem, $elem) && [
         replaceElement(renderElements(elem, $parent)[0], $elem),
         unrenderElements($elem)
@@ -575,6 +480,31 @@ const render = (elem, $parent = parseHtml("<main></main>"))=>{
     $parent.ownerDocument.__unrender = $parent.ownerDocument.__unrender || unrenderElements;
     return renderElements(elem, $parent)[0];
 };
+export { updateElements as update };
+export { unrenderElements as unrender };
+export { render as render };
+const setContext = (contexts, context)=>contexts[context.name] = context;
+const setContexts = (elem, contexts = {})=>elem.__contexts = elem.__contexts ?? contexts;
+const setContextValue = (context, value)=>(context.value = value, context);
+const createContext = (name, value)=>({
+        name,
+        value
+    });
+const getContext = (contexts, name)=>contexts[name];
+const getContexts = (elem)=>elem.__contexts;
+const existsContext = (contexts, name)=>name in contexts;
+const isContextConsumer = (elem, name)=>getHtmlName(elem) !== "context" && existsContext(getContexts(elem), name);
+const isContextProducer = (elem, name)=>getHtmlName(elem) === "context" && existsContext(getContexts(elem), name);
+const findProducer = (elem, name)=>findHtmlAscendant(elem, (elem)=>isContextProducer(elem, name));
+const getContextValue = (contexts, name)=>getContext(contexts, name).value;
+const getProducerContextValue = (name, fallbackValue, elem)=>{
+    const producer = findProducer(elem, name);
+    if (!producer) return fallbackValue;
+    const contexts = getContexts(producer);
+    const context = getContext(contexts, name);
+    return context.value;
+};
+const findConsumer = (elem, name)=>findHtmlDescendants(elem, (elem)=>isContextConsumer(elem, name));
 const updateConsumerContext = (name, value, elem)=>{
     const contexts = getContexts(elem);
     const context = getContext(contexts, name);
@@ -604,15 +534,17 @@ const useContext = (contexts, name, initialValue, elem)=>{
     ];
 };
 const Context = ({ name, value, children }, elem)=>{
-    const contexts = getContexts(elem);
-    const effects = getEffects(elem);
-    const [, setContext] = useContext(contexts, name, value, elem);
-    useEffect(effects, "setcontext", ()=>setContext(value, elem), [
+    const [, setContext] = useContext(setContexts(elem), name, value, elem);
+    useEffect(setEffects(elem), "setcontext", ()=>setContext(value, elem), [
         value
     ]);
     return children;
 };
-export { Context as Context };
+const getErrorPath = (boundary, elem, names = [])=>{
+    if (!elem) return;
+    names.push(getHtmlName(elem));
+    return boundary === elem ? names.reverse().join("/") : getErrorPath(boundary, elem.parentElement, names);
+};
 const ErrorBoundary = ({ path, error, children }, elem)=>{
     setEventHandler(elem, "onerror", (event)=>{
         event.stopPropagation();
@@ -632,6 +564,61 @@ const updateErrorBoundary = (elem, event)=>{
         error: error?.message
     }));
 };
+const createMemo = (name, value, deps)=>({
+        name,
+        value,
+        deps
+    });
+const setMemo = (states, memo)=>states[memo.name] = memo;
+const setMemoDeps = (memo, deps)=>memo.deps = deps;
+const setMemoValue = (memo, value)=>memo.value = value;
+const getMemo = (memos, name)=>memos[name];
+const getMemoUsage = (memo)=>[
+        memo.value,
+        (func)=>setMemoValue(memo, func())
+    ];
+const existsMemo = (states, name)=>states[name];
+const isDefaultDeps1 = (deps)=>deps === undefined;
+const useMemo = (states, name, func, deps)=>{
+    if (!existsMemo(states, name)) {
+        const memo = setMemo(states, createMemo(name, func(), deps));
+        return getMemoUsage(memo);
+    }
+    const memo = getMemo(states, name);
+    if (equalArrays(memo.deps, deps) && !isDefaultDeps1(deps)) return getMemoUsage(memo);
+    setMemoDeps(memo, deps);
+    setMemoValue(memo, func());
+    return getMemoUsage(memo);
+};
+const setState = (states, state)=>states[state.name] = state;
+const setStateDeps = (state, deps)=>state.deps = deps;
+const setStateValue = (state, value)=>state.value = value;
+const setStates = (elem, states = {})=>elem.__states = elem.__states ?? states;
+const getState = (states, name)=>states[name];
+const getStateUsage = (state)=>[
+        state.value,
+        (value)=>setStateValue(state, value)
+    ];
+const createState = (name, value, deps)=>({
+        name,
+        value,
+        deps
+    });
+const existsState = (states, name)=>states[name];
+const isDefaultDeps2 = (deps)=>deps === undefined;
+const useState = (states, name, value, deps)=>{
+    if (!existsState(states, name)) {
+        const state = setState(states, createState(name, value, deps));
+        return getStateUsage(state);
+    }
+    const state = getState(states, name);
+    if (equalArrays(state.deps, deps) && !isDefaultDeps2(deps)) return getStateUsage(state);
+    setStateDeps(state, deps);
+    setStateValue(state, value);
+    return getStateUsage(state);
+};
+const Suspense = ({ suspending = true, fallback, children })=>suspending ? fallback : children;
+const isSuspenseElement = (elem)=>getHtmlName(elem) === "suspense";
 const toggleSuspense = (elem, suspending)=>{
     const $suspense = findHtmlAscendant(elem, isSuspenseElement);
     if (!$suspense) return elem;
@@ -643,24 +630,30 @@ const toggleSuspense = (elem, suspending)=>{
 };
 const suspense = (elem)=>toggleSuspense(elem, true);
 const unsuspense = (elem)=>toggleSuspense(elem, false);
+const isFunctionLazyLoader = (loader)=>typeof loader === "function";
+const validateLazyLoader = (loader)=>isFunctionLazyLoader(loader) ? "" : "Lazy loader should be function.";
 const Lazy = (props, elem)=>{
     throwError(validateHtmlElement(elem));
     throwError(validateLazyLoader(props.loader));
     const loader = props.loader;
-    const effects = getEffects(elem);
-    const states = getStates(elem);
-    const [factory, setFactory] = useState(states, "factory", undefined, []);
+    const [factory, setFactory] = useState(setStates(elem), "factory", undefined, []);
     if (factory) return createJsxElement(factory, props);
-    useEffect(effects, "suspense", ()=>suspense(elem));
-    useEffect(effects, "load", async ()=>{
+    useEffect(setEffects(elem), "suspense", ()=>suspense(elem));
+    useEffect(setEffects(elem), "load", async ()=>{
         const factory = await loader();
         setFactory(factory);
         unsuspense(elem);
         render(createJsxElement(factory, props), elem);
     });
 };
-export { updateElements as update };
-export { unrenderElements as unrender };
+const setServices = (elem, services)=>elem.ownerDocument.__services = services;
+const Services = (props, elem)=>{
+    setServices(elem, props);
+    return props.children;
+};
+const getService = (elem, name, fallback)=>getServices(elem)?.[name] ?? fallback;
+const getServices = (elem)=>elem.ownerDocument.__services;
+export { Context as Context };
 export { getContexts as getContexts };
 export { setContexts as setContexts };
 export { useContext as useContext };
@@ -670,7 +663,6 @@ export { Services as Services };
 export { getService as getService };
 export { Suspense as Suspense };
 export { suspense as suspense, unsuspense as unsuspense };
-export { render as render };
 export { dispatchEvent as dispatchEvent };
 export { setEventHandler as setEventHandler };
 try {
@@ -682,5 +674,5 @@ try {
     console.error(error);
     throw error;
 }
-export { useEffect as useEffect, getEffects as getEffects };
-export { useMemo as useMemo, useState as useState, getStates as getStates };
+export { setEffects as setEffects, useEffect as useEffect };
+export { setStates as setStates, useMemo as useMemo, useState as useState };
