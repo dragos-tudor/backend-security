@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
 using Security.Authentication;
-using static Security.Authentication.AuthenticationFuncs;
 
 namespace Security.Authorization;
 

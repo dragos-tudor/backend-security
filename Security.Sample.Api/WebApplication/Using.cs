@@ -10,5 +10,7 @@ partial class SampleFuncs
       .UseCors()
       .UseRouting()
       .UseAuthentication(AuthenticateCookie)
-      .UseAuthorization(ChallengeCookie, ForbidCookie);
+      .UseAuthorization(
+        ChallengeAuth<CookieAuthenticationOptions>,
+        ForbidAuth<CookieAuthenticationOptions>);
 }

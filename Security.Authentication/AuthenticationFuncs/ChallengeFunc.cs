@@ -5,4 +5,5 @@ namespace Security.Authentication;
 
 public delegate string? ChallengeFunc(
   HttpContext context,
-  AuthenticationProperties authProperties);
+  AuthenticationProperties authProperties
+);

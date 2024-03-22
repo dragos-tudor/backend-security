@@ -5,4 +5,5 @@ namespace Security.Authentication;
 
 public delegate string? ForbidFunc(
   HttpContext context,
-  AuthenticationProperties authProperties);
+  AuthenticationProperties authProperties
+);
