@@ -22,7 +22,7 @@ partial class OAuthFuncs
       UseCodeChallenge(authProperties, authParams, GenerateCodeVerifier());
 
     var callbackUrl = BuildAbsoluteUrl(context.Request, authOptions.CallbackPath);
-    var redirectUri = GetRequestQueryReturnUrl(context.Request, authOptions.ReturnUrlParameter)!;
+    var redirectUri = GetRequestQueryValue(context.Request, authOptions.ReturnUrlParameter)!; // TODO: investigate security risk for absolute url
     SetAuthorizationAuthenticationProperties(authProperties, callbackUrl, correlationId, redirectUri);
     SetAuthorizationParams(authParams, authOptions, callbackUrl,
       ProtectAuthenticationProperties(authProperties, propertiesDataFormat));

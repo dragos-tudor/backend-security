@@ -11,5 +11,5 @@ partial class CookiesFuncs
     AuthenticationProperties authProperties,
     CookieAuthenticationOptions authOptions) =>
       GetAuthenticationPropertiesRedirectUri(authProperties) ??
-      GetRequestQueryReturnUrl(context.Request, authOptions.ReturnUrlParameter);
+      GetRequestQueryValue(context.Request, authOptions.ReturnUrlParameter);
 }
