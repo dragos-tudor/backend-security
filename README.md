@@ -1,8 +1,9 @@
 
 ## ASPNET Security libraries
 - simplified ASPNET Security-like libraries.
+- rewritten from scratch ASPNET Security libraries.
 - "light" functional-style libraries [90% OOP-free].
-- **samples projects wip**
+- **sample projects wip**
 
 ### Security libraries
 - [Authentication.Cookies](/Security.Authentication.Cookies/).
