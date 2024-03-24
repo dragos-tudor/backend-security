@@ -1,4 +1,4 @@
-import { getErrorDescription } from "../error/getting.js"
+import { getErrorDescription } from "./getting.js"
 const { NavLink } = await import("/scripts/routing.js")
 
 export const Forbidden = ({location}) =>
