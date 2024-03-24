@@ -10,6 +10,7 @@ partial class SampleFuncs
     CookieAuthenticationOptions authOptions,
     CredentialsDto credentials)
   {
+    await SimulateLongProcess(2000);
     if (ValidateCredentials(credentials) is string valError)
       return BadRequest(valError);
 
