@@ -1,4 +1,4 @@
-import { selectUserAuthenticated } from "../support/store/selecting.js";
+import { selectUserAuthenticated } from "../support/store/selectors.js";
 import { Logout } from "../logout/logout.jsx"
 import { useSelector } from "../scripts/extending.js"
 const { NavLink } = await import("/scripts/routing.js")

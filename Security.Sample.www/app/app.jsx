@@ -1,7 +1,8 @@
-import { createAppReducer, createAppState } from "../support/store/creating.js";
 import { Header } from "../header/header.jsx"
 import { Footer } from "../footer/footer.jsx"
 import { Routes } from "../routes/routes.jsx"
+import { createAppState } from "../support/store/states.js"
+import { createAppReducer } from "../support/store/reducers.js"
 import { useEffect } from "../scripts/extending.js"
 import { getApiUrl, getFetchApi } from "./getting.js";
 import { startApp } from "./starting.js"

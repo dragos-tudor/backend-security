@@ -157,10 +157,10 @@ const setHtmlProperty = (props)=>(elem, propName)=>{
         return elem;
     };
 const setHtmlProperties = (elem, props)=>getValidPropNames(elem, props).reduce(setHtmlProperty(props), elem);
-const unsetAttribute = (elem, attrName)=>elem.setAttribute?.(attrName, undefined);
+const removeAttribute = (elem, attrName)=>elem.removeAttribute(attrName);
 const unsetHtmlProperty = (elem, propName)=>{
     const htmlPropName = mapPropName(propName);
-    isHtmlPropName(elem, htmlPropName) && isWritableHtmlProp(elem, propName) ? elem[htmlPropName] = undefined : unsetAttribute(elem, htmlPropName);
+    isHtmlPropName(elem, htmlPropName) && isWritableHtmlProp(elem, propName) ? elem[htmlPropName] = undefined : removeAttribute(elem, htmlPropName);
     return elem;
 };
 const unsetHtmlProperties = (elem, props)=>getValidPropNames(elem, props).reduce(unsetHtmlProperty, elem);

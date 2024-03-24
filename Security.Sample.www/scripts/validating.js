@@ -39,7 +39,9 @@ const validateProps = (obj, validators, errors = validationErrors)=>{
     });
 };
 export { validate as validate, validateProps as validateProps };
-const isEmptyValue = (value)=>value === null || value === undefined || value === "";
+const isEmptyString = (value)=>value === "";
+const isEmptyValue = (value)=>isNullValue(value) || isEmptyString(value);
+const isNullValue = (value)=>value == null;
 const contains = (token)=>(str, errors = validationErrors)=>isEmptyValue(str) || str.includes(token) ? null : errors["contains"].replace("#token", token);
 const isDateValue = (value)=>{
     if (value instanceof Date) return true;

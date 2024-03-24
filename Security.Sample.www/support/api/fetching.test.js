@@ -39,7 +39,7 @@ Deno.test("fetch api", async t => {
     await fetch("", {})
 
     assertSpyCalls(navigationSpy, 1)
-    assertSpyCallArg(navigationSpy, 0, RoutePaths.accessdenied)
+    assertSpyCallArg(navigationSpy, 0, RoutePaths.forbidden)
   })
 
   await t.step("bad request => fetch api => response error", async () =>

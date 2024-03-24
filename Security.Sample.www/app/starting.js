@@ -8,6 +8,8 @@ export const startApp = async (fetchApi, elem) =>
 {
   const result = await getUserApi(fetchApi)
   const [user, error] = result
+
+  if (error) navigate(elem, RoutePaths.login)
   if (error) return result
 
   dispatchAction(elem, createSetUserAction(user))

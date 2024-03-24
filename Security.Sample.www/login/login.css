@@ -20,6 +20,11 @@ login .remote-authentication {
   border: 3px solid var(--dark-primary-color);
 }
 
+login .local-authentication .error {
+  justify-self: start;
+  color: var(--error-color)
+}
+
 login .or {
   margin: 1em;
   color: var(--light-primary-color);

@@ -1,18 +1,28 @@
-import { google, facebook, twitter } from "../images/icons.jsx"
+import { google, facebook, twitter, spinner } from "../images/icons.jsx"
 import { encodeLocationUrl } from "../support/locations/encoding.js"
 import { getLocationUrl } from "../support/locations/getting.js"
-import { updateState, useState } from "../scripts/extending.js"
 import { getFetchApiService, getApiUrlService } from "../support/services/getting.js"
-import { signInUser } from "./signingin.js"
+import { updateState, useState } from "../scripts/extending.js"
+import { createCredentials } from "./creating.js"
+import { signInClick } from "./signingin.js"
+import { validateCredentials } from "./validating.js"
+
 
 export const Login = (props, elem) =>
 {
   const apiUrl = getApiUrlService(elem)
   const fetchApi = getFetchApiService(elem)
+
   const currentUrl = getLocationUrl(props.location)
   const returnUrl = encodeLocationUrl(currentUrl)
-  const [userName, setUserName] = useState(elem, "userName", "", [])
-  const [password, setPassword] = useState(elem, "password", "", [])
+
+  const [userName, setUserName] = useState(elem, "userName", null, [])
+  const [password, setPassword] = useState(elem, "password", null, [])
+  const [signing, setSigning] = useState(elem, "signing", false, [])
+
+  const credentials = createCredentials(userName, password)
+  const validationResult = validateCredentials(credentials)
+  const validCredentials = validationResult.isValid
 
   return <>
     <style css={css}></style>
@@ -26,7 +36,16 @@ export const Login = (props, elem) =>
         <input id="password" type="password" onchange={updateState(setPassword, elem)} placeholder="password here"/>
       </div>
       <div>
-        <button onclick={() => signInUser({userName, password}, fetchApi, elem)}>Signin with credentials</button>
+        <button class="signing" disabled={signing} onclick={() => validCredentials && signInClick(credentials, fetchApi, setSigning, elem)}>
+          <span hidden={!signing}>{spinner}</span>
+          <span>Signin with credentials</span>
+        </button>
+      </div>
+      <div class="error" hidden={userName == null || !validationResult.userName}>
+        {"User name " + validationResult.userName}
+      </div>
+      <div class="error" hidden={password == null || !validationResult.password}>
+        {"Password " + validationResult.password}
       </div>
     </section>
     <div class="or">or</div>
@@ -67,6 +86,11 @@ login .remote-authentication {
   padding: 1em;
   border-radius: var(--default-radius);
   border: 3px solid var(--dark-primary-color);
+}
+
+login .local-authentication .error {
+  justify-self: start;
+  color: var(--error-color)
 }
 
 login .or {

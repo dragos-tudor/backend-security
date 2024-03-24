@@ -1,4 +1,4 @@
-import { selectUser } from "../support/store/selecting.js"
+import { selectUser } from "../support/store/selectors.js"
 import { useSelector } from "../scripts/extending.js"
 import { concatClaim } from "./concating.js"
 

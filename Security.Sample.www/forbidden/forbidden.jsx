@@ -1,7 +1,7 @@
-import { getErrorDescription } from "./getting.js"
+import { getErrorDescription } from "../error/getting.js"
 const { NavLink } = await import("/scripts/routing.js")
 
-export const AccessDenied = ({location}) =>
+export const Forbidden = ({location}) =>
   <>
     <style css={css}></style>
     <h3>Access denied</h3>
@@ -9,15 +9,15 @@ export const AccessDenied = ({location}) =>
     <p>You are not authorize to access resource.</p>
     <p>{getErrorDescription(location ?? globalThis.location)}</p>
 
-    <NavLink href="/login">Go to login</NavLink>
+    <NavLink href="/home">Go to home</NavLink>
   </>
 
 const css = `
-access-denied {
+forbidden {
   display: block;
   margin: 3rem;
 }
 
-access-denied h3 {
+forbidden h3 {
   color: var(--error-color)
 }`

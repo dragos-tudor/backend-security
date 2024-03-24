@@ -1,9 +1,9 @@
 
-access-denied {
+forbidden {
   display: block;
   margin: 3rem;
 }
 
-access-denied h3 {
+forbidden h3 {
   color: var(--error-color)
 }
