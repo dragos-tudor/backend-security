@@ -3,16 +3,17 @@
   --ff-serif: Georgia, 'Times New Roman', Times, serif;
   --ff-sans-serif: Arial, Helvetica, sans-serif;
 
-  --light-primary-color: rgb(168, 166, 166);
-  --primary-color: rgb(49, 46, 46);
-  --dark-primary-color: rgb(41, 39, 39);
+  --light-neutral-color: rgb(168, 166, 166);
+  --neutral-color: rgb(49, 46, 46);
+  --dark-neutral-color: rgb(41, 39, 39);
 
-  --light-secondary-color: rgb(250, 221, 169);
-  --secondary-color: rgb(255, 192, 74);
-  --dark-secondary-color: rgb(255, 153, 0);
+  --light-accent-color: rgb(250, 221, 169);
+  --accent-color: rgb(255, 192, 74);
+  --dark-accent-color: rgb(255, 153, 0);
 
-  --text-color: rgb(235, 235, 235);
   --label-color: rgb(140, 231, 140);
+  --info-color: rgb(235, 235, 235);
+  --warning-color: rgb(255, 253, 111);
   --error-color: rgb(252, 89, 89);
 
   --default-font-size: 1.6em;
@@ -29,8 +30,8 @@ html {
 
 body {
   font-size: var(--default-font-size);
-  background-color: var(--primary-color);
-  color: var(--text-color);
+  background-color: var(--neutral-color);
+  color: var(--info-color);
 }
 
 * {
@@ -49,11 +50,11 @@ a {
   transition: color var(--default-transition) ease-in-out;
   border: 0;
   border-radius: var(--default-radius);
-  color: var(--secondary-color);
+  color: var(--accent-color);
 }
 
 a:hover, a:focus {
-  color: var(--dark-secondary-color);
+  color: var(--dark-accent-color);
 }
 
 a * {
@@ -66,13 +67,13 @@ input {
   font-size: 1em;
   outline: 0;
   transition: border-color var(--default-transition) ease-in-out;
-  border: 1px solid var(--dark-primary-color);
-  background-color: var(--dark-primary-color);
-  color: var(--light-primary-color);
+  border: 1px solid var(--dark-neutral-color);
+  background-color: var(--dark-neutral-color);
+  color: var(--light-neutral-color);
 }
 
 input:hover, input:focus {
-  border-color: var(--text-color);
+  border-color: var(--info-color);
 }
 
 
@@ -82,10 +83,10 @@ button {
   outline: 0;
   cursor: pointer;
   transition: color var(--default-transition) ease-in-out, border-color var(--default-transition);
-  border: 1px solid var(--secondary-color);
+  border: 1px solid var(--accent-color);
   border-radius: var(--default-radius);
-  color: var(--secondary-color);
-  background-color: var(--dark-primary-color);
+  color: var(--accent-color);
+  background-color: var(--dark-neutral-color);
 }
 
 button * {
@@ -93,14 +94,14 @@ button * {
 }
 
 button:hover, button:focus {
-  color: var(--dark-secondary-color);
-  border-color: var(--dark-secondary-color);
+  color: var(--dark-accent-color);
+  border-color: var(--dark-accent-color);
 }
 
 button:disabled {
   cursor: default;
-  color: var(--light-primary-color);
-  border-color: var(--light-primary-color);
+  color: var(--light-neutral-color);
+  border-color: var(--light-neutral-color);
 }
 
 

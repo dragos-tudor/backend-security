@@ -6,12 +6,10 @@ const { dispatchAction } = await import("/scripts/states.js")
 
 export const signOutUser = async (fetchApi, elem) =>
 {
-  const result = await signOutAccoutApi(fetchApi)
-  const [, error] = result
-  if (error) return result
+  const [_, error] = await signOutAccoutApi(fetchApi)
+  if (error) return [, error]
 
   dispatchAction(elem, createSetUserAction(null))
   navigate(elem, RoutePaths.login)
-
-  return result
+  return [_]
 }

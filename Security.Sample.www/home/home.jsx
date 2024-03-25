@@ -30,5 +30,5 @@ home {
 }
 
 home .user-detail {
-  color: var(--text-color)
+  color: var(--info-color)
 }`

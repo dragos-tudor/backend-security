@@ -85,7 +85,7 @@ login .local-authentication,
 login .remote-authentication {
   padding: 1em;
   border-radius: var(--default-radius);
-  border: 3px solid var(--dark-primary-color);
+  border: 3px solid var(--dark-neutral-color);
 }
 
 login .local-authentication .error {
@@ -95,7 +95,7 @@ login .local-authentication .error {
 
 login .or {
   margin: 1em;
-  color: var(--light-primary-color);
+  color: var(--light-neutral-color);
 }
 
 login .remote-authentication .auth-provider {

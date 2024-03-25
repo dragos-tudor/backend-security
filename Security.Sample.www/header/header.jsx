@@ -15,7 +15,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: var(--dark-primary-color);
+  background-color: var(--dark-neutral-color);
 }
 
 header .logo {

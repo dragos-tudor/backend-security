@@ -15,10 +15,10 @@ export const signInClick = async (credentials, fetchApi, setSigning, elem) =>
 
 export const signInUser = async (credentials, fetchApi, elem) =>
 {
-  const result = await signInAccountApi(credentials, fetchApi)
-  const [user] = result
+  const [user, error] = await signInAccountApi(credentials, fetchApi)
+  if (error) return [, error]
 
-  user && dispatchAction(elem, createSetUserAction(user))
-  user && navigate(elem, RoutePaths.home)
-  return result
+  dispatchAction(elem, createSetUserAction(user))
+  navigate(elem, RoutePaths.home)
+  return [user]
 }

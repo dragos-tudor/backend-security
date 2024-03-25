@@ -6,13 +6,11 @@ const { dispatchAction } = await import("/scripts/states.js")
 
 export const startApp = async (fetchApi, elem) =>
 {
-  const result = await getUserApi(fetchApi)
-  const [user, error] = result
-
+  const [user, error] = await getUserApi(fetchApi)
   if (error) navigate(elem, RoutePaths.login)
-  if (error) return result
+  if (error) return [, error]
 
   dispatchAction(elem, createSetUserAction(user))
   navigate(elem, RoutePaths.home)
-  return result
+  return [user]
 }

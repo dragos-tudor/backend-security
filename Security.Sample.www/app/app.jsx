@@ -6,7 +6,6 @@ import { createAppReducer } from "../support/store/reducers.js"
 import { useEffect } from "../scripts/extending.js"
 import { getApiUrl, getFetchApi } from "./getting.js";
 import { startApp } from "./starting.js"
-
 const { Services } = await import("/scripts/rendering.js")
 const { Router } = await import("/scripts/routing.js")
 const { Store } = await import("/scripts/states.js")
@@ -14,10 +13,10 @@ const { Store } = await import("/scripts/states.js")
 
 export const App = (props, elem) =>
 {
-  const appState = createAppState()
-  const appReducer = createAppReducer()
   const apiUrl = getApiUrl(props)
   const fetchApi = getFetchApi(props)
+  const appState = createAppState()
+  const appReducer = createAppReducer()
 
   useEffect(elem, "startapp", () => startApp(fetchApi, elem), [])
   return <>

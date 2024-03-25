@@ -21,7 +21,7 @@ const css = `
 footer {
   text-align: center;
   vertical-align: middle;
-  background-color: var(--dark-primary-color);
+  background-color: var(--dark-neutral-color);
 }
 
 footer .social-icons {
@@ -34,6 +34,6 @@ footer .social-icons .social-icon {
 
 footer .me {
   margin: 0.5rem;
-  color: var(--light-primary-color);
+  color: var(--light-neutral-color);
 }
 `
