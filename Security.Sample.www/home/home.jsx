@@ -1,3 +1,4 @@
+import { getLabel } from "../languages/labels.js"
 import { selectUser } from "../support/store/selectors.js"
 import { useSelector } from "../scripts/extending.js"
 import { concatClaim } from "./concating.js"
@@ -8,15 +9,15 @@ export const Home = (props, elem) =>
   return <>
     <style css={css}></style>
     <div class="user-detail">
-      <label>User name:</label>
+      <label>{getLabel("userName") + ": "}</label>
       <span>{user?.userName}</span>
     </div>
     <div class="user-detail">
-      <label>Scheme name:</label>
+      <label>{getLabel("schemeName") + ": "}</label>
       <span>{user?.schemeName}</span>
     </div>
     <div class="user-detail">
-      <label>User claims:</label>
+      <label>{getLabel("userClaims") + ": "}</label>
       <span>{user?.userClaims?.reduce(concatClaim, "")}</span>
     </div>
     {props.children}

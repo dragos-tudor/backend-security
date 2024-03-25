@@ -1,15 +1,16 @@
+import { getLabel } from "../languages/labels.js"
 import { getErrorDescription } from "./getting.js"
 const { NavLink } = await import("/scripts/routing.js")
 
 export const Forbidden = ({location}) =>
   <>
     <style css={css}></style>
-    <h3>Access denied</h3>
+    <h3>{getLabel("accessDenied")}</h3>
 
-    <p>You are not authorize to access resource.</p>
+    <p>{getLabel("unauthorized")}</p>
     <p>{getErrorDescription(location ?? globalThis.location)}</p>
 
-    <NavLink href="/home">Go to home</NavLink>
+    <NavLink href="/home">{getLabel("gotoHome")}</NavLink>
   </>
 
 const css = `

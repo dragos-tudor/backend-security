@@ -1,4 +1,5 @@
 import { google, facebook, twitter, spinner } from "../images/icons.jsx"
+import { getLabel } from "../languages/labels.js"
 import { encodeLocationUrl } from "../support/locations/encoding.js"
 import { getLocationUrl } from "../support/locations/getting.js"
 import { getFetchApiService, getApiUrlService } from "../support/services/getting.js"
@@ -28,39 +29,41 @@ export const Login = (props, elem) =>
     <style css={css}></style>
     <section class="local-authentication">
       <div>
-        <label for="userName">User name</label>
-        <input id="userName" type="text" onchange={updateState(setUserName, elem)} placeholder="user name here"/>
+        <label for="userName">{getLabel("userName")}</label>
+        <input id="userName" type="text" onchange={updateState(setUserName, elem)} placeholder={getLabel("userName")}/>
       </div>
       <div>
-        <label for="password">Password</label>
-        <input id="password" type="password" onchange={updateState(setPassword, elem)} placeholder="password here"/>
+        <label for="password">{getLabel("password")}</label>
+        <input id="password" type="password" onchange={updateState(setPassword, elem)} placeholder={getLabel("password")}/>
       </div>
       <div>
         <button class="signing" disabled={signing} onclick={() => validCredentials && signInClick(credentials, fetchApi, setSigning, elem)}>
           <span hidden={!signing}>{spinner}</span>
-          <span>Signin with credentials</span>
+          <span>{getLabel("signin")}</span>
         </button>
       </div>
       <div class="error" hidden={userName == null || !validationResult.userName}>
-        {"User name " + validationResult.userName}
+        <label>{getLabel("userName")}</label>
+        <span>{validationResult.userName}</span>
       </div>
       <div class="error" hidden={password == null || !validationResult.password}>
-        {"Password " + validationResult.password}
+        <label>{getLabel("password")}</label>
+        <span>{validationResult.password}</span>
       </div>
     </section>
     <div class="or">or</div>
     <section class="remote-authentication">
       <a class="auth-provider" href={`${apiUrl}/accounts/challenge-google?returnUrl=${returnUrl}`}>
         {google}
-        <span>Signin with Google</span>
+        <span>{getLabel("signinWithGoogle")}</span>
       </a>
-      <a class="auth-provider" href={`${apiUrl}/accounts/challenge-facebook?returnUrl=${returnUrl}"`}>
+      <a class="auth-provider" href={`${apiUrl}/accounts/challenge-facebook?returnUrl=${returnUrl}`}>
         {facebook}
-        <span>Signin with Facebook</span>
+        <span>{getLabel("signinWithFacebook")}</span>
       </a>
-      <a class="auth-provider" href={`${apiUrl}/accounts/challenge-twitter?returnUrl=${returnUrl}"`}>
+      <a class="auth-provider" href={`${apiUrl}/accounts/challenge-twitter?returnUrl=${returnUrl}`}>
         {twitter}
-        <span>Signin with Twitter</span>
+        <span>{getLabel("signinWithTwitter")}</span>
       </a>
     </section>
   </>

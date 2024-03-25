@@ -1,21 +1,21 @@
-const getEnglishErrors = ()=>Object.freeze({
-        contains: 'value not contains "#token"',
-        hasMaxLength: "maximum #max characters allowed",
-        hasMinLength: "minimum #min characters required",
-        isDate: "invalid date",
-        isEmail: "invalid email",
-        isInteger: "invalid integer",
-        isNumber: "invalid number",
-        inRange: "value is not between #min and #max",
-        isRequired: "value is required",
-        isString: "invalid string",
-        isUrl: "invalid url",
-        matchRegExp: "value not match expression"
-    });
+const errorMessages = Object.freeze({
+    contains: 'value not contains "#token"',
+    hasMaxLength: "maximum #max characters allowed",
+    hasMinLength: "minimum #min characters required",
+    isDate: "invalid date",
+    isEmail: "invalid email",
+    isInteger: "invalid integer",
+    isNumber: "invalid number",
+    inRange: "value is not between #min and #max",
+    isRequired: "value is required",
+    isString: "invalid string",
+    isUrl: "invalid url",
+    matchRegExp: "value not match expression"
+});
 const extendValidationErrors = (name, message, errors)=>Object.assign({}, errors, {
         [name]: message
     });
-let validationErrors = getEnglishErrors();
+let validationErrors = errorMessages;
 const getValidationErrors = ()=>validationErrors;
 const setValidationErrors = (errors)=>validationErrors = errors;
 const setValidationError = (validatorName, error, errors = validationErrors)=>validationErrors = extendValidationErrors(validatorName, error, errors);

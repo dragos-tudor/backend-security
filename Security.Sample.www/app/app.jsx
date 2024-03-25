@@ -18,7 +18,7 @@ export const App = (props, elem) =>
   const appState = createAppState()
   const appReducer = createAppReducer()
 
-  useEffect(elem, "startapp", () => startApp(fetchApi, elem), [])
+  useEffect(elem, "start-app", () => startApp(fetchApi, elem), [])
   return <>
     <style css={css}></style>
     <Router>

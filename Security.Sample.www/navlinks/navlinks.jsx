@@ -1,5 +1,6 @@
-import { selectUserAuthenticated } from "../support/store/selectors.js";
+import { getLabel } from "../languages/labels.js"
 import { Logout } from "../logout/logout.jsx"
+import { selectUserAuthenticated } from "../support/store/selectors.js"
 import { useSelector } from "../scripts/extending.js"
 const { NavLink } = await import("/scripts/routing.js")
 
@@ -12,11 +13,11 @@ export const NavLinks = (props, elem) =>
     {
       authenticated?
         <nav>
-          <NavLink href="/home">Home</NavLink>
+          <NavLink href="/home">{getLabel("home")}</NavLink>
           <Logout></Logout>
         </nav>:
         <nav>
-          <NavLink href="/login">Login</NavLink>
+          <NavLink href="/login">{getLabel("login")}</NavLink>
         </nav>
     }
   </>

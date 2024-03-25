@@ -1,3 +1,4 @@
+import { getLabel } from "../languages/labels.js"
 import { getFetchApiService } from "../support/services/getting.js"
 import { signOutUser } from "./signingout.js"
 
@@ -8,7 +9,7 @@ export const Logout = (_, elem) =>
     <>
       <style css={css}></style>
       <button class="signout" onclick={() => signOutUser(fetchApi, elem)}>
-        Signout
+        {getLabel("signout")}
       </button>
     </>)
 }
