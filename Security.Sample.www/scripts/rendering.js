@@ -427,6 +427,7 @@ const setEffectDeps = (effect, deps)=>effect.deps = deps;
 const setEffectInitialFunc = (effect, func)=>effect.initialFunc = func;
 const setEffect = (effects, effect)=>effects[effect.name] = effect;
 const setEffects = (elem, effects = {})=>elem.__effects = elem.__effects ?? effects;
+const setInitialEffect = (effects, name, func)=>setEffectInitialFunc(getEffect(effects, name), func);
 const createEffect = (name, deps)=>({
         name,
         deps
@@ -674,5 +675,5 @@ try {
     console.error(error);
     throw error;
 }
-export { setEffects as setEffects, useEffect as useEffect };
+export { setEffects as setEffects, useEffect as useEffect, setInitialEffect as setInitialEffect };
 export { setStates as setStates, useMemo as useMemo, useState as useState };

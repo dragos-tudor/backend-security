@@ -1,5 +1,8 @@
 const { getStoreStates, setSelectors, useSelector: _useSelector, dispatchAction: _dispatchAction } = await import("/scripts/states.js")
-const { setEffects, setStates, update, useEffect: _useEffect, useState: _useState } = await import("/scripts/rendering.js")
+const { setEffects, setStates, update, useEffect: _useEffect, useState: _useState, setInitialEffect: _setInitialEffect } = await import("/scripts/rendering.js")
+
+export const setInitialEffect = (elem, name, func) =>
+  _setInitialEffect(setEffects(elem), name, func)
 
 export const useEffect = (elem, name, func, deps) =>
   _useEffect(setEffects(elem), name, func, deps)

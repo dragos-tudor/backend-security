@@ -1,6 +1,7 @@
 import { App } from "./app/app.jsx"
 import { createAppProps } from "./app/creating.js"
 import { Error } from "./error/error.jsx"
+import { existsErrorMessage } from "./error/verifying.js"
 import { updateError } from "./error/updating.js"
 import { getFetchApi } from "./support/api/fetching.js"
 import { createJsxElement } from "./support/jsx/creating.js"
@@ -16,10 +17,10 @@ const { navigate, Router } = await import("/scripts/routing.js")
 const fetchApi = getFetchApi(
   (url, request) => fetchWithTimeout(fetch, Settings.apiUrl + url, request, Settings.apiTimeout),
   (url) => navigate($router, url),
-  error => (logResponseError(error), updateError($error, error.message))
+  error => (logResponseError(error), existsErrorMessage(error) && updateError($error, error.message))
 )
 const appProps = createAppProps(fetchApi, Settings.apiUrl)
 
 const $app = render(createJsxElement(App, appProps), getHtmlBody(document))
-const $error = render(createJsxElement(Error, {}), getHtmlBody(document))
+const $error = render(createJsxElement(Error, {message: "some text here"}), getHtmlBody(document))
 const $router = getHtmlElement($app, Router.name)
