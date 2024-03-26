@@ -1,6 +1,7 @@
 import { Header } from "../header/header.jsx"
 import { Footer } from "../footer/footer.jsx"
 import { Routes } from "../routes/routes.jsx"
+import { Error } from "../error/error.jsx"
 import { createAppState } from "../support/store/states.js"
 import { createAppReducer } from "../support/store/reducers.js"
 import { useEffect } from "../scripts/extending.js"
@@ -29,6 +30,7 @@ export const App = (props, elem) =>
         <Footer></Footer>
       </layout>
     </Router>
+    <Error timeout={props.errorTimeout}></Error>
   </>
 }
 

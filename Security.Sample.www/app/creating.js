@@ -1,8 +1,9 @@
 import { ServiceNames } from "../support/services/names.js"
 
-export const createAppProps = (apiUrl, fetchApi, labels, validationErrors) => Object.freeze({
-  [ServiceNames.apiUrl]: apiUrl,
+export const createAppProps = (settings, fetchApi, labels, validationErrors) => Object.freeze({
+  [ServiceNames.apiUrl]: settings.apiUrl,
   [ServiceNames.fetchApi]: fetchApi,
   [ServiceNames.labels]: labels,
-  [ServiceNames.validationErrors]: validationErrors
+  [ServiceNames.validationErrors]: validationErrors,
+  errorTimeout: settings.errorTimeout
 })
