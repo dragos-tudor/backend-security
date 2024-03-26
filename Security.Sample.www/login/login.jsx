@@ -1,8 +1,7 @@
 import { google, facebook, twitter, spinner } from "../images/icons.jsx"
-import { getLabel } from "../languages/labels.js"
 import { encodeLocationUrl } from "../support/locations/encoding.js"
 import { getLocationUrl } from "../support/locations/getting.js"
-import { getFetchApiService, getApiUrlService } from "../support/services/getting.js"
+import { getApiUrl, getFetchApi, getLabels, getValidationErrors } from "../support/services/getting.js"
 import { updateState, useState } from "../scripts/extending.js"
 import { createCredentials } from "./creating.js"
 import { signInClick } from "./signingin.js"
@@ -11,8 +10,10 @@ import { validateCredentials } from "./validating.js"
 
 export const Login = (props, elem) =>
 {
-  const apiUrl = getApiUrlService(elem)
-  const fetchApi = getFetchApiService(elem)
+  const apiUrl = getApiUrl(elem)
+  const fetchApi = getFetchApi(elem)
+  const labels = getLabels(elem)
+  const validationErrors = getValidationErrors(elem)
 
   const currentUrl = getLocationUrl(props.location)
   const returnUrl = encodeLocationUrl(currentUrl)
@@ -22,32 +23,32 @@ export const Login = (props, elem) =>
   const [signing, setSigning] = useState(elem, "signing", false, [])
 
   const credentials = createCredentials(userName, password)
-  const validationResult = validateCredentials(credentials)
+  const validationResult = validateCredentials(credentials, validationErrors)
   const validCredentials = validationResult.isValid
 
   return <>
     <style css={css}></style>
     <section class="local-authentication">
       <div>
-        <label for="userName">{getLabel("userName")}</label>
-        <input id="userName" type="text" onchange={updateState(setUserName, elem)} placeholder={getLabel("userName")}/>
+        <label for="userName">{labels["userName"]}</label>
+        <input id="userName" type="text" onchange={updateState(setUserName, elem)} placeholder={labels["userName"]}/>
       </div>
       <div>
-        <label for="password">{getLabel("password")}</label>
-        <input id="password" type="password" onchange={updateState(setPassword, elem)} placeholder={getLabel("password")}/>
+        <label for="password">{labels["password"]}</label>
+        <input id="password" type="password" onchange={updateState(setPassword, elem)} placeholder={labels["password"]}/>
       </div>
       <div>
         <button class="signing" disabled={signing} onclick={() => validCredentials && signInClick(credentials, fetchApi, setSigning, elem)}>
           <span hidden={!signing}>{spinner}</span>
-          <span>{getLabel("signin")}</span>
+          <span>{labels["signin"]}</span>
         </button>
       </div>
       <div class="error" hidden={userName == null || !validationResult.userName}>
-        <label>{getLabel("userName")}</label>
+        <label>{labels["userName"]}</label>
         <span>{validationResult.userName}</span>
       </div>
       <div class="error" hidden={password == null || !validationResult.password}>
-        <label>{getLabel("password")}</label>
+        <label>{labels["password"]}</label>
         <span>{validationResult.password}</span>
       </div>
     </section>
@@ -55,15 +56,15 @@ export const Login = (props, elem) =>
     <section class="remote-authentication">
       <a class="auth-provider" href={`${apiUrl}/accounts/challenge-google?returnUrl=${returnUrl}`}>
         {google}
-        <span>{getLabel("signinWithGoogle")}</span>
+        <span>{labels["signinWithGoogle"]}</span>
       </a>
       <a class="auth-provider" href={`${apiUrl}/accounts/challenge-facebook?returnUrl=${returnUrl}`}>
         {facebook}
-        <span>{getLabel("signinWithFacebook")}</span>
+        <span>{labels["signinWithFacebook"]}</span>
       </a>
       <a class="auth-provider" href={`${apiUrl}/accounts/challenge-twitter?returnUrl=${returnUrl}`}>
         {twitter}
-        <span>{getLabel("signinWithTwitter")}</span>
+        <span>{labels["signinWithTwitter"]}</span>
       </a>
     </section>
   </>

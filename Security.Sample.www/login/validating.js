@@ -8,6 +8,6 @@ const credentialsValidators = Object.freeze({
   password: passwordvalidators
 })
 
-export const validateCredentials = (credentials) =>
-  validateProps(credentials, credentialsValidators)
+export const validateCredentials = (credentials, validationMessages) =>
+  validateProps(credentials, credentialsValidators, validationMessages)
 

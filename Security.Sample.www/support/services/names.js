@@ -1,5 +1,7 @@
 
 export const ServiceNames = Object.freeze({
+  apiUrl: "api-url",
   fetchApi: "fetch-api",
-  apiUrl: "api-url"
+  labels: "labels",
+  validationErrors: "validation-errors"
 })

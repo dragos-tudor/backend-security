@@ -1,6 +1,8 @@
 import { ServiceNames } from "../support/services/names.js"
 
-export const createAppProps = (fetchApi, apiUrl) => Object.freeze({
+export const createAppProps = (apiUrl, fetchApi, labels, validationErrors) => Object.freeze({
+  [ServiceNames.apiUrl]: apiUrl,
   [ServiceNames.fetchApi]: fetchApi,
-  [ServiceNames.apiUrl]: apiUrl
+  [ServiceNames.labels]: labels,
+  [ServiceNames.validationErrors]: validationErrors
 })

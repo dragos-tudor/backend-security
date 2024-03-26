@@ -1,5 +1,5 @@
 
-let Labels = {
+export const Labels = Object.freeze({
   userName: "User name",
   password: "Password",
   signin: "Signin with credentials",
@@ -14,8 +14,4 @@ let Labels = {
   gotoHome: "Goto hone",
   home: "Home",
   login: "Login"
-}
-
-export const getLabel = (name) => Labels?.[name]
-
-export const setLabels = (labels) => Labels = labels
+})

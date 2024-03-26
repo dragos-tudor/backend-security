@@ -1,15 +1,15 @@
-import { getLabel } from "../languages/labels.js"
-import { getFetchApiService } from "../support/services/getting.js"
+import { getFetchApi, getLabels } from "../support/services/getting.js"
 import { signOutUser } from "./signingout.js"
 
 export const Logout = (_, elem) =>
 {
-  const fetchApi = getFetchApiService(elem)
+  const fetchApi = getFetchApi(elem)
+  const labels = getLabels(elem)
   return (
     <>
       <style css={css}></style>
       <button class="signout" onclick={() => signOutUser(fetchApi, elem)}>
-        {getLabel("signout")}
+        {labels["signout"]}
       </button>
     </>)
 }
