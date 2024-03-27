@@ -11,9 +11,9 @@ import { createJsxElement } from "./support/jsx/creating.js"
 import { getHtmlBody, getHtmlElement } from "./support/html/getting.js"
 import { logResponseError } from "./support/responses/logging.js"
 import { createServices } from "./support/services/creating.js"
-const { render } = await import("./scripts/rendering.js")
-const { fetchWithTimeout } = await import("./scripts/fetching.js")
-const { navigate, Router } = await import("./scripts/routing.js")
+const { render } = await import("/scripts/rendering.js")
+const { fetchWithTimeout } = await import("/scripts/fetching.js")
+const { changeRoute, navigate, Router } = await import("/scripts/routing.js")
 const { apiUrl, apiTimeout,  errorTimeout } = await import("/settings.js")
 
 const fetchApi = getFetchApi(
@@ -30,6 +30,6 @@ const $app = render(createJsxElement(App, {services, errorTimeout}), getHtmlBody
 const $error = getHtmlElement($app, Error.name)
 const $router = getHtmlElement($app, Router.name)
 
-navigate($app, RoutePaths.root)
+changeRoute($router, RoutePaths.root)
 
 

@@ -1,12 +1,12 @@
-import { getLabels } from "../support/services/getting.js"
+import { useLabels } from "../support/services/using.js"
 import { selectUser } from "../support/store/selectors.js"
 import { useSelector } from "../scripts/extending.js"
 import { concatClaim } from "./concating.js"
 
 export const Home = (props, elem) =>
 {
-  const user = props.user ?? useSelector(elem, "user", selectUser)
-  const labels = getLabels(elem)
+  const user = useSelector(elem, "user", selectUser)
+  const labels = useLabels(elem)
 
   return <>
     <style css={css}></style>

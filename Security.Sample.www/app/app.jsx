@@ -5,18 +5,18 @@ import { Error } from "../error/error.jsx"
 import { createAppState } from "../support/store/states.js"
 import { createAppReducer } from "../support/store/reducers.js"
 import { useEffect } from "../scripts/extending.js"
-import { getPropsFetchApi } from "./getting.js"
+import { getFetchApi } from "./getting.js"
 import { startApp } from "./starting.js"
-const { Services } = await import("../scripts/rendering.js")
-const { Router } = await import("../scripts/routing.js")
-const { Store } = await import("../scripts/states.js")
+const { Services } = await import("/scripts/rendering.js")
+const { Router } = await import("/scripts/routing.js")
+const { Store } = await import("/scripts/states.js")
 
 
 export const App = (props, elem) =>
 {
   const appState = createAppState()
   const appReducer = createAppReducer()
-  const fetchApi = getPropsFetchApi(props)
+  const fetchApi = getFetchApi(props)
 
   useEffect(elem, "start-app", () => startApp(fetchApi, elem), [])
   return <>

@@ -1,15 +1,17 @@
 import { Languages } from "../support/languages/languages.js"
 import { setLanguageParam } from "../support/languages/setting.js"
-import { isEnglishLanguage, isRomanianLanguage } from "../support/languages/verifying.js";
-import { toUrl } from "../support/locations/converting.js";
-import { getLocation } from "../support/locations/getting.js";
-import { getLanguage } from "../support/services/getting.js"
+import { isEnglishLanguage, isRomanianLanguage } from "../support/languages/verifying.js"
+import { toUrl } from "../support/locations/converting.js"
+import { ensureLocation } from "../support/locations/ensuring.js"
+import { useLanguage } from "../support/services/using.js"
+const { useLocation } = await import("/scripts/routing.js")
 
-
-export const Language = (props, elem) =>
+export const Language = (_, elem) =>
 {
-  const lang = getLanguage(elem)
-  const url = toUrl(getLocation(props.location))
+  const lang = useLanguage(elem)
+  const location = useLocation(elem)
+  const url = toUrl(ensureLocation(location))
+
   return <>
     <a href={setLanguageParam(url, Languages.en)} hidden={isEnglishLanguage(lang)} target="_self">
       {Languages.en}

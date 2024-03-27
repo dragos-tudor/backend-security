@@ -1,14 +1,14 @@
-import { getLabels } from "../support/services/getting.js"
+import { useLabels } from "../support/services/using.js"
 import { Logout } from "../logout/logout.jsx"
 import { selectUserAuthenticated } from "../support/store/selectors.js"
 import { useSelector } from "../scripts/extending.js"
-const { NavLink } = await import("../scripts/routing.js")
+const { NavLink } = await import("/scripts/routing.js")
 
 
 export const NavLinks = (props, elem) =>
 {
-  const authenticated = props.authenticated ?? useSelector(elem, "authenticated", selectUserAuthenticated)
-  const labels = getLabels(elem)
+  const authenticated = useSelector(elem, "authenticated", selectUserAuthenticated)
+  const labels = useLabels(elem)
   return <>
     <style css={css}></style>
     {
@@ -26,10 +26,5 @@ export const NavLinks = (props, elem) =>
 
 const css = `
 navlinks {
-  margin: 1rem 2rem;
-}
-
-navlinks navlink {
-  padding-right: 0.7rem;
-  font-size: 1.8rem;
+  margin: 0 2rem;
 }`

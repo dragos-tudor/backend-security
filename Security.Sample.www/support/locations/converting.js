@@ -1,3 +1,4 @@
+import { ensureLocation } from "./ensuring.js"
 
 export const toUrl = (location) =>
-  new URL(location.href)
+  new URL(ensureLocation(location).href)

@@ -1,9 +1,9 @@
 import { signInAccountApi } from "../support/api/accounts.js"
 import { createSetUserAction } from "../support/store/actions.js"
 import { RoutePaths } from "../routes/paths.js"
-const { update } = await import("../scripts/rendering.js")
-const { navigate } = await import("../scripts/routing.js")
-const { dispatchAction } = await import("../scripts/states.js")
+const { update } = await import("/scripts/rendering.js")
+const { navigate } = await import("/scripts/routing.js")
+const { dispatchAction } = await import("/scripts/states.js")
 
 export const signInClick = async (credentials, fetchApi, setSigning, elem) =>
   setSigning(true) &&

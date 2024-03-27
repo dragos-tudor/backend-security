@@ -1,10 +1,8 @@
 import { toUrl } from "./converting.js"
-
-export const getLocation = (location) =>
-  (location ?? globalThis.location)
+import { ensureLocation } from "./ensuring.js"
 
 export const getLocationUrl = (location) =>
-  getLocation(location)?.href
+  ensureLocation(location)?.href
 
 export const getLocationParam = (location, paramName) =>
-  toUrl(getLocation(location)).searchParams.get(paramName)
+  toUrl(ensureLocation(location)).searchParams.get(paramName)

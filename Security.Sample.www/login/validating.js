@@ -1,4 +1,4 @@
-const { validateObj, isRequired, hasMaxLength } = await import("../scripts/validating.js")
+const { validateObj, isRequired, hasMaxLength } = await import("/scripts/validating.js")
 
 const userNameValidators = [isRequired, hasMaxLength(10)]
 const passwordvalidators = [isRequired, hasMaxLength(10)]

@@ -3,11 +3,12 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 1.5rem 2rem;
   background-color: var(--dark-neutral-color);
 }
 
 header .logo {
+  font-size: 3rem;
   font-family: var(--ff-serif);
   color: var(--label-color);
   text-transform: uppercase;

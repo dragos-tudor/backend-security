@@ -1,6 +1,6 @@
 import { google, facebook, twitter, spinner } from "../images/icons.jsx"
 import { getLocationUrl } from "../support/locations/getting.js"
-import { getApiUrl, getFetchApi, getLabels, getValidationErrors } from "../support/services/getting.js"
+import { useApiUrl, useFetchApi, useLabels, useValidationErrors } from "../support/services/using.js"
 import { updateState, useState } from "../scripts/extending.js"
 import { createCredentials } from "./creating.js"
 import { signInClick } from "./signingin.js"
@@ -9,10 +9,10 @@ import { validateCredentials } from "./validating.js"
 
 export const Login = (props, elem) =>
 {
-  const apiUrl = getApiUrl(elem)
-  const fetchApi = getFetchApi(elem)
-  const labels = getLabels(elem)
-  const validationErrors = getValidationErrors(elem)
+  const apiUrl = useApiUrl(elem)
+  const fetchApi = useFetchApi(elem)
+  const labels = useLabels(elem)
+  const validationErrors = useValidationErrors(elem)
 
   const currentUrl = getLocationUrl(props.location)
   const returnUrl = encodeURIComponent(currentUrl)
@@ -38,7 +38,7 @@ export const Login = (props, elem) =>
       </div>
       <div>
         <button class="signing" disabled={signing} onclick={() => validCredentials && signInClick(credentials, fetchApi, setSigning, elem)}>
-          <span hidden={!signing}>{spinner}</span>
+          {signing? spinner: <span></span>}
           <span>{labels["signin"]}</span>
         </button>
       </div>

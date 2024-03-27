@@ -1,19 +1,21 @@
 import { useEffect, useState, setInitialEffect } from "../scripts/extending.js"
+import { getMessage, getTimeout } from "./getting.js"
 import { toggleError } from "./toggling.js"
 
 export const Error = (props, elem) =>
 {
-  const [timeout] = useState(elem, "timeout", props.timeout, [])
-  props.message && useEffect(elem, "toggle-error",
-    () => {
+  const [timeout] = useState(elem, "timeout", getTimeout(props), [])
+  const message = getMessage(props)
+
+  if(message)
+    useEffect(elem, "toggle-error", () => {
       const timeoutId = toggleError(elem, timeout)
       setInitialEffect(elem, "toggle-error", () => clearTimeout(timeoutId))
-    }
-  )
+    })
 
   return <>
     <style css={css}></style>
-    <p>{props.message}</p>
+    <p>{message}</p>
   </>
 }
 

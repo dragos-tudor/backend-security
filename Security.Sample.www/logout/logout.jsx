@@ -1,10 +1,11 @@
-import { getFetchApi, getLabels } from "../support/services/getting.js"
+import { useFetchApi, useLabels } from "../support/services/using.js"
 import { signOutUser } from "./signingout.js"
 
 export const Logout = (_, elem) =>
 {
-  const fetchApi = getFetchApi(elem)
-  const labels = getLabels(elem)
+  const fetchApi = useFetchApi(elem)
+  const labels = useLabels(elem)
+
   return (
     <>
       <style css={css}></style>
