@@ -1,6 +1,6 @@
 
-export const Settings = Object.freeze({
-  apiUrl: "https://localhost:5000",
-  apiTimeout: 3000,
-  errorTimeout: 3500
-})
+export const apiUrl = "https://localhost:5000"
+
+export const apiTimeout = 3000
+
+export const errorTimeout = 3000

@@ -4,7 +4,7 @@ import { Login } from "../login/login.jsx"
 import { Root } from "../root/root.jsx"
 
 import { RoutePaths } from "./paths.js"
-const { Route } = await import("/scripts/routing.js")
+const { Route } = await import("../scripts/routing.js")
 
 export const Routes = () =>
   <>

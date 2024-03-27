@@ -2,7 +2,7 @@ import { getLabels } from "../support/services/getting.js"
 import { Logout } from "../logout/logout.jsx"
 import { selectUserAuthenticated } from "../support/store/selectors.js"
 import { useSelector } from "../scripts/extending.js"
-const { NavLink } = await import("/scripts/routing.js")
+const { NavLink } = await import("../scripts/routing.js")
 
 
 export const NavLinks = (props, elem) =>

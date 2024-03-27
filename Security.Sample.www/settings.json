@@ -1,9 +1,0 @@
-{
-  "serverOptions": {
-    "hostname": "localhost",
-    "cert": "/workspaces/backend-security/.certificates/localhost.pem",
-    "key": "/workspaces/backend-security/.certificates/localhost-key.pem",
-    "port": 5500,
-    "secure": true
-  }
-}

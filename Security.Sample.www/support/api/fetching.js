@@ -1,7 +1,7 @@
 import { RoutePaths } from "../../routes/paths.js"
 import { setRequestCredentials, setRequestMode, setRequestRedirect } from "../requests/setting.js"
 import { isUnauthorizedResponse, isForbiddenResponse } from "../responses/verifying.js"
-const { fetchJson } = await import("/scripts/fetching.js")
+const { fetchJson } = await import("../../scripts/fetching.js")
 
 export const getFetchApi = (fetch, navigate, handle) => async (url, request = {}) =>
 {

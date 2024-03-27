@@ -1,7 +1,10 @@
 import { toUrl } from "./converting.js"
 
-export const getLocationUrl = (location) =>
-  toUrl(location ?? globalThis.location)?.href
+export const getLocation = (location) =>
+  (location ?? globalThis.location)
 
-export const getSearchParam = (location, paramName) =>
-  toUrl(location?.href)?.searchParams?.get(paramName)
+export const getLocationUrl = (location) =>
+  getLocation(location)?.href
+
+export const getLocationParam = (location, paramName) =>
+  toUrl(getLocation(location)).searchParams.get(paramName)

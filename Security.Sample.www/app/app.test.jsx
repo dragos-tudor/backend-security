@@ -1,7 +1,7 @@
 import { assertExists } from "/asserts.ts"
 import { waitForAsyncs } from "/testing.js"
 import { App } from "./app.jsx"
-const { render } = await import("/scripts/rendering.js")
+const { render } = await import("../scripts/rendering.js")
 
 Deno.test("app component", async t => {
 

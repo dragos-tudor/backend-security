@@ -1,6 +1,9 @@
-import { getSearchParam } from "../locations/getting.js"
+import { getLocationParam } from "../locations/getting.js"
 import { Languages } from "./languages.js";
 
-export const getLanguageParam = (location) => getSearchParam(location, "lang")
+export const LanguageParamName = "lang"
 
-export const getLanguage = (location) => getLanguageParam(location) ?? Languages.en
+export const getDefaultLanguage = (languages) => languages.en
+
+export const getLanguageParam = (location) =>
+  getLocationParam(location, LanguageParamName) ?? getDefaultLanguage(Languages)

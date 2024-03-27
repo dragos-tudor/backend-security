@@ -19,13 +19,14 @@ export const Footer = () =>
 
 const css = `
 footer {
+  padding: 1rem;
   text-align: center;
   vertical-align: middle;
   background-color: var(--dark-neutral-color);
 }
 
 footer .social-icons {
-  margin: 0.5rem;
+  margin: 1rem;
 }
 
 footer .social-icons .social-icon {
@@ -33,7 +34,6 @@ footer .social-icons .social-icon {
 }
 
 footer .me {
-  margin: 0.5rem;
   color: var(--light-neutral-color);
 }
 `

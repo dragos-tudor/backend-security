@@ -1,4 +1,4 @@
-const { createStoreState } = await import("/scripts/states.js")
+const { createStoreState } = await import("../../scripts/states.js")
 
 export const AppState = "appState"
 

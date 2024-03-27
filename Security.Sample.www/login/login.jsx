@@ -1,5 +1,4 @@
 import { google, facebook, twitter, spinner } from "../images/icons.jsx"
-import { encodeLocationUrl } from "../support/locations/encoding.js"
 import { getLocationUrl } from "../support/locations/getting.js"
 import { getApiUrl, getFetchApi, getLabels, getValidationErrors } from "../support/services/getting.js"
 import { updateState, useState } from "../scripts/extending.js"
@@ -16,7 +15,7 @@ export const Login = (props, elem) =>
   const validationErrors = getValidationErrors(elem)
 
   const currentUrl = getLocationUrl(props.location)
-  const returnUrl = encodeLocationUrl(currentUrl)
+  const returnUrl = encodeURIComponent(currentUrl)
 
   const [userName, setUserName] = useState(elem, "userName", null, [])
   const [password, setPassword] = useState(elem, "password", null, [])
