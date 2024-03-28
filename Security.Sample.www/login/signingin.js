@@ -1,4 +1,6 @@
-import { getRedirectOrHomeUrl } from "../redirections/getting.js"
+import { getLocationRedirect } from "../redirections/getting.js"
+import { hasLocationRedirect } from "../redirections/verifying.js"
+import { RoutePaths } from "../routes/paths.js"
 import { signInAccountApi } from "../support/api/accounts.js"
 import { createSetUserAction } from "../support/store/actions.js"
 const { update } = await import("/scripts/rendering.js")
@@ -19,6 +21,8 @@ export const signInUser = async (credentials, location, fetchApi, elem) =>
   if (error) return [, error]
 
   dispatchAction(elem, createSetUserAction(user))
-  navigate(elem, getRedirectOrHomeUrl(location))
+  hasLocationRedirect(location)?
+    navigate(elem, getLocationRedirect(location)):
+    navigate(elem, RoutePaths.home)
   return [user]
 }
