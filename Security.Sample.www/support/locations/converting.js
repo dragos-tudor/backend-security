@@ -1,4 +1,3 @@
-import { resolveLocation } from "./resolving.js"
+import { getLocationUrl } from "./getting.js"
 
-export const toUrl = (location) =>
-  new URL(resolveLocation(location).href)
+export const toUrl = (location) => new URL(getLocationUrl(location))

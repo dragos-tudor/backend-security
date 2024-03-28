@@ -13,5 +13,6 @@ export default {
   unauthorized: "Nu esti autorizat sa accesezi aceasta resursa.",
   gotoHome: "spre acasa",
   home: "Acasa",
-  login: "Conecteaza-te"
+  login: "Conecteaza-te",
+  info: "Info"
 }

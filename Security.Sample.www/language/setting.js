@@ -1,6 +1,7 @@
 import { Languages } from "../support/languages/languages.js"
-import { setLanguageParam } from "../support/languages/setting.js"
+import { LanguageParamName } from "../support/languages/param.name.js"
+import { setLocationParam } from "../support/locations/setting.js"
 
-export const setEnglishParam = (searchParams) => setLanguageParam(searchParams, Languages.en)
+export const setEnglishParam = (searchParams) => setLocationParam(searchParams, LanguageParamName, Languages.en)
 
-export const setRomanianParam = (searchParams) => setLanguageParam(searchParams, Languages.ro)
+export const setRomanianParam = (searchParams) => setLocationParam(searchParams, LanguageParamName, Languages.ro)

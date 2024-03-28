@@ -1,8 +1,12 @@
 import { toUrl } from "./converting.js"
-import { resolveLocation } from "./resolving.js"
 
-export const getLocationUrl = (location) =>
-  resolveLocation(location)?.href
+const getSearchParams = (url) => url.searchParams
 
-export const getLocationParam = (location, paramName) =>
-  toUrl(resolveLocation(location)).searchParams.get(paramName)
+export const getEncodedLocationPathName = (location) => encodeURIComponent(getLocationPathName(location))
+
+export const getLocationPathName = (location) => location.pathname
+
+export const getLocationUrl = (location) => location.href
+
+export const getLocationParam = (location, paramName) => getSearchParams(toUrl(location)).get(paramName)
+

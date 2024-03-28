@@ -13,5 +13,6 @@ export const Labels = Object.freeze({
   unauthorized: "You are not authorize to access resource.",
   gotoHome: "Goto hone",
   home: "Home",
-  login: "Login"
+  login: "Login",
+  info: "Info"
 })

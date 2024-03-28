@@ -1,5 +1,6 @@
 import { google, facebook, twitter, spinner } from "../images/icons.jsx"
 import { getLocationUrl } from "../support/locations/getting.js"
+import { resolveLocation } from "../support/locations/resolving.js"
 import { useApiUrl, useFetchApi, useLabels, useValidationErrors } from "../support/services/using.js"
 import { updateState, useState } from "../scripts/extending.js"
 import { createCredentials } from "./creating.js"
@@ -14,7 +15,8 @@ export const Login = (props, elem) =>
   const labels = useLabels(elem)
   const validationErrors = useValidationErrors(elem)
 
-  const currentUrl = getLocationUrl(props.location)
+  const location = resolveLocation(props.location)
+  const currentUrl = getLocationUrl(location)
   const returnUrl = encodeURIComponent(currentUrl)
 
   const [userName, setUserName] = useState(elem, "userName", null, [])
@@ -37,7 +39,7 @@ export const Login = (props, elem) =>
         <input id="password" type="password" onchange={updateState(setPassword, elem)} placeholder={labels["password"]}/>
       </div>
       <div>
-        <button class="signing" disabled={signing} onclick={() => validCredentials && signInClick(credentials, fetchApi, setSigning, elem)}>
+        <button class="signing" disabled={signing} onclick={() => validCredentials && signInClick(credentials, location, fetchApi, setSigning, elem)}>
           {signing? spinner: <span></span>}
           <span>{labels["signin"]}</span>
         </button>

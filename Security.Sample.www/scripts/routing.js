@@ -74,7 +74,7 @@ const resolveSearchParams = (url)=>{
     const queryString = getQueryString(url);
     const searchParams = new URLSearchParams(queryString);
     if (!searchParams.size) return undefined;
-    return searchParams.entries().reduce(setSearchParam, {});
+    return Array.from(searchParams.entries()).reduce(setSearchParam, {});
 };
 const skipQueryString = (url, delimiter = QueryDelimiter)=>url.split(delimiter)[0];
 const useSearchParams = (elem)=>(elem.__searchParams = true) && getSearchParams(elem);
@@ -280,6 +280,6 @@ const Route = (props, elem)=>{
 export { NavLink as NavLink };
 export { Router as Router };
 export { Route as Route };
-export { useHistory as useHistory, useLocation as useLocation, setLocation as setLocation };
+export { useHistory as useHistory, useLocation as useLocation };
 export { useSearchParams as useSearchParams, useRouteParams as useRouteParams };
 export { navigateFromUser as navigate, changeRoute as changeRoute };

@@ -1,16 +1,17 @@
+import { isLoginPath, isRootPath } from "../routes/verifying.js"
 import { getUserApi } from "../support/api/users.js"
 import { createSetUserAction } from "../support/store/actions.js"
-import { RoutePaths } from "../routes/paths.js"
 const { navigate } = await import("/scripts/routing.js")
 const { dispatchAction } = await import("/scripts/states.js")
 
-export const startApp = async (fetchApi, elem) =>
+export const startApp = async (fetchApi, location, elem) =>
 {
   const [user, error] = await getUserApi(fetchApi)
-  if (error) navigate(elem, RoutePaths.login)
   if (error) return [, error]
 
   dispatchAction(elem, createSetUserAction(user))
-  navigate(elem, RoutePaths.home)
+  isLoginPath(location) || isRootPath(location)?
+    navigate(elem, RoutePaths.home):
+    navigate(elem, getLocationPathName(location))
   return [user]
 }

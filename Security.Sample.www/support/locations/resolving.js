@@ -1,3 +1,2 @@
 
-export const resolveLocation = (location) =>
-  (location ?? globalThis.location)
+export const resolveLocation = (location) => (location ?? globalThis.location) ?? {href: ""}
