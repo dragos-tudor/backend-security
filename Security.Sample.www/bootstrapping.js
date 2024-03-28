@@ -1,11 +1,11 @@
 import { getFetchApi } from "./support/api/fetching.js"
+import { logError } from "./support/errors/logging.js"
 import { createJsxElement } from "./support/jsx/creating.js"
 import { getHtmlBody, getHtmlElement } from "./support/html/getting.js"
 import { getLanguageParam } from "./support/languages/getting.js"
 import { Languages } from "./support/languages/languages.js";
 import { validateLanguage } from "./support/languages/validating.js"
 import { resolveLabels } from "./support/labels/resolving.js"
-import { logResponseError } from "./support/responses/logging.js"
 import { createServices } from "./support/services/creating.js"
 import { resolveValidationErrors } from "./support/validations/resolving.js"
 import { App } from "./app/app.jsx"
@@ -20,7 +20,7 @@ const { apiUrl, apiTimeout,  errorTimeout } = await import("/settings.js")
 const fetchApi = getFetchApi(
   (url, request) => fetchWithTimeout(fetch, apiUrl + url, request, apiTimeout),
   (url) => navigate($router, url),
-  error => (logResponseError(error), updateError($error, error.message))
+  error => (logError(error), updateError($error, error.message))
 )
 const language = validateLanguage(getLanguageParam(location) ?? Languages.en)
 const labels = await resolveLabels(language)

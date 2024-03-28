@@ -1,3 +1,2 @@
 
-export const throwError = (message) =>
-    { throw Error(message) }
+export const throwError = (message) => { throw Error(message) }
