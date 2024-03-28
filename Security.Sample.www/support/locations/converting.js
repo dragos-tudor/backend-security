@@ -1,4 +1,4 @@
-import { ensureLocation } from "./ensuring.js"
+import { resolveLocation } from "./resolving.js"
 
 export const toUrl = (location) =>
-  new URL(ensureLocation(location).href)
+  new URL(resolveLocation(location).href)

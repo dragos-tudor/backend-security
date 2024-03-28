@@ -1,4 +1,4 @@
-import { ensureLocation } from "../support/locations/ensuring.js"
+import { resolveLocation } from "../support/locations/resolving.js"
 import { useLabels } from "../support/services/using.js"
 import { getErrorDescription } from "./getting.js"
 const { NavLink } = await import("/scripts/routing.js")
@@ -6,7 +6,7 @@ const { NavLink } = await import("/scripts/routing.js")
 export const Forbidden = (props) =>
 {
   const labels = useLabels(elem)
-  const location = ensureLocation(props.location)
+  const location = resolveLocation(props.location)
   const error = getErrorDescription(location)
 
   return <>

@@ -1,16 +1,17 @@
+import { getFetchApi } from "./support/api/fetching.js"
+import { createJsxElement } from "./support/jsx/creating.js"
+import { getHtmlBody, getHtmlElement } from "./support/html/getting.js"
+import { getLanguageParam } from "./support/languages/getting.js"
+import { Languages } from "./support/languages/languages.js";
+import { validateLanguage } from "./support/languages/validating.js"
+import { resolveLabels } from "./support/labels/resolving.js"
+import { logResponseError } from "./support/responses/logging.js"
+import { createServices } from "./support/services/creating.js"
+import { resolveValidationErrors } from "./support/validations/resolving.js"
 import { App } from "./app/app.jsx"
 import { Error } from "./error/error.jsx"
 import { updateError } from "./error/updating.jsx"
 import { RoutePaths } from "./routes/paths.js"
-import { getLanguageParam } from "./support/languages/getting.js"
-import { resolveLabels } from "./support/labels/resolving.js"
-import { resolveValidationErrors } from "./support/validations/resolving.js"
-import { validateLanguage } from "./support/languages/validating.js"
-import { getFetchApi } from "./support/api/fetching.js"
-import { createJsxElement } from "./support/jsx/creating.js"
-import { getHtmlBody, getHtmlElement } from "./support/html/getting.js"
-import { logResponseError } from "./support/responses/logging.js"
-import { createServices } from "./support/services/creating.js"
 const { render } = await import("/scripts/rendering.js")
 const { fetchWithTimeout } = await import("/scripts/fetching.js")
 const { changeRoute, navigate, Router } = await import("/scripts/routing.js")
@@ -21,7 +22,7 @@ const fetchApi = getFetchApi(
   (url) => navigate($router, url),
   error => (logResponseError(error), updateError($error, error.message))
 )
-const language = validateLanguage(getLanguageParam(location))
+const language = validateLanguage(getLanguageParam(location) ?? Languages.en)
 const labels = await resolveLabels(language)
 const validationErrors = await resolveValidationErrors(language)
 const services = createServices(apiUrl, fetchApi, language, labels, validationErrors)
