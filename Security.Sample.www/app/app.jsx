@@ -1,11 +1,12 @@
 import { Header } from "../header/header.jsx"
 import { Footer } from "../footer/footer.jsx"
 import { Routes } from "../routes/routes.jsx"
-import { useEffect } from "../scripts/extending.js"
+import { usePostEffect } from "../scripts/extending.js"
 import { resolveLocation } from "../support/locations/resolving.js"
 import { useFetchApi } from "../support/services/using.js"
 import { Spinner } from "../spinner/spinner.jsx"
 import { hideSpinner } from "../spinner/hiding.js"
+import { showSpinner } from "../spinner/showing.js";
 import { startApp } from "./starting.js"
 const { navigate, Router } = await import("/scripts/routing.js")
 const { dispatchAction } = await import("/scripts/states.js")
@@ -15,7 +16,8 @@ export const App = (props, elem) =>
   const fetchApi = props.fetch ?? useFetchApi(elem)
   const location = resolveLocation(props?.location)
 
-  useEffect(elem, "start-app", async () => {
+  usePostEffect(elem, "start-app", async () => {
+      showSpinner(elem)
       await startApp(fetchApi, (action) => dispatchAction(elem, action), (url) => navigate(elem, url), location)
       hideSpinner(elem)
     },

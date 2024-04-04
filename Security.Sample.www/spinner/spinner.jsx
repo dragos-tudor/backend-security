@@ -8,7 +8,7 @@ export const Spinner = (props) =>
 const css = `
 spinner {
   display: block;
-  background-image: url("/images/spinner.svg");
+  background-image: none;
   background-position: center;
   background-size: 3rem;
   background-repeat: no-repeat;

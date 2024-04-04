@@ -5,7 +5,7 @@ import { Spinner } from "./spinner.jsx"
 export const hideSpinner = (elem) =>
 {
   const spinner = getHtmlDescendant(elem, Spinner.name)
-  if (!spinner) return elem
+  if (!spinner) return
 
   setHtmlBackgroundImage(spinner, "none")
   setHtmlVisibility(spinner.children[1], true)
