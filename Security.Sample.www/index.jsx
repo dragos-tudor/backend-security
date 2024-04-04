@@ -167,14 +167,4 @@ label {
 
 svg {
   height: 1em;
-}
-
-
-.spinner {
-  display: block;
-  background-image: url("/images/spinner.svg");
-  background-position: center;
-  background-size: 3rem;
-  background-repeat: no-repeat;
-  height: inherit;
 }`
