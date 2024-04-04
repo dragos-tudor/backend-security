@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>false</IsTestProject>
+    <!-- skip copy apphost [Microsoft.Common.CurrentVersion.targets: MSB3021 error]  -->
+    <UseAppHost>false</UseAppHost>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet"/>
+    <ProjectReference Include="../Security.Authentication.Cookies/Security.Authentication.Cookies.csproj"/>
+  </ItemGroup>
+
+</Project>

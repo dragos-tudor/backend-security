@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+  <IncludeTestAssembly>True</IncludeTestAssembly>
+
+  <CodeCoverage>
+    <ModulePaths>
+      <Include>
+        <ModulePath>.*\\Security\..*\.dll$</ModulePath>
+      </Include>
+      <Exclude>
+        <ModulePath>.*\\Security\.Authentication\.dll$</ModulePath>
+        <ModulePath>.*\\Security\.Authentication\.Remote\.dll$</ModulePath>
+        <ModulePath>.*\\Security\.Testing\.dll$</ModulePath>
+      </Exclude>
+    </ModulePaths>
+
+    <Attributes>
+      <Exclude>
+        <Attribute>^Microsoft\.VisualStudio\.TestTools\.UnitTesting\.TestClassAttribute$</Attribute>
+        <Attribute>^System\.CodeDom\.Compiler\.GeneratedCodeAttribute$</Attribute>
+        <Attribute>^Microsoft\.Extensions\.Logging\.LoggerMessageAttribute$</Attribute>
+      </Exclude>
+    </Attributes>
+
+    <Sources>
+      <Exclude>
+        <Source>.*\\LoggerMessage\.g\.cs</Source>
+      </Exclude>
+    </Sources>
+  </CodeCoverage>
+</Configuration>

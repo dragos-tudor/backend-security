@@ -1,0 +1,15 @@
+
+footer {
+  padding-block: 2rem 3rem;
+  text-align: center;
+  background-color: var(--dark-neutral-color);
+}
+
+.footer-social-icon {
+  margin-inline: 0.5rem 0.5rem;
+  font-size: 2.5rem;
+}
+
+.footer-me {
+  margin-top: 1rem;
+}

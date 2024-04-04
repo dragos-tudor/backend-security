@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/appsettings",
+  "Logging": {
+    "LogLevel": {
+      "Microsoft.AspNetCore": "Error",
+      "Microsoft.Hosting": "Error",
+      "Microsoft.AspNetCore.Hosting": "Information",
+      "Security": "Debug"
+    }
+  },
+  "Kestrel": {
+    "Endpoints": {
+      "Https": {
+        "Url": "https://*:5000",
+        "Certificate": {
+          "Path": "../.certificates/localhost.pem",
+          "KeyPath": "../.certificates/localhost-key.pem"
+        }
+      },
+      "Http": {
+        "Url": "http://*:5001"
+      }
+    }
+  },
+  "Cors": {
+    "Origins": [
+      "https://localhost:5500"
+    ]
+  }
+}

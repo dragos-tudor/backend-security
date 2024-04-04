@@ -1,0 +1,32 @@
+<Project>
+
+  <!-- <Usage>dotnet msbuild -t:Coveraging -p:threshold=80</Usage> -->
+  <Target Name="Coveraging">
+    <Exec Command='dotnet run \
+      --no-restore \
+      --no-build \
+      --coverage \
+      --coverage-output "$(MSBuildProjectDirectory)"/.coverage/coverage.cob \
+      --coverage-output-format cobertura \
+      --coverage-settings "$(MSBuildProjectDirectory)"/../.coverage-settings.xml'
+    />
+    <Exec Command='reportgenerator \
+      -targetdir:$(MSBuildProjectDirectory)/.coverage/ \
+      -reports:$(MSBuildProjectDirectory)/.coverage/coverage.cob \
+      -reporttypes:MarkdownSummary \
+      -title:summary.md \
+      minimumCoverageThresholds:lineCoverage=$(threshold) \
+      minimumCoverageThresholds:branchCoverage=$(threshold)'
+    />
+  </Target>
+
+  <Target Name="Packing">
+    <Exec Command='dotnet pack \
+      --no-restore \
+      --no-build \
+      --configuration Release \
+      --output "$(MSBuildProjectDirectory)"/../.packages'
+    />
+  </Target>
+
+</Project>

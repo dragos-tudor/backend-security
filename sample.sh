@@ -1,0 +1,1 @@
+(trap 'kill 0' SIGINT; deno task start /workspaces/backend-security/Security.Sample.www & dotnet run --no-restore --no-build --project /workspaces/backend-security/Security.Sample.Api)

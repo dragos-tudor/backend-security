@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../Directory.Testing.props" />
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    <ProjectReference Include="../Security.Authentication.Remote/Security.Authentication.Remote.csproj" />
+  </ItemGroup>
+
+</Project>

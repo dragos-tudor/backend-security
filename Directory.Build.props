@@ -1,0 +1,34 @@
+<Project>
+
+  <PropertyGroup Label="Project props">
+    <TargetFramework>net8.0</TargetFramework>
+
+    <!-- compiling -->
+    <ImplicitUsings>disable</ImplicitUsings>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Nullable>enable</Nullable>
+
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+
+    <!-- packing -->
+    <IsPackable>true</IsPackable>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+
+    <!-- package -->
+    <Authors>Dragos Tudor</Authors>
+    <Company>$(Authors)</Company>
+    <Copyright>Copyright @2024</Copyright>
+    <Version>1.0.0-alpha1</Version>
+
+    <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
+    <RepositoryUrl>https://github.com/dragos-tudor/backend-security.git</RepositoryUrl>
+    <PackageLicense>$(RepositoryUrl)/blob/master/LICENSE</PackageLicense>
+    <PackageProjectUrl>$(RepositoryUrl)/$(MSBuildProjectName)</PackageProjectUrl>
+
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+
+</Project>

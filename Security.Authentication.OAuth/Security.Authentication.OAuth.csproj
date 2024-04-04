@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../Directory.Testing.props" />
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App"></FrameworkReference>
+    <ProjectReference Include="../Security.Authentication.Remote/Security.Authentication.Remote.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)'=='Debug'">
+    <PackageReference Include="NSubstitute" />
+  </ItemGroup>
+
+</Project>

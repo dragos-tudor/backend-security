@@ -1,0 +1,19 @@
+{
+  "imports": {
+    "/asserts.ts": "https://deno.land/std@0.204.0/assert/mod.ts",
+    "/mock.ts": "https://deno.land/std@0.204.0/testing/mock.ts",
+    "/emit.ts": "https://deno.land/x/emit@0.38.1/mod.ts",
+    "/hex.ts": "https://deno.land/std@0.207.0/encoding/hex.ts",
+    "/scripts/rendering.js": "./Security.Sample.www/scripts/rendering.js",
+    "/scripts/routing.js": "./Security.Sample.www/scripts/routing.js",
+    "/scripts/fetching.js": "./Security.Sample.www/scripts/fetching.js",
+    "/scripts/states.js": "./Security.Sample.www/scripts/states.js",
+    "/scripts/validating.js": "./Security.Sample.www/scripts/validating.js",
+    "/serving.js": "./.deno/serving.js",
+    "/testing.js": "./.deno/testing.js",
+    "/www/testing.js": "./Security.Sample.testing/mod.js",
+    "/settings.js": "./Security.Sample.www/settings.js",
+    "/starting.js": "./Security.Sample.server/starting.js",
+    "/publishing.js": "./Security.Sample.www/publishing.js"
+  }
+}

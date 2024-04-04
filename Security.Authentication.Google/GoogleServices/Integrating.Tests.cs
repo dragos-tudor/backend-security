@@ -1,0 +1,60 @@
+
+using System.Net;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.DependencyInjection;
+using static Security.Testing.Funcs;
+using static Security.Authentication.Google.GoogleFuncs;
+
+namespace Security.Authentication.Google;
+
+partial class GoogleTests {
+
+  [TestMethod]
+  public async Task Google_authentication__execute_authentication_flow__authentication_succedded () {
+    using var authServer = CreateHttpServer();
+    authServer.MapGet("/authorize", (HttpContext context) => SetResponseRedirect(context.Response, GetCallbackLocation(context.Request)) );
+    authServer.MapPost("/token", (HttpContext request) => JsonSerializer.Serialize(new { access_token = "token" }));
+    authServer.MapGet("/userinfo", (HttpContext request) => JsonSerializer.Serialize(new { email = "email", username = "username" }));
+    await authServer.StartAsync();
+    using var authClient = authServer.GetTestClient();
+
+    var googleOptions = CreateGoogleOptions("", "") with {
+      AuthorizationEndpoint = "/authorize", TokenEndpoint = "/token", UserInformationEndpoint = "/userinfo"
+    };
+    using var appServer = CreateHttpServer(services => services
+      .AddSingleton(authClient)
+      .AddSingleton<IDataProtectionProvider>(new EphemeralDataProtectionProvider())
+      .AddGoogle(googleOptions)
+    );
+    appServer.MapGoogle(googleOptions, SignIn);
+    await appServer.StartAsync();
+    using var appClient = appServer.GetTestClient();
+
+    var challengeResponse = await appClient.GetAsync(googleOptions.ChallengePath + "?returnUrl=/redirect-from");
+    Assert.AreEqual(HttpStatusCode.Redirect, challengeResponse.StatusCode);
+
+    var authUrl = GetResponseMessageLocation(challengeResponse);
+    var authResponse = await authClient.GetAsync(authUrl);
+    Assert.AreEqual(HttpStatusCode.Redirect, authResponse.StatusCode);
+
+    var signinUrl = GetResponseMessageLocation(authResponse);
+    var signinResponse = await appClient.GetAsync(signinUrl, GetRequestMessageCookieHeader(challengeResponse));
+    Assert.AreEqual("/redirect-from", await ReadResponseMessageContent(signinResponse));
+  }
+
+
+  static string GetCallbackLocation(HttpRequest request) =>
+    $"{GetQueryParamValue(request, "redirect_uri")}?state={GetQueryParamValue(request, "state")}&code=abc";
+
+  static string GetQueryParamValue (HttpRequest request, string keyName) =>
+    request.Query[keyName]!;
+
+  static ValueTask<AuthenticationTicket> SignIn(HttpContext _, ClaimsPrincipal principal, AuthenticationProperties authProperties) =>
+    new (new AuthenticationTicket(principal, authProperties, string.Empty));
+
+}

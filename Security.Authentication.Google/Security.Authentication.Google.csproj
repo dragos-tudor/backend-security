@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../Directory.Testing.props" />
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App"></FrameworkReference>
+    <ProjectReference Include="../Security.Authentication.OAuth/Security.Authentication.OAuth.csproj"/>
+  </ItemGroup>
+
+</Project>

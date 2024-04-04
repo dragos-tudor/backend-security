@@ -1,0 +1,19 @@
+
+header {
+  display: flex;
+  align-items: end;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: var(--dark-neutral-color);
+}
+
+.header-logo {
+  font-family: var(--ff-serif);
+  color: var(--label-color);
+  text-transform: uppercase;
+}
+
+.header-language {
+  flex: 1 1;
+  text-align: right;
+}

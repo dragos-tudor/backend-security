@@ -1,0 +1,9 @@
+
+home {
+  display: block;
+  margin: 3rem;
+}
+
+.home-user-detail {
+  color: var(--info-color)
+}

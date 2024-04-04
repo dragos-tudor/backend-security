@@ -1,0 +1,9 @@
+
+forbidden {
+  display: block;
+  margin: 3rem;
+}
+
+forbidden h3 {
+  color: var(--error-color)
+}

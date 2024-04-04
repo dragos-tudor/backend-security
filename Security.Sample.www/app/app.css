@@ -1,0 +1,23 @@
+
+app {
+  height: 100vh;
+}
+
+router {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: inherit;
+}
+
+main {
+  height: 100%;
+}
+
+routes, route {
+  display: block;
+  height: inherit;
+}
+
+.app-spinner {
+  background-size: 6rem;
+}

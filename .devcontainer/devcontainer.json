@@ -1,0 +1,29 @@
+{
+	"image": "ubuntu:22.04",
+  "customizations": {
+    "vscode": {
+	    "extensions": [
+        "ms-dotnettools.csharp",
+        "icsharpcode.ilspy-vscode",
+        "denoland.vscode-deno",
+        "appulate.filewatcher"
+      ]
+	  }
+	},
+  "features": {
+    "ghcr.io/dragos-tudor/devcontainer-features/debian-packages": "",
+    "ghcr.io/dragos-tudor/devcontainer-features/debian-user-group": "",
+    "ghcr.io/dragos-tudor/devcontainer-features/debian-dotnet-sdk": "",
+    "ghcr.io/dragos-tudor/devcontainer-features/debian-deno": {"deno_version": "v1.41.0"}
+  },
+  "containerEnv": { "DATA_PROTECTION_KEY": "HFm8fYbLyEarjjlGBj5r9Q==" },
+  "mounts": [
+		"source=nuget,target=/home/vscode/.nuget",
+		"source=deno-cache,target=/home/vscode/.deno-cache"
+  ],
+	"runArgs": [
+		"--name=backend-security",
+		"--hostname=security"
+	],
+  "remoteUser": "vscode"
+}

@@ -1,0 +1,30 @@
+<Project>
+
+  <PropertyGroup Condition="'$(Configuration)'!='Release'">
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Configuration)'!='Release'">
+    <PackageReference Include="MsTest" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+    <PackageReference Include="Microsoft.CodeCoverage.MSBuild" />
+    <ProjectReference Include="../Security.Testing/Security.Testing.csproj"/>
+  </ItemGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <!-- <See> Microsoft.NET.Test.Sdk package
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.targets
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.props
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs
+    </See> -->
+    <GenerateProgramFile>false</GenerateProgramFile>
+    <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(Configuration)'=='Release'">
+    <Compile Remove="**/*.Tests.cs" />
+    <Compile Include="../Program.cs" />
+  </ItemGroup>
+
+</Project>

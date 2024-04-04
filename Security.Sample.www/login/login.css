@@ -1,0 +1,46 @@
+
+login {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.local-authentication {
+  display: grid;
+  justify-items: end;
+  row-gap: 1rem;
+}
+
+.local-authentication,
+.remote-authentication {
+  padding: 1em;
+  border-radius: var(--default-radius);
+  border: 3px solid var(--dark-neutral-color);
+}
+
+.local-authentication .error {
+  justify-self: start;
+  color: var(--error-color)
+}
+
+.or {
+  margin: 1em;
+  color: var(--light-neutral-color);
+}
+
+.remote-authentication .auth-provider {
+  display: block;
+  margin: 0.5em 0;
+}
+
+.remote-authentication .auth-provider span {
+  margin-left: var(--default-margin);
+}
+
+@media (max-width: 800px) {
+  login {
+    flex-direction: column;
+  }
+}
