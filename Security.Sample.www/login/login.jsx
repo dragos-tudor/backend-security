@@ -29,51 +29,43 @@ export const Login = (props, elem) =>
   const credentials = createCredentials(userName, password)
   const validationResult = validateCredentials(credentials, validationErrors)
   const validCredentials = validationResult.isValid
+  const userNameVisibility = userName == null || !validationResult.userName
+  const passwordVisibility = password == null || !validationResult.password
 
   return <>
     <style css={css}></style>
     <section class="local-authentication">
-      <div>
-        <label for="userName">{labels["userName"]}</label>
-        <input id="userName" type="text" onchange={updateState(setUserName, elem)} placeholder={labels["userName"]}/>
-      </div>
-      <div>
-        <label for="password">{labels["password"]}</label>
-        <input id="password" type="password" onchange={updateState(setPassword, elem)} onblur={() => getHtmlButton(elem).focus()} placeholder={labels["password"]}/>
-      </div>
-      <div>
-        <Spinner no-skip>
-          <button disabled={!validCredentials} onclick={async () =>
-              showSpinner(elem) &&
-              await signInUser(credentials, location, fetchApi, elem) &&
-              hideSpinner(elem)
-            }>
-            <span>{labels["signin"]}</span>
-          </button>
-        </Spinner>
-      </div>
-      <div class="error" hidden={userName == null || !validationResult.userName}>
-        <label>{labels["userName"]}</label>
-        <span>{validationResult.userName}</span>
-      </div>
-      <div class="error" hidden={password == null || !validationResult.password}>
-        <label>{labels["password"]}</label>
-        <span>{validationResult.password}</span>
-      </div>
+      <label for="userName">{labels["userName"]}</label>
+      <input id="userName" type="text" onchange={updateState(setUserName, elem)} placeholder={labels["userName"]}/>
+      <label for="password">{labels["password"]}</label>
+      <input id="password" type="password" onchange={updateState(setPassword, elem)} onblur={() => getHtmlButton(elem).focus()} placeholder={labels["password"]}/>
+      <Spinner class="signing-spinner" no-skip>
+        <button disabled={!validCredentials} onclick={async () =>
+            showSpinner(elem) &&
+            await signInUser(credentials, location, fetchApi, elem) &&
+            hideSpinner(elem)
+          }>
+          <span>{labels["signin"]}</span>
+        </button>
+      </Spinner>
+      <label hidden={userNameVisibility}>{labels["userName"]}</label>
+      <span hidden={userNameVisibility} class="error">{validationResult.userName}</span>
+      <label hidden={passwordVisibility}>{labels["password"]}</label>
+      <span hidden={passwordVisibility} class="error">{validationResult.password}</span>
     </section>
     <div class="or">or</div>
     <section class="remote-authentication">
       <a class="auth-provider" href={`${apiUrl}/accounts/challenge-google?returnUrl=${returnUrl}`}>
         {google}
-        <span>{labels["signinWithGoogle"]}</span>
+        <span class="auth-provider-label">{labels["signinWithGoogle"]}</span>
       </a>
       <a class="auth-provider" href={`${apiUrl}/accounts/challenge-facebook?returnUrl=${returnUrl}`}>
         {facebook}
-        <span>{labels["signinWithFacebook"]}</span>
+        <span class="auth-provider-label">{labels["signinWithFacebook"]}</span>
       </a>
       <a class="auth-provider" href={`${apiUrl}/accounts/challenge-twitter?returnUrl=${returnUrl}`}>
         {twitter}
-        <span>{labels["signinWithTwitter"]}</span>
+        <span class="auth-provider-label">{labels["signinWithTwitter"]}</span>
       </a>
     </section>
   </>
@@ -85,42 +77,47 @@ login {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  gap: 2rem;
   height: 100%;
-}
-
-.local-authentication {
-  display: grid;
-  justify-items: end;
-  row-gap: 1rem;
 }
 
 .local-authentication,
 .remote-authentication {
   padding: 1em;
-  border-radius: var(--default-radius);
-  border: 3px solid var(--dark-neutral-color);
+  border: thick solid var(--dark-neutral-color);
+}
+
+.local-authentication {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  justify-items: end;
+  align-items: center;
+  column-gap: 1rem;
+  row-gap: 1rem;
+}
+
+.local-authentication .signing-spinner {
+  grid-column: 1 / span 2;
 }
 
 .local-authentication .error {
-  justify-self: start;
   color: var(--error-color)
 }
 
 .or {
-  margin: 1em;
   color: var(--light-neutral-color);
 }
 
-.remote-authentication .auth-provider {
-  display: block;
-  margin: 0.5em 0;
+.remote-authentication {
+  display: grid;
+  row-gap: 1rem;
 }
 
-.remote-authentication .auth-provider span {
+.remote-authentication .auth-provider .auth-provider-label {
   margin-left: var(--default-margin);
 }
 
-@media (max-width: 800px) {
+@media (max-width: 40rem) {
   login {
     flex-direction: column;
   }
