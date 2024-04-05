@@ -1,5 +1,5 @@
-const states = await import("./states.js")
-const rendering = await import("./rendering.js")
+const states = await import("/scripts/states.js")
+const rendering = await import("/scripts/rendering.js")
 
 const { setEffects, setStates, update } = rendering
 const { getStoreStates, setSelectors } = states

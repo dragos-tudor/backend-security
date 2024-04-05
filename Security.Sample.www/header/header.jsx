@@ -2,7 +2,7 @@ import { Language } from "../language/language.jsx"
 import { NavLinks } from "../navlinks/navlinks.jsx"
 import { Logout } from "../logout/logout.jsx"
 import { selectUserAuthenticated } from "../support/store/selectors.js"
-const { useSelector } = await import("../scripts/extending.js")
+import { useSelector } from "../scripts/extending.js"
 
 export const Header = (props, elem) =>
 {

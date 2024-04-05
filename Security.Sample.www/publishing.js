@@ -10,15 +10,15 @@ import { encodeHex } from "/hex.ts"
   - pure script, 100% control.
 */
 
-const bundleApp = async (cwd, homeName) => {
-  const { code: appBundle } = await bundle(cwd + "/bootstrapping.js");
-  const encodedApp = new TextEncoder().encode(
-    appBundle
-      .replaceAll("../home.jsx", homeName)
-      .replaceAll("./home.jsx", homeName));
-  const hashApp = await crypto.subtle.digest("SHA-256", encodedApp);
-  const appName = `app.${encodeHex(hashApp)}.js`;
-  return { appName, encodedApp };
+const bundleMod = async (cwd, homeName) => {
+  const { code: modBundle } = await bundle(cwd + "/mod.js");
+  const encodedMod = new TextEncoder().encode(
+    modBundle
+      .replaceAll("../home.jsx", "/" + homeName)
+      .replaceAll("./home.jsx", "/" + homeName));
+  const hashMod = await crypto.subtle.digest("SHA-256", encodedMod);
+  const modName = `mod.${encodeHex(hashMod)}.js`;
+  return { modName, encodedMod };
 }
 
 const bundleHome = async (cwd) => {
@@ -29,21 +29,19 @@ const bundleHome = async (cwd) => {
   return { homeName, encodedHome };
 }
 
-const compileIndexCss = async (cwd) => {
-  const encodedIndexCss = Deno.readFileSync(cwd + "/index.css");
-  const hashIndexCss = await crypto.subtle.digest("SHA-256", encodedIndexCss);
-  const indexCssName = `index.${encodeHex(hashIndexCss)}.css`;
-  return { indexCssName, encodedIndexCss };
-}
-
-const compileIndexHtml = (cwd, indexCssName, appName) => {
+const compileIndexHtml = (cwd, modName) => {
   const indexHtml = Deno.readTextFileSync(cwd + "/index.html");
   const encodedIndexHtml = new TextEncoder().encode(
     indexHtml
-      .replace("/index.css", indexCssName)
-      .replace("/bootstrapping.js", appName)
+      .replace("mod.js", modName)
   );
   return { indexHtmlName: "index.html", encodedIndexHtml };
+}
+
+const encodeSettings = async (cwd) => {
+  const settings = await Deno.readTextFile(cwd + "/settings.js");
+  const encodedSettings = new TextEncoder().encode(settings);
+  return { settingsName: "settings.js", encodedSettings }
 }
 
 const copyFiles = (source, target) =>
@@ -80,18 +78,20 @@ console.log("[publishing]", "copy scripts and images files to wwwroot directorie
 copyFiles(sourceScripts, targetScripts)
 copyFiles(sourceImages, targetImages)
 
-console.log("[publishing]", "bundle home and app files")
+console.log("[publishing]", "bundle home and mod files")
 const { homeName, encodedHome } = await bundleHome(source);
-const { appName, encodedApp } = await bundleApp(source, homeName);
+const { modName, encodedMod } = await bundleMod(source, homeName);
 
-console.log("[publishing]", "compile index css and html files")
-const { indexCssName, encodedIndexCss } = await compileIndexCss(source);
-const { indexHtmlName, encodedIndexHtml } = compileIndexHtml(source, indexCssName, appName);
+console.log("[publishing]", "compile index html file")
+const { indexHtmlName, encodedIndexHtml } = compileIndexHtml(source, modName);
+
+console.log("[publishing]", "encode settings file")
+const { settingsName, encodedSettings } = await encodeSettings(source)
 
 
-console.log("[publishing]", "copy bundled and compiled files to wwwroot directory")
+console.log("[publishing]", "publish bundled and compiled files to wwwroot directory")
 Deno.writeFileSync(target + "/" + homeName, encodedHome)
-Deno.writeFileSync(target + "/" + appName, encodedApp)
-Deno.writeFileSync(target + "/" + indexCssName, encodedIndexCss)
+Deno.writeFileSync(target + "/" + modName, encodedMod)
+Deno.writeFileSync(target + "/" + settingsName, encodedSettings)
 Deno.writeFileSync(target + "/" + indexHtmlName, encodedIndexHtml)
-console.log("[publishing]", "publish sample www at", target)
+console.log("[publishing]", "published sample www to", target)

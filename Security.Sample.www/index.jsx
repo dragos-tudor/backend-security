@@ -12,7 +12,7 @@ import { updateError } from "./error/updating.jsx"
 import { createAppState } from "./support/store/states.js"
 import { createAppReducer } from "./support/store/reducers.js"
 const { fetchWithTimeout } = await import("/scripts/fetching.js")
-const { navigate } = await import("/scripts/routing.js")
+const { navigate, Router } = await import("/scripts/routing.js")
 const { Services } = await import("/scripts/rendering.js")
 const { Store } = await import("/scripts/states.js")
 const { apiUrl, apiTimeout,  errorTimeout } = await import("/settings.js")
