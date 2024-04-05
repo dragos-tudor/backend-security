@@ -21,7 +21,7 @@ const css = `
 footer {
   padding-block: 2rem 3rem;
   text-align: center;
-  background-color: var(--dark-neutral-color);
+  background-color: var(--neutral-dark-color);
 }
 
 .footer-social-icon {

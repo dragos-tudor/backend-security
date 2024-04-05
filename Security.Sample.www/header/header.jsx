@@ -26,7 +26,7 @@ header {
   align-items: end;
   gap: 2rem;
   padding: 2rem;
-  background-color: var(--dark-neutral-color);
+  background-color: var(--neutral-dark-color);
 }
 
 .header-logo {

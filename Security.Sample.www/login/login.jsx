@@ -84,7 +84,7 @@ login {
 .local-authentication,
 .remote-authentication {
   padding: 1em;
-  border: thick solid var(--dark-neutral-color);
+  border: thick solid var(--neutral-dark-color);
 }
 
 .local-authentication {
@@ -105,7 +105,7 @@ login {
 }
 
 .or {
-  color: var(--light-neutral-color);
+  color: var(--neutral--light-color);
 }
 
 .remote-authentication {
@@ -114,7 +114,7 @@ login {
 }
 
 .remote-authentication .auth-provider .auth-provider-label {
-  margin-left: var(--default-margin);
+  margin-left: 0.5rem;
 }
 
 @media (max-width: 40rem) {

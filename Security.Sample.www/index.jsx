@@ -49,23 +49,21 @@ const css = `
   --ff-serif: Georgia, 'Times New Roman', Times, serif;
   --ff-sans-serif: Arial, Helvetica, sans-serif;
 
-  --light-neutral-color: rgb(168, 166, 166);
+  --neutral--light-color: rgb(168, 166, 166);
   --neutral-color: rgb(49, 46, 46);
-  --dark-neutral-color: rgb(41, 39, 39);
+  --neutral-dark-color: rgb(41, 39, 39);
 
-  --light-accent-color: rgb(250, 221, 169);
+  --accent-light-color: rgb(250, 221, 169);
   --accent-color: rgb(255, 192, 74);
-  --dark-accent-color: rgb(255, 153, 0);
+  --accent-dark-color: rgb(255, 153, 0);
 
   --label-color: rgb(140, 231, 140);
   --info-color: rgb(168, 166, 166);
   --warning-color: rgb(255, 253, 111);
   --error-color: rgb(252, 89, 89);
 
-  --default-font-size: 2rem;
-  --default-padding: 1rem;
-  --default-margin: 0.5rem;
-  --default-transition: 0.5s;
+  --font-size: 2rem;
+  --transition-interval: 0.5s;
 }
 
 html {
@@ -74,7 +72,7 @@ html {
 }
 
 body {
-  font-size: var(--default-font-size);
+  font-size: var(--font-size);
   background-color: var(--neutral-color);
   color: var(--info-color);
 }
@@ -92,13 +90,13 @@ a {
   text-decoration: none;
   outline: none;
   cursor: pointer;
-  transition: color var(--default-transition) ease-in-out;
+  transition: color var(--transition-interval) ease-in-out;
   border: 0;
   color: var(--accent-color);
 }
 
 a:hover, a:focus {
-  color: var(--dark-accent-color);
+  color: var(--accent-dark-color);
 }
 
 a * {
@@ -110,13 +108,13 @@ a * {
 
 
 input {
-  padding: var(--default-padding);
-  font-size: var(--default-font-size);
+  padding: 1rem;
+  font-size: var(--font-size);
   outline: none;
-  transition: border-color var(--default-transition) ease-in-out;
-  border: thin solid var(--dark-neutral-color);
-  background-color: var(--dark-neutral-color);
-  color: var(--light-neutral-color);
+  transition: border-color var(--transition-interval) ease-in-out;
+  border: thin solid var(--neutral-dark-color);
+  background-color: var(--neutral-dark-color);
+  color: var(--neutral--light-color);
 }
 
 input:hover, input:focus {
@@ -128,14 +126,14 @@ input:hover, input:focus {
 
 
 button {
-  padding: var(--default-padding);
-  font-size: var(--default-font-size);
+  padding: 1rem;
+  font-size: var(--font-size);
   outline: 0;
   cursor: pointer;
-  transition: color var(--default-transition) ease-in-out, border-color var(--default-transition);
+  transition: color var(--transition-interval) ease-in-out, border-color var(--transition-interval);
   border: thin solid var(--accent-color);
   color: var(--accent-color);
-  background-color: var(--dark-neutral-color);
+  background-color: var(--neutral-dark-color);
 }
 
 button * {
@@ -143,14 +141,14 @@ button * {
 }
 
 button:hover, button:focus {
-  color: var(--dark-accent-color);
-  border-color: var(--dark-accent-color);
+  color: var(--accent-dark-color);
+  border-color: var(--accent-dark-color);
 }
 
 button:disabled {
   cursor: default;
-  color: var(--light-neutral-color);
-  border-color: var(--light-neutral-color);
+  color: var(--neutral--light-color);
+  border-color: var(--neutral--light-color);
 }
 
 
