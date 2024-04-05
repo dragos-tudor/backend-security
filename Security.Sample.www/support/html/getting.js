@@ -1,6 +1,8 @@
 
 export const getHtmlBody = (document) => document.body
 
-export const getHtmlDescendant = (element, name) => element.querySelector(name.toLowerCase())
+export const getHtmlChildren = (elem) => Array.from(elem.children)
 
-export const getHtmlParent = (element) => element.parentElement
+export const getHtmlDescendant = (elem, name) => elem.querySelector(name.toLowerCase())
+
+export const getHtmlParent = (elem) => elem.parentElement

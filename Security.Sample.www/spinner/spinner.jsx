@@ -2,7 +2,7 @@
 export const Spinner = (props) =>
   <>
     <style css={css}></style>
-    {props.children[0]}
+    {...props.children}
   </>
 
 const css = `

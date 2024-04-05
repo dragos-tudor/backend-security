@@ -1,4 +1,4 @@
-import { getHtmlDescendant } from "../support/html/getting.js"
+import { getHtmlChildren, getHtmlDescendant } from "../support/html/getting.js"
 import { setHtmlBackgroundImage, setHtmlVisibility } from "../support/html/setting.js"
 import { Spinner } from "./spinner.jsx"
 
@@ -8,6 +8,7 @@ export const hideSpinner = (elem) =>
   if (!spinner) return
 
   setHtmlBackgroundImage(spinner, "none")
-  setHtmlVisibility(spinner.children[1], true)
+  getHtmlChildren(spinner).forEach(child =>
+    setHtmlVisibility(child, true))
   return spinner
 }

@@ -270,17 +270,17 @@ const buildJsxFactoryChildren = (elem, $elem)=>{
         factoryElems
     ]);
 };
-const isLogLibraryEnabled = (elem, libraryName)=>elem.__log.includes(libraryName);
+const isLogCategoryEnabled = (elem, category)=>elem.__log.includes(category);
 const isLogMounted = (elem)=>elem.__log instanceof Array;
-const isLogEnabled = (elem, libraryName)=>isLogMounted(elem) && isLogLibraryEnabled(elem, libraryName);
+const isLogEnabled = (elem, category)=>isLogMounted(elem) && isLogCategoryEnabled(elem, category);
 const mountLog = ($elem, $parent)=>$elem.__log = [
         ...$parent.__log
     ];
-const enableLogging = ($elem, $parent)=>isLogMounted($parent) && mountLog($elem, $parent);
-const LibraryName = "rendering";
+const enableLogging = ($elem, $parent)=>isLogMounted($elem) || isLogMounted($parent) && mountLog($elem, $parent);
+const Category = "rendering";
 const LogHeader = "[rendering]";
-const logError = (elem, ...args)=>isLogEnabled(elem, LibraryName) && console.error(LogHeader, ...args);
-const logInfo = (elem, ...args)=>isLogEnabled(elem, LibraryName) && console.info(LogHeader, ...args);
+const logError = (elem, ...args)=>isLogEnabled(elem, Category) && console.error(LogHeader, ...args);
+const logInfo = (elem, ...args)=>isLogEnabled(elem, Category) && console.info(LogHeader, ...args);
 const isIgnoreArray = (elem)=>elem.__ignore instanceof Array;
 const isIgnoredElement = ($elem)=>$elem.__ignore?.includes(getHtmlName($elem));
 const enableIgnoring = ($elem, $parent)=>isIgnoreArray($parent) && ($elem.__ignore = [
@@ -400,7 +400,7 @@ const equalElementProps = (elem, $elem)=>!getJsxElementProps(elem)["no-skip"] &&
 const equalElementTexts = (elem, $elem)=>getJsxText(elem) === getHtmlText($elem);
 const isStyleElement = (elem)=>getHtmlName(elem) === "style";
 const isUpdatedElement = ($elem)=>isHtmlElement($elem);
-const shouldRenderChildren = ($elem)=>!isStyleElement($elem) && !isIgnoredElement($elem) && !isHtmlText($elem);
+const shouldSkipElement = ($elem)=>isStyleElement($elem) || isIgnoredElement($elem) || isHtmlText($elem);
 const shouldRenderElement = ($elem)=>!existsElement($elem);
 const shouldReplaceElement = (elem, $elem)=>!equalElementNames(elem, $elem);
 const shouldUnrenderElement = (elem)=>!existsElement(elem);
@@ -414,7 +414,7 @@ const renderElements = (elem, $parent = parseHtml("<main></main>"))=>{
     ];
     for (const $elem of rendered){
         logElement($elem, "render");
-        shouldRenderChildren($elem) && handleError(()=>resolveJsxChildren(getJsxElement($elem), $elem), $elem).forEach((child)=>rendered.push(renderElement(child, $elem)));
+        shouldSkipElement($elem) || handleError(()=>resolveJsxChildren(getJsxElement($elem), $elem), $elem).forEach((child)=>rendered.push(renderElement(child, $elem)));
     }
     return rendered;
 };
@@ -452,7 +452,7 @@ const unrenderElements = ($elem)=>{
     const unrendered = [
         unrenderElement($elem)
     ];
-    for (const $elem of unrendered)shouldRenderChildren($elem) && getHtmlChildNodes($elem).forEach(($child)=>unrendered.push(unrenderElement($child)));
+    for (const $elem of unrendered)shouldSkipElement($elem) || getHtmlChildNodes($elem).forEach(($child)=>unrendered.push(unrenderElement($child)));
     return unrendered;
 };
 const getMaxLengthElements = (elems, $elems)=>elems.length > $elems.length ? elems : $elems;
@@ -468,7 +468,7 @@ const updateElements = ($elem, elem = getJsxElement($elem))=>{
         updateElement(elem, $elem)
     ];
     for (const $elem of updated){
-        if (!shouldRenderChildren($elem)) continue;
+        if (shouldSkipElement($elem)) continue;
         const children = handleError(()=>resolveJsxChildren(getJsxElement($elem), $elem), $elem);
         const $children = resolveHtmlChildren($elem, children);
         getMaxLengthElements(children, $children).map((_, index)=>reconcileElement(children[index], $children[index], $elem)).filter(($elem)=>isUpdatedElement($elem)).forEach(($elem)=>updated.push($elem));
@@ -618,32 +618,18 @@ const useState = (states, name, value, deps)=>{
     setStateValue(state, value);
     return getStateUsage(state);
 };
-const Suspense = ({ suspending = true, fallback, children })=>suspending ? fallback : children;
-const isSuspenseElement = (elem)=>getHtmlName(elem) === "suspense";
-const toggleSuspense = (elem, suspending)=>{
-    const $suspense = findHtmlAscendant(elem, isSuspenseElement);
-    if (!$suspense) return elem;
-    const { props } = getJsxElement($suspense);
-    return updateElements($suspense, React.createElement(Suspense, {
-        suspending: suspending,
-        fallback: props.fallback
-    }, props.children));
-};
-const suspense = (elem)=>toggleSuspense(elem, true);
-const unsuspense = (elem)=>toggleSuspense(elem, false);
 const isFunctionLazyLoader = (loader)=>typeof loader === "function";
 const validateLazyLoader = (loader)=>isFunctionLazyLoader(loader) ? "" : "Lazy loader should be function.";
 const Lazy = (props, elem)=>{
     throwError(validateHtmlElement(elem));
     throwError(validateLazyLoader(props.loader));
-    const loader = props.loader;
-    const [factory, setFactory] = useState(setStates(elem), "factory", undefined, []);
+    const states = setStates(elem);
+    const effects = setEffects(elem);
+    const [factory, setFactory] = useState(states, "factory", undefined, []);
     if (factory) return createJsxElement(factory, props);
-    useEffect(setEffects(elem), "suspense", ()=>suspense(elem));
-    useEffect(setEffects(elem), "load", async ()=>{
-        const factory = await loader();
+    useEffect(effects, "load", async ()=>{
+        const factory = await props.loader();
         setFactory(factory);
-        unsuspense(elem);
         render(createJsxElement(factory, props), elem);
     });
 };
@@ -654,6 +640,12 @@ const Services = (props, elem)=>{
 };
 const getService = (elem, name, fallback)=>getServices(elem)?.[name] ?? fallback;
 const getServices = (elem)=>elem.ownerDocument.__services;
+const setHiddenProps = (elem, value)=>elem.props.hidden = value;
+const Suspense = ({ suspending = true, fallback, children })=>{
+    setHiddenProps(fallback, !suspending);
+    children.forEach((child)=>setHiddenProps(child, suspending));
+    return React.createElement(React.Fragment, null, fallback, ...children);
+};
 export { Context as Context };
 export { getContexts as getContexts };
 export { setContexts as setContexts };
@@ -663,7 +655,6 @@ export { Lazy as Lazy };
 export { Services as Services };
 export { getService as getService };
 export { Suspense as Suspense };
-export { suspense as suspense, unsuspense as unsuspense };
 export { dispatchEvent as dispatchEvent };
 export { setEventHandler as setEventHandler };
 try {
