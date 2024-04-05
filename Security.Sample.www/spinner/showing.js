@@ -1,4 +1,4 @@
-import { getHtmlChildren, getHtmlDescendant } from "../support/html/getting.js"
+import { getHtmlChildren, getHtmlDescendant, getHtmlName } from "../support/html/getting.js"
 import { setHtmlBackgroundImage, setHtmlVisibility } from "../support/html/setting.js"
 import { Spinner } from "./spinner.jsx"
 
@@ -10,7 +10,8 @@ export const showSpinner = (elem, image = SpinnerImage) =>
   if (!spinner) return
 
   setHtmlBackgroundImage(spinner, image)
-  getHtmlChildren(spinner).forEach(child =>
-    setHtmlVisibility(child, false))
+  getHtmlChildren(spinner)
+    .filter(child => getHtmlName(child) !== "style")
+    .forEach(child => setHtmlVisibility(child, false))
   return spinner
 }
