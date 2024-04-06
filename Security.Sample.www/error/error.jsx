@@ -27,7 +27,7 @@ error {
   bottom: 5rem;
   left: 2rem;
   padding: 1rem;
-  border: thick solid var(--error-color);
+  border: thin solid var(--error-color);
   color: var(--info-color);
   background-color: var(--neutral-light-color);
 }`

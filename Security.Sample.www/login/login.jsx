@@ -2,14 +2,12 @@ import { google, facebook, twitter } from "../images/icons.jsx"
 import { getLocationUrl } from "../support/locations/getting.js"
 import { resolveLocation } from "../support/locations/resolving.js"
 import { useApiUrl, useFetchApi, useLabels, useValidationErrors } from "../support/services/using.js"
-import { updateState, useState } from "../scripts/extending.js"
-import { hideSpinner } from "../spinner/hiding.js"
-import { showSpinner } from "../spinner/showing.js"
+import { useState } from "../scripts/extending.js"
 import { Spinner } from "../spinner/spinner.jsx"
 import { createCredentials } from "./creating.js"
 import { signInUser } from "./signingin.js"
 import { validateCredentials } from "./validating.js"
-import { getHtmlButton } from "./getting.js";
+import { getHtmlButton } from "./getting.js"
 
 
 export const Login = (props, elem) =>
@@ -25,33 +23,34 @@ export const Login = (props, elem) =>
 
   const [userName, setUserName] = useState(elem, "userName", null, [])
   const [password, setPassword] = useState(elem, "password", null, [])
+  const [signing, setSigning] = useState(elem, "signing", false, [])
 
   const credentials = createCredentials(userName, password)
   const validationResult = validateCredentials(credentials, validationErrors)
   const validCredentials = validationResult.isValid
-  const userNameVisibility = userName == null || !validationResult.userName
-  const passwordVisibility = password == null || !validationResult.password
+  const userNameError = userName == null || !validationResult.userName
+  const passwordError = password == null || !validationResult.password
 
   return <>
     <style css={css}></style>
     <section class="local-authentication">
       <label for="userName">{labels["userName"]}</label>
-      <input id="userName" type="text" onchange={updateState(setUserName, elem)} placeholder={labels["userName"]}/>
+      <input id="userName" type="text" onchange={({target}) => setUserName(target.value)} placeholder={labels["userName"]}/>
       <label for="password">{labels["password"]}</label>
-      <input id="password" type="password" onchange={updateState(setPassword, elem)} onblur={() => getHtmlButton(elem).focus()} placeholder={labels["password"]}/>
-      <Spinner class="signing-spinner" no-skip>
-        <button disabled={!validCredentials} onclick={async () =>
-            showSpinner(elem) &&
-            await signInUser(credentials, location, fetchApi, elem) &&
-            hideSpinner(elem)
-          }>
+      <input id="password" type="password" onchange={({target}) => setPassword(target.value)} onblur={() => getHtmlButton(elem).focus()} placeholder={labels["password"]}/>
+      <Spinner spinning={signing} class="signing-spinner" no-skip>
+        <button disabled={!validCredentials} onclick={async () => {
+            setSigning(true);
+            await signInUser(credentials, location, fetchApi, elem);
+            setSigning(false);
+          }}>
           <span>{labels["signin"]}</span>
         </button>
       </Spinner>
-      <label hidden={userNameVisibility}>{labels["userName"]}</label>
-      <span hidden={userNameVisibility} class="error">{validationResult.userName}</span>
-      <label hidden={passwordVisibility}>{labels["password"]}</label>
-      <span hidden={passwordVisibility} class="error">{validationResult.password}</span>
+      <label hidden={userNameError}>{labels["userName"]}</label>
+      <span hidden={userNameError} class="error">{validationResult.userName}</span>
+      <label hidden={passwordError}>{labels["password"]}</label>
+      <span hidden={passwordError} class="error">{validationResult.password}</span>
     </section>
     <div class="or">or</div>
     <section class="remote-authentication">

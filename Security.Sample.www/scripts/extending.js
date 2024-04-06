@@ -17,10 +17,8 @@ export const usePostEffect = (elem, name, func, deps) =>  // run after rendering
 export const useSelector = (elem, name, func) =>
   states.useSelector(setSelectors(elem), name, func, getStoreStates(elem))
 
-export const useState = (elem, name, value, deps) =>
-  rendering.useState(setStates(elem), name, value, deps)
-
-export const updateState = (setState, elem) => (event) => {
-  setState(event.target.value)
-  return update(elem)
+export const useState = (elem, name, value, deps) => // convenient useState function
+{
+  const [state, setState] = rendering.useState(setStates(elem), name, value, deps)
+  return [state, (value) => { const result = setState(value); update(elem); return result; }]
 }
