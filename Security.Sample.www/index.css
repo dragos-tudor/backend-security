@@ -31,13 +31,29 @@ body {
   color: var(--info-color);
 }
 
-* {
+*, *:after, *::before {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
 
+@media (prefers-color-scheme: light) {
+  :root {
+    --neutral--light-color: rgb(255, 235, 235);
+    --neutral-color: rgb(207, 207, 207);
+    --neutral-dark-color: rgb(231, 228, 228);
+
+    --accent-light-color: rgb(252, 105, 60);
+    --accent-color: rgb(247, 119, 80);
+    --accent-dark-color: rgb(241, 73, 22);
+
+    --label-color: rgb(1, 160, 36);
+    --info-color: rgb(131, 131, 131);
+    --warning-color: rgb(255, 253, 111);
+    --error-color: rgb(252, 89, 89);
+  }
+}
 
 
 a {
@@ -68,7 +84,7 @@ input {
   transition: border-color var(--transition-interval) ease-in-out;
   border: thin solid var(--neutral-dark-color);
   background-color: var(--neutral-dark-color);
-  color: var(--neutral--light-color);
+  color: var(--info-color);
 }
 
 input:hover, input:focus {
@@ -101,7 +117,7 @@ button:hover, button:focus {
 
 button:disabled {
   cursor: default;
-  color: var(--neutral--light-color);
+  color: var(--info-color);
   border-color: var(--neutral--light-color);
 }
 

@@ -24,10 +24,10 @@ error {
   display: none;
   position: absolute;
   transition: display 1s ease-in-out;
-  bottom: 3rem;
+  bottom: 5rem;
   left: 2rem;
   padding: 1rem;
-  border: 1px solid var(--error-color);
+  border: thick solid var(--error-color);
   color: var(--info-color);
-  background-color: var(--neutral-color);
+  background-color: var(--neutral-light-color);
 }`
