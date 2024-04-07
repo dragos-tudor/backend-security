@@ -8,6 +8,13 @@ login {
   height: 100%;
 }
 
+@media (max-width: 40rem) {
+  login {
+    flex-direction: column;
+  }
+}
+
+
 .local-authentication,
 .remote-authentication {
   padding: 1em;
@@ -23,7 +30,7 @@ login {
   row-gap: 1rem;
 }
 
-.local-authentication .signing-spinner {
+.local-authentication .signing {
   grid-column: 1 / span 2;
 }
 
@@ -44,8 +51,6 @@ login {
   margin-left: 0.5rem;
 }
 
-@media (max-width: 40rem) {
-  login {
-    flex-direction: column;
-  }
+.signing > * {
+  display: inline-block;
 }

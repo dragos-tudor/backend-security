@@ -26,7 +26,6 @@ const UnsafeTagNames = Object.freeze([
     "IFRAME"
 ]);
 const UnsafePropNames = Object.freeze([
-    "style",
     "css",
     "innerHTML",
     "outerHTML"
@@ -54,6 +53,9 @@ const createCustomEvent = (eventName, detail)=>new CustomEvent(eventName, {
         detail
     });
 const dispatchEvent = (elem, eventName, detail)=>elem.dispatchEvent(createCustomEvent(eventName, detail));
+const ReservedPropNames = Object.freeze([
+    "children"
+]);
 const AriaPropMappings = Object.freeze({
     "aria-autocomplete": "ariaAutoComplete",
     "aria-colcount": "ariaColCount",
@@ -82,12 +84,20 @@ const SpecialPropMappings = Object.freeze({
     css: "innerHTML",
     html: "innerHTML"
 });
-const ReservedPropNames = Object.freeze([
-    "children"
+const TogglePropNames = Object.freeze([
+    "checked",
+    "disabled",
+    "hidden",
+    "readOnly",
+    "selected"
 ]);
 const isAriaPropName = (propName)=>propName.startsWith("aria-");
-const isSpecialPropName = (propName)=>SpecialPropMappings[propName];
+const isDangerouslyPropName = (propName)=>propName === "html";
+const isInternalPropName = (propName)=>propName.startsWith("__");
 const isReservedPropName = (propName)=>ReservedPropNames.includes(propName);
+const isSpecialPropName = (propName)=>propName in SpecialPropMappings;
+const isStylePropName = (propName)=>propName === "style";
+const isTogglePropName = (propName)=>TogglePropNames.includes(propName);
 const isValidPropName = (elem, props, propName)=>!isReservedPropName(propName) && !isEventHandler(propName) && isSafePropName(getHtmlName(elem), propName) && isSafeUrl(props, propName);
 const getPropNames = (elem)=>Object.getOwnPropertyNames(elem);
 const getValidPropNames = (elem, props)=>getPropNames(props).filter((propName)=>isValidPropName(elem, props, propName));
@@ -129,21 +139,12 @@ const mapPropName = (propName)=>isSpecialPropName(propName) && SpecialPropMappin
 const EncodingCharsRegex = /[^\w. ]/gi;
 const getHtmlEntity = (__char)=>`&#${__char.charCodeAt(0)};`;
 const encodeHtml = (string)=>string.replace(EncodingCharsRegex, getHtmlEntity);
-const TogglePropNames = Object.freeze([
-    "checked",
-    "disabled",
-    "hidden",
-    "readOnly",
-    "selected"
-]);
-const isDangerouslyHtmlPropName = (propName)=>propName === "html";
 const isEmptyPropValue = (propValue)=>propValue == undefined || propValue === "";
-const isTogglePropName = (propName)=>TogglePropNames.includes(propName);
-const getTogglePropValue = (propValue)=>isEmptyPropValue(propValue) || propValue;
-const resolvePropValue = (props, propName)=>isDangerouslyHtmlPropName(propName) && encodeHtml(props[propName]) || isTogglePropName(propName, props[propName]) && getTogglePropValue(props[propName]) || props[propName];
 const isSVGPropValue = (elem, propName)=>elem[propName]?.constructor?.name.startsWith("SVG");
-const isHtmlPropName = (elem, propName)=>propName in elem || propName.startsWith("__");
-const isWritableHtmlProp = (elem, propName)=>{
+const getTogglePropValue = (propValue)=>isEmptyPropValue(propValue) || propValue;
+const resolvePropValue = (props, propName)=>isDangerouslyPropName(propName) && encodeHtml(props[propName]) || isTogglePropName(propName, props[propName]) && getTogglePropValue(props[propName]) || props[propName];
+const isHtmlProperty = (elem, propName)=>propName in elem;
+const isHtmlWritableProperty = (elem, propName)=>{
     const descriptor = Object.getOwnPropertyDescriptor(elem, propName);
     if (descriptor && "writable" in descriptor) return descriptor.writable;
     if (descriptor && "set" in descriptor) return true;
@@ -151,18 +152,27 @@ const isWritableHtmlProp = (elem, propName)=>{
     return true;
 };
 const setHtmlProperty = (props)=>(elem, propName)=>{
+        if (isStylePropName(propName)) {
+            setHtmlStyleProperties(elem, props[propName]);
+            return elem;
+        }
         const htmlPropName = mapPropName(propName);
         const htmlPropValue = resolvePropValue(props, propName);
-        isHtmlPropName(elem, htmlPropName) && isWritableHtmlProp(elem, propName) ? elem[htmlPropName] = htmlPropValue : setAttribute(elem, htmlPropName, htmlPropValue);
+        (isHtmlProperty(elem, htmlPropName) || isInternalPropName(htmlPropName)) && isHtmlWritableProperty(elem, propName) ? setHtmlPropertyValue(elem, htmlPropName, htmlPropValue) : setAttribute(elem, htmlPropName, htmlPropValue);
         return elem;
     };
+const setHtmlPropertyValue = (elem, propName, propValue)=>elem[propName] = propValue;
+const setHtmlStyleProperty = (style)=>(elem, styleName)=>(elem.style[styleName] = style[styleName], styleName);
+const setHtmlStyleProperties = (elem, style)=>getPropNames(style).reduce(setHtmlStyleProperty(style), elem);
 const setHtmlProperties = (elem, props)=>getValidPropNames(elem, props).reduce(setHtmlProperty(props), elem);
 const removeAttribute = (elem, attrName)=>elem.removeAttribute(attrName);
 const unsetHtmlProperty = (elem, propName)=>{
+    if (isStylePropName(propName)) return elem;
     const htmlPropName = mapPropName(propName);
-    isHtmlPropName(elem, htmlPropName) && isWritableHtmlProp(elem, propName) ? elem[htmlPropName] = undefined : removeAttribute(elem, htmlPropName);
+    (isHtmlProperty(elem, htmlPropName) || isInternalPropName(htmlPropName)) && isHtmlWritableProperty(elem, propName) ? unsetHtmlPropertyValue(elem, htmlPropName) : removeAttribute(elem, htmlPropName);
     return elem;
 };
+const unsetHtmlPropertyValue = (elem, propName)=>elem[propName] = undefined;
 const unsetHtmlProperties = (elem, props)=>getValidPropNames(elem, props).reduce(unsetHtmlProperty, elem);
 const createHtmlText = (document, text)=>document.createTextNode(text);
 const isHtmlText = (elem)=>elem.nodeType === 3;
@@ -231,12 +241,12 @@ const copyJsxProp = (sourceProps)=>(targetProps, propName)=>{
     };
 const copyDefaultJsxProps = (sourceProps, targetProps)=>getJsxPropNames(sourceProps).filter((propName)=>!existsJsxPropValue(targetProps, propName)).reduce(copyJsxProp(sourceProps), targetProps);
 const copyValidJsxProps = (sourceProps, targetProps = {})=>getJsxPropNames(sourceProps).filter((propName)=>!isReservedJsxPropName(propName)).reduce(copyJsxProp(sourceProps), targetProps);
-const resolveJsxPropsyKey = (props, maybeKey)=>existsJsxPropsKey(props) && getJsxPropsKey(props).toString() || existsJsxKey(maybeKey) && maybeKey.toString() || null;
+const resolveJsxPropsKey = (props, maybeKey)=>existsJsxPropsKey(props) && getJsxPropsKey(props).toString() || existsJsxKey(maybeKey) && maybeKey.toString() || null;
 const resolveJsxPropsRef = (props)=>existsJsxPropsRef(props) && getJsxPropsRef(props) || null;
 const resolveJsxProps = (initialProps, type)=>type && type.defaultProps ? copyDefaultJsxProps(type.defaultProps, copyValidJsxProps(initialProps)) : copyValidJsxProps(initialProps);
 const getJsxLegacyChildren = (children)=>children?.length == 1 ? children[0] : children;
 const emptyLegacyJsxChildren = (children)=>!children || children.length === 0;
-const compileJsxExpression = (type, props, maybeKey)=>createJsxElement(type, resolveJsxProps(props, type), resolveJsxPropsyKey(props, maybeKey), getJsxParent(getJsxInternals(globalThis["React"])), resolveJsxPropsRef(props));
+const compileJsxExpression = (type, props, maybeKey)=>createJsxElement(type, resolveJsxProps(props, type), resolveJsxPropsKey(props, maybeKey), getJsxParent(getJsxInternals(globalThis["React"])), resolveJsxPropsRef(props));
 const compileLegacyJsxExpression = (type, props, ...children)=>emptyLegacyJsxChildren(children) ? compileJsxExpression(type, props ?? {}) : compileJsxExpression(type, {
         ...props ?? {},
         children: getJsxLegacyChildren(children)
@@ -396,7 +406,7 @@ const equalObjectsProp = (obj1, obj2, propName)=>isReservedObjectPropName(propNa
 const equalObjectsProps = (obj1, obj2)=>getObjectPropNames(obj1).every((propName)=>equalObjectsProp(obj1, obj2, propName));
 const equalObjects = (obj1, obj2)=>(!existsObjects(obj1, obj2) && equalPrimitives || !equalObjectsPropsCount(obj1, obj2) && falsy || equalObjectsProps)(obj1, obj2);
 const equalElementNames = (elem, $elem)=>getJsxName(elem) === getHtmlName($elem);
-const equalElementProps = (elem, $elem)=>!getJsxElementProps(elem)["no-skip"] && equalObjects(getJsxElementProps(elem), getJsxElementProps(getJsxElement($elem)));
+const equalElementProps = (elem, $elem)=>equalObjects(getJsxElementProps(elem), getJsxElementProps(getJsxElement($elem)));
 const equalElementTexts = (elem, $elem)=>getJsxText(elem) === getHtmlText($elem);
 const isStyleElement = (elem)=>getHtmlName(elem) === "style";
 const isUpdatedElement = ($elem)=>isHtmlElement($elem);
@@ -404,7 +414,7 @@ const shouldSkipElement = ($elem)=>isStyleElement($elem) || isIgnoredElement($el
 const shouldRenderElement = ($elem)=>!existsElement($elem);
 const shouldReplaceElement = (elem, $elem)=>!equalElementNames(elem, $elem);
 const shouldUnrenderElement = (elem)=>!existsElement(elem);
-const shouldUpdateElement = (elem, $elem)=>equalElementNames(elem, $elem) && (isJsxElement(elem) || isJsxFactory(elem) && !equalElementProps(elem, $elem) || isJsxText(elem) && !equalElementTexts(elem, $elem));
+const shouldUpdateElement = (elem, $elem)=>equalElementNames(elem, $elem) && (isJsxElement(elem) || isJsxFactory(elem) && (getJsxElementProps(elem)["no-skip"] || !equalElementProps(elem, $elem)) || isJsxText(elem) && !equalElementTexts(elem, $elem));
 const renderElement = (elem, $parent)=>(isJsxText(elem) ? renderHtmlText : renderHtmlElement)(elem, $parent);
 const renderElements = (elem, $parent = parseHtml("<main></main>"))=>{
     isJsxText(elem) || throwError(validateHtmlElement($parent));
@@ -640,10 +650,11 @@ const Services = (props, elem)=>{
 };
 const getService = (elem, name, fallback)=>getServices(elem)?.[name] ?? fallback;
 const getServices = (elem)=>elem.ownerDocument.__services;
-const setHiddenProps = (elem, value)=>elem.props.hidden = value;
+const setElementPropsHidden = (elem, value)=>(elem.props.hidden = value, elem);
+const setElementsPropsHiodden = (elems, value)=>elems.map((elem)=>setElementPropsHidden(elem, value));
 const Suspense = ({ suspending = true, fallback, children })=>{
-    setHiddenProps(fallback, !suspending);
-    children.forEach((child)=>setHiddenProps(child, suspending));
+    setElementPropsHidden(fallback, !suspending);
+    setElementsPropsHiodden(children, suspending);
     return React.createElement(React.Fragment, null, fallback, ...children);
 };
 export { Context as Context };

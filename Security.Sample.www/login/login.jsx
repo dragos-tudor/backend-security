@@ -1,14 +1,15 @@
-import { google, facebook, twitter } from "../images/icons.jsx"
+import { google, facebook, twitter, spinner } from "../images/icons.jsx"
 import { getLocationUrl } from "../support/locations/getting.js"
 import { resolveLocation } from "../support/locations/resolving.js"
 import { useApiUrl, useFetchApi, useLabels, useValidationErrors } from "../support/services/using.js"
 import { useState } from "../scripts/extending.js"
-import { Spinner } from "../spinner/spinner.jsx"
 import { createCredentials } from "./creating.js"
 import { signInUser } from "./signingin.js"
 import { validateCredentials } from "./validating.js"
 import { getHtmlButton } from "./getting.js"
-
+const { Suspense } = await import("/scripts/rendering.js")
+const { navigate } = await import("/scripts/routing.js")
+const { dispatchAction } = await import("/scripts/states.js")
 
 export const Login = (props, elem) =>
 {
@@ -38,15 +39,16 @@ export const Login = (props, elem) =>
       <input id="userName" type="text" onchange={({target}) => setUserName(target.value)} placeholder={labels["userName"]}/>
       <label for="password">{labels["password"]}</label>
       <input id="password" type="password" onchange={({target}) => setPassword(target.value)} onblur={() => getHtmlButton(elem).focus()} placeholder={labels["password"]}/>
-      <Spinner spinning={signing} class="signing-spinner" no-skip>
-        <button disabled={!validCredentials} onclick={async () => {
-            setSigning(true);
-            await signInUser(credentials, location, fetchApi, elem);
-            setSigning(false);
-          }}>
-          <span>{labels["signin"]}</span>
-        </button>
-      </Spinner>
+      <button class="signing"
+        disabled={!validCredentials || signing}
+        onclick={async () => {
+          setSigning(true);
+          await signInUser(credentials, location, fetchApi, (action) => dispatchAction(elem, action), (url) => navigate(elem, url));
+          setSigning(false);
+        }}>
+        <Suspense suspending={signing} fallback={<div>{spinner}</div>}></Suspense>
+        <div>{labels["signin"]}</div>
+      </button>
       <label hidden={userNameError}>{labels["userName"]}</label>
       <span hidden={userNameError} class="error">{validationResult.userName}</span>
       <label hidden={passwordError}>{labels["password"]}</label>
@@ -80,6 +82,13 @@ login {
   height: 100%;
 }
 
+@media (max-width: 40rem) {
+  login {
+    flex-direction: column;
+  }
+}
+
+
 .local-authentication,
 .remote-authentication {
   padding: 1em;
@@ -95,7 +104,7 @@ login {
   row-gap: 1rem;
 }
 
-.local-authentication .signing-spinner {
+.local-authentication .signing {
   grid-column: 1 / span 2;
 }
 
@@ -116,8 +125,6 @@ login {
   margin-left: 0.5rem;
 }
 
-@media (max-width: 40rem) {
-  login {
-    flex-direction: column;
-  }
+.signing > * {
+  display: inline-block;
 }`

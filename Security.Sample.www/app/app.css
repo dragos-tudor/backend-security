@@ -11,13 +11,21 @@ router {
 
 main {
   height: 100%;
+  justify-self: center;
+  align-self: center;
 }
 
-routes, route {
+routes, route, suspense {
   display: block;
   height: inherit;
 }
 
-.app-spinner {
-  background-size: 6rem;
+main > suspense {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+}
+
+.app-spinner svg  {
+  height: 5rem;
 }

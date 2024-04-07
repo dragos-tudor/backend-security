@@ -1,11 +1,12 @@
 import { Header } from "../header/header.jsx"
 import { Footer } from "../footer/footer.jsx"
 import { Routes } from "../routes/routes.jsx"
+import { spinner } from "../images/icons.jsx"
 import { usePostEffect, useState } from "../scripts/extending.js"
 import { resolveLocation } from "../support/locations/resolving.js"
 import { useFetchApi } from "../support/services/using.js"
-import { Spinner } from "../spinner/spinner.jsx"
 import { startApp } from "./starting.js"
+const { Suspense } = await import("/scripts/rendering.js")
 const { navigate, Router } = await import("/scripts/routing.js")
 const { dispatchAction } = await import("/scripts/states.js")
 
@@ -26,9 +27,9 @@ export const App = (props, elem) =>
     <Router no-skip>
       <Header></Header>
       <main>
-        <Spinner spinning={starting} class="app-spinner">
+        <Suspense suspending={starting} fallback={<div class="app-spinner">{spinner}</div>}>
           <Routes></Routes>
-        </Spinner>
+        </Suspense>
       </main>
       <Footer></Footer>
     </Router>
@@ -48,13 +49,21 @@ router {
 
 main {
   height: 100%;
+  justify-self: center;
+  align-self: center;
 }
 
-routes, route {
+routes, route, suspense {
   display: block;
   height: inherit;
 }
 
-.app-spinner {
-  background-size: 6rem;
+main > suspense {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+}
+
+.app-spinner svg  {
+  height: 5rem;
 }`

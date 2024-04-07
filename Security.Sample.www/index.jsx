@@ -66,24 +66,6 @@ const css = `
   --transition-interval: 0.5s;
 }
 
-html {
-  font-size: 62.5%;
-  font-family: var(--ff-sans-serif);
-}
-
-body {
-  font-size: var(--font-size);
-  background-color: var(--neutral-color);
-  color: var(--info-color);
-}
-
-*, *:after, *::before {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-
 @media (prefers-color-scheme: light) {
   :root {
     --neutral--light-color: rgb(255, 235, 235);
@@ -99,6 +81,25 @@ body {
     --warning-color: rgb(255, 253, 111);
     --error-color: rgb(252, 89, 89);
   }
+}
+
+*, *:after, *::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+
+html {
+  font-size: 62.5%;
+  font-family: var(--ff-sans-serif);
+}
+
+body {
+  font-size: var(--font-size);
+  background-color: var(--neutral-color);
+  color: var(--info-color);
 }
 
 
@@ -150,10 +151,6 @@ button {
   border: thin solid var(--accent-color);
   color: var(--accent-color);
   background-color: var(--neutral-dark-color);
-}
-
-button * {
-  vertical-align: middle;
 }
 
 button:hover, button:focus {

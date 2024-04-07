@@ -3,17 +3,15 @@ import { hasLocationRedirect } from "../support/redirections/verifying.js"
 import { RoutePaths } from "../routes/paths.js"
 import { signInAccountApi } from "../support/api/accounts.js"
 import { createSetUserAction } from "../support/store/actions.js"
-const { navigate } = await import("/scripts/routing.js")
-const { dispatchAction } = await import("/scripts/states.js")
 
-export const signInUser = async (credentials, location, fetchApi, elem) =>
+export const signInUser = async (credentials, location, fetchApi, dispatchAction, navigate) =>
 {
   const [user, error] = await signInAccountApi(credentials, fetchApi)
   if (error) return [, error]
 
-  dispatchAction(elem, createSetUserAction(user))
+  dispatchAction(createSetUserAction(user))
   hasLocationRedirect(location)?
-    navigate(elem, getRedirectParam(location)):
-    navigate(elem, RoutePaths.home)
+    navigate(getRedirectParam(location)):
+    navigate(RoutePaths.home)
   return [user]
 }
