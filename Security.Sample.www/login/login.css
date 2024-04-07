@@ -50,7 +50,3 @@ login {
 .remote-authentication .auth-provider .auth-provider-label {
   margin-left: 0.5rem;
 }
-
-.signing > * {
-  display: inline-block;
-}

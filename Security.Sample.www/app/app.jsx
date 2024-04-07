@@ -6,7 +6,6 @@ import { usePostEffect, useState } from "../scripts/extending.js"
 import { resolveLocation } from "../support/locations/resolving.js"
 import { useFetchApi } from "../support/services/using.js"
 import { startApp } from "./starting.js"
-const { Suspense } = await import("/scripts/rendering.js")
 const { navigate, Router } = await import("/scripts/routing.js")
 const { dispatchAction } = await import("/scripts/states.js")
 
@@ -27,9 +26,8 @@ export const App = (props, elem) =>
     <Router no-skip>
       <Header></Header>
       <main>
-        <Suspense suspending={starting} fallback={<div class="app-spinner">{spinner}</div>}>
-          <Routes></Routes>
-        </Suspense>
+        <div hidden={!starting} class="app-spinner">{spinner}</div>
+        <Routes></Routes>
       </main>
       <Footer></Footer>
     </Router>
@@ -58,7 +56,7 @@ routes, route, suspense {
   height: inherit;
 }
 
-main > suspense {
+main {
   display: grid;
   justify-items: center;
   align-items: center;

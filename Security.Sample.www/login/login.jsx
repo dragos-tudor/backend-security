@@ -7,7 +7,6 @@ import { createCredentials } from "./creating.js"
 import { signInUser } from "./signingin.js"
 import { validateCredentials } from "./validating.js"
 import { getHtmlButton } from "./getting.js"
-const { Suspense } = await import("/scripts/rendering.js")
 const { navigate } = await import("/scripts/routing.js")
 const { dispatchAction } = await import("/scripts/states.js")
 
@@ -46,8 +45,8 @@ export const Login = (props, elem) =>
           await signInUser(credentials, location, fetchApi, (action) => dispatchAction(elem, action), (url) => navigate(elem, url));
           setSigning(false);
         }}>
-        <Suspense suspending={signing} fallback={<div>{spinner}</div>}></Suspense>
-        <div>{labels["signin"]}</div>
+        <span hidden={!signing}>{spinner}</span>
+        <span>{labels["signin"]}</span>
       </button>
       <label hidden={userNameError}>{labels["userName"]}</label>
       <span hidden={userNameError} class="error">{validationResult.userName}</span>
@@ -123,8 +122,4 @@ login {
 
 .remote-authentication .auth-provider .auth-provider-label {
   margin-left: 0.5rem;
-}
-
-.signing > * {
-  display: inline-block;
 }`

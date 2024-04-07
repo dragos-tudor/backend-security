@@ -20,7 +20,7 @@ routes, route, suspense {
   height: inherit;
 }
 
-main > suspense {
+main {
   display: grid;
   justify-items: center;
   align-items: center;
