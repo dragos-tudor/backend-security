@@ -22,7 +22,7 @@ const bundleMod = async (cwd, homeName) => {
 }
 
 const bundleHome = async (cwd) => {
-  const { code: homeBundle } = await bundle(cwd + "/home/home.jsx");
+  const { code: homeBundle } = await bundle(cwd + "/components/home/home.jsx");
   const encodedHome = new TextEncoder().encode(homeBundle);
   const hashHome = await crypto.subtle.digest("SHA-256", encodedHome);
   const homeName = `home.${encodeHex(hashHome)}.js`;

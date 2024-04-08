@@ -1,5 +1,5 @@
-import { isRootPath } from "../../routes/verifying.js";
 import { getLocationPathName } from "../locations/getting.js"
+import { isRootPath } from "../route-paths/verifying.js"
 import { RedirectParamName } from "./param.name.js"
 
 const resolveRedirectParamPath = (location, fallback) =>

@@ -1,16 +1,16 @@
-import { getFetchApi } from "./support/api/fetching.js"
+import { getFetchApi } from "./api/fetching.js"
 import { getHtmlDescendant, getHtmlParent } from "./support/html/getting.js"
 import { logError } from "./support/errors/logging.js"
 import { resolveLocation } from "./support/locations/resolving.js"
 import { getLanguageParam } from "./support/languages/getting.js"
 import { Languages } from "./support/languages/languages.js"
 import { resolveLabels } from "./support/labels/resolving.js"
-import { createServices } from "./support/services/creating.js"
+import { createServices } from "./services/creating.js"
 import { resolveValidationErrors } from "./support/validations/resolving.js"
-import { Error } from "./error/error.jsx"
-import { updateError } from "./error/updating.jsx"
-import { createAppState } from "./support/store/states.js"
-import { createAppReducer } from "./support/store/reducers.js"
+import { Error } from "./components/error/error.jsx"
+import { updateError } from "./components/error/updating.jsx"
+import { createAppState } from "./store/states.js"
+import { createAppReducer } from "./store/reducers.js"
 const { fetchWithTimeout } = await import("/scripts/fetching.js")
 const { navigate, Router } = await import("/scripts/routing.js")
 const { Services } = await import("/scripts/rendering.js")

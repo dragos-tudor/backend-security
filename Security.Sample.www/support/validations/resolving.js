@@ -1,4 +1,4 @@
-import { isEnglishLanguage } from "../../language/verifying.js";
+import { isEnglishLanguage } from "../languages/verifying.js"
 import { importValidationErrors } from "./importing.js";
 const { ValidationErrors } = await import("/scripts/validating.js")
 

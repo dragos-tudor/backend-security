@@ -1,4 +1,4 @@
-import { isEnglishLanguage } from "../../language/verifying.js"
+import { isEnglishLanguage } from "../languages/verifying.js"
 import { importLabels } from "./importing.js"
 import { Labels } from "./labels.js"
 

@@ -1,5 +1,5 @@
-import { RoutePaths } from "../../routes/paths.js"
 import { getLocationSearchParam } from "../locations/getting.js"
+import { RoutePaths } from "../route-paths/route.paths.js"
 import { RedirectParamName } from "./param.name.js"
 import { setRedirectParam } from "./setting.js"
 
