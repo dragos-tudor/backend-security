@@ -11,10 +11,10 @@
 	  }
 	},
   "features": {
-    "ghcr.io/dragos-tudor/devcontainer-features/debian-packages": "",
-    "ghcr.io/dragos-tudor/devcontainer-features/debian-user-group": "",
-    "ghcr.io/dragos-tudor/devcontainer-features/debian-dotnet-sdk": "",
-    "ghcr.io/dragos-tudor/devcontainer-features/debian-deno": {"deno_version": "v1.41.0"}
+    "ghcr.io/dragos-tudor/devcontainer-features/debian-packages:1.2": {},
+    "ghcr.io/dragos-tudor/devcontainer-features/debian-user-group:1.3": {},
+    "ghcr.io/dragos-tudor/devcontainer-features/debian-dotnet-product:1.2": {},
+    "ghcr.io/dragos-tudor/devcontainer-features/debian-deno:1.5": {}
   },
   "containerEnv": { "DATA_PROTECTION_KEY": "HFm8fYbLyEarjjlGBj5r9Q==" },
   "mounts": [
