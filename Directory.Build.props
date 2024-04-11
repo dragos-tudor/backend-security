@@ -2,19 +2,25 @@
 
   <PropertyGroup Label="Project props">
     <TargetFramework>net8.0</TargetFramework>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
 
     <!-- compiling -->
     <ImplicitUsings>disable</ImplicitUsings>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Nullable>enable</Nullable>
-
-    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
-    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+
+    <!-- analysing -->
+    <AnalysisMode>All</AnalysisMode>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <!-- <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors> -->
+    <!-- <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild> -->
 
     <!-- packing -->
     <IsPackable>true</IsPackable>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
 
     <!-- package -->
     <Authors>Dragos Tudor</Authors>
@@ -26,9 +32,6 @@
     <RepositoryUrl>https://github.com/dragos-tudor/backend-security.git</RepositoryUrl>
     <PackageLicense>$(RepositoryUrl)/blob/master/LICENSE</PackageLicense>
     <PackageProjectUrl>$(RepositoryUrl)/$(MSBuildProjectName)</PackageProjectUrl>
-
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
 </Project>

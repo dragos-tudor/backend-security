@@ -7,4 +7,8 @@ partial record class TokenResult
 
   public static implicit operator TokenResult(TokenInfo tokenInfo) =>
     new (tokenInfo);
+
+  public static TokenResult ToTokenResult(TokenInfo tokenInfo) => tokenInfo;
+
+  public static TokenResult ToTokenResult(string failure) => failure;
 }

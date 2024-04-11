@@ -13,32 +13,32 @@ partial class FacebookTests {
 
   [TestMethod]
   public async Task Access_token__access_user_informations__token_endpoint_receive_access_token () {
-    var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {query = request.RequestUri}));
+    using var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {query = request.RequestUri}));
     var authOptions = CreateFacebookOptions("", "secret") with { UserInformationEndpoint = "http://oauth/userinfo" };
     MapJsonClaim(authOptions, "query");
 
     var result = await AccessFacebookUserInfo("token", authOptions, httpClient);
-    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "query")?.Value, "access_token=token");
+    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "query")?.Value, "access_token=token", StringComparison.InvariantCulture);
   }
 
   [TestMethod]
   public async Task App_secret_proof__access_user_informations__token_endpoint_receive_app_secret_proof () {
-    var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {secret_proof = request.RequestUri}));
+    using var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {secret_proof = request.RequestUri}));
     var authOptions = CreateFacebookOptions("", "secret") with { UserInformationEndpoint = "http://oauth/userinfo" };
     MapJsonClaim(authOptions, "secret_proof");
 
     var result = await AccessFacebookUserInfo(string.Empty, authOptions, httpClient);
-    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "secret_proof")?.Value, "appsecret_proof=");
+    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "secret_proof")?.Value, "appsecret_proof=", StringComparison.InvariantCulture);
   }
 
   [TestMethod]
   public async Task Facebook_fields__access_user_informations__token_endpoint_receive_fields () {
-    var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {fields = request.RequestUri}));
+    using var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {fields = request.RequestUri}));
     var authOptions = CreateFacebookOptions("", "secret") with { UserInformationEndpoint = "http://oauth/userinfo" };
     MapJsonClaim(authOptions, "fields");
 
     var result = await AccessFacebookUserInfo(string.Empty, authOptions, httpClient);
-    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "fields")?.Value, "fields=name,email");
+    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "fields")?.Value, "fields=name,email", StringComparison.InvariantCulture);
   }
 
   static Claim GetSecurityClaim(ClaimsPrincipal principal, string claimType) =>

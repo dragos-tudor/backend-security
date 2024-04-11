@@ -13,12 +13,12 @@ partial class TwitterTests {
 
   [TestMethod]
   public async Task Optional_query_params__access_user_informations__token_endpoint_receive_optional_params () {
-    var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {query = request.RequestUri}));
+    using var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {query = request.RequestUri}));
     var authOptions = CreateTwitterOptions("", "secret") with { UserInformationEndpoint = "http://oauth/userinfo", UserFields = new [] { "field1" } };
     MapJsonClaim(authOptions, "query");
 
     var result = await AccessTwitterUserInfo(string.Empty, authOptions, httpClient);
-    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "query")?.Value, "user.fields=field1");
+    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "query")?.Value, "user.fields=field1", StringComparison.Ordinal);
   }
 
   static Claim GetSecurityClaim(ClaimsPrincipal principal, string claimType) =>

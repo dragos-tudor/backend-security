@@ -21,7 +21,7 @@ partial class OpenIdConnectFuncs {
   where TOptions: OpenIdConnectOptions
   {
     var tokenParams = BuildTokenParams(authProperties, oidcOptions, authCode);
-    var request = BuildTokenRequest(oidcConfiguration.TokenEndpoint, tokenParams, httpClient.DefaultRequestVersion);
+    using var request = BuildTokenRequest(oidcConfiguration.TokenEndpoint, tokenParams, httpClient.DefaultRequestVersion);
     using var response = await SendTokenRequest(request, httpClient, cancellationToken);
     return await HandleTokenResponse(response, authProperties, oidcOptions, oidcConfiguration, stringDataFormat, cookies, cancellationToken);
   }

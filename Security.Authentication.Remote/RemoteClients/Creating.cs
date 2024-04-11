@@ -2,6 +2,7 @@
 using System.Net.Http;
 
 namespace Security.Authentication.Remote;
+#pragma warning disable CA2000
 
 partial class RemoteFuncs {
 

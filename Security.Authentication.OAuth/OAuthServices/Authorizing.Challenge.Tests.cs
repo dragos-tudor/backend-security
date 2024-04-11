@@ -16,7 +16,7 @@ partial class OAuthTests {
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
     var authorizationPath = AuthorizeChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now);
 
-    StringAssert.StartsWith(authorizationPath, "http://oauth/?");
+    StringAssert.StartsWith(authorizationPath, "http://oauth/?", StringComparison.Ordinal);
   }
 
   [TestMethod]
@@ -26,7 +26,7 @@ partial class OAuthTests {
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
     var authorizationPath = AuthorizeChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now);
 
-    StringAssert.Contains(authorizationPath, "scope=openid%20email");
+    StringAssert.Contains(authorizationPath, "scope=openid%20email", StringComparison.Ordinal);
   }
 
   [TestMethod]
@@ -36,7 +36,7 @@ partial class OAuthTests {
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
     var authorizationPath = AuthorizeChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now);
 
-    StringAssert.Contains(authorizationPath, "client_id=clientID");
+    StringAssert.Contains(authorizationPath, "client_id=clientID", StringComparison.Ordinal);
   }
 
   [TestMethod]
@@ -46,7 +46,7 @@ partial class OAuthTests {
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
     var authorizationPath = AuthorizeChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now);
 
-    StringAssert.Contains(authorizationPath, "redirect_uri=" + Uri.EscapeDataString("http://localhost/callback"));
+    StringAssert.Contains(authorizationPath, "redirect_uri=" + Uri.EscapeDataString("http://localhost/callback"), StringComparison.Ordinal);
   }
 
   [TestMethod]
@@ -58,7 +58,7 @@ partial class OAuthTests {
 
     var authProperties = propertiesDataFormat.Unprotect(QueryHelpers.ParseQuery(authorizationPath)["state"]);
     var codeChallenge = HashCodeVerifier(GetAuthenticationPropertiesCodeVerifier(authProperties!)!);
-    StringAssert.Contains(authorizationPath, "code_challenge=" + codeChallenge);
+    StringAssert.Contains(authorizationPath, "code_challenge=" + codeChallenge, StringComparison.Ordinal);
   }
 
   [TestMethod]
@@ -70,7 +70,7 @@ partial class OAuthTests {
     var stateParam = GetQueryStateParam(authorizationPath);
     var properties = UnprotectAuthenticationProperties(stateParam.Value!, propertiesDataFormat);
 
-    StringAssert.Contains(properties!.RedirectUri,"/index");
+    StringAssert.Contains(properties!.RedirectUri,"/index", StringComparison.Ordinal);
   }
 
   [TestMethod]

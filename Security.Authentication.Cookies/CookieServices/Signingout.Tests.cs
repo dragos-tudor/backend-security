@@ -26,8 +26,8 @@ partial class CookiesTests {
     using var response = await client.PostAsync("/api/account/signout");
 
     Assert.IsTrue(response.IsSuccessStatusCode);
-    StringAssert.Contains(GetResponseMessageCookie(response), ".AspNetCore.Cookies=;");
-    StringAssert.Contains(GetResponseMessageCookie(response), "expires=Thu, 01 Jan 1970");
+    StringAssert.Contains(GetResponseMessageCookie(response), ".AspNetCore.Cookies=;", StringComparison.Ordinal);
+    StringAssert.Contains(GetResponseMessageCookie(response), "expires=Thu, 01 Jan 1970", StringComparison.Ordinal);
   }
 
   [TestMethod]
@@ -46,8 +46,8 @@ partial class CookiesTests {
     using var signoutResponse = await client.PostAsync("/api/account/signout", GetRequestMessageCookieHeader(signinResponse));
 
     Assert.IsTrue(signoutResponse.IsSuccessStatusCode);
-    StringAssert.Contains(GetResponseMessageCookie(signoutResponse), "CookiesScheme=;");
-    StringAssert.Contains(GetResponseMessageCookie(signoutResponse), "expires=Thu, 01 Jan 1970");
+    StringAssert.Contains(GetResponseMessageCookie(signoutResponse), "CookiesScheme=;", StringComparison.Ordinal);
+    StringAssert.Contains(GetResponseMessageCookie(signoutResponse), "expires=Thu, 01 Jan 1970", StringComparison.Ordinal);
   }
 
   [TestMethod]
@@ -78,7 +78,8 @@ partial class CookiesTests {
     await server.StartAsync();
 
     using var client = server.GetTestClient();
-    using var response = await client.PostAsync("/api/accounts/signout", new FormUrlEncodedContent(new Dictionary<string, string> { { "redirect_url", "/logged-out" } }));
+    using var form = new FormUrlEncodedContent(new Dictionary<string, string> { { "redirect_url", "/logged-out" } });
+    using var response = await client.PostAsync("/api/accounts/signout", form);
 
     Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
     Assert.AreEqual("/logged-out", GetResponseMessageLocation(response));
@@ -98,8 +99,8 @@ partial class CookiesTests {
     using var response = await client.PostAsync("/api/account/signout", GetRequestMessageCookieHeader(loginResponse));
 
     Assert.IsTrue(response.IsSuccessStatusCode);
-    StringAssert.Contains(GetResponseMessageCookie(response), ".AspNetCore.Cookies=;");
-    StringAssert.Contains(GetResponseMessageCookie(response), "expires=Thu, 01 Jan 1970");
+    StringAssert.Contains(GetResponseMessageCookie(response), ".AspNetCore.Cookies=;", StringComparison.Ordinal);
+    StringAssert.Contains(GetResponseMessageCookie(response), "expires=Thu, 01 Jan 1970", StringComparison.Ordinal);
   }
 
 }

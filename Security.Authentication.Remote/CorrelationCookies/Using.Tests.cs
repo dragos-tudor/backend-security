@@ -13,7 +13,7 @@ partial class RemoteTests {
     var cookieName = UseCorrelationCookie(context, "correlation.id", authOptions, currentUtc);
 
     var expected = (currentUtc + authOptions.RemoteAuthenticationTimeout).ToString("r");
-    StringAssert.Contains(GetResponseCookie(context.Response, cookieName), expected);
+    StringAssert.Contains(GetResponseCookie(context.Response, cookieName), expected, StringComparison.Ordinal);
   }
 
   [TestMethod]
@@ -22,7 +22,7 @@ partial class RemoteTests {
     var authOptions = new RemoteAuthenticationOptions() { CallbackPath = "/callback", ChallengePath = "" };
     var cookieName = UseCorrelationCookie(context, "correlation.id", authOptions, DateTimeOffset.Now);
 
-    StringAssert.Contains(GetResponseCookie(context.Response, cookieName), "path=/callback;");
+    StringAssert.Contains(GetResponseCookie(context.Response, cookieName), "path=/callback;", StringComparison.Ordinal);
   }
 
 }

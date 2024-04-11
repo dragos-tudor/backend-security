@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using static Security.Testing.Funcs;
-#pragma warning disable ASP0016
 
 namespace Security.Authentication.BearerToken;
 

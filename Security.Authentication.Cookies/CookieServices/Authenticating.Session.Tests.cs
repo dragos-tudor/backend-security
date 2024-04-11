@@ -120,10 +120,9 @@ partial class CookiesTests
     Assert.AreEqual(MissingSessionTicketId, result.Failure!.Message);
   }
 
-  IServiceProvider BuildServiceProvider(CookieAuthenticationOptions authOptions, FakeTicketStore ticketStore) =>
+  static ServiceProvider BuildServiceProvider(CookieAuthenticationOptions authOptions, FakeTicketStore ticketStore) =>
     new ServiceCollection()
       .AddDataProtection(Environment.CurrentDirectory + "/keys")
       .AddCookies(authOptions, ticketStore)
       .BuildServiceProvider();
-
 }

@@ -26,8 +26,8 @@ partial class CookiesTests {
     using var response = await client.PostAsync("/api/account/signin");
 
     Assert.IsTrue(response.IsSuccessStatusCode);
-    StringAssert.Contains(GetResponseMessageCookie(response), "CookiesScheme");
-    StringAsserts.NotContains(GetResponseMessageCookie(response)!, "expires=Thu, 01 Jan 1970");
+    StringAssert.Contains(GetResponseMessageCookie(response), "CookiesScheme", StringComparison.Ordinal);
+    StringAsserts.NotContains(GetResponseMessageCookie(response)!, "expires=Thu, 01 Jan 1970", StringComparison.Ordinal);
   }
 
   [TestMethod]
@@ -43,7 +43,7 @@ partial class CookiesTests {
     using var response = await client.PostAsync("/api/account/signin");
 
     Assert.IsTrue(response.IsSuccessStatusCode);
-    StringAsserts.NotContains(GetResponseMessageCookie(response), "expires");
+    StringAsserts.NotContains(GetResponseMessageCookie(response), "expires", StringComparison.Ordinal);
   }
 
   [TestMethod]
@@ -58,7 +58,8 @@ partial class CookiesTests {
     await server.StartAsync();
 
     using var client = server.GetTestClient();
-    using var response = await client.PostAsync("/api/accounts/signin", new FormUrlEncodedContent(new Dictionary<string, string> { { "redirect_url", "/logged-in" } }));
+    using var form = new FormUrlEncodedContent(new Dictionary<string, string> { { "redirect_url", "/logged-in" } });
+    using var response = await client.PostAsync("/api/accounts/signin", form);
 
     Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
     Assert.AreEqual("/logged-in", GetResponseMessageLocation(response));
@@ -111,7 +112,7 @@ partial class CookiesTests {
     using var response = await client.PostAsync("/api/account/signin", default);
 
     Assert.IsTrue(response.IsSuccessStatusCode);
-    StringAssert.Contains(GetResponseMessageCookie(response),"CookiesScheme");
+    StringAssert.Contains(GetResponseMessageCookie(response),"CookiesScheme", StringComparison.Ordinal);
   }
 
   static string? GetSessionBasedCookieTicketId(HttpResponseMessage response, IServiceProvider services)

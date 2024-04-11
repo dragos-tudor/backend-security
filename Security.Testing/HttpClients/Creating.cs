@@ -1,7 +1,9 @@
 
 namespace Security.Testing;
+#pragma warning disable CA2000 // Dispose objects before losing scope
 
-partial class Funcs {
+partial class Funcs
+{
 
   public static HttpClient CreateHttpClient (string baseAddress, params HttpEndpoint[] endpoints) =>
     new (CreateHttpEndpointsHandler(endpoints)) { BaseAddress = new Uri(baseAddress) };

@@ -15,7 +15,7 @@ partial class RemoteTests {
     SetRequestCookiesHeader(callbackContext.Request, challengeContext.Response);
     CleanCorrelationCookie(callbackContext, remoteOptions, "correlation.id");
 
-    StringAssert.Contains(GetResponseCookie(callbackContext.Response, cookieName), "expires=Thu, 01 Jan 1970");
+    StringAssert.Contains(GetResponseCookie(callbackContext.Response, cookieName), "expires=Thu, 01 Jan 1970", StringComparison.Ordinal);
   }
 
 }

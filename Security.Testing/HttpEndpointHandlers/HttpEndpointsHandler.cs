@@ -10,7 +10,7 @@ public class HttpEndpointsHandler(IEnumerable<HttpEndpoint> endpoints) : HttpMes
 
   protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default) =>
     GetHttpEndpoint(Endpoints, GetRequestPath(request)) switch {
-      null => throw new Exception($"Endpoint with route '{GetRequestPath(request)}' not found."),
+      null => throw new WebException($"Endpoint with route '{GetRequestPath(request)}' not found."),
       var endpoint => Task.FromResult(endpoint.EndpointHandler(request))
     };
 }

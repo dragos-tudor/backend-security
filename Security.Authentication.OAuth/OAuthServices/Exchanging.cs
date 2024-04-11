@@ -17,7 +17,7 @@ partial class OAuthFuncs {
   where TOptions: OAuthOptions
   {
     var tokenParams = BuildTokenParams(authProperties, authOptions, authCode);
-    var request = BuildTokenRequest(authOptions.TokenEndpoint, tokenParams, httpClient.DefaultRequestVersion);
+    using var request = BuildTokenRequest(authOptions.TokenEndpoint, tokenParams, httpClient.DefaultRequestVersion);
     using var response = await SendTokenRequest(request, httpClient, cancellationToken);
     return await HandleTokenResponse(response, cancellationToken);
   }

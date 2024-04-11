@@ -6,9 +6,9 @@ namespace Security.Authentication.Remote;
 partial class RemoteFuncs
 {
   public static readonly string CodeVerifier = "code_verifier";
-  static readonly string CodeChallenge = "code_challenge";
-  static readonly string CodeChallengeMethod = "code_challenge_method";
-  static readonly string CodeChallengeMethodS256 = "S256";
+  const string CodeChallenge = "code_challenge";
+  const string CodeChallengeMethod = "code_challenge_method";
+  const string CodeChallengeMethodS256 = "S256";
 
   public static string SetRemoteParam (IDictionary<string, string> remoteParams, string key, string value)
     { remoteParams.Add(key, value); return value; }

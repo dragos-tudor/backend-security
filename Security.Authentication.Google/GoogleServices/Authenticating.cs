@@ -10,8 +10,8 @@ partial class GoogleFuncs {
   public static Task<AuthenticateResult> AuthenticateGoogle (HttpContext context) =>
     AuthenticateOAuth<GoogleOptions>(
       context,
-      PostAuthorization<GoogleOptions>,
-      ExchangeCodeForTokens<GoogleOptions>,
+      PostAuthorization,
+      ExchangeCodeForTokens,
       AccessUserInfo);
 
 }

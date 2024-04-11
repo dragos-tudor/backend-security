@@ -1,7 +1,6 @@
 # IDE specific files
 .ionide/
 .vscode/
-.editorconfig
 
 # Build results
 [Bb]in/

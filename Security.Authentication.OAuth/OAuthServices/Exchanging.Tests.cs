@@ -1,6 +1,5 @@
 
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -14,47 +13,48 @@ partial class OAuthTests {
 
   [TestMethod]
   public async Task Token_endpoint_request_with_code__exchange_code_for_tokens__endpoint_receive_code () {
-    var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a"}));
+    using var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a"}));
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
     var result = await ExchangeCodeForTokens("abc", authProperties, authOptions, httpClient);
 
-    StringAssert.Contains(GetTokenType(result), "code=abc");
+    StringAssert.Contains(GetTokenType(result), "code=abc", StringComparison.Ordinal);
   }
 
   [TestMethod]
   public async Task Token_endpoint_request_with_redirect_uri__exchange_code_for_tokens__endpoint_receive_redirect_uri () {
-    var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a", }));
+    using var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a", }));
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties(new Dictionary<string, string?>() { {CallbackUri, "http://localhost/callback"} });
     var result = await ExchangeCodeForTokens(string.Empty, authProperties, authOptions, httpClient);
 
-    StringAssert.Contains(GetTokenType(result), "redirect_uri=" + Uri.EscapeDataString("http://localhost/callback"));
+    StringAssert.Contains(GetTokenType(result), "redirect_uri=" + Uri.EscapeDataString("http://localhost/callback"), StringComparison.Ordinal);
   }
 
   [TestMethod]
   public async Task Token_endpoint_request_with_client_id__exchange_code_for_tokens__endpoint_receive_client_id () {
-    var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a"}));
+    using var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a"}));
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
     var result = await ExchangeCodeForTokens("abc", authProperties, authOptions, httpClient);
 
-    StringAssert.Contains(GetTokenType(result), "client_id=client+id");
+    StringAssert.Contains(GetTokenType(result), "client_id=client+id", StringComparison.Ordinal);
   }
 
   [TestMethod]
   public async Task Token_endpoint_request_with_client_secret__exchange_code_for_tokens__endpoint_receive_client_secret () {
-    var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a"}));
+    using var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a"}));
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
     var result = await ExchangeCodeForTokens("abc", authProperties, authOptions, httpClient);
 
-    StringAssert.Contains(GetTokenType(result), "client_secret=client+secret");
+    StringAssert.Contains(GetTokenType(result), "client_secret=client+secret", StringComparison.Ordinal);
   }
 
   [TestMethod]
   public async Task Token_endpoint_response_with_access_token__exchange_code_for_tokens__client_receive_access_token () {
-    var httpClient = CreateHttpClient("http://oauth", "/token", JsonContent.Create(new {access_token = "access token"}));
+    using var endpointResponse = JsonContent.Create(new {access_token = "access token"});
+    using var httpClient = CreateHttpClient("http://oauth", "/token", endpointResponse);
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
     var result = await ExchangeCodeForTokens(string.Empty, authProperties, authOptions, httpClient);
@@ -64,7 +64,8 @@ partial class OAuthTests {
 
   [TestMethod]
   public async Task Token_endpoint_response_with_token_lifetime__exchange_code_for_tokens__client_receive_token_lifetime () {
-    var httpClient = CreateHttpClient("http://oauth", "/token", JsonContent.Create(new {expires_in = 3600, access_token = string.Empty }));
+    using var endpointResponse = JsonContent.Create(new {expires_in = 3600, access_token = string.Empty });
+    using var httpClient = CreateHttpClient("http://oauth", "/token", endpointResponse);
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
     var result = await ExchangeCodeForTokens(string.Empty, authProperties, authOptions, httpClient);
@@ -74,35 +75,38 @@ partial class OAuthTests {
 
   [TestMethod]
   public async Task Token_endpoint_response_without_access_token__exchange_code_for_tokens__result_access_token_error () {
-    var httpClient = CreateHttpClient("http://oauth", "/token", JsonContent.Create(new {}));
+    using var endpointResponse = JsonContent.Create(new {});
+    using var httpClient = CreateHttpClient("http://oauth", "/token", endpointResponse);
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
     var (_, error) = await ExchangeCodeForTokens(string.Empty, authProperties, authOptions, httpClient);
 
-    StringAssert.StartsWith(error, AccessTokenNotFound);
+    StringAssert.StartsWith(error, AccessTokenNotFound, StringComparison.Ordinal);
   }
 
   [TestMethod]
   public async Task Token_endpoint_response_with_generic_error__exchange_code_for_tokens__client_receive_error () {
-    var httpClient = CreateHttpClient("http://oauth", "/token", JsonContent.Create(new {message = "error"}), 400);
+    using var endpointResponse = JsonContent.Create(new {message = "error"});
+    using var httpClient = CreateHttpClient("http://oauth", "/token", endpointResponse, 400);
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
     var result = await ExchangeCodeForTokens(string.Empty, authProperties, authOptions, httpClient);
 
-    StringAssert.StartsWith(result.Failure, TokenEndpointError);
-    StringAssert.Contains(result.Failure, "Status: BadRequest");
-    StringAssert.Contains(result.Failure, "Body: {\"message\":\"error\"}");
+    StringAssert.StartsWith(result.Failure, TokenEndpointError, StringComparison.Ordinal);
+    StringAssert.Contains(result.Failure, "Status: BadRequest", StringComparison.Ordinal);
+    StringAssert.Contains(result.Failure, "Body: {\"message\":\"error\"}", StringComparison.Ordinal);
   }
 
   [TestMethod]
   public async Task Token_endpoint_response_with_json_error__exchange_code_for_tokens__client_receive_error () {
-    var httpClient = CreateHttpClient("http://oauth", "/token", JsonContent.Create(new {error = "error", error_description = "abc" }), 400);
+    using var endpointResponse = JsonContent.Create(new {error = "error", error_description = "abc" });
+    using var httpClient = CreateHttpClient("http://oauth", "/token", endpointResponse, 400);
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
     var result = await ExchangeCodeForTokens(string.Empty, authProperties, authOptions, httpClient);
 
-    StringAssert.StartsWith(result.Failure, TokenEndpointError);
-    StringAssert.Contains(result.Failure, "Description=abc");
+    StringAssert.StartsWith(result.Failure, TokenEndpointError, StringComparison.Ordinal);
+    StringAssert.Contains(result.Failure, "Description=abc", StringComparison.Ordinal);
   }
 
   [TestMethod]

@@ -9,4 +9,8 @@ partial record class PostAuthorizationResult
 
   public static implicit operator PostAuthorizationResult(string failure) =>
     CreatePostAuthorizationResultFailure(failure);
+
+  public static PostAuthorizationResult ToPostAuthorizationResult(string failure) => failure;
+
+  public static PostAuthorizationResult ToPostAuthorizationResult(AuthenticationProperties authProperties) => authProperties;
 }

@@ -49,7 +49,7 @@ partial class DataProtectionTests {
     var encrypted = protector1.Protect("some text to encrypt");
 
     var exception = Assert.ThrowsException<CryptographicException>(() => protector2.Unprotect(encrypted));
-    StringAssert.Contains(exception.Message, "The payload was invalid.");
+    StringAssert.Contains(exception.Message, "The payload was invalid.", StringComparison.Ordinal);
   }
 
 }

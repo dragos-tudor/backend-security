@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using static Security.Authentication.Remote.RemoteFuncs;
 
 namespace Security.Sample.Api;
+#pragma warning disable CA2000
 
 partial class SampleFuncs
 {

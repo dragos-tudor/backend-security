@@ -13,7 +13,7 @@ partial class OAuthFuncs {
     HttpClient httpClient,
     CancellationToken cancellationToken = default) where TOptions: OAuthOptions
   {
-    var request = BuildUserInfoRequest(authOptions.UserInformationEndpoint, accessToken);
+    using var request = BuildUserInfoRequest(authOptions.UserInformationEndpoint, accessToken);
     using var response = await SendUserInfoRequest(request, httpClient, cancellationToken);
     return await HandleUserInfoResponse(response, authOptions, cancellationToken);
   }

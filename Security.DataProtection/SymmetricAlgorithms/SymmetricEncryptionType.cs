@@ -1,7 +1,7 @@
 
 namespace Security.DataProtection;
 
-public enum SymmetricEncryptionType : byte {
+public enum SymmetricEncryptionType  {
   ECB = 0,
   CBC = 1,
   CFB = 2

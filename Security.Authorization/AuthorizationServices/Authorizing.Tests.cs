@@ -8,13 +8,15 @@ using System.Security.Claims;
 using System.Collections.Generic;
 using Security.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 namespace Security.Authorization;
+#pragma warning disable CA1812
 
 partial class AuthorizationTests {
 
-  static readonly ChallengeFunc challegeFunc = (context, authProperties) => (context.Response.StatusCode = StatusCodes.Status401Unauthorized).ToString();
-  static readonly ForbidFunc forbidFunc = (context, authProperties) => (context.Response.StatusCode = StatusCodes.Status403Forbidden).ToString();
+  static readonly ChallengeFunc challegeFunc = (context, authProperties) => (context.Response.StatusCode = StatusCodes.Status401Unauthorized).ToString(CultureInfo.InvariantCulture);
+  static readonly ForbidFunc forbidFunc = (context, authProperties) => (context.Response.StatusCode = StatusCodes.Status403Forbidden).ToString(CultureInfo.InvariantCulture);
 
   [TestMethod]
   public async Task Authenticated_user__access_private_resource__user_authorized()
@@ -137,7 +139,7 @@ partial class AuthorizationTests {
       .AddAuthorization(options => options.AddPolicy("req policy", policy => policy.AddRequirements([new MinimumAgeRequirement(21)])))
       .AddAuthentication().AddCookie());
     server.UseAuthentication().UseAuthorization(challegeFunc, forbidFunc);
-    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreateClaimsPrincipalWithClaim(ClaimTypes.DateOfBirth, DateTime.Now.AddYears(-23).ToString())) );
+    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreateClaimsPrincipalWithClaim(ClaimTypes.DateOfBirth, DateTime.Now.AddYears(-23).ToString(CultureInfo.InvariantCulture))) );
     server.MapGet("/resource", (HttpContext context) => "private").RequireAuthorization("req policy");
     await server.StartAsync();
 
@@ -171,7 +173,7 @@ partial class AuthorizationTests {
   static ClaimsPrincipal CreateClaimsPrincipalWithClaim (string claimType, string claimValue) =>
     new (new ClaimsIdentity(new List<Claim>{ new (claimType, claimValue!) }, "Cookies"));
 
-  public class MinimumAgeRequirement : IAuthorizationRequirement
+  internal sealed class MinimumAgeRequirement : IAuthorizationRequirement
   {
       public MinimumAgeRequirement(int minimumAge) =>
           MinimumAge = minimumAge;
@@ -179,7 +181,7 @@ partial class AuthorizationTests {
       public int MinimumAge { get; }
   }
 
-  public class MinimumAgeHandler : AuthorizationHandler<MinimumAgeRequirement>
+  internal sealed class MinimumAgeHandler : AuthorizationHandler<MinimumAgeRequirement>
   {
     protected override Task HandleRequirementAsync(
         AuthorizationHandlerContext context,
@@ -188,7 +190,7 @@ partial class AuthorizationTests {
         var dateOfBirthClaim = context.User.FindFirst(c => c.Type == ClaimTypes.DateOfBirth);
         if (dateOfBirthClaim is null) return Task.CompletedTask;
 
-        var dateOfBirth = Convert.ToDateTime(dateOfBirthClaim.Value);
+        var dateOfBirth = Convert.ToDateTime(dateOfBirthClaim.Value, CultureInfo.InvariantCulture);
         int calculatedAge = DateTime.Today.Year - dateOfBirth.Year;
 
         if (dateOfBirth > DateTime.Today.AddYears(-calculatedAge)) calculatedAge--;

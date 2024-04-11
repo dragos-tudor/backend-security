@@ -22,7 +22,7 @@ partial class RemoteTests
     SetRequestCookies(request, new RequestCookieCollection().AddCookie(GetCorrelationCookieName("correlaton.id"), "abc"));
     var validationErrors = ValidateCorrelationCookie(request, "correlaton.id");
 
-    StringAssert.StartsWith(UnexpectedCorrelationCookieContent, validationErrors);
+    StringAssert.StartsWith(UnexpectedCorrelationCookieContent, validationErrors, StringComparison.Ordinal);
   }
 
   [TestMethod]
@@ -30,7 +30,7 @@ partial class RemoteTests
     var request = new DefaultHttpContext().Request;
     var validationErrors = ValidateCorrelationCookie(request, "correlaton.id");
 
-    StringAssert.StartsWith(CorrelationCookieNotFound, validationErrors);
+    StringAssert.StartsWith(CorrelationCookieNotFound, validationErrors, StringComparison.Ordinal);
   }
 
   [TestMethod]
@@ -40,7 +40,7 @@ partial class RemoteTests
     SetAuthenticationPropertiesCorrelationId(authProperties, "id");
     var error = ValidateCorrelationCookie(context.Request, authProperties);
 
-    StringAssert.StartsWith(error, CorrelationFailed);
+    StringAssert.StartsWith(error, CorrelationFailed, StringComparison.Ordinal);
   }
 
   [TestMethod]

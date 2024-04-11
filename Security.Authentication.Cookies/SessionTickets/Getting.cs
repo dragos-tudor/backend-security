@@ -16,5 +16,5 @@ partial class CookiesFuncs {
     new (SessionTicketIdClaim, ticketId);
 
   internal static string? GetSessionTicketId(ClaimsPrincipal? principal) =>
-    principal?.Claims.FirstOrDefault(c => c.Type.Equals(SessionTicketIdClaim))?.Value;
+    principal?.Claims.FirstOrDefault(c => c.Type.Equals(SessionTicketIdClaim, StringComparison.Ordinal))?.Value;
 }

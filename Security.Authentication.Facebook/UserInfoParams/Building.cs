@@ -3,7 +3,7 @@ namespace Security.Authentication.Facebook;
 
 partial class FacebookFuncs
 {
-  static KeyValuePair<string, string?>[] BuildUserInfoParams(
+  static KeyValuePair<string, string?>[] BuildFacebookUserInfoParams(
     FacebookOptions facebookOptions,
     string accessToken) =>
       [

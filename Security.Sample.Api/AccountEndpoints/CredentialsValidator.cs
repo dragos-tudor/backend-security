@@ -2,7 +2,7 @@ namespace Security.Sample.Api;
 
 using FluentValidation;
 
-class CredentialsDtoValidator : AbstractValidator<CredentialsDto>
+sealed class CredentialsDtoValidator : AbstractValidator<CredentialsDto>
 {
   public CredentialsDtoValidator()
   {

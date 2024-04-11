@@ -4,6 +4,6 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs
 {
-  static IDictionary<string, string> CreateAuthorizationParams() =>
-    new Dictionary<string, string>();
+  static Dictionary<string, string> CreateAuthorizationParams() =>
+    [];
 }

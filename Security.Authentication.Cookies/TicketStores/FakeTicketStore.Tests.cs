@@ -7,7 +7,7 @@ namespace Security.Authentication.Cookies;
 partial class CookiesTests
 {
 
-  internal class FakeTicketStore() : ITicketStore
+  internal sealed class FakeTicketStore() : ITicketStore
   {
     readonly Dictionary<string, AuthenticationTicket> Tickets = [];
 

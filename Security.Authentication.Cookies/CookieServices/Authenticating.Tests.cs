@@ -101,7 +101,7 @@ partial class CookiesTests
   }
 
   [TestMethod]
-  public async Task Authenticated_user_wuth_expired_authentication_cookie__authenticate__unauthenticated_user()
+  public async Task Authenticated_user_with_expired_authentication_cookie__authenticate__unauthenticated_user()
   {
     var expireCookieTicket = TimeSpan.FromMinutes(10);
     using var server = CreateHttpServer(services => services.AddCookies((CreateCookieAuthenticationOptions()) with { ExpireTimeSpan = expireCookieTicket }));
@@ -119,7 +119,7 @@ partial class CookiesTests
   }
 
   [TestMethod]
-  public async Task Authenticated_user_wuth_expired_session_based_authentication_cookie__authenticate__unauthenticated_user()
+  public async Task Authenticated_user_with_expired_session_based_authentication_cookie__authenticate__unauthenticated_user()
   {
     var expireCookieTicket = TimeSpan.FromMinutes(10);
     using var server = CreateHttpServer(services => services.AddCookies(
@@ -139,7 +139,7 @@ partial class CookiesTests
   }
 
   [TestMethod]
-  public async Task Authenticated_user_wuth_expired_session_based_authentication_cookie__authenticate__expired_cookie_and_removed_session_ticket_from_store()
+  public async Task Authenticated_user_with_expired_session_based_authentication_cookie__authenticate__expired_cookie_and_removed_session_ticket_from_store()
   {
     var ticketStore = new FakeTicketStore();
     var expireCookieTicket = TimeSpan.FromMinutes(10);
@@ -158,13 +158,13 @@ partial class CookiesTests
     using var response = await client.GetAsync("/resource", GetRequestMessageCookieHeader(signinResponse));
 
     Assert.IsTrue(response.IsSuccessStatusCode);
-    StringAssert.Contains(GetResponseMessageCookie(response), ".AspNetCore.Cookies=;");
-    StringAssert.Contains(GetResponseMessageCookie(response), "expires=Thu, 01 Jan 1970");
+    StringAssert.Contains(GetResponseMessageCookie(response), ".AspNetCore.Cookies=;", StringComparison.Ordinal);
+    StringAssert.Contains(GetResponseMessageCookie(response), "expires=Thu, 01 Jan 1970", StringComparison.Ordinal);
     Assert.IsNull(await ticketStore.GetTicket(ticketId!));
   }
 
   [TestMethod]
-  public async Task Authenticated_user_wuth_renewable_session_based_authentication_cookie__authenticate__authenticated_user()
+  public async Task Authenticated_user_with_renewable_session_based_authentication_cookie__authenticate__authenticated_user()
   {
     var expireCookieTicket = TimeSpan.FromMinutes(10);
     using var server = CreateHttpServer(services => services.AddCookies(
@@ -184,7 +184,7 @@ partial class CookiesTests
   }
 
   [TestMethod]
-  public async Task Authenticated_user_wuth_renewable_session_based_authentication_cookie__authenticate__renewed_authentication_cookie()
+  public async Task Authenticated_user_with_renewable_session_based_authentication_cookie__authenticate__renewed_authentication_cookie()
   {
     var expireCookieTicket = TimeSpan.FromMinutes(10);
     using var server = CreateHttpServer(services => services.AddCookies(

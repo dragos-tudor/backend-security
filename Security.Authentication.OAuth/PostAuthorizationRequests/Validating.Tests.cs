@@ -28,8 +28,8 @@ partial class OAuthTests {
     });
     var error = ValidatePostAuthorizationRequest(context);
 
-    StringAssert.Contains(error, EndpointError);
-    StringAssert.Contains(error, "abc");
+    StringAssert.Contains(error, EndpointError, StringComparison.Ordinal);
+    StringAssert.Contains(error, "abc", StringComparison.Ordinal);
   }
 
   [TestMethod]

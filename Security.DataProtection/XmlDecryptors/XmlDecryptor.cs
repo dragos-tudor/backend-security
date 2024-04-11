@@ -6,9 +6,9 @@ namespace Security.DataProtection;
 
 public sealed class XmlDecryptor : XmlEncryption, IXmlDecryptor {
 
-  public XElement Decrypt (XElement encryptedXmlKey) {
+  public XElement Decrypt (XElement encryptedElement) {
     using var algorithm = CreateSymmetricAlgorithm(GetAlgorithmType(), GetAlgorithmKey());
-    return DecryptXmlKey(encryptedXmlKey, algorithm, GetEncryptionType());
+    return DecryptXmlKey(encryptedElement, algorithm, GetEncryptionType());
   }
 
 }

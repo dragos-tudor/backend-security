@@ -19,7 +19,7 @@ partial class OpenIdConnectFuncs {
     CancellationToken cancellationToken = default)
   where TOptions: OpenIdConnectOptions
   {
-    var request = BuildUserInfoRequest(oidcConfiguration.TokenEndpoint, accessToken, httpClient.DefaultRequestVersion);
+    using var request = BuildUserInfoRequest(oidcConfiguration.TokenEndpoint, accessToken, httpClient.DefaultRequestVersion);
     using var response = await SendUserInfoRequest(request, httpClient, cancellationToken);
     return await HandleUserInfoResponse(response, identity, securityToken, oidcOptions, cancellationToken);
   }

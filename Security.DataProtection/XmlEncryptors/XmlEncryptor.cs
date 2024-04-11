@@ -6,9 +6,9 @@ namespace Security.DataProtection;
 
 public sealed class XmlEncryptor : XmlEncryption, IXmlEncryptor {
 
-  public EncryptedXmlInfo Encrypt (XElement unencryptedXmlKey) {
+  public EncryptedXmlInfo Encrypt (XElement plaintextElement) {
     using var algorithm = CreateSymmetricAlgorithm(GetAlgorithmType(), GetAlgorithmKey());
-    return new (EncryptXmlKey(unencryptedXmlKey, algorithm, GetEncryptionType()), typeof(XmlDecryptor));
+    return new (EncryptXmlKey(plaintextElement, algorithm, GetEncryptionType()), typeof(XmlDecryptor));
   }
 
 }

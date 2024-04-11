@@ -1,13 +1,14 @@
 using System.Security.Cryptography;
 
 namespace Security.DataProtection;
+#pragma warning disable CA5350
 
 partial class DataProtectionFuncs {
 
   static SymmetricAlgorithm CreateAlgorithm (SymmetricAlgorithmType algorithmType) =>
     algorithmType switch {
       SymmetricAlgorithmType.Aes => Aes.Create(),
-      SymmetricAlgorithmType.RC2 => RC2.Create(),
+      // SymmetricAlgorithmType.RC2 => RC2.Create(),
       SymmetricAlgorithmType.TripleDES => TripleDES.Create(),
       _ => Aes.Create()
     };

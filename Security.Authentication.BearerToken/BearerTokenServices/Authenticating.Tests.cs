@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using static Security.Testing.Funcs;
-#pragma warning disable ASP0016
 
 namespace Security.Authentication.BearerToken;
 

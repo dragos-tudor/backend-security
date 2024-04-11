@@ -1,0 +1,13 @@
+[*.Tests.cs]
+dotnet_diagnostic.ASP0016.severity = none # ASPNET Code analysis: Do not return a value from RequestDelegate
+dotnet_diagnostic.CA1707.severity = none # Naming: Identifiers should not contain underscores
+dotnet_diagnostic.CA2012.severity = none # #Reliability: Use ValueTasks correctly
+dotnet_diagnostic.CA2234.severity = none # Usage: Pass System.Uri objects instead of strings
+
+[*.cs]
+dotnet_diagnostic.CA1054.severity = none # Design: URI parameters should not be string
+dotnet_diagnostic.CA1055.severity = none # Design: URI return values should not be strings
+dotnet_diagnostic.CA1056.severity = none # Design: URI properties should not be strings
+dotnet_diagnostic.CA1062.severity = none # Design: Validate arguments of public methods [non-nullable reference types => clear intention => no rule]
+dotnet_diagnostic.CA2007.severity = none # Reliability: Do not directly await a Task
+dotnet_diagnostic.CA2007.exclude_async_void_methods = false # CA2007 rule option
