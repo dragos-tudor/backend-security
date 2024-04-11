@@ -1,9 +1,9 @@
 import { RoutePaths } from "../../support/route-paths/route.paths.js"
 import { isLoginPath, isRootPath } from "../../support/route-paths/verifying.js"
-import { getUserApi } from "../../api/users.js"
 import { getLocationPathName, getLocationPathNameAndSearch } from "../../support/locations/getting.js"
 import { getRedirectedLogin } from "../../support/redirections/getting.js"
 import { createSetUserAction } from "../../store/actions.js"
+import { getUserApi } from "./getting.js"
 
 
 export const startApp = async (fetchApi, dispatchAction, navigate, location = globalThis.location) =>

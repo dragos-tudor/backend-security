@@ -4,7 +4,7 @@ import { resolveLocation } from "../../support/locations/resolving.js"
 import { useApiUrl, useFetchApi, useLabels, useValidationErrors } from "../../services/using.js"
 import { useState } from "../../scripts/extending.js"
 import { createCredentials } from "./creating.js"
-import { signInUser } from "./signingin.js"
+import { signInAccount } from "./signingin.js"
 import { validateCredentials } from "./validating.js"
 import { getHtmlButton } from "./getting.js"
 const { navigate } = await import("/scripts/routing.js")
@@ -42,7 +42,7 @@ export const Login = (props, elem) =>
         disabled={!validCredentials || signing}
         onclick={async () => {
           setSigning(true);
-          await signInUser(credentials, location, fetchApi, (action) => dispatchAction(elem, action), (url) => navigate(elem, url));
+          await signInAccount(credentials, location, fetchApi, (action) => dispatchAction(elem, action), (url) => navigate(elem, url));
           setSigning(false);
         }}>
         <span hidden={!signing}>{spinner}</span>

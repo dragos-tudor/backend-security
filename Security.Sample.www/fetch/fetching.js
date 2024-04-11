@@ -1,8 +1,8 @@
 import { getRedirectedLogin } from "../support/redirections/getting.js"
 import { RoutePaths } from "../support/route-paths/route.paths.js"
 import { isLoginPath } from "../support/route-paths/verifying.js"
-import { setRequestCredentials, setRequestMode, setRequestRedirect } from "./setting.js"
-import { isUnauthorizedResponse, isForbiddenResponse } from "./verifying.js"
+import { setRequestCredentials, setRequestMode, setRequestRedirect } from "../support/requests/setting.js"
+import { isUnauthorizedResponse, isForbiddenResponse } from "../support/responses/verifying.js"
 const { fetchJson } = await import("/scripts/fetching.js")
 
 export const getFetchApi = (fetch, navigate, handleError, location = globalThis.location) => async (url, request = {}) =>

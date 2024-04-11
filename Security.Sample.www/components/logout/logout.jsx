@@ -1,5 +1,5 @@
 import { useFetchApi, useLabels } from "../../services/using.js"
-import { signOutUser } from "./signingout.js"
+import { signOutAccount } from "./signingout.js"
 
 export const Logout = (_, elem) =>
 {
@@ -8,7 +8,7 @@ export const Logout = (_, elem) =>
 
   return (
     <>
-      <a onclick={() => signOutUser(fetchApi, elem)}>
+      <a onclick={() => signOutAccount(fetchApi, elem)}>
         {labels["signout"]}
       </a>
     </>)

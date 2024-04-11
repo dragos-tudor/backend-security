@@ -1,4 +1,4 @@
-import { getFetchApi } from "./api/fetching.js"
+import { getFetchApi } from "./fetch/fetching.js"
 import { getHtmlDescendant, getHtmlParent } from "./support/html/getting.js"
 import { logError } from "./support/errors/logging.js"
 import { resolveLocation } from "./support/locations/resolving.js"
