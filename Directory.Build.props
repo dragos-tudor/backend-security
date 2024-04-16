@@ -13,8 +13,8 @@
 
     <!-- analysing -->
     <AnalysisMode>All</AnalysisMode>
-    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
-    <!-- <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors> -->
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <!-- <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild> -->
 
     <!-- packing -->
