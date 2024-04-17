@@ -1,14 +1,12 @@
-### Generate certificates
-- generate certificates:
+### CA and localhost certificates
+- install *mkcert* utility: `sudo apt install -y mkcert`
+- generate CA certificate and install in the system trust store and browsers: `mkcert --install`.
+  - *mkcert* install generated CA certificate into Chromium.
+  - *mkcert* don't install generated CA certificate into Firefox. Generated CA certificate [taken from `mkcert --CAROOT`] should by manually installed into Firefox.
+- generate localhost certificates [for testing]:
 ```sh
-  chmod 755 ./certificates.sh
-  ./certificates.sh
-```
-
-### Import CA certificate
-- import container CA certificate into host browsers [firefox, chrome, edge].
-```sh
-  echo $ROOT_CERT # /home/vscode/.local/share/mkcert/rootCA.pem
+cd .../backend-security/.certificates
+mkcert localhost
 ```
 
 ### Using certificates
