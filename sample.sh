@@ -1,1 +1,8 @@
-(trap 'kill 0' SIGINT; deno task start /workspaces/backend-security/Security.Sample.www & dotnet run --no-restore --no-build --project /workspaces/backend-security/Security.Sample.Api)
+trap 'kill 0' SIGINT;
+
+SAMPLE_PATH=/workspaces/backend-security/Security.Sample
+SAMPLE_API_PATH=$SAMPLE_PATH.Api
+SAMPLE_WWW_PATH=$SAMPLE_PATH.www
+
+deno task start $SAMPLE_WWW_PATH & \
+dotnet run --no-restore --no-build --project $SAMPLE_API_PATH
