@@ -8,7 +8,7 @@
       --coverage \
       --coverage-output "$(MSBuildProjectDirectory)"/.coverage/coverage.cob \
       --coverage-output-format cobertura \
-      --coverage-settings "$(MSBuildProjectDirectory)"/../.coverage-settings.xml'
+      --coverage-settings "$(MSBuildProjectDirectory)"/../codecoverage.runsettings'
     />
     <Exec Command='reportgenerator \
       -targetdir:$(MSBuildProjectDirectory)/.coverage/ \
