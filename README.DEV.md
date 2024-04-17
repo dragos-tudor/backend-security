@@ -1,4 +1,4 @@
-### CA and localhost certificates
+### Generate and install host certificates
 - install *mkcert* utility: `sudo apt install -y mkcert`
 - generate CA certificate and install in the system trust store and browsers: `mkcert --install`.
   - *mkcert* install generated CA certificate into Chromium.
