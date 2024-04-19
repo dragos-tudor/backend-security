@@ -5,11 +5,11 @@ namespace Security.Sample.Api;
 
 partial class SampleFuncs
 {
-  static WebApplicationBuilder LogAppStart(WebApplicationBuilder builder)
+  static WebApplication LogApplicationStart(WebApplication app)
   {
-    WriteLine($"[api] Server started: {builder.WebHost.GetSetting("Kestrel:Endpoints:Https:Url")}");
-    WriteLine($"[api] \tEnvironment: {builder.Environment.EnvironmentName}");
-    WriteLine($"[api] \tContent directory: {builder.Environment.ContentRootPath}");
-    return builder;
+    WriteLine($"[api] Server started: {app.Configuration["Kestrel:Endpoints:Https:Url"]}");
+    WriteLine($"[api] \tEnvironment: {app.Environment.EnvironmentName}");
+    WriteLine($"[api] \tContent directory: {app.Environment.ContentRootPath}");
+    return app;
   }
 }

@@ -21,10 +21,10 @@ partial class SampleFuncs
 
     var app = builder.Build();
     SetLoggerFactory(ResolveService<ILoggerFactory>(app.Services)!);
-    LogAppStart(builder);
 
     UseMiddlewares(app);
     MapEndpoints(app);
+    LogApplicationStart(app);
     app.Run();
   }
 }
