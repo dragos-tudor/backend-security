@@ -11,7 +11,7 @@ partial class SampleFuncs
     var services = builder.Services;
 
     AddSecrets(configuration);
-    AddSettings(configuration).Build();
+    AddSettings(configuration);
     AddEnvironmentVariables(configuration);
     AddCommandLine(configuration, args);
 
