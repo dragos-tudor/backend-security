@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using static Security.Authentication.Remote.RemoteFuncs;
 
@@ -8,19 +9,20 @@ namespace Security.Sample.Api;
 partial class SampleFuncs
 {
   static IServiceCollection AddServices(
-    WebApplicationBuilder builder,
-    string keysPath,
+    IServiceCollection services,
+    ConfigurationManager configuration,
+    string encryptionKeysPath,
     string[] origins) =>
-      builder.Services
+      services
         .AddCookies(SetCookieOptions(), cookieBuilder: SetCookieBuilderSameSite(CreateCookieBuilder(), SameSiteMode.None))
-        .AddGoogle(SetGoogleOptions(builder), SetRemoteClient(CreateRemoteClient(), GoogleDefaults.AuthenticationScheme))
-        .AddFacebook(SetFacebookOptions(builder), SetRemoteClient(CreateRemoteClient(), FacebookDefaults.AuthenticationScheme))
-        .AddTwitter(SetTwitterOptions(builder), SetRemoteClient(CreateRemoteClient(), TwitterDefaults.AuthenticationScheme))
+        .AddGoogle(SetGoogleOptions(configuration), SetRemoteClient(CreateRemoteClient(), GoogleDefaults.AuthenticationScheme))
+        .AddFacebook(SetFacebookOptions(configuration), SetRemoteClient(CreateRemoteClient(), FacebookDefaults.AuthenticationScheme))
+        .AddTwitter(SetTwitterOptions(configuration), SetRemoteClient(CreateRemoteClient(), TwitterDefaults.AuthenticationScheme))
         .AddAuthorization()
         .AddLogging()
         .AddCors(o => o.AddDefaultPolicy(BuildCorsPolicy(origins)))
         .AddProblemDetails()
         .AddDataProtection()
-        .PersistKeysToFileSystem(new (keysPath))
+        .PersistKeysToFileSystem(new (encryptionKeysPath))
         .Services;
 }

@@ -8,4 +8,4 @@ SAMPLE_WWW_PATH=$SAMPLE_PATH.www
 
 deno task start $SAMPLE_WWW_PATH &
 dotnet run --no-restore --no-build --project $SAMPLE_API_PATH &
-wait
+wait -n
