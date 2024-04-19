@@ -13,12 +13,9 @@
       "Https": {
         "Url": "https://*:5000",
         "Certificate": {
-          "Path": "../.certificates/localhost.pem",
-          "KeyPath": "../.certificates/localhost-key.pem"
+          "Path": "/workspaces/backend-security/.certificates/localhost.pem",
+          "KeyPath": "/workspaces/backend-security/.certificates/localhost-key.pem"
         }
-      },
-      "Http": {
-        "Url": "http://*:5001"
       }
     }
   },
