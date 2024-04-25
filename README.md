@@ -68,3 +68,16 @@
 - to simplify authentication/authorization mechanisms [ASPNET schema-based free mechanism].
 - to demonstrate a functional programming implementation.
 - to demonstrate a practical alternative to OOP.
+
+### Benchmark
+| Method    | InvocationCount | Mean      | Error     | StdDev    | Median    | Ratio | RatioSD | Gen0    | Gen1    | Gen2    | Allocated | Alloc Ratio |
+|---------- |---------------- |----------:|----------:|----------:|----------:|------:|--------:|--------:|--------:|--------:|----------:|------------:|
+| FPSignin  | 128             |  64.34 μs |  1.196 μs |  1.119 μs |  64.69 μs |  1.00 |    0.00 |       - |       - |       - |   7.96 KB |        1.00 |
+| OOPSignin | 128             |  79.98 μs |  3.247 μs |  9.212 μs |  79.56 μs |  1.13 |    0.14 |  7.8125 |  7.8125 |  7.8125 | 116.21 KB |       14.59 |
+|           |                 |           |           |           |           |       |         |         |         |         |           |             |
+| FPSignin  | 512             |  45.75 μs |  5.065 μs | 14.934 μs |  39.12 μs |  1.00 |    0.00 |  1.9531 |       - |       - |   7.96 KB |        1.00 |
+| OOPSignin | 512             |  97.08 μs |  7.432 μs | 21.679 μs |  95.52 μs |  2.41 |    1.12 |  9.7656 |  9.7656 |  9.7656 |  445.7 KB |       56.01 |
+|           |                 |           |           |           |           |       |         |         |         |         |           |             |
+| FPSignin  | 1024            |  28.83 μs |  2.009 μs |  5.533 μs |  26.26 μs |  1.00 |    0.00 |  1.9531 |       - |       - |   7.95 KB |        1.00 |
+| OOPSignin | 1024            | 186.15 μs | 26.776 μs | 78.949 μs | 211.04 μs |  6.32 |    3.02 | 14.6484 | 13.6719 | 13.6719 | 915.64 KB |      115.12 |
+- for InvocationCount > 2048 OOP benchmark start running extremely slow.
