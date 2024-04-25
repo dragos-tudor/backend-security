@@ -29,7 +29,7 @@
 - *high-level* functions usually use declarative style [eg. *SignInCookie*].
   - usually impure functions [with side-effects].
   - built on top of *low-level* and *intermediate-level* functions.
-- *intermediate-level* functions could use imperative/declarative style [eg. *SetAuthorizationParams*].
+- *intermediate-level* functions use imperative/declarative style [eg. *SetAuthorizationParams*].
 - *low-level* functions usually use imperative style and are one-liners [eg. *IsSecuredCookie*].
   - usually pure [without side effects] or semi-pure functions [side effects on parameters].
 - *high-intermediate-low-level* hierarchy design I named it **lego principle**. It could be seen also as a **functions-pyramid** having at the base *low-level* functions.
