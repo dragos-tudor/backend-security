@@ -11,7 +11,7 @@ partial class CookiesFuncs
   internal const string MissingSessionTicketId = "Missing session ticket id";
   internal const string MissingSessionTicket = "Missing session ticket";
 
-  internal static async ValueTask<AuthenticateResult> AuthenticateSessionCookie(
+  internal static async Task<AuthenticateResult> AuthenticateSessionCookie(
     HttpContext context,
     CookieAuthenticationOptions authOptions,
     CookieBuilder cookieBuilder,
@@ -45,7 +45,7 @@ partial class CookiesFuncs
     return authResult;
   }
 
-  internal static ValueTask<AuthenticateResult> AuthenticateSessionCookie(
+  internal static Task<AuthenticateResult> AuthenticateSessionCookie(
     HttpContext context,
     CookieAuthenticationOptions authOptions,
     string? ticketId) =>
