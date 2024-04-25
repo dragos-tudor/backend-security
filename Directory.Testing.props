@@ -18,13 +18,12 @@
       build/netcoreapp3.1/Microsoft.NET.Test.Sdk.props
       build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs
     </See> -->
-    <GenerateProgramFile>false</GenerateProgramFile>
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(Configuration)'=='Release'">
     <Compile Remove="**/*.Tests.cs" />
-    <Compile Include="../Program.cs" />
+    <Compile Remove="@(RemoveExistingMicrosoftNETTestSdkProgram)" />
   </ItemGroup>
 
 </Project>
