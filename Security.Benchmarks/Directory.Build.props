@@ -1,0 +1,3 @@
+<Project>
+  <!-- workaround: https://github.com/dotnet/BenchmarkDotNet/issues/1215 -->
+</Project>

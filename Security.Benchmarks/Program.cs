@@ -1,8 +1,15 @@
 ﻿
 using BenchmarkDotNet.Running;
-using Security.Benchmarks;
 
-// BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
-BenchmarkRunner.Run<SignInBenchmarks>();
+namespace Security.Benchmarks;
+
+public class Program
+{
+  public static void Main(string[] args)
+  {
+    // BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
+    BenchmarkRunner.Run<SignInBenchmarks>();
+  }
+}
 
 

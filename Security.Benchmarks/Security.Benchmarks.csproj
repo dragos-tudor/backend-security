@@ -1,10 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
+  <PropertyGroup Label="Project props">
     <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+
+    <!-- compiling -->
+    <ImplicitUsings>disable</ImplicitUsings>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <Nullable>enable</Nullable>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+
     <IsPackable>false</IsPackable>
-    <IsTestProject>false</IsTestProject>
-    <!-- skip copy apphost [Microsoft.Common.CurrentVersion.targets: MSB3021 error]  -->
+    <IsTestable>false</IsTestable>
+
     <UseAppHost>false</UseAppHost>
   </PropertyGroup>
 

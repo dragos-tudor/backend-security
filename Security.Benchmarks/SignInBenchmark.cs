@@ -14,22 +14,22 @@ using static Security.Authentication.Cookies.CookiesFuncs;
 
 namespace Security.Benchmarks;
 
-[DryJob]
 [SimpleJob(invocationCount: 128)]
 [SimpleJob(invocationCount: 512)]
 [SimpleJob(invocationCount: 1024)]
 [MemoryDiagnoser]
 public class SignInBenchmarks
 {
-  static readonly IServiceProvider msServices = new ServiceCollection().AddLogging().AddAuthentication("Cookies").AddCookie().Services.BuildServiceProvider()!;
-  static readonly IServiceProvider services = new ServiceCollection().AddLogging().AddCookies().AddDataProtection().Services.BuildServiceProvider();
-  static readonly IIdentity identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+  const string cookieScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+  static readonly IServiceProvider msServices = new ServiceCollection().AddLogging().AddAuthentication(cookieScheme).AddCookie(cookieScheme).Services.BuildServiceProvider()!;
+  static readonly IServiceProvider myServices = new ServiceCollection().AddCookies().AddDataProtection().Services.BuildServiceProvider();
+  static readonly IIdentity identity = new ClaimsIdentity(cookieScheme);
 	static readonly IAuthenticationService authenticationService = msServices.GetRequiredService<IAuthenticationService>();
 
   [Benchmark(Baseline = true)]
-  public async Task FPBenchmark ()
+  public async Task FPSignin ()
   {
-    var context = new DefaultHttpContext(){RequestServices = services};
+    var context = new DefaultHttpContext(){RequestServices = myServices};
     await SignInCookie(
       context,
       new ClaimsPrincipal(identity),
@@ -37,13 +37,13 @@ public class SignInBenchmarks
   }
 
   [Benchmark]
-  public async Task OOPBenchmark ()
+  public async Task OOPSignin ()
   {
     var context = new DefaultHttpContext(){RequestServices = msServices};
     // var authenticationService = msServices.GetRequiredService<IAuthenticationService>();
     await authenticationService.SignInAsync(
       context,
-      CookieAuthenticationDefaults.AuthenticationScheme,
+      cookieScheme,
       new ClaimsPrincipal(identity),
       new AuthenticationProperties());
   }
