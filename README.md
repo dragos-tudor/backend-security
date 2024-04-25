@@ -17,17 +17,22 @@
 
 ### Design
 - security services [authentication and authorization services] represent the **mechanism backbone**.
-- security services [*high-level* functions] act as **security behaviour controllers** and use *low-level* functions.
-- security libraries were written following some of **FP principles** [pure functions, high-order functions, immutability, data/behaviour separation, static methods/functions as first-class citiziens].
+- security services [*high-level* functions] act as **security behaviour controllers** and represent public API.
+- security libraries were written following some of **FP principles** [pure functions, high-order functions, immutability, data/behaviour separation, static methods/functions as first-class citiziens, result pattern].
 - DI is used as **thin layer** usually over functional security services [eg. *SignInCookie* have 2 implementations with/without DI services]. DI services implementations are registred as usual with specific method extensions [eg. *AddCookies*, *AddFacebook*].
 - **security mechanism** is based on security services [authentication scheme free-mechanism]:
   - *authentication middleware* receive authentication service [*UseAuthentication* extension].
   - *authorization middleware* receive challenge and forbid services [*UseAuthorization* extension].
   - *oauth callback endpoints* receive signin service [eg. *MapFacebook*].
-- *high-level* functions usually use declarative style and TDA principle [eg. *SignInCookie*]. *High-level* functions, usually impure functions [with side-effects], are built on top of *low-level* functions, usually pure or semi-pure functions [some parameters are changed]. I named this kind of design *Lego principle*.
-- *low-level* functions usually use imperative style and are one-liners [eg. *IsSecuredCookie*].
 - authentication libraries implement specific authentication services [eg. *AuthenticateCookie*, *SignInCookie*, *ChallengeGoogle*, *AuthenticateFacebook*].
 - authorization library implement authorization services [eg. *Authorize*].
+- *high-level* functions usually use declarative style [eg. *SignInCookie*].
+  - usually impure functions [with side-effects].
+  - built on top of *low-level* and *intermediate-level* functions.
+- *intermediate-level* functions could use imperative/declarative style [eg. *SetAuthorizationParams*].
+- *low-level* functions usually use imperative style and are one-liners [eg. *IsSecuredCookie*].
+  - usually pure [without side effects] or semi-pure functions [side effects on parameters].
+- *high-intermediate-low-level* hierarchy design I named it **lego principle**. It could be seen also as a **functions-pyramid** having at the base *low-level* functions.
 
 ### Processes
 - there are 2 different security processes: *local authentication* and *remote authentication*.
