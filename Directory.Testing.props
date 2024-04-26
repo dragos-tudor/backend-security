@@ -13,16 +13,16 @@
   </ItemGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
-    <!-- <See> Microsoft.NET.Test.Sdk package
-      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.targets
-      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.props
-      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs
-    </See> -->
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
   <ItemGroup Condition="'$(Configuration)'=='Release'">
     <Compile Remove="**/*.Tests.cs" />
+    <!-- <See> Microsoft.NET.Test.Sdk package
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.targets
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.props
+      build/netcoreapp3.1/Microsoft.NET.Test.Sdk.Program.cs
+    </See> -->
     <Compile Remove="@(RemoveExistingMicrosoftNETTestSdkProgram)" />
   </ItemGroup>
 
