@@ -16,6 +16,7 @@
     <IsTestable>false</IsTestable>
 
     <UseAppHost>false</UseAppHost>
+    <GenerateProgramFile>false</GenerateProgramFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Security.Authentication.Cookies;
 using static Security.Authentication.Cookies.CookiesFuncs;
-#pragma warning disable CA1822
 
 namespace Security.Benchmarks;
 
@@ -21,10 +20,19 @@ namespace Security.Benchmarks;
 public class SignInBenchmarks
 {
   const string cookieScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-  static readonly IServiceProvider msServices = new ServiceCollection().AddLogging().AddAuthentication(cookieScheme).AddCookie(cookieScheme).Services.BuildServiceProvider()!;
-  static readonly IServiceProvider myServices = new ServiceCollection().AddCookies().AddDataProtection().Services.BuildServiceProvider();
-  static readonly IIdentity identity = new ClaimsIdentity(cookieScheme);
-	static readonly IAuthenticationService authenticationService = msServices.GetRequiredService<IAuthenticationService>();
+  IServiceProvider msServices = default!;
+  IServiceProvider myServices = default!;
+  IIdentity identity = default!;
+	IAuthenticationService authenticationService = default!;
+
+  [GlobalSetup]
+  public void Setup()
+  {
+    msServices = new ServiceCollection().AddLogging().AddAuthentication(cookieScheme).AddCookie(cookieScheme).Services.BuildServiceProvider()!;
+    myServices = new ServiceCollection().AddCookies().AddDataProtection().Services.BuildServiceProvider();
+    identity = new ClaimsIdentity(cookieScheme);
+    authenticationService = msServices.GetRequiredService<IAuthenticationService>();
+  }
 
   [Benchmark(Baseline = true)]
   public async Task FPSignin ()
@@ -40,7 +48,6 @@ public class SignInBenchmarks
   public async Task OOPSignin ()
   {
     var context = new DefaultHttpContext(){RequestServices = msServices};
-    // var authenticationService = msServices.GetRequiredService<IAuthenticationService>();
     await authenticationService.SignInAsync(
       context,
       cookieScheme,
