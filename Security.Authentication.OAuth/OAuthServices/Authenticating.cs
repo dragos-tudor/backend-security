@@ -18,29 +18,34 @@ partial class OAuthFuncs {
     AccessUserInfoFunc<TOptions> accessUserInfo)
   where TOptions: OAuthOptions
   {
+    var cancellationToken = context.RequestAborted;
+    var requestId = context.TraceIdentifier;
+    var schemeName = authOptions.SchemeName;
+
     var authResult = postAuthorize(context, authOptions, propertiesDataFormat);
-    if(authResult.Failure is not null) LogPostAuthorizationWithFailure(Logger, authOptions.SchemeName, authResult.Failure, context.TraceIdentifier);
-    if(authResult.Failure is not null) return Fail(authResult.Failure);
-    LogPostAuthorization(Logger, authOptions.SchemeName, context.TraceIdentifier);
+    if(IsFailedPostAuthorizationResult(authResult)) LogPostAuthorizationFailure(Logger, schemeName, authResult.Failure!, requestId);
+    if(IsFailedPostAuthorizationResult(authResult)) return Fail(authResult.Failure!);
+    LogPostAuthorization(Logger, schemeName, requestId);
 
     var authProperties = GetAutheticationProperties(authResult);
     var authorizationCode = GetPostAuthorizationCode(context.Request)!;
-    var tokenResult = await exchangeCodeForTokens(authorizationCode, authProperties!, authOptions, httpClient, context.RequestAborted);
-    if (tokenResult.Failure is not null) LogExchangeCodeForTokensWithFailure(Logger, authOptions.SchemeName, tokenResult.Failure, context.TraceIdentifier);
-    if (tokenResult.Failure is not null) return Fail(tokenResult.Failure);
-    LogExchangeCodeForTokens(Logger, authOptions.SchemeName, context.TraceIdentifier);
+    var tokenResult = await exchangeCodeForTokens(authorizationCode, authProperties!, authOptions, httpClient, cancellationToken);
+    if (IsFailedTokenResult(tokenResult)) LogExchangeCodeForTokensFailure(Logger, schemeName, tokenResult.Failure!, requestId);
+    if (IsFailedTokenResult(tokenResult)) return Fail(tokenResult.Failure!);
+    LogExchangeCodeForTokens(Logger, schemeName, requestId);
 
     var accessToken = GetAccessToken(tokenResult);
-    var userInfoResult = await accessUserInfo(accessToken!, authOptions, httpClient, context.RequestAborted);
-    if(userInfoResult.Failure is not null) LogAccessUserInfoWithFailure(Logger, authOptions.SchemeName, userInfoResult.Failure, context.TraceIdentifier);
-    if(userInfoResult.Failure is not null) return Fail(userInfoResult.Failure);
-    LogAccessUserInfo(Logger, authOptions.SchemeName, context.TraceIdentifier);
+    var userInfoResult = await accessUserInfo(accessToken!, authOptions, httpClient, cancellationToken);
+    if(IsFailedUserInfoResult(userInfoResult)) LogAccessUserInfoFailure(Logger, schemeName, userInfoResult.Failure!, requestId);
+    if(IsFailedUserInfoResult(userInfoResult)) return Fail(userInfoResult.Failure!);
+    LogAccessUserInfo(Logger, schemeName, requestId);
 
-    if (ShouldCleanCodeChallenge(authOptions)) RemoveAuthenticationPropertiesCodeVerifier(authProperties!);
+    if (ShouldCleanCodeChallenge(authOptions))
+      RemoveAuthenticationPropertiesCodeVerifier(authProperties!);
 
     var principal = GetClaimsPrincipal(userInfoResult)!;
-    LogAuthenticated(Logger, authOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
-    return Success(CreateAuthenticationTicket(principal, authProperties, authOptions.SchemeName));
+    LogAuthenticated(Logger, schemeName, GetPrincipalNameId(principal)!, requestId);
+    return Success(CreateAuthenticationTicket(principal, authProperties, schemeName));
   }
 
 

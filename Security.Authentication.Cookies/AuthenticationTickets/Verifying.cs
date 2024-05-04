@@ -9,6 +9,8 @@ partial class CookiesFuncs {
 
   static bool AllowAuthenticationTicketSlideExpiration (bool slidingExpiration) => slidingExpiration;
 
+  static bool ExistAuthenticationTicket (AuthenticationTicket? ticket) => ticket is not null;
+
   static bool IsSetAuthenticationTicketIssued (AuthenticationTicket ticket) => ticket.Properties?.IssuedUtc is not null;
 
   static bool IsSetAuthenticationTicketExpires (AuthenticationTicket ticket) => ticket.Properties?.ExpiresUtc is not null;

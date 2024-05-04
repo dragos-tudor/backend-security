@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+#nullable disable
 
 namespace Security.Authentication.OAuth;
 
@@ -14,13 +15,13 @@ partial class OAuthFuncs {
   {
     var authError = ValidatePostAuthorizationRequest(context);
     if (IsAccessDeniedError(authError)) SetResponseRedirect(context.Response, authOptions.AccessDeniedPath);
-    if (authError is not null) return authError;
+    if (ExistsPostAuthorizationValidationError(authError)) return authError;
 
     var authProperties = UnprotectAuthenticationProperties(GetPostAuthorizationState(context.Request)!, propertiesDataFormat);
-    if (authProperties is null) return UnprotectAuthorizationStateFailed;
+    if (!ExistsAuthenticationProperties(authProperties)) return UnprotectAuthorizationStateFailed;
 
     var correlationError = ValidateCorrelationCookie(context.Request, authProperties);
-    if (correlationError is not null) return correlationError;
+    if (ExistsCorrelationCookieValidationError(correlationError)) return correlationError;
 
     var correlationId = GetAuthenticationPropertiesCorrelationId(authProperties);
     CleanCorrelationCookie(context, authOptions, correlationId);

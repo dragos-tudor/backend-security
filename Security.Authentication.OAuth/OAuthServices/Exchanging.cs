@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.OAuth;
 
-partial class OAuthFuncs {
-
+partial class OAuthFuncs
+{
   public static async Task<TokenResult> ExchangeCodeForTokens<TOptions> (
     string authCode,
     AuthenticationProperties authProperties,
@@ -35,5 +35,4 @@ partial class OAuthFuncs {
       ResolveHttpClient<TOptions>(context),
       cancellationToken
     );
-
 }

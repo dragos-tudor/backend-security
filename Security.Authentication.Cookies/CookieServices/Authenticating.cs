@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 using static Microsoft.AspNetCore.Authentication.AuthenticateResult;
+#nullable disable
 
 namespace Security.Authentication.Cookies;
 
@@ -22,10 +23,10 @@ partial class CookiesFuncs
   {
     var cookieName = GetCookieName(cookieBuilder, authOptions);
     var cookie = GetAuthenticationCookie(context, cookieManager, cookieName);
-    if (cookie is null) return NoResult();
+    if (!ExistAuthenticationCookie(cookie)) return NoResult();
 
     var cookieTicket = UnprotectAuthenticationTicket(cookie, ticketDataFormat);
-    if (cookieTicket is null) return Fail(UnprotectTicketFailed);
+    if (!ExistAuthenticationTicket(cookieTicket)) return Fail(UnprotectTicketFailed);
 
     if (IsSessionBasedCookie(ticketStore))
       return await AuthenticateSessionCookie(context, authOptions, cookieBuilder, cookieManager,
