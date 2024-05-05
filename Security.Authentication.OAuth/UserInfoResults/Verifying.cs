@@ -3,9 +3,9 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs
 {
-  static bool IsFailedUserInfoResult(UserInfoResult userInfoResult) =>
+  static bool IsFailureUserInfoResult(UserInfoResult userInfoResult) =>
     userInfoResult.Failure is not null;
 
-  static bool IsSucceededUserInfoResult(UserInfoResult userInfoResult) =>
+  static bool IsSuccessUserInfoResult(UserInfoResult userInfoResult) =>
     userInfoResult.Success is not null;
 }

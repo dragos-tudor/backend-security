@@ -23,21 +23,21 @@ partial class OAuthFuncs {
     var schemeName = authOptions.SchemeName;
 
     var authResult = postAuthorize(context, authOptions, propertiesDataFormat);
-    if(IsFailedPostAuthorizationResult(authResult)) LogPostAuthorizationFailure(Logger, schemeName, authResult.Failure!, requestId);
-    if(IsFailedPostAuthorizationResult(authResult)) return Fail(authResult.Failure!);
+    if(IsFailurePostAuthorizationResult(authResult)) LogPostAuthorizationFailure(Logger, schemeName, authResult.Failure!, requestId);
+    if(IsFailurePostAuthorizationResult(authResult)) return Fail(authResult.Failure!);
     LogPostAuthorization(Logger, schemeName, requestId);
 
     var authProperties = GetAutheticationProperties(authResult);
     var authorizationCode = GetPostAuthorizationCode(context.Request)!;
     var tokenResult = await exchangeCodeForTokens(authorizationCode, authProperties!, authOptions, httpClient, cancellationToken);
-    if (IsFailedTokenResult(tokenResult)) LogExchangeCodeForTokensFailure(Logger, schemeName, tokenResult.Failure!, requestId);
-    if (IsFailedTokenResult(tokenResult)) return Fail(tokenResult.Failure!);
+    if (IsFailureTokenResult(tokenResult)) LogExchangeCodeForTokensFailure(Logger, schemeName, tokenResult.Failure!, requestId);
+    if (IsFailureTokenResult(tokenResult)) return Fail(tokenResult.Failure!);
     LogExchangeCodeForTokens(Logger, schemeName, requestId);
 
     var accessToken = GetAccessToken(tokenResult);
     var userInfoResult = await accessUserInfo(accessToken!, authOptions, httpClient, cancellationToken);
-    if(IsFailedUserInfoResult(userInfoResult)) LogAccessUserInfoFailure(Logger, schemeName, userInfoResult.Failure!, requestId);
-    if(IsFailedUserInfoResult(userInfoResult)) return Fail(userInfoResult.Failure!);
+    if(IsFailureUserInfoResult(userInfoResult)) LogAccessUserInfoFailure(Logger, schemeName, userInfoResult.Failure!, requestId);
+    if(IsFailureUserInfoResult(userInfoResult)) return Fail(userInfoResult.Failure!);
     LogAccessUserInfo(Logger, schemeName, requestId);
 
     if (ShouldCleanCodeChallenge(authOptions))
