@@ -48,7 +48,7 @@
       * *ExchangeCodeForTokens* - exchange with the authorization server the authorization code for the access [and refresh] tokens [remote].
       * *AccessUserInfo* - using access token gets from the authorization server the user informations [remote].
       * The authentication step transform user informations received from authorization server into security claims, add them to the claims identity, create an authentication ticket and return the *AuthenticationResult*.
-    - signin: after oauth authentication step when *AuthenticationResult* succedded then the signin func is called [eg. *SiginInCookie^, *SignInBearerToken*]. Signin func is set on oauth endpoints registration.
+    - signin: after oauth authentication step when authentication succedded then the signin func is called [eg. *SiginInCookie^, *SignInBearerToken*]. Signin func is set on oauth endpoints registration.
   - after callback redirection next requests will use *local authentication process*.
 
 ### Remarks
