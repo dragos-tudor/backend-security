@@ -13,7 +13,7 @@
 
     <!-- analysing -->
     <AnalysisMode>All</AnalysisMode>
-    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+    <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <!-- <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild> -->
 
