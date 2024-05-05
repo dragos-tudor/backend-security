@@ -30,8 +30,8 @@
 
     <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
     <RepositoryUrl>https://github.com/dragos-tudor/backend-security.git</RepositoryUrl>
-    <PackageLicense>$(RepositoryUrl)/blob/master/LICENSE</PackageLicense>
-    <PackageProjectUrl>$(RepositoryUrl)/$(MSBuildProjectName)</PackageProjectUrl>
+    <PackageLicense>https://github.com/dragos-tudor/backend-security/blob/master/LICENSE</PackageLicense>
+    <PackageProjectUrl>https://github.com/dragos-tudor/backend-security/tree/main/$(MSBuildProjectName)</PackageProjectUrl>
   </PropertyGroup>
 
 </Project>
