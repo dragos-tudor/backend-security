@@ -21,9 +21,9 @@
 - security libraries were written following some of **FP principles** [pure functions, high-order functions, immutability, data/behaviour separation, static methods/functions as first-class citiziens, result pattern].
 - DI is used as **thin layer** usually over functional security services [eg. *SignInCookie* have 2 implementations with/without DI services]. DI services implementations are registred as usual with specific method extensions [eg. *AddCookies*, *AddFacebook*].
 - **security mechanism** is based on security services [authentication scheme free-mechanism]:
-  - *authentication middleware* receive authentication service [*UseAuthentication* extension].
-  - *authorization middleware* receive challenge and forbid services [*UseAuthorization* extension].
-  - *oauth callback endpoints* receive signin service [eg. *MapFacebook*].
+  - *authentication middleware* receive authentication service as param [*UseAuthentication* extension].
+  - *authorization middleware* receive challenge and forbid services as params [*UseAuthorization* extension].
+  - *oauth callback endpoints* receive signin service as param [eg. *MapFacebook*].
 - authentication libraries implement specific authentication services [eg. *AuthenticateCookie*, *SignInCookie*, *ChallengeGoogle*, *AuthenticateFacebook*].
 - authorization library implement authorization services [eg. *Authorize*].
 - *high-level* functions usually use declarative style [eg. *SignInCookie*].
@@ -37,7 +37,7 @@
 ### Processes
 - there are 2 different security processes: *local authentication* and *remote authentication*.
 - *local authentication process* [cookie]:
-  - each request [when use authentication middlware] call *authentication func* [eg. *AuthenticateCookie*]. Based on authorization result the middleware set *HttpContext.User* prop.
+  - each request [when use authentication middlware] call *authentication func* [eg. *AuthenticateCookie*]. Based on authentication result the middleware set *HttpContext.User* prop.
   - then each request [when use authorization middlware] call *authorization func* [eg. *Authorize*]. Based on authorization policies result is decided if the request is allowed, unauthenticated/challenged or unauthorized/forbidden.
   - signin/signout funcs are used on specific endpoints/controller actions implememted by devs.
 - *remote authentication process* [OAuth2 protocol]:
