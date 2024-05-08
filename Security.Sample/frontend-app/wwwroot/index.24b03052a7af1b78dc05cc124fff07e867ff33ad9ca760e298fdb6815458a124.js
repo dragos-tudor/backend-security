@@ -290,9 +290,10 @@ const signOutAccoutApi = (fetchApi)=>fetchApi("/accounts/signout", {
         method: HttpMethods1.POST
     });
 const authenticatedAccountApi = (fetchApi)=>fetchApi("/accounts/authenticated", {});
+const isSignoutError = (error)=>!!error;
 const signOutAccount = async (fetchApi, dispatchAction, navigate)=>{
     const [, error] = await signOutAccoutApi(fetchApi);
-    if (error) return [
+    if (isSignoutError(error)) return [
         ,
         error
     ];
@@ -398,7 +399,7 @@ forbidden h3 {
   color: var(--error-color)
 }`;
 const loadHome = async ()=>{
-    const { Home } = await import("/home.8215320d5c57b0a1616643bb20d2b3468daf06c27aefe2d29c9778308afb8e6f.js");
+    const { Home } = await import("/home.eb70d490d1f295ef5a693436e61ccd7831672f42cd6ece2c8c1177388ad9fdb9.js");
     return React.createElement(Home, null);
 };
 const hideHtmlElement = (elem1)=>(elem1.style.display = "none", elem1);
@@ -443,11 +444,12 @@ const createCredentials = (userName, password)=>Object.freeze({
     });
 const getHtmlButton = (elem1)=>getHtmlDescendant(elem1, "button");
 const hasLocationRedirect = (location1)=>getLocationUrl(location1).includes(RedirectParamName);
+const isSigninError = (error)=>!!error;
 const IsUnauthorizedError = (error)=>isUnauthorizedResponse(error?.response);
 const signInAccount = async (credentials, fetchApi, dispatchAction, navigate, sendError, labels, location1)=>{
     const [_, error] = await signInAccountApi(credentials, fetchApi);
     if (IsUnauthorizedError(error)) sendError(labels.wrongCredentials);
-    if (error) return [
+    if (isSigninError(error)) return [
         ,
         error
     ];
@@ -629,12 +631,9 @@ const isAuthenticationSuccedded = (authenticated, error)=>!error && authenticate
 const startApp = async (fetchApi, dispatchAction, navigate, location1 = globalThis.location)=>{
     const [authenticated, error] = await authenticatedAccountApi(fetchApi);
     if (!isAuthenticationSuccedded(authenticated, error)) isLoginPath(location1) ? navigate(getLocationPathNameAndSearch(location1)) : navigate(getRedirectedLogin(location1));
-    if (error) return [
-        ,
+    if (!isAuthenticationSuccedded(authenticated, error)) return [
+        authenticated,
         error
-    ];
-    if (!authenticated) return [
-        authenticated
     ];
     dispatchAction(createAuthenticatedAction(authenticated));
     isLoginPath(location1) || isRootPath(location1) ? navigate(RoutePaths.home) : navigate(getLocationPathName(location1));

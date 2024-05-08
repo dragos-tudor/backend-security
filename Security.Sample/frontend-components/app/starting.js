@@ -13,8 +13,7 @@ export const startApp = async (fetchApi, dispatchAction, navigate, location = gl
     isLoginPath(location)?
       navigate(getLocationPathNameAndSearch(location)):
       navigate(getRedirectedLogin(location))
-  if (error) return [, error]
-  if (!authenticated) return [authenticated]
+  if (!isAuthenticationSuccedded(authenticated, error)) return [authenticated, error]
 
   dispatchAction(createAuthenticatedAction(authenticated))
   isLoginPath(location) || isRootPath(location)?

@@ -39,9 +39,10 @@ const createSetUserAction = (user)=>createAction(`${UserState}/setUser`, {
 const { HttpMethods } = await import("/scripts/fetching.js");
 const { HttpMethods: HttpMethods1 } = await import("/scripts/fetching.js");
 const getUserApi = (fetchApi)=>fetchApi("/users", {});
+const isGetUserError = (error)=>!!error;
 const getUser = async (fetchApi, dispatchAction)=>{
     const [user, error] = await getUserApi(fetchApi);
-    if (error) return [
+    if (isGetUserError(error)) return [
         ,
         error
     ];
