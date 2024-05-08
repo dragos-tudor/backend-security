@@ -46,7 +46,7 @@ const compileIndexCss = async (cwd) => {
   return { indexCssName, encodedIndexCss };
 }
 
-const encodeSettings = async (cwd) => {
+const compileSettings = async (cwd) => {
   const settings = await Deno.readTextFile(cwd + "/settings.js");
   const encodedSettings = new TextEncoder().encode(settings);
   return { settingsName: "settings.js", encodedSettings }
@@ -73,22 +73,27 @@ const target = "/workspaces/backend-security/Security.Sample/frontend-app/wwwroo
 const targetScripts = target + "/scripts";
 const targetImages = target + "/images";
 
-console.log("[publishing]", "make scripts and images wwwroot directories")
-removeDirectories(target)
-makeDirectories(targetScripts, targetImages)
-
-
 const source = import.meta.dirname
 const sourceScripts = source + "/scripts";
 const sourceImages = source + "/images";
 
-console.log("[publishing]", "copy scripts and images files to wwwroot directories")
-copyFiles(sourceScripts, targetScripts)
+console.log("[publishing]", "remove scripts and images app wwwroot directories")
+removeDirectories(target)
+
+console.log("[publishing]", "make scripts and images app wwwroot directories")
+makeDirectories(targetScripts, targetImages)
+
+console.log("[publishing]", "bundle home file")
+const { homeName, encodedHome } = await bundleHome(source)
+
+console.log("[publishing]", "bundle index file")
+const { indexName, encodedIndex } = await bundleIndex(source, homeName)
+
+console.log("[publishing]", "copy images to app wwwroot directory")
 copyFiles(sourceImages, targetImages)
 
-console.log("[publishing]", "bundle home and index files")
-const { homeName, encodedHome } = await bundleHome(source)
-const { indexName, encodedIndex } = await bundleIndex(source, homeName)
+console.log("[publishing]", "copy scripts to app wwwroot directory")
+copyFiles(sourceScripts, targetScripts)
 
 console.log("[publishing]", "compile index css file")
 const { indexCssName, encodedIndexCss } = await compileIndexCss(source)
@@ -96,14 +101,13 @@ const { indexCssName, encodedIndexCss } = await compileIndexCss(source)
 console.log("[publishing]", "compile index html file")
 const { indexHtmlName, encodedIndexHtml } = compileIndexHtml(source, indexName, indexCssName);
 
-console.log("[publishing]", "encode settings file")
-const { settingsName, encodedSettings } = await encodeSettings(source)
+console.log("[publishing]", "compile settings file")
+const { settingsName, encodedSettings } = await compileSettings(source)
 
-
-console.log("[publishing]", "publish bundled and compiled app files to wwwroot directory")
+console.log("[publishing]", "publish bundled and compiled files to app wwwroot directory")
 Deno.writeFileSync(target + "/" + homeName, encodedHome)
 Deno.writeFileSync(target + "/" + indexName, encodedIndex)
 Deno.writeFileSync(target + "/" + indexCssName, encodedIndexCss)
 Deno.writeFileSync(target + "/" + settingsName, encodedSettings)
 Deno.writeFileSync(target + "/" + indexHtmlName, encodedIndexHtml)
-console.log("[publishing]", "published sample app to", target)
+console.log("[publishing]", "published www sample to", target)
