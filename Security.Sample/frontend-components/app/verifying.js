@@ -1,5 +1,5 @@
 
 export const isAppElement = (elem) => elem.tagName === "APP"
 
-export const isAuthenticationSuccedded = (isAuthenticated, error) => !error && isAuthenticated
+export const isAuthenticationSuccedded = (authenticated, error) => !error && authenticated
 

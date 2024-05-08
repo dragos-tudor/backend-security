@@ -2,6 +2,7 @@ import { google, facebook, twitter, spinner } from "../../images/icons.jsx"
 import { getLocationUrl } from "../../frontend-shared/locations/getting.js"
 import { resolveLocation } from "../../frontend-shared/locations/resolving.js"
 import { useApiUrl, useFetchApi, useLabels, useValidationErrors } from "../../frontend-shared/services/using.js"
+import { sendError } from "../error/sending.js"
 import { dispatchAction, navigate, useState } from "../../scripts/extending.js"
 import { createCredentials } from "./creating.js"
 import { getHtmlButton } from "./getting.js"
@@ -40,7 +41,7 @@ export const Login = (props, elem) =>
         disabled={!validCredentials || signing}
         onclick={async () => {
           setSigning(true);
-          await signInAccount(credentials, location, fetchApi, dispatchAction(elem), navigate(elem));
+          await signInAccount(credentials, fetchApi, dispatchAction(elem), navigate(elem), sendError(elem), labels, location);
           setSigning(false);
         }}>
         <span hidden={!signing}>{spinner}</span>

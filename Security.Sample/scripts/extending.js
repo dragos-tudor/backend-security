@@ -1,3 +1,4 @@
+import { getHtmlBody } from "../frontend-shared/html-elements/getting.js"
 const rendering = await import("/scripts/rendering.js")
 const routing = await import("/scripts/routing.js")
 const states = await import("/scripts/states.js")
@@ -9,7 +10,7 @@ export const dispatchAction = (elem) =>
   (action) => states.dispatchAction(elem, action)
 
 export const navigate = (elem) =>
-  (url) => routing.navigate(elem, url)
+  (url) => routing.navigate(getHtmlBody(elem), url)
 
 export const setInitialEffect = (elem, name, func) =>
   rendering.setInitialEffect(setEffects(elem), name, func)

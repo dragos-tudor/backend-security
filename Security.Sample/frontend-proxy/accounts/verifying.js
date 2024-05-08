@@ -1,2 +1,2 @@
 
-export const isAuthenticatedAccountApi = (fetchApi) => fetchApi("/accounts/authenticated", {})
+export const authenticatedAccountApi = (fetchApi) => fetchApi("/accounts/authenticated", {})

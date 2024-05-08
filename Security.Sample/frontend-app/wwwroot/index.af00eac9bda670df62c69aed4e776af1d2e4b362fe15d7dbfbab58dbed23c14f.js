@@ -29,16 +29,18 @@ const setRequestRedirect = (request, redirect)=>Object.assign(request, {
     });
 const isForbiddenResponse = (response)=>response?.status === 403;
 const isUnauthorizedResponse = (response)=>response?.status === 401;
+const isFetchSuccess = (error)=>!error;
+const isFetchFailure = (error)=>error;
 const { fetchJson } = await import("/scripts/fetching.js");
-const getFetchApi = (fetch1, navigate, handleError, location1 = globalThis.location)=>async (url, request = {})=>{
+const getFetchApi = (fetch1, navigate, sendError, location1 = globalThis.location)=>async (url, request = {})=>{
         setRequestMode(request, "cors");
         setRequestRedirect(request, "manual");
         setRequestCredentials(request, "include");
         const [data, error] = await fetchJson(fetch1, url, request);
-        if (!error) return [
+        if (isFetchSuccess(error)) return [
             data
         ];
-        if (error) handleError(error);
+        if (isFetchFailure(error)) sendError(error);
         if (isUnauthorizedResponse(error.response)) !isLoginPath(location1) && navigate(getRedirectedLogin(location1));
         if (isForbiddenResponse(error.response)) navigate(RoutePaths.forbidden);
         return [
@@ -58,21 +60,22 @@ const isRomanianLanguage = (lang)=>Languages.ro === lang;
 const getLabelsPath = (lang)=>`/scripts/labels.${lang}.js`;
 const importLabels = async (lang)=>(await import(getLabelsPath(lang))).default;
 const Labels = Object.freeze({
-    userName: "User name",
+    accessDenied: "Access denied",
+    gotoHome: "Goto hone",
+    home: "Home",
+    login: "Login",
+    info: "Info",
     password: "Password",
     signin: "Signin with credentials",
     signinWithGoogle: "Signin with Google",
     signinWithFacebook: "Signin with Facebook",
     signinWithTwitter: "Signin with Twitter",
     signout: "Sign out",
-    userClaims: "User claims",
     schemeName: "Scheme name",
-    accessDenied: "Access denied",
+    userName: "User name",
+    userClaims: "User claims",
     unauthorized: "You are not authorize to access resource.",
-    gotoHome: "Goto hone",
-    home: "Home",
-    login: "Login",
-    info: "Info"
+    wrongCredentials: "Invalid username or password."
 });
 const resolveLabels = async (lang)=>isEnglishLanguage(lang) ? Labels : await importLabels(lang);
 const ServiceNames = Object.freeze({
@@ -207,13 +210,15 @@ const youtube = React.createElement("svg", {
 }, React.createElement("path", {
     d: "M 32 15 C 14.938 15 12.659656 15.177734 10.472656 17.427734 C 8.2856563 19.677734 8 23.252 8 32 C 8 40.748 8.2856562 44.323266 10.472656 46.572266 C 12.659656 48.821266 14.938 49 32 49 C 49.062 49 51.340344 48.821266 53.527344 46.572266 C 55.714344 44.322266 56 40.748 56 32 C 56 23.252 55.714344 19.677734 53.527344 17.427734 C 51.340344 15.177734 49.062 15 32 15 z M 32 19 C 45.969 19 49.379156 19.062422 50.535156 20.232422 C 51.691156 21.402422 52 24.538 52 32 C 52 39.462 51.691156 42.597578 50.535156 43.767578 C 49.379156 44.937578 45.969 45 32 45 C 18.031 45 14.620844 44.937578 13.464844 43.767578 C 12.308844 42.597578 12.03125 39.462 12.03125 32 C 12.03125 24.538 12.308844 21.402422 13.464844 20.232422 C 14.620844 19.062422 18.031 19 32 19 z M 27.949219 25.017578 L 27.949219 38.982422 L 40.095703 31.945312 L 27.949219 25.017578 z"
 }));
+const getHtmlBody = (elem1)=>elem1.ownerDocument.body;
+const getHtmlDescendant = (elem1, name)=>elem1.querySelector(name.toLowerCase());
 const rendering = await import("/scripts/rendering.js");
 const routing = await import("/scripts/routing.js");
 const states = await import("/scripts/states.js");
 const { setEffects, setStates, update } = rendering;
 const { getStoreStates, setSelectors } = states;
 const dispatchAction = (elem1)=>(action)=>states.dispatchAction(elem1, action);
-const navigate = (elem1)=>(url)=>routing.navigate(elem1, url);
+const navigate = (elem1)=>(url)=>routing.navigate(getHtmlBody(elem1), url);
 const setInitialEffect = (elem1, name, func)=>rendering.setInitialEffect(setEffects(elem1), name, func);
 const useEffect = (elem1, name, func, deps)=>rendering.useEffect(setEffects(elem1), name, func, deps);
 const usePostEffect = (elem1, name, func, deps)=>rendering.useEffect(setEffects(elem1), name, async ()=>(await Promise.resolve(), func()), deps);
@@ -246,14 +251,14 @@ const Language = (_, elem1)=>{
         target: "_self"
     }, Languages.ro));
 };
-const selectIsAuthenticated = (states)=>states[AccountState].isAuthenticated;
+const selectAuthenticated = (states)=>states[AccountState].authenticated;
 const { NavLink } = await import("/scripts/routing.js");
 const NavLinks = (props, elem1)=>{
-    const isAuthenticated = useSelector(elem1, "is-authenticated", selectIsAuthenticated);
+    const authenticated = useSelector(elem1, "authenticated", selectAuthenticated);
     const labels = useLabels(elem1);
     return React.createElement(React.Fragment, null, React.createElement("style", {
         css: css
-    }), isAuthenticated ? React.createElement("nav", null, React.createElement(NavLink, {
+    }), authenticated ? React.createElement("nav", null, React.createElement(NavLink, {
         class: "navlinks-link",
         href: RoutePaths.home
     }, labels["home"]), React.createElement(NavLink, {
@@ -269,8 +274,8 @@ const css = `
   margin-left: 1rem
 }`;
 const { createAction } = await import("/scripts/states.js");
-const createIsAuthenticatedAction = (isAuthenticated)=>createAction(`${AccountState}/setAccount`, {
-        isAuthenticated
+const createAuthenticatedAction = (authenticated)=>createAction(`${AccountState}/setAccount`, {
+        authenticated
     });
 const createSetUserAction = (user)=>createAction(`${UserState}/setUser`, {
         user
@@ -284,7 +289,7 @@ const { HttpMethods: HttpMethods1 } = await import("/scripts/fetching.js");
 const signOutAccoutApi = (fetchApi)=>fetchApi("/accounts/signout", {
         method: HttpMethods1.POST
     });
-const isAuthenticatedAccountApi = (fetchApi)=>fetchApi("/accounts/authenticated", {});
+const authenticatedAccountApi = (fetchApi)=>fetchApi("/accounts/authenticated", {});
 const signOutAccount = async (fetchApi, dispatchAction, navigate)=>{
     const [, error] = await signOutAccoutApi(fetchApi);
     if (error) return [
@@ -292,7 +297,7 @@ const signOutAccount = async (fetchApi, dispatchAction, navigate)=>{
         error
     ];
     dispatchAction(createSetUserAction(null));
-    dispatchAction(createIsAuthenticatedAction(false));
+    dispatchAction(createAuthenticatedAction(false));
     navigate(RoutePaths.login);
     return [
         true
@@ -306,7 +311,7 @@ const Logout = (props, elem1)=>{
     }, labels["signout"]));
 };
 const Header = (props, elem1)=>{
-    const isAuthenticated = useSelector(elem1, "is-authenticated", selectIsAuthenticated);
+    const authenticated = useSelector(elem1, "authenticated", selectAuthenticated);
     return React.createElement(React.Fragment, null, React.createElement("style", {
         css: css1
     }), React.createElement("h2", null, React.createElement("a", {
@@ -316,7 +321,7 @@ const Header = (props, elem1)=>{
         class: "header-language"
     }), React.createElement(NavLinks, {
         class: "header-navlinks"
-    }), isAuthenticated && React.createElement(Logout, null));
+    }), authenticated && React.createElement(Logout, null));
 };
 const css1 = `
 header {
@@ -393,23 +398,60 @@ forbidden h3 {
   color: var(--error-color)
 }`;
 const loadHome = async ()=>{
-    const { Home } = await import("/home.ea29d464e592b02f393bbb68528a906eebb1c2a1503e6b0822e633bcb55ce4a1.js");
+    const { Home } = await import("/home.8215320d5c57b0a1616643bb20d2b3468daf06c27aefe2d29c9778308afb8e6f.js");
     return React.createElement(Home, null);
 };
+const hideHtmlElement = (elem1)=>(elem1.style.display = "none", elem1);
+const showHtmlElement = (elem1, display = "block")=>(elem1.style.display = display, elem1);
+const toggleError = (elem1, timeout)=>showHtmlElement(elem1) && setTimeout(()=>hideHtmlElement(elem1), timeout);
+const getPropsTimeout = (props)=>props.timeout ?? 3000;
+const getErrorMessage = (error)=>error?.message ?? error;
+const getPropsMessage = (props)=>props.message;
+const Error = (props, elem1)=>{
+    const [timeout] = useState(elem1, "timeout", getPropsTimeout(props), []);
+    const message = getPropsMessage(props);
+    if (message) useEffect(elem1, "toggle-error", ()=>{
+        const timeoutId = toggleError(elem1, timeout);
+        setInitialEffect(elem1, "toggle-error", ()=>clearTimeout(timeoutId));
+    });
+    return React.createElement(React.Fragment, null, React.createElement("style", {
+        css: css4
+    }), React.createElement("p", null, message));
+};
+const getErrorElement = (elem1)=>getHtmlDescendant(getHtmlBody(elem1), Error.name);
+const css4 = `
+error {
+  display: none;
+  position: absolute;
+  transition: display 1s ease-in-out;
+  bottom: 5rem;
+  left: 2rem;
+  padding: 1rem;
+  border: thin solid var(--error-color);
+  color: var(--info-color);
+  background-color: var(--neutral-light-color);
+}`;
+const sanitizeMessage = (message)=>message.replaceAll("\"", "");
+const { update: update1 } = await import("/scripts/rendering.js");
+const updateError = (elem1, message)=>update1(elem1, React.createElement(Error, {
+        message: sanitizeMessage(message)
+    }));
+const sendError = (elem1)=>(error)=>updateError(getErrorElement(elem1), getErrorMessage(error));
 const createCredentials = (userName, password)=>Object.freeze({
         userName,
         password
     });
-const getHtmlDescendant = (elem1, name)=>elem1.querySelector(name.toLowerCase());
 const getHtmlButton = (elem1)=>getHtmlDescendant(elem1, "button");
 const hasLocationRedirect = (location1)=>getLocationUrl(location1).includes(RedirectParamName);
-const signInAccount = async (credentials, location1, fetchApi, dispatchAction, navigate)=>{
-    const [, error] = await signInAccountApi(credentials, fetchApi);
+const IsUnauthorizedError = (error)=>isUnauthorizedResponse(error?.response);
+const signInAccount = async (credentials, fetchApi, dispatchAction, navigate, sendError, labels, location1)=>{
+    const [_, error] = await signInAccountApi(credentials, fetchApi);
+    if (IsUnauthorizedError(error)) sendError(labels.wrongCredentials);
     if (error) return [
         ,
         error
     ];
-    dispatchAction(createIsAuthenticatedAction(true));
+    dispatchAction(createAuthenticatedAction(true));
     hasLocationRedirect(location1) ? navigate(getRedirectParam(location1)) : navigate(RoutePaths.home);
     return [
         true
@@ -446,7 +488,7 @@ const Login = (props, elem1)=>{
     const userNameError = userName == null || !validationResult.userName;
     const passwordError = password == null || !validationResult.password;
     return React.createElement(React.Fragment, null, React.createElement("style", {
-        css: css4
+        css: css5
     }), React.createElement("section", {
         class: "local-authentication"
     }, React.createElement("label", {
@@ -469,7 +511,7 @@ const Login = (props, elem1)=>{
         disabled: !validCredentials || signing,
         onclick: async ()=>{
             setSigning(true);
-            await signInAccount(credentials, location1, fetchApi, dispatchAction(elem1), navigate(elem1));
+            await signInAccount(credentials, fetchApi, dispatchAction(elem1), navigate(elem1), sendError(elem1), labels, location1);
             setSigning(false);
         }
     }, React.createElement("span", {
@@ -505,7 +547,7 @@ const Login = (props, elem1)=>{
         class: "auth-provider-label"
     }, labels["signinWithTwitter"]))));
 };
-const css4 = `
+const css5 = `
 login {
   display: flex;
   flex-direction: row;
@@ -560,10 +602,10 @@ login {
 const Info = (_, elem1)=>{
     const labels = useLabels(elem1);
     return React.createElement(React.Fragment, null, React.createElement("style", {
-        css: css5
+        css: css6
     }), React.createElement("h3", null, labels["info"]), React.createElement("span", null, "Dragos Tudor sofware developer."));
 };
-const css5 = `
+const css6 = `
 info {
   display: block;
   margin: 3rem;
@@ -583,21 +625,21 @@ const Routes = ()=>React.createElement(React.Fragment, null, React.createElement
         path: RoutePaths.forbidden,
         child: React.createElement(Forbidden, null)
     }));
-const isAuthenticationSuccedded = (isAuthenticated, error)=>!error && isAuthenticated;
+const isAuthenticationSuccedded = (authenticated, error)=>!error && authenticated;
 const startApp = async (fetchApi, dispatchAction, navigate, location1 = globalThis.location)=>{
-    const [isAuthenticated, error] = await isAuthenticatedAccountApi(fetchApi);
-    if (!isAuthenticationSuccedded(isAuthenticated, error)) isLoginPath(location1) ? navigate(getLocationPathNameAndSearch(location1)) : navigate(getRedirectedLogin(location1));
+    const [authenticated, error] = await authenticatedAccountApi(fetchApi);
+    if (!isAuthenticationSuccedded(authenticated, error)) isLoginPath(location1) ? navigate(getLocationPathNameAndSearch(location1)) : navigate(getRedirectedLogin(location1));
     if (error) return [
         ,
         error
     ];
-    if (!isAuthenticated) return [
-        isAuthenticated
+    if (!authenticated) return [
+        authenticated
     ];
-    dispatchAction(createIsAuthenticatedAction(isAuthenticated));
+    dispatchAction(createAuthenticatedAction(authenticated));
     isLoginPath(location1) || isRootPath(location1) ? navigate(RoutePaths.home) : navigate(getLocationPathName(location1));
     return [
-        isAuthenticated
+        authenticated
     ];
 };
 const { Router } = await import("/scripts/routing.js");
@@ -610,7 +652,7 @@ const Application = (props, elem1)=>{
         setStarting(false);
     }, []);
     return React.createElement(React.Fragment, null, React.createElement("style", {
-        css: css6
+        css: css7
     }), React.createElement(Router, {
         "no-skip": true
     }, React.createElement(Header, null), React.createElement("main", null, React.createElement("div", {
@@ -618,7 +660,7 @@ const Application = (props, elem1)=>{
         class: "app-spinner"
     }, spinner), React.createElement(Routes, null)), React.createElement(Footer, null)));
 };
-const css6 = `
+const css7 = `
 application {
   height: 100vh;
 }
@@ -649,44 +691,7 @@ main {
 .app-spinner svg  {
   height: 5rem;
 }`;
-const getMessage = (props)=>props.message;
-const getTimeout = (props)=>props.timeout ?? 3000;
-const hideHtmlElement = (elem1)=>(elem1.style.display = "none", elem1);
-const showHtmlElement = (elem1, display = "block")=>(elem1.style.display = display, elem1);
-const toggleError = (elem1, timeout)=>showHtmlElement(elem1) && setTimeout(()=>hideHtmlElement(elem1), timeout);
-const Error = (props, elem1)=>{
-    const [timeout] = useState(elem1, "timeout", getTimeout(props), []);
-    const message = getMessage(props);
-    if (message) useEffect(elem1, "toggle-error", ()=>{
-        const timeoutId = toggleError(elem1, timeout);
-        setInitialEffect(elem1, "toggle-error", ()=>clearTimeout(timeoutId));
-    });
-    return React.createElement(React.Fragment, null, React.createElement("style", {
-        css: css7
-    }), React.createElement("p", null, message));
-};
-const css7 = `
-error {
-  display: none;
-  position: absolute;
-  transition: display 1s ease-in-out;
-  bottom: 5rem;
-  left: 2rem;
-  padding: 1rem;
-  border: thin solid var(--error-color);
-  color: var(--info-color);
-  background-color: var(--neutral-light-color);
-}`;
-const sanitizeMessage = (message)=>message.replaceAll("\"", "");
-const { update: update1 } = await import("/scripts/rendering.js");
-const updateError = (elem1, message)=>update1(elem1, React.createElement(Error, {
-        message: sanitizeMessage(message)
-    }));
-const { Router: Router1 } = await import("/scripts/routing.js");
-const getErrorElement = (elem1)=>getHtmlDescendant(elem1, Error.name);
-const getRouterElement = (elem1)=>getHtmlDescendant(elem1, Router1.name);
 const { fetchWithTimeout } = await import("/scripts/fetching.js");
-const { navigate: navigate1 } = await import("/scripts/routing.js");
 const { Services } = await import("/scripts/rendering.js");
 const { Store } = await import("/scripts/states.js");
 const language = getLanguageParam(location) ?? Languages.en;
@@ -694,13 +699,13 @@ const labels = await resolveLabels(language);
 const validationErrors = await resolveValidationErrors(language);
 const Root = (props, elem1)=>{
     const { apiUrl, apiTimeout, location: location1 } = props;
-    const fetchApi = getFetchApi((url, request)=>fetchWithTimeout(fetch, apiUrl + url, request, apiTimeout), (url)=>navigate1(getRouterElement(elem1), url), (error)=>updateError(getErrorElement(elem1), error.message), resolveLocation(location1));
+    const fetchApi = getFetchApi((url, request)=>fetchWithTimeout(fetch, apiUrl + url, request, apiTimeout), navigate(elem1), sendError(elem1), resolveLocation(location1));
     const services = createServices(apiUrl, fetchApi, labels, language, validationErrors);
     return React.createElement(React.Fragment, null, React.createElement("style", {
         css: css8
     }), React.createElement(Store, {
         state: createAccountState({
-            isAuthenticated: false
+            authenticated: false
         }),
         reducer: createAccountReducer()
     }), React.createElement(Store, {

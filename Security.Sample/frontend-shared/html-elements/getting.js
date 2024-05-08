@@ -1,5 +1,5 @@
 
-export const getHtmlBody = (document) => document.body
+export const getHtmlBody = (elem)=> elem.ownerDocument.body
 
 export const getHtmlChildren = (elem) => Array.from(elem.children)
 

@@ -1,11 +1,11 @@
-import { useEffect, useState, setInitialEffect } from "../../scripts/extending.js"
-import { getMessage, getTimeout } from "./getting.js"
+import { setInitialEffect, useEffect, useState } from "../../scripts/extending.js"
+import { getPropsMessage, getPropsTimeout } from "./getting.js"
 import { toggleError } from "./toggling.js"
 
 export const Error = (props, elem) =>
 {
-  const [timeout] = useState(elem, "timeout", getTimeout(props), [])
-  const message = getMessage(props)
+  const [timeout] = useState(elem, "timeout", getPropsTimeout(props), [])
+  const message = getPropsMessage(props)
 
   if(message)
     useEffect(elem, "toggle-error", () => {

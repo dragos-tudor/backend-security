@@ -11,7 +11,7 @@ const useLabels = (elem)=>getService(elem, ServiceNames.labels);
 const { createStoreState } = await import("/scripts/states.js");
 const AccountState = "account";
 const UserState = "user";
-const selectIsAuthenticated = (states)=>states[AccountState].isAuthenticated;
+const selectAuthenticated = (states)=>states[AccountState].authenticated;
 const rendering = await import("/scripts/rendering.js");
 await import("/scripts/routing.js");
 const states = await import("/scripts/states.js");
@@ -54,12 +54,12 @@ const Home = (props, elem)=>{
     const fetchApi = useFetchApi(elem, props);
     const labels = useLabels(elem);
     const [user, setUser] = useState(elem, "user", null, []);
-    const isAuthenticated = useSelector(elem, "is-authenticated", selectIsAuthenticated);
+    const authenticated = useSelector(elem, "authenticated", selectAuthenticated);
     useEffect(elem, "get-user", async ()=>{
         const [user] = await getUser(fetchApi, dispatchAction(elem));
         user && setUser(user);
     }, [
-        isAuthenticated
+        authenticated
     ]);
     return React.createElement(React.Fragment, null, React.createElement("style", {
         css: css

@@ -9,10 +9,9 @@ import { createAccountState, createUserState } from "../../frontend-shared/store
 import { createAccountReducer, createUserReducer } from "../../frontend-shared/store/reducers.js"
 import { Application } from "../app/app.jsx"
 import { Error } from "../error/error.jsx"
-import { updateError } from "../error/updating.jsx"
-import { getErrorElement, getRouterElement } from "./getting.js"
+import { sendError } from "../error/sending.js"
+import { navigate } from "../../scripts/extending.js"
 const { fetchWithTimeout } = await import("/scripts/fetching.js")
-const { navigate } = await import("/scripts/routing.js")
 const { Services } = await import("/scripts/rendering.js")
 const { Store } = await import("/scripts/states.js")
 
@@ -25,8 +24,8 @@ export const Root = (props, elem) =>
   const {apiUrl, apiTimeout, location} = props
   const fetchApi = getFetchApi(
     (url, request) => fetchWithTimeout(fetch, apiUrl + url, request, apiTimeout),
-    (url) => navigate(getRouterElement(elem), url),
-    (error) => updateError(getErrorElement(elem), error.message),
+    navigate(elem),
+    sendError(elem),
     resolveLocation(location)
   )
   const services = createServices(apiUrl, fetchApi, labels, language, validationErrors)
@@ -34,7 +33,7 @@ export const Root = (props, elem) =>
   return (
     <>
       <style css={css}></style>
-      <Store state={createAccountState({isAuthenticated: false})} reducer={createAccountReducer()}></Store>
+      <Store state={createAccountState({authenticated: false})} reducer={createAccountReducer()}></Store>
       <Store state={createUserState()} reducer={createUserReducer()}></Store>
       <Services {...services}></Services>
       <Application></Application>

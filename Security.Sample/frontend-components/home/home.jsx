@@ -1,5 +1,5 @@
 import { useLabels, useFetchApi } from "../../frontend-shared/services/using.js"
-import { selectIsAuthenticated } from "../../frontend-shared/store/selectors.js"
+import { selectAuthenticated } from "../../frontend-shared/store/selectors.js"
 import { dispatchAction, useEffect, useSelector, useState } from "../../scripts/extending.js"
 import { concatClaim } from "./concating.js"
 import { getUser } from "./getting.js"
@@ -9,13 +9,13 @@ export const Home = (props, elem) =>
   const fetchApi = useFetchApi(elem, props)
   const labels = useLabels(elem)
   const [user, setUser] = useState(elem, "user", null, [])
-  const isAuthenticated = useSelector(elem, "is-authenticated", selectIsAuthenticated)
+  const authenticated = useSelector(elem, "authenticated", selectAuthenticated)
 
   useEffect(elem, "get-user", async () => {
       const [user] = await getUser(fetchApi, dispatchAction(elem))
       user && setUser(user)
     },
-  [isAuthenticated])
+  [authenticated])
 
   return <>
     <style css={css}></style>

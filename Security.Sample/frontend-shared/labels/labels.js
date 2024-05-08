@@ -1,18 +1,19 @@
 
 export const Labels = Object.freeze({
-  userName: "User name",
+  accessDenied: "Access denied",
+  gotoHome: "Goto hone",
+  home: "Home",
+  login: "Login",
+  info: "Info",
   password: "Password",
   signin: "Signin with credentials",
   signinWithGoogle: "Signin with Google",
   signinWithFacebook: "Signin with Facebook",
   signinWithTwitter: "Signin with Twitter",
   signout: "Sign out",
-  userClaims: "User claims",
   schemeName: "Scheme name",
-  accessDenied: "Access denied",
+  userName: "User name",
+  userClaims: "User claims",
   unauthorized: "You are not authorize to access resource.",
-  gotoHome: "Goto hone",
-  home: "Home",
-  login: "Login",
-  info: "Info"
+  wrongCredentials: "Invalid username or password."
 })

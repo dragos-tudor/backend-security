@@ -4,6 +4,6 @@ namespace Security.Sample.Endpoints;
 
 partial class EndpointsFuncs
 {
-  public static Ok<bool> IsAuthenticatedAccount(HttpContext context) =>
+  public static Ok<bool> AuthenticatedAccount(HttpContext context) =>
     Ok(IsAuthenticatedPrincipal(context.User));
 }

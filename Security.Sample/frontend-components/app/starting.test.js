@@ -1,7 +1,8 @@
+import { assertEquals } from "/asserts.ts"
 import { spy, assertSpyCalls, assertSpyCallArgs } from "/mock.ts"
 import { fetchError, fetchOk, createLocation } from "/www/testing.js"
 import { RoutePaths } from "../../frontend-shared/route-paths/route.paths.js"
-import { createIsAuthenticatedAction } from "../../frontend-shared/store/actions.js"
+import { createAuthenticatedAction } from "../../frontend-shared/store/actions.js"
 import { startApp } from "./starting.js"
 
 
@@ -10,18 +11,20 @@ Deno.test("app component", async t =>
   await t.step("is authenticated response => start app => dispatch is authenticated action", async () =>
   {
     const dispatchSpy = spy(() => {})
-    const [isAuthenticated] = await startApp(() => fetchOk(true), dispatchSpy, _, {})
+    const [authenticated] = await startApp(() => fetchOk(true), dispatchSpy, _, {})
 
     assertSpyCalls(dispatchSpy, 1)
-    assertSpyCallArgs(dispatchSpy, 0, [createIsAuthenticatedAction(isAuthenticated)])
+    assertSpyCallArgs(dispatchSpy, 0, [createAuthenticatedAction(authenticated)])
+    assertEquals(authenticated, true)
   })
 
   await t.step("is not authenticated response => start app => no dispatch action", async () =>
   {
     const dispatchSpy = spy(() => {})
-    await startApp(() => fetchOk(false), dispatchSpy, _, {})
+    const [authenticated] = await startApp(() => fetchOk(false), dispatchSpy, _, {})
 
     assertSpyCalls(dispatchSpy, 0)
+    assertEquals(authenticated, false)
   })
 
   await t.step("error response => start app => no dispatch action", async () =>

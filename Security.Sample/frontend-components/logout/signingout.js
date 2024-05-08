@@ -1,4 +1,4 @@
-import { createSetUserAction, createIsAuthenticatedAction } from "../../frontend-shared/store/actions.js"
+import { createSetUserAction, createAuthenticatedAction } from "../../frontend-shared/store/actions.js"
 import { RoutePaths } from "../../frontend-shared/route-paths/route.paths.js"
 import { signOutAccoutApi } from "../../frontend-proxy/mod.js"
 
@@ -8,7 +8,7 @@ export const signOutAccount = async (fetchApi, dispatchAction, navigate) =>
   if (error) return [, error]
 
   dispatchAction(createSetUserAction(null))
-  dispatchAction(createIsAuthenticatedAction(false))
+  dispatchAction(createAuthenticatedAction(false))
   navigate(RoutePaths.login)
   return [true]
 }

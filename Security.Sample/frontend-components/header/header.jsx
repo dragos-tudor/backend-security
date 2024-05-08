@@ -1,12 +1,12 @@
 import { Language } from "../language/language.jsx"
 import { NavLinks } from "../navlinks/navlinks.jsx"
 import { Logout } from "../logout/logout.jsx"
-import { selectIsAuthenticated } from "../../frontend-shared/store/selectors.js"
+import { selectAuthenticated } from "../../frontend-shared/store/selectors.js"
 import { useSelector } from "../../scripts/extending.js"
 
 export const Header = (props, elem) =>
 {
-  const isAuthenticated = useSelector(elem, "is-authenticated", selectIsAuthenticated)
+  const authenticated = useSelector(elem, "authenticated", selectAuthenticated)
 
   return (<>
     <style css={css} ></style>
@@ -15,7 +15,7 @@ export const Header = (props, elem) =>
     </h2>
     <Language class="header-language"></Language>
     <NavLinks class="header-navlinks"></NavLinks>
-    {isAuthenticated && <Logout></Logout>}
+    {authenticated && <Logout></Logout>}
   </>)
 }
 
