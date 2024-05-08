@@ -1,0 +1,56 @@
+
+:root {
+  --ff-serif: Georgia, 'Times New Roman', Times, serif;
+  --ff-sans-serif: Arial, Helvetica, sans-serif;
+
+  --neutral--light-color: rgb(168, 166, 166);
+  --neutral-color: rgb(49, 46, 46);
+  --neutral-dark-color: rgb(41, 39, 39);
+
+  --accent-light-color: rgb(250, 221, 169);
+  --accent-color: rgb(255, 192, 74);
+  --accent-dark-color: rgb(255, 153, 0);
+
+  --label-color: rgb(140, 231, 140);
+  --info-color: rgb(168, 166, 166);
+  --warning-color: rgb(255, 253, 111);
+  --error-color: rgb(252, 89, 89);
+
+  --font-size: 2rem;
+  --transition-interval: 0.5s;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --neutral--light-color: rgb(255, 235, 235);
+    --neutral-color: rgb(207, 207, 207);
+    --neutral-dark-color: rgb(231, 228, 228);
+
+    --accent-light-color: rgb(252, 105, 60);
+    --accent-color: rgb(247, 119, 80);
+    --accent-dark-color: rgb(241, 73, 22);
+
+    --label-color: rgb(1, 160, 36);
+    --info-color: rgb(131, 131, 131);
+    --warning-color: rgb(255, 253, 111);
+    --error-color: rgb(252, 89, 89);
+  }
+}
+
+*, *:after, *::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+html {
+  font-size: 62.5%;
+  font-family: var(--ff-sans-serif);
+}
+
+body {
+  font-size: var(--font-size);
+  background-color: var(--neutral-color);
+  color: var(--info-color);
+}

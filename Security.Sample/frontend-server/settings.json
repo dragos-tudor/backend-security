@@ -1,0 +1,9 @@
+{
+  "serverOptions": {
+    "hostname": "127.0.0.1",
+    "certPath": "/workspaces/backend-security/.certificates/localhost.pem",
+    "keyPath": "/workspaces/backend-security/.certificates/localhost-key.pem",
+    "port": 5090,
+    "secure": true
+  }
+}

@@ -1,7 +1,6 @@
 
 using Microsoft.AspNetCore.Http;
 using Security.Authentication;
-using static Security.Authentication.AuthenticationFuncs;
 
 namespace Security.Authorization;
 
@@ -16,7 +15,7 @@ partial class AuthorizationFuncs {
     var (authResult, principal) =
       await Authorize(context, challenge, forbid);
 
-    SetContextUser(context, principal);
+    if (IsExistingPrincipal(principal)) SetContextUser(context, principal);
     if (IsSuccessfulAuthorization(authResult)) await next(context);
     if (!IsSuccessfulAuthorization(authResult)) await WriteResponse(context,string.Empty);
   }

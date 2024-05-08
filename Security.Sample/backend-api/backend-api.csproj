@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>false</IsTestProject>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App"></FrameworkReference>
+    <ProjectReference Include="../backend-endpoints/backend-endpoints.csproj"/>
+    <ProjectReference Include="../../Security.Authentication.Cookies/Security.Authentication.Cookies.csproj"/>
+    <ProjectReference Include="../../Security.Authentication.Google/Security.Authentication.Google.csproj"/>
+    <ProjectReference Include="../../Security.Authentication.Facebook/Security.Authentication.Facebook.csproj"/>
+    <ProjectReference Include="../../Security.Authentication.Twitter/Security.Authentication.Twitter.csproj"/>
+    <ProjectReference Include="../../Security.Authorization/Security.Authorization.csproj"/>
+    <None Include="../../.certificates/localhost*" CopyToOutputDirectory="PreserveNewest"/>
+    <None Include="settings.json" CopyToOutputDirectory="PreserveNewest"/>
+    <None Include="secrets.json" CopyToOutputDirectory="PreserveNewest"/>
+  </ItemGroup>
+
+</Project>

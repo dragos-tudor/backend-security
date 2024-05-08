@@ -25,11 +25,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.Authentication.Fac
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.Authentication.Twitter", "Security.Authentication.Twitter\Security.Authentication.Twitter.csproj", "{15B077A0-1F85-4FF0-8F86-56FC8B326DC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.Sample.Api", "Security.Sample.Api\Security.Sample.Api.csproj", "{7D502505-C28D-430E-8EE0-7CD826E3EE81}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.Authentication.BearerToken", "Security.Authentication.BearerToken\Security.Authentication.BearerToken.csproj", "{838D5F3E-11E7-4DA9-A087-A01A81194A5F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.Authentication.OpenIdConnect", "Security.Authentication.OpenIdConnect\Security.Authentication.OpenIdConnect.csproj", "{016EE288-75A6-46B6-8C1A-769CE90862AF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security.Sample", "Security.Sample", "{3433718A-7CCB-485C-8FFA-FBAA9F439C4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "frontend-app", "Security.Sample\frontend-app\frontend-app.csproj", "{3FFF3711-51BC-473D-8C34-71A65154925A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend-api", "Security.Sample\backend-api\backend-api.csproj", "{65C7CFBA-3173-4BE2-9B21-2099915A5EC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "backend-endpoints", "Security.Sample\backend-endpoints\backend-endpoints.csproj", "{51E93041-7070-42D7-BB1A-B10F82097411}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,10 +90,6 @@ Global
 		{15B077A0-1F85-4FF0-8F86-56FC8B326DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15B077A0-1F85-4FF0-8F86-56FC8B326DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15B077A0-1F85-4FF0-8F86-56FC8B326DC8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7D502505-C28D-430E-8EE0-7CD826E3EE81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7D502505-C28D-430E-8EE0-7CD826E3EE81}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7D502505-C28D-430E-8EE0-7CD826E3EE81}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7D502505-C28D-430E-8EE0-7CD826E3EE81}.Release|Any CPU.Build.0 = Release|Any CPU
 		{838D5F3E-11E7-4DA9-A087-A01A81194A5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{838D5F3E-11E7-4DA9-A087-A01A81194A5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{838D5F3E-11E7-4DA9-A087-A01A81194A5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -96,5 +98,22 @@ Global
 		{016EE288-75A6-46B6-8C1A-769CE90862AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{016EE288-75A6-46B6-8C1A-769CE90862AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{016EE288-75A6-46B6-8C1A-769CE90862AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FFF3711-51BC-473D-8C34-71A65154925A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FFF3711-51BC-473D-8C34-71A65154925A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FFF3711-51BC-473D-8C34-71A65154925A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FFF3711-51BC-473D-8C34-71A65154925A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65C7CFBA-3173-4BE2-9B21-2099915A5EC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65C7CFBA-3173-4BE2-9B21-2099915A5EC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65C7CFBA-3173-4BE2-9B21-2099915A5EC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65C7CFBA-3173-4BE2-9B21-2099915A5EC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51E93041-7070-42D7-BB1A-B10F82097411}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51E93041-7070-42D7-BB1A-B10F82097411}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51E93041-7070-42D7-BB1A-B10F82097411}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51E93041-7070-42D7-BB1A-B10F82097411}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3FFF3711-51BC-473D-8C34-71A65154925A} = {3433718A-7CCB-485C-8FFA-FBAA9F439C4D}
+		{65C7CFBA-3173-4BE2-9B21-2099915A5EC8} = {3433718A-7CCB-485C-8FFA-FBAA9F439C4D}
+		{51E93041-7070-42D7-BB1A-B10F82097411} = {3433718A-7CCB-485C-8FFA-FBAA9F439C4D}
 	EndGlobalSection
 EndGlobal

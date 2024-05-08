@@ -23,11 +23,11 @@ partial class AuthorizationFuncs {
     var authResult = GetAuthenticationFeature<AuthenticateResult>(context) ?? GetDefaultAuthenticateResult(context);
     if (IsAnonymousEndpoint(endpoint)) return (default, authResult.Principal);
 
-    var authorizationResult = await AuthorizePolicy(policy, authResult, authorizationService, context, endpoint);
-    if (authorizationResult.Forbidden) forbid(context, GetAuthenticationProperties(authResult));
-    if (authorizationResult.Challenged) challenge(context, GetAuthenticationProperties(authResult));
+    var authzResult = await AuthorizePolicy(policy, authResult, authorizationService, context, endpoint);
+    if (authzResult.Forbidden) forbid(context, GetAuthenticationProperties(authResult));
+    if (authzResult.Challenged) challenge(context, GetAuthenticationProperties(authResult));
 
-    return (authorizationResult, authResult.Principal);
+    return (authzResult, authResult.Principal);
   }
 
   static Task<(PolicyAuthorizationResult?, ClaimsPrincipal?)> Authorize (
