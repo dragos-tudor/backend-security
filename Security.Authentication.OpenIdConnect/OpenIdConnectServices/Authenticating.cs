@@ -21,7 +21,7 @@ partial class OpenIdConnectFuncs
   where TOptions: OpenIdConnectOptions
   {
     var authResult = await postAuthorize(context, oidcOptions, oidcConfiguration, propertiesDataFormat, stringDataFormat);
-    if(authResult.Failure is not null) LogPostAuthorizationWithFailure(Logger, oidcOptions.SchemeName, authResult.Failure, context.TraceIdentifier);
+    if(authResult.Failure is not null) LogPostAuthorizationFailure(Logger, oidcOptions.SchemeName, authResult.Failure, context.TraceIdentifier);
     if(authResult.Failure is not null) return Fail(authResult.Failure);
     LogPostAuthorization(Logger, oidcOptions.SchemeName, context.TraceIdentifier);
 
@@ -31,7 +31,7 @@ partial class OpenIdConnectFuncs
     if(ShouldExchangeCodeForTokens(authInfo)) {
       tokenResult = await exchangeCodeForTokens(authInfo.Code!, authProperties, oidcOptions,
         oidcConfiguration, stringDataFormat, httpClient, GetRequestCookies(context.Request), context.RequestAborted);
-      if(tokenResult.Failure is not null) LogExchangeCodeForTokensWithFailure(Logger, oidcOptions.SchemeName, tokenResult.Failure, context.TraceIdentifier);
+      if(tokenResult.Failure is not null) LogExchangeCodeForTokensFailure(Logger, oidcOptions.SchemeName, tokenResult.Failure, context.TraceIdentifier);
       if(tokenResult.Failure is not null) return Fail(tokenResult.Failure);
       LogExchangeCodeForTokens(Logger, oidcOptions.SchemeName, context.TraceIdentifier);
     }
@@ -47,7 +47,7 @@ partial class OpenIdConnectFuncs
     var userInfoResult = default(UserInfoResult);
     if (ShouldAccessUserInfo(oidcOptions, oidcConfiguration, tokenInfo)) {
       userInfoResult = await accessUserInfo(tokenInfo!.AccessToken!, securityToken, identity, oidcOptions, oidcConfiguration, httpClient, context.RequestAborted);
-      if (userInfoResult.Failure is not null) LogAccessUserInfoWithFailure(Logger, oidcOptions.SchemeName, userInfoResult.Failure, context.TraceIdentifier);
+      if (userInfoResult.Failure is not null) LogAccessUserInfoFailure(Logger, oidcOptions.SchemeName, userInfoResult.Failure, context.TraceIdentifier);
       if (userInfoResult.Failure is not null) return Fail(userInfoResult.Failure);
       LogAccessUserInfo(Logger, oidcOptions.SchemeName, context.TraceIdentifier);
     }
