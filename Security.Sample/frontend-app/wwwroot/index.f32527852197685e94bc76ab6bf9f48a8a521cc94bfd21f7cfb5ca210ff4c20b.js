@@ -94,19 +94,19 @@ const importValidationErrors = async (lang)=>(await import(getValidationErrorsPa
 const { ValidationErrors } = await import("/scripts/validating.js");
 const resolveValidationErrors = async (lang)=>isEnglishLanguage(lang) ? ValidationErrors : await importValidationErrors(lang);
 const { createStoreState } = await import("/scripts/states.js");
-const AppState = "appState";
 const AccountState = "account";
-const createAppState = (account, user)=>createStoreState(AppState, {
-        account,
-        user
-    });
+const UserState = "user";
+const createAccountState = (account)=>createStoreState(AccountState, account);
+const createUserState = (user)=>createStoreState(UserState, user);
 const { createReducer } = await import("/scripts/states.js");
-const createAppReducer = ()=>createReducer(AppState, {
-        setUser: (state, action)=>({
+const createAccountReducer = ()=>createReducer(AccountState, {
+        setAccount: (state, action)=>({
                 ...state,
                 ...action.payload
-            }),
-        setAccount: (state, action)=>({
+            })
+    });
+const createUserReducer = ()=>createReducer(UserState, {
+        setUser: (state, action)=>({
                 ...state,
                 ...action.payload
             })
@@ -246,7 +246,7 @@ const Language = (_, elem1)=>{
         target: "_self"
     }, Languages.ro));
 };
-const selectIsAuthenticated = (states)=>states[AppState][AccountState].isAuthenticated;
+const selectIsAuthenticated = (states)=>states[AccountState].isAuthenticated;
 const { NavLink } = await import("/scripts/routing.js");
 const NavLinks = (props, elem1)=>{
     const isAuthenticated = useSelector(elem1, "is-authenticated", selectIsAuthenticated);
@@ -269,11 +269,11 @@ const css = `
   margin-left: 1rem
 }`;
 const { createAction } = await import("/scripts/states.js");
-const createSetUserAction = (user)=>createAction(`${AppState}/setUser`, {
-        user
-    });
-const createIsAuthenticatedAction = (isAuthenticated)=>createAction(`${AppState}/setAccount`, {
+const createIsAuthenticatedAction = (isAuthenticated)=>createAction(`${AccountState}/setAccount`, {
         isAuthenticated
+    });
+const createSetUserAction = (user)=>createAction(`${UserState}/setUser`, {
+        user
     });
 const { HttpMethods } = await import("/scripts/fetching.js");
 const signInAccountApi = (credentials, fetchApi)=>fetchApi("/accounts/signin", {
@@ -292,6 +292,7 @@ const signOutAccount = async (fetchApi, dispatchAction, navigate)=>{
         error
     ];
     dispatchAction(createSetUserAction(null));
+    dispatchAction(createIsAuthenticatedAction(false));
     navigate(RoutePaths.login);
     return [
         true
@@ -392,7 +393,7 @@ forbidden h3 {
   color: var(--error-color)
 }`;
 const loadHome = async ()=>{
-    const { Home } = await import("/home.4963dd9df79adddcb11229bb64ca305c65ecea3c20f96d422d92752dedf81eb3.js");
+    const { Home } = await import("/home.ea29d464e592b02f393bbb68528a906eebb1c2a1503e6b0822e633bcb55ce4a1.js");
     return React.createElement(Home, null);
 };
 const createCredentials = (userName, password)=>Object.freeze({
@@ -698,10 +699,13 @@ const Root = (props, elem1)=>{
     return React.createElement(React.Fragment, null, React.createElement("style", {
         css: css8
     }), React.createElement(Store, {
-        state: createAppState({
+        state: createAccountState({
             isAuthenticated: false
         }),
-        reducer: createAppReducer()
+        reducer: createAccountReducer()
+    }), React.createElement(Store, {
+        state: createUserState(),
+        reducer: createUserReducer()
     }), React.createElement(Services, services), React.createElement(Application, null), React.createElement(Error, null));
 };
 const css8 = `

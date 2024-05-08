@@ -9,9 +9,9 @@ const { getService } = await import("/scripts/rendering.js");
 const useFetchApi = (elem, props = {})=>props[ServiceNames.fetchApi] ?? getService(elem, ServiceNames.fetchApi);
 const useLabels = (elem)=>getService(elem, ServiceNames.labels);
 const { createStoreState } = await import("/scripts/states.js");
-const AppState = "appState";
 const AccountState = "account";
-const selectIsAuthenticated = (states)=>states[AppState][AccountState].isAuthenticated;
+const UserState = "user";
+const selectIsAuthenticated = (states)=>states[AccountState].isAuthenticated;
 const rendering = await import("/scripts/rendering.js");
 await import("/scripts/routing.js");
 const states = await import("/scripts/states.js");
@@ -33,7 +33,7 @@ const useState = (elem, name, value, deps)=>{
 };
 const concatClaim = (result, claim)=>result + (result ? ", " : "") + claim;
 const { createAction } = await import("/scripts/states.js");
-const createSetUserAction = (user)=>createAction(`${AppState}/setUser`, {
+const createSetUserAction = (user)=>createAction(`${UserState}/setUser`, {
         user
     });
 const { HttpMethods } = await import("/scripts/fetching.js");
