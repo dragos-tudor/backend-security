@@ -496,8 +496,8 @@ const Login = (props, elem1)=>{
     const credentials = createCredentials(userName, password);
     const validationResult = validateCredentials(credentials, validationErrors);
     const validCredentials = validationResult.isValid;
-    const userNameError = userName == null || !validationResult.userName;
-    const passwordError = password == null || !validationResult.password;
+    const validUserName = userName == null || !validationResult.userName;
+    const validPassword = password == null || !validationResult.password;
     return React.createElement(React.Fragment, null, React.createElement("style", {
         css: css5
     }), React.createElement("section", {
@@ -528,14 +528,14 @@ const Login = (props, elem1)=>{
     }, React.createElement("span", {
         hidden: !signing
     }, spinner), React.createElement("span", null, labels["signin"])), React.createElement("label", {
-        hidden: userNameError
+        hidden: validUserName
     }, labels["userName"]), React.createElement("span", {
-        hidden: userNameError,
+        hidden: validUserName,
         class: "error"
     }, validationResult.userName), React.createElement("label", {
-        hidden: passwordError
+        hidden: validPassword
     }, labels["password"]), React.createElement("span", {
-        hidden: passwordError,
+        hidden: validPassword,
         class: "error"
     }, validationResult.password)), React.createElement("div", {
         class: "or"

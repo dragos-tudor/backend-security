@@ -27,8 +27,8 @@ export const Login = (props, elem) =>
   const credentials = createCredentials(userName, password)
   const validationResult = validateCredentials(credentials, validationErrors)
   const validCredentials = validationResult.isValid
-  const userNameError = userName == null || !validationResult.userName
-  const passwordError = password == null || !validationResult.password
+  const validUserName = userName == null || !validationResult.userName
+  const validPassword = password == null || !validationResult.password
 
   return <>
     <style css={css}></style>
@@ -47,10 +47,10 @@ export const Login = (props, elem) =>
         <span hidden={!signing}>{spinner}</span>
         <span>{labels["signin"]}</span>
       </button>
-      <label hidden={userNameError}>{labels["userName"]}</label>
-      <span hidden={userNameError} class="error">{validationResult.userName}</span>
-      <label hidden={passwordError}>{labels["password"]}</label>
-      <span hidden={passwordError} class="error">{validationResult.password}</span>
+      <label hidden={validUserName}>{labels["userName"]}</label>
+      <span hidden={validUserName} class="error">{validationResult.userName}</span>
+      <label hidden={validPassword}>{labels["password"]}</label>
+      <span hidden={validPassword} class="error">{validationResult.password}</span>
     </section>
     <div class="or">or</div>
     <section class="remote-authentication">
