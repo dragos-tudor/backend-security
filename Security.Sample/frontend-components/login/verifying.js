@@ -2,4 +2,4 @@ import { isUnauthorizedResponse } from "../../frontend-shared/responses/verifyin
 
 export const isSigninError = (error) => !!error
 
-export const IsUnauthorizedError = (error) => isUnauthorizedResponse(error?.response)
+export const isUnauthorizedError = (error) => isUnauthorizedResponse(error?.response)

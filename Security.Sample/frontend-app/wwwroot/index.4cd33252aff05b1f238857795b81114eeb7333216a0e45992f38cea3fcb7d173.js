@@ -454,10 +454,10 @@ const createCredentials = (userName, password)=>Object.freeze({
 const findHtmlButton = (elem1)=>findHtmlDescendant(elem1, "BUTTON");
 const hasLocationRedirect = (location1)=>getLocationUrl(location1).includes(RedirectParamName);
 const isSigninError = (error)=>!!error;
-const IsUnauthorizedError = (error)=>isUnauthorizedResponse(error?.response);
+const isUnauthorizedError = (error)=>isUnauthorizedResponse(error?.response);
 const signInAccount = async (credentials, fetchApi, dispatchAction, navigate, sendError, labels, location1)=>{
     const [_, error] = await signInAccountApi(credentials, fetchApi);
-    if (IsUnauthorizedError(error)) sendError(labels.wrongCredentials);
+    if (isUnauthorizedError(error)) sendError(labels.wrongCredentials);
     if (isSigninError(error)) return [
         ,
         error
