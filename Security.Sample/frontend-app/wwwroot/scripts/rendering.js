@@ -1,22 +1,22 @@
 // deno-lint-ignore-file no-control-regex
 const createHtmlElement = (document, tagName)=>document.createElement(tagName);
 const createHtmlElementNS = (document, ns, tagName)=>document.createElementNS(ns, tagName);
+const getHtmlChildren = (elem)=>Array.from(elem.children ?? []);
 const getHtmlName = (elem)=>elem.tagName?.toLowerCase() || "text";
 const getHtmlOwnerDocument = (elem)=>elem?.ownerDocument;
 const getHtmlParentElement = (elem)=>elem?.parentElement;
-const iterateHtmlChildren = (elem, func)=>{
-    for(let index = 0; index < elem.children.length; index++)func(elem.children[index]);
-};
-const findHtmlAscendant = (elem, func)=>{
-    if (func(elem)) return elem;
-    if (!getHtmlParentElement(elem)) return undefined;
-    return findHtmlAscendant(getHtmlParentElement(elem), func);
-};
-const findHtmlDescendants = (elem, func, elems = [])=>{
-    if (func(elem)) elems.push(elem);
-    iterateHtmlChildren(elem, (child)=>findHtmlDescendants(child, func, elems));
-    return elems;
-};
+const flatHtmlChildren = (elems)=>elems.flatMap(getHtmlChildren);
+const existsHtmlElement = (elem)=>elem;
+const existsHtmlElements = (elems)=>elems.length !== 0;
+const isHtmlElement = (elem)=>elem.nodeType === 1;
+const findsHtmlDescendants = (elems, func, result = [])=>!existsHtmlElements(elems) && result || findsHtmlDescendants(flatHtmlChildren(elems), func, [
+        ...result,
+        ...elems.filter(func)
+    ]);
+const findHtmlAscendant = (elem, func)=>(existsHtmlElement(elem) || undefined) && (func(elem) && elem || findHtmlAscendant(getHtmlParentElement(elem), func));
+const findHtmlDescendants = (elem, func)=>findsHtmlDescendants([
+        elem
+    ], func);
 const HtmlMimeType = "text/html";
 const parseHtml = (html)=>new DOMParser().parseFromString(html, HtmlMimeType).documentElement;
 const isEventHandler = (name)=>name.startsWith("on");
@@ -44,7 +44,6 @@ const isSafeEventHandler = (props, propName)=>isEventHandler(propName) && isFunc
 const isSafePropName = (tagName, propName)=>isSafePropNameForTag(propName, tagName) || !UnsafePropNames.includes(propName);
 const isSafeTagName = (tagName)=>!UnsafeTagNames.includes(tagName.toUpperCase());
 const isSafeUrl = (props, propName)=>UrlPropNames.includes(propName) ? !JavaScriptProtocolRegex.test(props[propName] || "") : true;
-const isHtmlElement = (elem)=>elem.nodeType === 1;
 const validateHtmlElement = (elem)=>isHtmlElement(elem) ? "" : "Element type should be HTML Element.";
 const validateHtmlTagName = (name)=>isSafeTagName(name) ? "" : "Unsafe html tag " + name;
 const createCustomEvent = (eventName, detail)=>new CustomEvent(eventName, {

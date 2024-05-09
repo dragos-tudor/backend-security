@@ -105,32 +105,27 @@ const getHtmlBody = (elem)=>elem.ownerDocument.body;
 const getHtmlChildren = (elem)=>Array.from(elem.children);
 const getHtmlName = (elem)=>elem.tagName.toLowerCase();
 const getHtmlParentElement = (elem)=>elem.parentElement;
-const findHtmlAscendant = (elem, func)=>{
-    if (!elem) return;
-    if (func(elem)) return elem;
-    return findHtmlAscendant(getHtmlParentElement(elem), func);
-};
-const findHtmlAscendants = (elem, func, elems = [])=>{
-    if (!elem) return elems;
-    if (func(elem)) elems.push(elem);
-    return findHtmlAscendants(getHtmlParentElement(elem), func, elems);
-};
-const findHtmlDescendant = (elem, func)=>{
-    if (func(elem)) return elem;
-    for(let index = 0; index < elem.children.length; index++){
-        const descendant = findHtmlDescendant(elem.children[index], func);
-        if (descendant) return descendant;
-    }
-};
-const findHtmlDescendants = (elem, func, elems = [])=>{
-    if (func(elem)) elems.push(elem);
-    for(let index = 0; index < elem.children.length; index++)findHtmlDescendants(elem.children[index], func, elems);
-    return elems;
-};
+const flatHtmlChildren = (elems)=>elems.flatMap(getHtmlChildren);
+const existsHtmlElement = (elem)=>!!elem;
+const existsHtmlElements = (elems)=>elems.length !== 0;
+const isHiddenHtmlElement = (elem)=>elem.hidden;
+const isHtmlElement = (elem)=>elem.nodeType === 1;
+const findHtmlElement = (elems, func)=>elems.find(func);
+const findsHtmlDescendant = (elems, func)=>findHtmlElement(elems, func) || (existsHtmlElements(elems) ? findsHtmlDescendant(flatHtmlChildren(elems), func) : undefined);
+const findsHtmlDescendants = (elems, func, result = [])=>!existsHtmlElements(elems) && result || findsHtmlDescendants(flatHtmlChildren(elems), func, [
+        ...result,
+        ...elems.filter(func)
+    ]);
+const findHtmlAscendant = (elem, func)=>(existsHtmlElement(elem) || undefined) && (func(elem) && elem || findHtmlAscendant(getHtmlParentElement(elem), func));
+const findHtmlDescendant = (elem, func)=>findsHtmlDescendant([
+        elem
+    ], func);
+const findHtmlDescendants = (elem, func)=>findsHtmlDescendants([
+        elem
+    ], func);
 const findHtmlRoot = (elem)=>globalThis["Deno"] ? findHtmlAscendant(elem, (elem)=>!getHtmlParentElement(elem)) : getHtmlBody(elem);
 const hideHtmlElement = (elem)=>(elem.style.display = "none", elem);
 const showHtmlElement = (elem)=>(elem.style.display = "block", elem);
-const isHtmlElement = (elem)=>elem.nodeType === 1;
 const validateHtmlElement = (elem)=>isHtmlElement(elem) ? "" : "Element type should be HTML element.";
 const getEventName = (handlerName)=>handlerName.replace("on", "");
 const addEventListener = (elem, handlerName, handler)=>elem[handlerName] = handler;
@@ -215,7 +210,7 @@ const changeRoute = async (elem, url, routes = [])=>{
     ]);
 };
 const isConsumer = (elem)=>elem.__history || elem.__location || elem.__routeParams || elem.__searchParams;
-const isVisiblePath = (elem)=>findHtmlAscendants(elem, isRouteElement).every((elem)=>!elem.hidden);
+const isVisiblePath = (elem)=>!findHtmlAscendant(elem, (elem)=>isRouteElement(elem) && isHiddenHtmlElement(elem));
 const findConsumers = (elem)=>findHtmlDescendants(elem, isConsumer);
 const getUpdateFunc = (elem)=>elem?.ownerDocument?.__update;
 const updateConsumer = (update)=>(elem)=>(logInfo(elem, "Update routing consumer: ", getHtmlName(elem)), update(elem)[0]);

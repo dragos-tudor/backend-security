@@ -21,21 +21,23 @@ const throwErrors = (messages)=>{
     if (!messages.length) return false;
     throw new Error(messages.join(","));
 };
+const getHtmlChildren = (elem)=>Array.from(elem.children ?? []);
 const getHtmlBody = (elem)=>elem.ownerDocument.body;
 const getHtmlName = (elem)=>elem.tagName?.toLowerCase();
 const getHtmlParentElement = (elem)=>elem.parentElement;
-const findHtmlAscendant = (elem, func)=>{
-    if (func(elem)) return elem;
-    if (!getHtmlParentElement(elem)) return undefined;
-    return findHtmlAscendant(getHtmlParentElement(elem), func);
-};
-const findHtmlDescendants = (elem, func, elems = [])=>{
-    if (func(elem)) elems.push(elem);
-    for(let index = 0; index < elem.children.length; index++)findHtmlDescendants(elem.children[index], func, elems);
-    return elems;
-};
-const findHtmlRoot = (elem)=>globalThis["Deno"] ? findHtmlAscendant(elem, (elem)=>!getHtmlParentElement(elem)) : getHtmlBody(elem);
+const flatHtmlChildren = (elems)=>elems.flatMap(getHtmlChildren);
+const existsHtmlElement = (elem)=>elem;
+const existsHtmlElements = (elems)=>elems.length !== 0;
 const isHtmlElement = (elem)=>elem.nodeType === 1;
+const findsHtmlDescendants = (elems, func, result = [])=>!existsHtmlElements(elems) && result || findsHtmlDescendants(flatHtmlChildren(elems), func, [
+        ...result,
+        ...elems.filter(func)
+    ]);
+const findHtmlAscendant = (elem, func)=>(existsHtmlElement(elem) || undefined) && (func(elem) && elem || findHtmlAscendant(getHtmlParentElement(elem), func));
+const findHtmlDescendants = (elem, func)=>findsHtmlDescendants([
+        elem
+    ], func);
+const findHtmlRoot = (elem)=>globalThis["Deno"] ? findHtmlAscendant(elem, (elem)=>!getHtmlParentElement(elem)) : getHtmlBody(elem);
 const validateHtmlElement = (elem)=>isHtmlElement(elem) ? "" : "Element type should be HTML element.";
 const isLogLibraryEnabled = (elem, libraryName)=>elem.__log.includes(libraryName);
 const isLogMounted = (elem)=>elem.__log instanceof Array;
