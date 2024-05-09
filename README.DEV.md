@@ -89,7 +89,7 @@ dotnet run --no-restore --no-build --Secrets:google:clientid=google_id ...
       "${file}"
     ],
     "options": {
-      "cwd": "${workspaceFolder}/Security.Sample.www"
+      "cwd": "${workspaceFolder}/Security.Sample"
     },
     "presentation": {
       "reveal": "silent",
