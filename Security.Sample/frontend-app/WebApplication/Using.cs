@@ -20,6 +20,6 @@ partial class AppFuncs
       })
       .UseStaticFiles(new StaticFileOptions() {
         OnPrepareResponse = (context) =>
-          SetResponseCache(context.Context.Response, currentDate, GetResponseCacheSettings(configuration).IntervalSeconds)
+          SetResponseCache(context.Context.Response, currentDate, GetResponseCacheInterval(configuration))
       });
 }

@@ -17,7 +17,7 @@
       }
     }
   },
-  "ResponseCache": {
-    "IntervalSeconds": 3600
+  "ResponseCacheOptions": {
+    "IntervalSeconds": "03:00:00"
   }
 }
