@@ -1,6 +1,5 @@
 
 using System;
-using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Configuration;
 
 namespace Security.Sample.App;
@@ -20,8 +19,7 @@ partial class AppFuncs
         await next();
       })
       .UseStaticFiles(new StaticFileOptions() {
-          HttpsCompression = HttpsCompressionMode.Compress,
-          OnPrepareResponse = (context) =>
-            SetResponseCache(context.Context.Response, currentDate, GetResponseCacheSettings(configuration).IntervalSeconds)
+        OnPrepareResponse = (context) =>
+          SetResponseCache(context.Context.Response, currentDate, GetResponseCacheSettings(configuration).IntervalSeconds)
       });
 }
