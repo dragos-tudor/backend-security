@@ -211,7 +211,7 @@ const youtube = React.createElement("svg", {
     d: "M 32 15 C 14.938 15 12.659656 15.177734 10.472656 17.427734 C 8.2856563 19.677734 8 23.252 8 32 C 8 40.748 8.2856562 44.323266 10.472656 46.572266 C 12.659656 48.821266 14.938 49 32 49 C 49.062 49 51.340344 48.821266 53.527344 46.572266 C 55.714344 44.322266 56 40.748 56 32 C 56 23.252 55.714344 19.677734 53.527344 17.427734 C 51.340344 15.177734 49.062 15 32 15 z M 32 19 C 45.969 19 49.379156 19.062422 50.535156 20.232422 C 51.691156 21.402422 52 24.538 52 32 C 52 39.462 51.691156 42.597578 50.535156 43.767578 C 49.379156 44.937578 45.969 45 32 45 C 18.031 45 14.620844 44.937578 13.464844 43.767578 C 12.308844 42.597578 12.03125 39.462 12.03125 32 C 12.03125 24.538 12.308844 21.402422 13.464844 20.232422 C 14.620844 19.062422 18.031 19 32 19 z M 27.949219 25.017578 L 27.949219 38.982422 L 40.095703 31.945312 L 27.949219 25.017578 z"
 }));
 const getHtmlBody = (elem1)=>elem1.ownerDocument.body;
-const getHtmlChildren = (elem1)=>Array.from(elem1.children);
+const getHtmlChildren = (elem1)=>Array.from(elem1.children ?? []);
 const getHtmlName = (elem1)=>elem1.tagName;
 const rendering = await import("/scripts/rendering.js");
 const routing = await import("/scripts/routing.js");
@@ -410,7 +410,9 @@ const flatHtmlChildren = (elems)=>elems.flatMap((elem1)=>getHtmlChildren(elem1))
 const existsHtmlElements = (elems)=>elems.length !== 0;
 const isHtmlElement = (elem1, name)=>getHtmlName(elem1) === name;
 const findHtmlElement = (elems, name)=>elems.find((elem1)=>isHtmlElement(elem1, name));
-const findHtmlDescendant = (elem1, name)=>elem1.querySelector(name);
+const findHtmlDescendant = (elem1, name)=>findHtmlsDescendant([
+        elem1
+    ], name);
 const findHtmlsDescendant = (elems, name)=>findHtmlElement(elems, name) || (existsHtmlElements(elems) ? findHtmlsDescendant(flatHtmlChildren(elems), name) : undefined);
 const findErrorElement = (elem1)=>findHtmlDescendant(getHtmlBody(elem1), "ERROR");
 const hideHtmlElement = (elem1)=>(elem1.style.display = "none", elem1);
