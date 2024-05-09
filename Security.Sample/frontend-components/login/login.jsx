@@ -5,7 +5,7 @@ import { useApiUrl, useFetchApi, useLabels, useValidationErrors } from "../../fr
 import { sendError } from "../error/sending.js"
 import { dispatchAction, navigate, useState } from "../../scripts/extending.js"
 import { createCredentials } from "./creating.js"
-import { getHtmlButton } from "./getting.js"
+import { findHtmlButton } from "./finding.js"
 import { signInAccount } from "./signingin.js"
 import { validateCredentials } from "./validating.js"
 
@@ -36,7 +36,7 @@ export const Login = (props, elem) =>
       <label for="userName">{labels["userName"]}</label>
       <input id="userName" type="text" onchange={({target}) => setUserName(target.value)} placeholder={labels["userName"]}/>
       <label for="password">{labels["password"]}</label>
-      <input id="password" type="password" onchange={({target}) => setPassword(target.value)} onblur={() => getHtmlButton(elem).focus()} placeholder={labels["password"]}/>
+      <input id="password" type="password" onchange={({target}) => setPassword(target.value)} onblur={() => findHtmlButton(elem).focus()} placeholder={labels["password"]}/>
       <button class="signing"
         disabled={!validCredentials || signing}
         onclick={async () => {
