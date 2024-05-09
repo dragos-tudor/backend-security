@@ -97,10 +97,9 @@ Deno.writeFileSync(target + "/" + indexName, encodedIndex)
 Deno.writeFileSync(target + "/" + indexCssName, encodedIndexCss)
 Deno.writeFileSync(target + "/" + indexHtmlName, encodedIndexHtml)
 
-console.log("[publishing]", "copy images, scripts, settings.json, favicon.ico to app wwwroot directory")
+console.log("[publishing]", "copy images, scripts, settings to app wwwroot directory")
 copyFiles(sourceImages, targetImages)
 copyFiles(sourceScripts, targetScripts)
 copyFile(source, target, "settings.js")
-copyFile(source, target, "favicon.ico")
 
 console.log("[publishing]", "published www sample to", target)

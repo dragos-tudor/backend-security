@@ -411,7 +411,7 @@ const existsHtmlElements = (elems)=>elems.length !== 0;
 const isHtmlElement = (elem1, name)=>getHtmlName(elem1) === name;
 const findHtmlElement = (elems, name)=>elems.find((elem1)=>isHtmlElement(elem1, name));
 const findHtmlDescendant = (elem1, name)=>elem1.querySelector(name);
-const findHtmlTreeDescendant = (elems, name)=>findHtmlElement(elems, name) || (existsHtmlElements(elems) ? findHtmlTreeDescendant(flatHtmlChildren(elems), name) : undefined);
+const findHtmlsDescendant = (elems, name)=>findHtmlElement(elems, name) || (existsHtmlElements(elems) ? findHtmlsDescendant(flatHtmlChildren(elems), name) : undefined);
 const findErrorElement = (elem1)=>findHtmlDescendant(getHtmlBody(elem1), "ERROR");
 const hideHtmlElement = (elem1)=>(elem1.style.display = "none", elem1);
 const showHtmlElement = (elem1, display = "block")=>(elem1.style.display = display, elem1);
