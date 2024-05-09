@@ -46,27 +46,19 @@ const compileIndexCss = async (cwd) => {
   return { indexCssName, encodedIndexCss };
 }
 
-const compileSettings = async (cwd) => {
-  const settings = await Deno.readTextFile(cwd + "/settings.js");
-  const encodedSettings = new TextEncoder().encode(settings);
-  return { settingsName: "settings.js", encodedSettings }
-}
+const copyFile = (source, target, name) =>
+  Deno.copyFileSync(source + "/" + name, target + "/" + name)
 
 const copyFiles = (source, target) =>
   Deno.readDirSync(source)
     .filter(entry => entry.isFile)
-    .forEach(moveFile(source, target))
+    .forEach(file => copyFile(source, target, file.name))
 
-const moveFile = (source, target) => (file) =>
-  Deno.writeTextFileSync(
-    target + "/" + file.name,
-    Deno.readTextFileSync(source + "/" + file.name))
+const makeDirectory = (dir) =>
+  Deno.mkdirSync(dir, { recursive: true })
 
-const makeDirectories = (...dirs) =>
-  dirs.forEach(dir => Deno.mkdirSync(dir, { recursive: true }))
-
-const removeDirectories = (...dirs) =>
-  dirs.forEach(dir => { try { Deno.removeSync(dir, { recursive: true })} catch {;} })
+const removeDirectory = (dir) =>
+  { try { Deno.removeSync(dir, { recursive: true })} catch {;} }
 
 
 const target = "/workspaces/backend-security/Security.Sample/frontend-app/wwwroot";
@@ -77,23 +69,11 @@ const source = import.meta.dirname
 const sourceScripts = source + "/scripts";
 const sourceImages = source + "/images";
 
-console.log("[publishing]", "remove scripts and images app wwwroot directories")
-removeDirectories(target)
-
-console.log("[publishing]", "make scripts and images app wwwroot directories")
-makeDirectories(targetScripts, targetImages)
-
 console.log("[publishing]", "bundle home file")
 const { homeName, encodedHome } = await bundleHome(source)
 
 console.log("[publishing]", "bundle index file")
 const { indexName, encodedIndex } = await bundleIndex(source, homeName)
-
-console.log("[publishing]", "copy images to app wwwroot directory")
-copyFiles(sourceImages, targetImages)
-
-console.log("[publishing]", "copy scripts to app wwwroot directory")
-copyFiles(sourceScripts, targetScripts)
 
 console.log("[publishing]", "compile index css file")
 const { indexCssName, encodedIndexCss } = await compileIndexCss(source)
@@ -101,13 +81,26 @@ const { indexCssName, encodedIndexCss } = await compileIndexCss(source)
 console.log("[publishing]", "compile index html file")
 const { indexHtmlName, encodedIndexHtml } = compileIndexHtml(source, indexName, indexCssName);
 
-console.log("[publishing]", "compile settings file")
-const { settingsName, encodedSettings } = await compileSettings(source)
+
+console.log("[publishing]", "remove app wwwroot directory")
+removeDirectory(target)
+
+console.log("[publishing]", "make images app wwwroot directory")
+makeDirectory(targetImages)
+
+console.log("[publishing]", "make scripts app wwwroot directory")
+makeDirectory(targetScripts)
 
 console.log("[publishing]", "publish bundled and compiled files to app wwwroot directory")
 Deno.writeFileSync(target + "/" + homeName, encodedHome)
 Deno.writeFileSync(target + "/" + indexName, encodedIndex)
 Deno.writeFileSync(target + "/" + indexCssName, encodedIndexCss)
-Deno.writeFileSync(target + "/" + settingsName, encodedSettings)
 Deno.writeFileSync(target + "/" + indexHtmlName, encodedIndexHtml)
+
+console.log("[publishing]", "copy images, scripts, settings.json, favicon.ico to app wwwroot directory")
+copyFiles(sourceImages, targetImages)
+copyFiles(sourceScripts, targetScripts)
+copyFile(source, target, "settings.js")
+copyFile(source, target, "favicon.ico")
+
 console.log("[publishing]", "published www sample to", target)
