@@ -33,6 +33,7 @@
 - *low-level* functions usually use imperative style and are one-liners [eg. *IsSecuredCookie*].
   - usually pure [without side effects] or semi-pure functions [side effects on parameters].
 - *high-intermediate-low-level* hierarchy design I named it **lego principle**. It could be seen also as a **functions-pyramid** having at the base *low-level* functions.
+- **no else** strategy [0 (zero) else conditions].
 
 ### Processes
 - there are 2 different security processes: *local authentication* and *remote authentication*.
