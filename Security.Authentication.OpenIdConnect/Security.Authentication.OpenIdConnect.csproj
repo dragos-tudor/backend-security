@@ -2,6 +2,10 @@
 
   <Import Project="../Directory.Testing.props" />
 
+  <PropertyGroup>
+    <Description>Security openid authentication package.</Description>
+  </PropertyGroup>
+
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" />

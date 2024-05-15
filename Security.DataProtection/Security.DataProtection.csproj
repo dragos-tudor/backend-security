@@ -2,6 +2,10 @@
 
   <Import Project="../Directory.Testing.props" />
 
+  <PropertyGroup>
+    <Description>Security data protection package.</Description>
+  </PropertyGroup>
+
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App"></FrameworkReference>
   </ItemGroup>

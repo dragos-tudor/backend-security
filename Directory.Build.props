@@ -1,5 +1,4 @@
 <Project>
-
   <PropertyGroup Label="Project props">
     <TargetFramework>net8.0</TargetFramework>
     <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
@@ -27,6 +26,8 @@
     <Company>$(Authors)</Company>
     <Copyright>Copyright @2024</Copyright>
     <Version>1.0.0-alpha1</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
 
     <RepositoryRoot>$(MSBuildThisFileDirectory)</RepositoryRoot>
     <RepositoryUrl>https://github.com/dragos-tudor/backend-security.git</RepositoryUrl>
@@ -34,4 +35,12 @@
     <PackageProjectUrl>https://github.com/dragos-tudor/backend-security/tree/main/$(MSBuildProjectName)</PackageProjectUrl>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="\"/>
+    <None Include="../LICENSE" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 </Project>

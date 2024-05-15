@@ -2,6 +2,10 @@
 
   <Import Project="../Directory.Testing.props" />
 
+  <PropertyGroup>
+    <Description>Security oauth authentication package.</Description>
+  </PropertyGroup>
+
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App"></FrameworkReference>
     <ProjectReference Include="../Security.Authentication.Remote/Security.Authentication.Remote.csproj" />

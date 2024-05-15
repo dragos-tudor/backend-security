@@ -2,6 +2,10 @@
 
   <Import Project="../Directory.Testing.props" />
 
+  <PropertyGroup>
+    <Description>Security cookies authentication package.</Description>
+  </PropertyGroup>
+
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App"/>
     <ProjectReference Include="../Security.Authentication/Security.Authentication.csproj"/>

@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Description>Security base authentication package.</Description>
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
