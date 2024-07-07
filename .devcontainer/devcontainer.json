@@ -1,5 +1,5 @@
 {
-	"image": "ubuntu:22.04",
+	"image": "mcr.microsoft.com/dotnet/runtime-deps:8.0.6-bookworm-slim",
   "customizations": {
     "vscode": {
 	    "extensions": [
@@ -11,15 +11,15 @@
 	  }
 	},
   "features": {
-    "ghcr.io/dragos-tudor/devcontainer-features/debian-packages:1.2": {},
-    "ghcr.io/dragos-tudor/devcontainer-features/debian-user-group:1.4": {},
-    "ghcr.io/dragos-tudor/devcontainer-features/debian-dotnet-product:1.3": {},
-    "ghcr.io/dragos-tudor/devcontainer-features/debian-deno:1.6": {}
+     "ghcr.io/dragos-tudor/devcontainer-features/debian-packages:1.3": {},
+     "ghcr.io/dragos-tudor/devcontainer-features/debian-user-group:1.5": {},
+     "ghcr.io/dragos-tudor/devcontainer-features/debian-dotnet-product:1.4": { "version": "8.0.302" },
+		 "ghcr.io/dragos-tudor/devcontainer-features/debian-deno:1.7": { "version": "v1.44.4" }
   },
   "containerEnv": { "DATA_PROTECTION_KEY": "HFm8fYbLyEarjjlGBj5r9Q==" },
 	"runArgs": [
 		"--name=backend-security",
-		"--hostname=security"
+		"--hostname=security-network"
 	],
   "remoteUser": "vscode"
 }
