@@ -19,7 +19,7 @@
   "containerEnv": { "DATA_PROTECTION_KEY": "HFm8fYbLyEarjjlGBj5r9Q==" },
 	"runArgs": [
 		"--name=backend-security",
-		"--hostname=security-network"
+		"--hostname=security"
 	],
   "remoteUser": "vscode"
 }
