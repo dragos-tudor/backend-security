@@ -20,11 +20,11 @@ partial class OpenIdConnectFuncs
     var principal = GetContextUser(context);
 
     var validateError = ValidateSignoutMessage(signoutMessage, principal);
-    if (validateError is not null) LogSignedOutWithFailure(Logger, oidcOptions.SchemeName, validateError, context.TraceIdentifier);
+    if (validateError is not null) LogSignedOutWithFailure(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, validateError, context.TraceIdentifier);
     if (validateError is not null) return default;
 
     var redirectUri = await signOut(context, authProperties);
-    LogSignedOut(Logger, oidcOptions.SchemeName, redirectUri!, context.TraceIdentifier);
+    LogSignedOut(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, redirectUri!, context.TraceIdentifier);
     return redirectUri;
   }
 

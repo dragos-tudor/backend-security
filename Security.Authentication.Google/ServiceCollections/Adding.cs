@@ -7,11 +7,11 @@ namespace Security.Authentication.Google;
 
 partial class GoogleFuncs
 {
-  public static IServiceCollection AddGoogle(
+  public static IServiceCollection AddGoogleServices (
     this IServiceCollection services,
     GoogleOptions googleOptions,
     HttpClient? httpClient = default,
     IDataProtectionProvider? dataProtectionProvider = default,
     TimeProvider? timeProvider = default) =>
-      services.AddOAuth(googleOptions, httpClient, dataProtectionProvider, timeProvider);
+      services.AddOAuthServices(googleOptions, httpClient, dataProtectionProvider, timeProvider);
 }

@@ -8,10 +8,10 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs {
 
-  public static IServiceCollection AddCookies(this IServiceCollection services) =>
-      AddCookies(services, CreateCookieAuthenticationOptions());
+  public static IServiceCollection AddCookiesServices (this IServiceCollection services) =>
+      AddCookiesServices(services, CreateCookieAuthenticationOptions());
 
-  public static IServiceCollection AddCookies(
+  public static IServiceCollection AddCookiesServices (
     this IServiceCollection services,
     CookieAuthenticationOptions authOptions,
     ITicketStore? ticketStore = default,
@@ -24,6 +24,6 @@ partial class CookiesFuncs {
         .AddSingleton((services) =>
           CreateTicketDataFormat(dataProtectionProvider ?? ResolveService<IDataProtectionProvider>(services), authOptions.SchemeName))
         .AddSingleton(ticketStore ?? new DefaultTicketStore())
-        .AddSingleton(TimeProvider.System);
-
+        .AddSingleton(TimeProvider.System)
+        .AddKeyedSingleton(CategoryNameLogger, (services, serviceKey) => CreateLogger(services, (string)serviceKey));
 }

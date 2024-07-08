@@ -28,7 +28,7 @@ partial class OAuthFuncs
       ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
 
     var authUri = GetAuthorizationUri(authOptions, authParams);
-    LogAuthorizeChallenge(Logger, authOptions.SchemeName, authUri, context.TraceIdentifier);
+    LogAuthorizeChallenge(ResolveOAuthLogger(context), authOptions.SchemeName, authUri, context.TraceIdentifier);
 
     return SetResponseRedirect(context.Response, authUri)!;
   }

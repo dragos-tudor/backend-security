@@ -59,7 +59,7 @@ partial class CookiesFuncs
       ResolveService<TimeProvider>(context).GetUtcNow()
     );
 
-    LogAuthenticationResult(Logger, authResult, authOptions.SchemeName, context.TraceIdentifier);
+    LogAuthenticationResult(ResolveCookiesLogger(context), authResult, authOptions.SchemeName, context.TraceIdentifier);
     return authResult;
   }
 }

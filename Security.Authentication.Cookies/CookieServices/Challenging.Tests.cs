@@ -13,7 +13,7 @@ partial class CookiesTests {
   [TestMethod]
   public async Task Unautenticated_user_resource_request__challenge__login_redirection()
   {
-    using var server = CreateHttpServer(services => services.AddCookies());
+    using var server = CreateHttpServer(services => services.AddCookiesServices());
     var authProperties = CreateAuthenticationProperties();
     server.MapGet("/resource", (HttpContext context) => ChallengeCookie(context, authProperties));
     await server.StartAsync();

@@ -29,7 +29,7 @@ partial class GoogleTests {
     using var appServer = CreateHttpServer(services => services
       .AddSingleton(authClient)
       .AddSingleton<IDataProtectionProvider>(new EphemeralDataProtectionProvider())
-      .AddGoogle(googleOptions)
+      .AddGoogleServices(googleOptions)
     );
     appServer.MapGoogle(googleOptions, SignIn);
     await appServer.StartAsync();

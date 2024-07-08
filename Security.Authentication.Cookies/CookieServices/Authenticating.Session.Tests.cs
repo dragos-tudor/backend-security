@@ -123,6 +123,6 @@ partial class CookiesTests
   static ServiceProvider BuildServiceProvider(CookieAuthenticationOptions authOptions, FakeTicketStore ticketStore) =>
     new ServiceCollection()
       .AddDataProtection(Environment.CurrentDirectory + "/keys")
-      .AddCookies(authOptions, ticketStore)
+      .AddCookiesServices(authOptions, ticketStore)
       .BuildServiceProvider();
 }

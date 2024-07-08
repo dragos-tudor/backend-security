@@ -15,7 +15,7 @@ partial class BearerTokenFuncs
     SetResponseHeader(context, HeaderNames.WWWAuthenticate, "Bearer");
     SetResponseStatus(context, HttpStatusCode.Unauthorized);
 
-    LogChallenged(Logger, tokenOptions.SchemeName, string.Empty, context.TraceIdentifier);
+    LogChallenged(ResolveBearerTokenLogger(context), tokenOptions.SchemeName, string.Empty, context.TraceIdentifier);
     return default;
   }
 }

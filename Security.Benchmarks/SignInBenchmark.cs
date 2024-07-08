@@ -29,7 +29,7 @@ public class SignInBenchmarks
   public void Setup()
   {
     msServices = new ServiceCollection().AddLogging().AddAuthentication(cookieScheme).AddCookie(cookieScheme).Services.BuildServiceProvider()!;
-    myServices = new ServiceCollection().AddCookies().AddDataProtection().Services.BuildServiceProvider();
+    myServices = new ServiceCollection().AddCookiesServices().AddDataProtection().Services.BuildServiceProvider();
     identity = new ClaimsIdentity(cookieScheme);
     authenticationService = msServices.GetRequiredService<IAuthenticationService>();
   }

@@ -39,7 +39,7 @@ partial class BearerTokenFuncs
       ResolveService<TimeProvider>(context).GetUtcNow()
     );
 
-    LogAuthenticationResult(Logger, authResult, tokenOptions.SchemeName, context.TraceIdentifier);
+    LogAuthenticationResult(ResolveBearerTokenLogger(context), authResult, tokenOptions.SchemeName, context.TraceIdentifier);
     return Task.FromResult(authResult);
   }
 }

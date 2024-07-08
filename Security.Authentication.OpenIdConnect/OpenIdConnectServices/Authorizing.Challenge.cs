@@ -33,7 +33,7 @@ partial class OpenIdConnectFuncs
     var authUri = await SetAuthorizationResponse(context, challengeMessage, oidcOptions, oidcConfiguration);
     SanitizeResponse(context.Response);
 
-    LogAuthorizeChallenge(Logger, oidcOptions.SchemeName, authUri!, context.TraceIdentifier);
+    LogAuthorizeChallenge(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, authUri!, context.TraceIdentifier);
     return authUri;
   }
 

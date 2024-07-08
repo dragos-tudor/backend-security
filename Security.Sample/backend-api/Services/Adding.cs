@@ -14,11 +14,11 @@ partial class ApiFuncs
     string encryptionKeysPath,
     string[] origins) =>
       services
-        .AddCookies(SetCookieOptions(), cookieBuilder: SetCookieBuilderSameSite(CreateCookieBuilder(), SameSiteMode.None))
-        .AddGoogle(SetGoogleOptions(configuration), SetRemoteClient(CreateRemoteClient(), GoogleDefaults.AuthenticationScheme))
-        .AddFacebook(SetFacebookOptions(configuration), SetRemoteClient(CreateRemoteClient(), FacebookDefaults.AuthenticationScheme))
-        .AddTwitter(SetTwitterOptions(configuration), SetRemoteClient(CreateRemoteClient(), TwitterDefaults.AuthenticationScheme))
-        .AddAuthorization()
+        .AddCookiesServices(SetCookieOptions(), cookieBuilder: SetCookieBuilderSameSite(CreateCookieBuilder(), SameSiteMode.None))
+        .AddGoogleServices(SetGoogleOptions(configuration), SetRemoteClient(CreateRemoteClient(), GoogleDefaults.AuthenticationScheme))
+        .AddFacebookServices(SetFacebookOptions(configuration), SetRemoteClient(CreateRemoteClient(), FacebookDefaults.AuthenticationScheme))
+        .AddTwitterServices(SetTwitterOptions(configuration), SetRemoteClient(CreateRemoteClient(), TwitterDefaults.AuthenticationScheme))
+        .AddAuthorizationServices()
         .AddLogging()
         .AddCors(o => o.AddDefaultPolicy(BuildCorsPolicy(origins)))
         .AddProblemDetails()

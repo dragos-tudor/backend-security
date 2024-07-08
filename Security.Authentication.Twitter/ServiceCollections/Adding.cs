@@ -7,11 +7,11 @@ namespace Security.Authentication.Twitter;
 
 partial class TwitterFuncs
 {
-  public static IServiceCollection AddTwitter(
+  public static IServiceCollection AddTwitterServices (
     this IServiceCollection services,
     TwitterOptions twitterOptions,
     HttpClient? httpClient = default,
     IDataProtectionProvider? dataProtectionProvider = default,
     TimeProvider? timeProvider = default) =>
-      services.AddOAuth(twitterOptions, httpClient, dataProtectionProvider, timeProvider);
+      services.AddOAuthServices(twitterOptions, httpClient, dataProtectionProvider, timeProvider);
 }

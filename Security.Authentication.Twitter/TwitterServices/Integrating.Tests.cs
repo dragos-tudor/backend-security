@@ -29,7 +29,7 @@ partial class TwitterTests {
     using var appServer = CreateHttpServer(services => services
       .AddSingleton(authClient)
       .AddSingleton<IDataProtectionProvider>(new EphemeralDataProtectionProvider())
-      .AddTwitter(twitterOptions)
+      .AddTwitterServices(twitterOptions)
     );
     appServer.MapTwitter(twitterOptions, SignIn);
     await appServer.StartAsync();

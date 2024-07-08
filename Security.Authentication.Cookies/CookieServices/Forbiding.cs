@@ -14,7 +14,7 @@ partial class CookiesFuncs
     var returnUri = GetAuthenticationPropertiesRedirectUri(authProperties) ?? BuildRelativeUri(context.Request);
     var forbidPath = BuildForbidPath(authOptions, returnUri);
 
-    LogForbidden(Logger, authOptions.SchemeName, forbidPath, context.TraceIdentifier);
+    LogForbidden(ResolveCookiesLogger(context), authOptions.SchemeName, forbidPath, context.TraceIdentifier);
     return SetResponseRedirect(context.Response, forbidPath)!;
   }
 

@@ -28,7 +28,7 @@ partial class FacebookTests {
     using var appServer = CreateHttpServer(services => services
       .AddSingleton(authClient)
       .AddSingleton<IDataProtectionProvider>(new EphemeralDataProtectionProvider())
-      .AddFacebook(facebookOptions)
+      .AddFacebookServices(facebookOptions)
     );
     appServer.MapFacebook(facebookOptions, SignIn);
     await appServer.StartAsync();

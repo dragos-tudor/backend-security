@@ -14,7 +14,7 @@ partial class CookiesFuncs
     var returnUri = GetAuthenticationPropertiesRedirectUri(authProperties) ?? BuildRelativeUri(context.Request);
     var challengePath = BuildChallengePath(authOptions, returnUri);
 
-    LogChallenged(Logger, authOptions.SchemeName, challengePath, context.TraceIdentifier);
+    LogChallenged(ResolveCookiesLogger(context), authOptions.SchemeName, challengePath, context.TraceIdentifier);
     return SetResponseRedirect(context.Response, challengePath)!;
   }
 

@@ -13,7 +13,7 @@ partial class AuthorizationFuncs
     TOptions authOptions
   ) where TOptions: Authentication.AuthenticationOptions
   {
-    LogChallenged(Logger, authOptions.SchemeName, context.TraceIdentifier);
+    LogChallenged(ResolveAuthorizationLogger(context), authOptions.SchemeName, context.TraceIdentifier);
     SetResponseStatus(context, Unauthorized);
     return default;
   }

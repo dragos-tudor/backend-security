@@ -8,7 +8,7 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  public static IServiceCollection AddOpenIdConnect<TOptions>(
+  public static IServiceCollection AddOpenIdConnectServices<TOptions>(
     this IServiceCollection services,
     TOptions authOptions,
     OpenIdConnectConfiguration oidcConfiguration,
@@ -20,5 +20,6 @@ partial class OpenIdConnectFuncs
         .AddSingleton(authOptions)
         .AddSingleton(oidcConfiguration)
         .AddSingleton(services =>
-          CreateOpenIdConnectDeps(services, authOptions, httpClient, dataProtectionProvider, timeProvider));
+          CreateOpenIdConnectDeps(services, authOptions, httpClient, dataProtectionProvider, timeProvider))
+        .AddKeyedSingleton(CategoryNameLogger, (services, serviceKey) => CreateLogger(services, (string)serviceKey));
 }

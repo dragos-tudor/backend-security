@@ -17,7 +17,7 @@ partial class CookiesTests {
   [TestMethod]
   public async Task Signout_request__signout__expired_cookie()
   {
-    using var server = CreateHttpServer(services => services.AddCookies() );
+    using var server = CreateHttpServer(services => services.AddCookiesServices() );
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/api/account/signout", async (HttpContext context) => (await SignOutCookie(context)) ?? string.Empty);
     await server.StartAsync();
@@ -35,7 +35,7 @@ partial class CookiesTests {
   {
     var cookieOptions = CreateCookieAuthenticationOptions() with { SchemeName = "CookiesScheme" };
     var ticketStore = new FakeTicketStore();
-    using var server = CreateHttpServer(services => services.AddCookies(cookieOptions, ticketStore));
+    using var server = CreateHttpServer(services => services.AddCookiesServices(cookieOptions, ticketStore));
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("CookiesScheme", "user")).ToString());
     server.MapPost("/api/account/signout", async (HttpContext context) => (await SignOutCookie(context)) ?? string.Empty);
@@ -54,7 +54,7 @@ partial class CookiesTests {
   public async Task Signout_session_based_request__signout__session_ticket_removed_from_store()
   {
     var ticketStore = new FakeTicketStore();
-    using var server = CreateHttpServer(services => services.AddCookies(CreateCookieAuthenticationOptions(), ticketStore));
+    using var server = CreateHttpServer(services => services.AddCookiesServices(CreateCookieAuthenticationOptions(), ticketStore));
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal(CookieAuthenticationDefaults.AuthenticationScheme, "user")).ToString());
     server.MapPost("/api/account/signout", async (HttpContext context) => (await SignOutCookie(context)) ?? string.Empty);
@@ -72,7 +72,7 @@ partial class CookiesTests {
   public async Task Signout_request_with_return_url__signin__response_redirected_to_return_url()
   {
     var GetAuthProperties = (HttpContext context) => new AuthenticationProperties() { RedirectUri = context.Request.Form["redirect_url"] };
-    using var server = CreateHttpServer(services => services.AddCookies() );
+    using var server = CreateHttpServer(services => services.AddCookiesServices() );
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/api/accounts/signout", (HttpContext context) => SignOutCookie(context, GetAuthProperties(context)));
     await server.StartAsync();

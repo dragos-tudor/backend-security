@@ -13,7 +13,7 @@ partial class AuthorizationFuncs
     TOptions authOptions
   ) where TOptions: Authentication.AuthenticationOptions
   {
-    LogForbidden(Logger, authOptions.SchemeName, context.TraceIdentifier);
+    LogForbidden(ResolveAuthorizationLogger(context), authOptions.SchemeName, context.TraceIdentifier);
     SetResponseStatus(context, Forbidden);
     return default;
   }

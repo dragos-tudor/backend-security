@@ -39,7 +39,7 @@ partial class CookiesFuncs
     ResetResponseCacheHeaders(context.Response);
     SetResponseRedirect(context.Response, GetRedirectUriOrQueryReturnUrl(context, authProperties, authOptions));
 
-    LogSignedInCookie(Logger, authOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
+    LogSignedInCookie(ResolveCookiesLogger(context), authOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
     return authTicket;
   }
 

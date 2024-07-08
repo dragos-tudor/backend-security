@@ -19,9 +19,6 @@ partial class ApiFuncs
     UseMiddlewares(app);
     MapEndpoints(app);
 
-    var loggerFactory = ResolveLoggerFactory(app.Services);
-    SetLoggerFactory(loggerFactory);
-
     LogApplicationStart(app);
     app.Run();
   }

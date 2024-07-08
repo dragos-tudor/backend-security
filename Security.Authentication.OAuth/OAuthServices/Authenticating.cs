@@ -23,28 +23,28 @@ partial class OAuthFuncs {
     var schemeName = authOptions.SchemeName;
 
     var authResult = postAuthorize(context, authOptions, propertiesDataFormat);
-    if(IsFailurePostAuthorizationResult(authResult)) LogPostAuthorizationFailure(Logger, schemeName, authResult.Failure!, requestId);
+    if(IsFailurePostAuthorizationResult(authResult)) LogPostAuthorizationFailure(ResolveOAuthLogger(context), schemeName, authResult.Failure!, requestId);
     if(IsFailurePostAuthorizationResult(authResult)) return Fail(authResult.Failure!);
-    LogPostAuthorization(Logger, schemeName, requestId);
+    LogPostAuthorization(ResolveOAuthLogger(context), schemeName, requestId);
 
     var authProperties = GetAutheticationProperties(authResult);
     var authorizationCode = GetPostAuthorizationCode(context.Request)!;
     var tokenResult = await exchangeCodeForTokens(authorizationCode, authProperties!, authOptions, httpClient, cancellationToken);
-    if (IsFailureTokenResult(tokenResult)) LogExchangeCodeForTokensFailure(Logger, schemeName, tokenResult.Failure!, requestId);
+    if (IsFailureTokenResult(tokenResult)) LogExchangeCodeForTokensFailure(ResolveOAuthLogger(context), schemeName, tokenResult.Failure!, requestId);
     if (IsFailureTokenResult(tokenResult)) return Fail(tokenResult.Failure!);
-    LogExchangeCodeForTokens(Logger, schemeName, requestId);
+    LogExchangeCodeForTokens(ResolveOAuthLogger(context), schemeName, requestId);
 
     var accessToken = GetAccessToken(tokenResult);
     var userInfoResult = await accessUserInfo(accessToken!, authOptions, httpClient, cancellationToken);
-    if(IsFailureUserInfoResult(userInfoResult)) LogAccessUserInfoFailure(Logger, schemeName, userInfoResult.Failure!, requestId);
+    if(IsFailureUserInfoResult(userInfoResult)) LogAccessUserInfoFailure(ResolveOAuthLogger(context), schemeName, userInfoResult.Failure!, requestId);
     if(IsFailureUserInfoResult(userInfoResult)) return Fail(userInfoResult.Failure!);
-    LogAccessUserInfo(Logger, schemeName, requestId);
+    LogAccessUserInfo(ResolveOAuthLogger(context), schemeName, requestId);
 
     if (ShouldCleanCodeChallenge(authOptions))
       RemoveAuthenticationPropertiesCodeVerifier(authProperties!);
 
     var principal = GetClaimsPrincipal(userInfoResult)!;
-    LogAuthenticated(Logger, schemeName, GetPrincipalNameId(principal)!, requestId);
+    LogAuthenticated(ResolveOAuthLogger(context), schemeName, GetPrincipalNameId(principal)!, requestId);
     return Success(CreateAuthenticationTicket(principal, authProperties, schemeName));
   }
 

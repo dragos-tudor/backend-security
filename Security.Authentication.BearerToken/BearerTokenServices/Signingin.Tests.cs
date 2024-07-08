@@ -18,7 +18,7 @@ partial class BearerTokenTests {
   public async Task Signin_request__signin__authentication_ticket()
   {
     var cookieOptions = CreateBearerTokenOptions() with { SchemeName = "BearerTokenScheme" };
-    using var server = CreateHttpServer(services => services.AddBearerToken(cookieOptions));
+    using var server = CreateHttpServer(services => services.AddBearerTokenServices(cookieOptions));
     server.UseAuthentication(AuthenticateBearerToken);
     server.MapPost("/api/account/signin", (HttpContext context) => SignInBearerToken(context, CreateNamedClaimsPrincipal("user", "BearerTokenScheme")));
     await server.StartAsync();

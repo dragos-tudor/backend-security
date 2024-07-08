@@ -26,7 +26,7 @@ partial class BearerTokenTests
   [TestMethod]
   public async Task Authenticated_user_with_bearer_token__authenticate__authenticated_user()
   {
-    using var server = CreateHttpServer(services => services.AddBearerToken());
+    using var server = CreateHttpServer(services => services.AddBearerTokenServices());
     server.UseAuthentication(AuthenticateBearerToken);
     server.MapPost("/account/signin", (HttpContext context) => SignInBearerToken(context, CreateNamedClaimsPrincipal("user")));
     server.MapGet("/resource", (HttpContext context) => GetPrincipalName(context.User) ?? "unauthenticated" );

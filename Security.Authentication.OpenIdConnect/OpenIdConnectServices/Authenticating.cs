@@ -21,9 +21,9 @@ partial class OpenIdConnectFuncs
   where TOptions: OpenIdConnectOptions
   {
     var authResult = await postAuthorize(context, oidcOptions, oidcConfiguration, propertiesDataFormat, stringDataFormat);
-    if(authResult.Failure is not null) LogPostAuthorizationFailure(Logger, oidcOptions.SchemeName, authResult.Failure, context.TraceIdentifier);
+    if(authResult.Failure is not null) LogPostAuthorizationFailure(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, authResult.Failure, context.TraceIdentifier);
     if(authResult.Failure is not null) return Fail(authResult.Failure);
-    LogPostAuthorization(Logger, oidcOptions.SchemeName, context.TraceIdentifier);
+    LogPostAuthorization(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, context.TraceIdentifier);
 
     var authInfo = GetPostAuthorizationInfo(authResult)!;
     var authProperties = authInfo.AuthProperties;
@@ -31,9 +31,9 @@ partial class OpenIdConnectFuncs
     if(ShouldExchangeCodeForTokens(authInfo)) {
       tokenResult = await exchangeCodeForTokens(authInfo.Code!, authProperties, oidcOptions,
         oidcConfiguration, stringDataFormat, httpClient, GetRequestCookies(context.Request), context.RequestAborted);
-      if(tokenResult.Failure is not null) LogExchangeCodeForTokensFailure(Logger, oidcOptions.SchemeName, tokenResult.Failure, context.TraceIdentifier);
+      if(tokenResult.Failure is not null) LogExchangeCodeForTokensFailure(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, tokenResult.Failure, context.TraceIdentifier);
       if(tokenResult.Failure is not null) return Fail(tokenResult.Failure);
-      LogExchangeCodeForTokens(Logger, oidcOptions.SchemeName, context.TraceIdentifier);
+      LogExchangeCodeForTokens(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, context.TraceIdentifier);
     }
 
     var tokenInfo = GetTokenInfo(tokenResult);
@@ -47,15 +47,15 @@ partial class OpenIdConnectFuncs
     var userInfoResult = default(UserInfoResult);
     if (ShouldAccessUserInfo(oidcOptions, oidcConfiguration, tokenInfo)) {
       userInfoResult = await accessUserInfo(tokenInfo!.AccessToken!, securityToken, identity, oidcOptions, oidcConfiguration, httpClient, context.RequestAborted);
-      if (userInfoResult.Failure is not null) LogAccessUserInfoFailure(Logger, oidcOptions.SchemeName, userInfoResult.Failure, context.TraceIdentifier);
+      if (userInfoResult.Failure is not null) LogAccessUserInfoFailure(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, userInfoResult.Failure, context.TraceIdentifier);
       if (userInfoResult.Failure is not null) return Fail(userInfoResult.Failure);
-      LogAccessUserInfo(Logger, oidcOptions.SchemeName, context.TraceIdentifier);
+      LogAccessUserInfo(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, context.TraceIdentifier);
     }
 
     var principal = userInfoResult is not null?
       GetUserInfoResultPrincipal(userInfoResult):
       BuildClaimsPrincipal(oidcOptions, identity, "{}");
-    LogAuthenticated(Logger, oidcOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
+    LogAuthenticated(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
     return Success(CreateAuthenticationTicket(principal, authProperties, oidcOptions.SchemeName));
   }
 

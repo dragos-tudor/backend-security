@@ -15,7 +15,7 @@ partial class OpenIdConnectFuncs
     var returnUri = GetChallengeReturnUri(context.Request, authProperties);
     var challengePath = BuildChallengePath(authOptions, returnUri);
 
-    LogChallenged(Logger, authOptions.SchemeName, challengePath, context.TraceIdentifier);
+    LogChallenged(ResolveOpenIdConnectLogger(context), authOptions.SchemeName, challengePath, context.TraceIdentifier);
     return SetResponseRedirect(context.Response, challengePath)!;
   }
 

@@ -7,7 +7,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs
 {
-  public static IServiceCollection AddOAuth<TOptions>(
+  public static IServiceCollection AddOAuthServices<TOptions>(
     this IServiceCollection services,
     TOptions authOptions,
     HttpClient? httpClient = default,
@@ -17,5 +17,6 @@ partial class OAuthFuncs
       services
         .AddSingleton(authOptions)
         .AddSingleton(services =>
-          CreateOAuthDeps(services, authOptions, httpClient, dataProtectionProvider, timeProvider));
+          CreateOAuthDeps(services, authOptions, httpClient, dataProtectionProvider, timeProvider))
+        .AddKeyedSingleton(CategoryNameLogger, (services, serviceKey) => CreateLogger(services, (string)serviceKey));
 }
