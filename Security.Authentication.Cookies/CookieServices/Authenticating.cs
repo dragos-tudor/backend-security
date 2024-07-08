@@ -23,10 +23,10 @@ partial class CookiesFuncs
   {
     var cookieName = GetCookieName(cookieBuilder, authOptions);
     var cookie = GetAuthenticationCookie(context, cookieManager, cookieName);
-    if (!ExistAuthenticationCookie(cookie)) return NoResult();
+    if (!ExistsAuthenticationCookie(cookie)) return NoResult();
 
     var cookieTicket = UnprotectAuthenticationTicket(cookie, ticketDataFormat);
-    if (!ExistAuthenticationTicket(cookieTicket)) return Fail(UnprotectTicketFailed);
+    if (!ExistsAuthenticationTicket(cookieTicket)) return Fail(UnprotectTicketFailed);
 
     if (IsSessionBasedCookie(ticketStore))
       return await AuthenticateSessionCookie(context, authOptions, cookieBuilder, cookieManager,

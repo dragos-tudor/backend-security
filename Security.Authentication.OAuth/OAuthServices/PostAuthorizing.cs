@@ -18,7 +18,7 @@ partial class OAuthFuncs {
     if (ExistsPostAuthorizationValidationError(authError)) return authError;
 
     var authProperties = UnprotectAuthenticationProperties(GetPostAuthorizationState(context.Request)!, propertiesDataFormat);
-    if (!ExistsAuthenticationProperties(authProperties)) return UnprotectAuthorizationStateFailed;
+    if (!ExistAuthenticationProperties(authProperties)) return UnprotectAuthorizationStateFailed;
 
     var correlationError = ValidateCorrelationCookie(context.Request, authProperties);
     if (ExistsCorrelationCookieValidationError(correlationError)) return correlationError;

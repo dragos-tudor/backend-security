@@ -15,7 +15,7 @@ partial class AuthorizationFuncs {
     var (authResult, principal) =
       await Authorize(context, challenge, forbid);
 
-    if (IsExistingPrincipal(principal)) SetContextUser(context, principal);
+    if (ExistsPrincipal(principal)) SetContextUser(context, principal);
     if (IsSuccessfulAuthorization(authResult)) await next(context);
     if (!IsSuccessfulAuthorization(authResult)) await WriteResponse(context,string.Empty);
   }

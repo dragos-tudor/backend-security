@@ -5,6 +5,6 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs
 {
-  static bool ExistsAuthenticationProperties(AuthenticationProperties? authProperties = default) =>
+  static bool ExistAuthenticationProperties(AuthenticationProperties? authProperties = default) =>
     authProperties is not null;
 }

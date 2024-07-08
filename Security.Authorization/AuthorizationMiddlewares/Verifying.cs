@@ -8,5 +8,5 @@ partial class AuthorizationFuncs {
 
   static bool IsSuccessfulAuthorization (PolicyAuthorizationResult? authzResult) => authzResult is null || authzResult.Succeeded;
 
-  static bool IsExistingPrincipal (ClaimsPrincipal? principal) => principal is not null;
+  static bool ExistsPrincipal (ClaimsPrincipal? principal) => principal is not null;
 }
