@@ -19,7 +19,7 @@
 - security services [authentication and authorization services] represent the **mechanism backbone**.
 - security services [*high-level* functions] act as **security behaviour controllers** and represent public API.
 - security libraries were written following some of **FP principles** [pure functions, high-order functions, immutability, data/behaviour separation, static methods/functions as first-class citiziens, result pattern].
-- DI is used as **thin layer** usually over functional security services [eg. *SignInCookie* have 2 implementations with/without DI services]. DI services implementations are registred as usual with specific method extensions [eg. *AddCookies*, *AddFacebook*].
+- DI is used as **thin layer** usually over functional security services [eg. *SignInCookie* have 2 implementations with/without DI services]. DI services implementations are registred as usual with specific method extensions [eg. *AddCookiesServices*, *AddFacebookServices*].
 - **security mechanism** is based on security services [authentication scheme free-mechanism]:
   - *authentication middleware* receive authentication service as param [*UseAuthentication* extension].
   - *authorization middleware* receive challenge and forbid services as params [*UseAuthorization* extension].
