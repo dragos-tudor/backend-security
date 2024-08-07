@@ -2,6 +2,7 @@ set -e
 
 WORKSPACE_DIR=/workspaces/backend-security/
 PROJECTS=(
+  "Security.Authentication"
   "Security.Authentication.BearerToken"
   "Security.Authentication.Cookies"
   "Security.Authentication.OAuth"
