@@ -1,25 +1,23 @@
 {
-	"image": "mcr.microsoft.com/dotnet/runtime-deps:8.0.6-bookworm-slim",
+	"image": "mcr.microsoft.com/dotnet/sdk:8.0.303-bookworm-slim",
   "customizations": {
     "vscode": {
 	    "extensions": [
         "ms-dotnettools.csharp",
-        "icsharpcode.ilspy-vscode",
-        "denoland.vscode-deno",
-        "appulate.filewatcher"
+        "icsharpcode.ilspy-vscode"
       ]
 	  }
 	},
-  "features": {
-     "ghcr.io/dragos-tudor/devcontainer-features/debian-packages:1.3": {},
-     "ghcr.io/dragos-tudor/devcontainer-features/debian-user-group:1.5": {},
-     "ghcr.io/dragos-tudor/devcontainer-features/debian-dotnet-product:1.4": { "version": "8.0.302" },
-		 "ghcr.io/dragos-tudor/devcontainer-features/debian-deno:1.7": { "version": "v1.44.4" }
-  },
-  "containerEnv": { "DATA_PROTECTION_KEY": "HFm8fYbLyEarjjlGBj5r9Q==" },
+  "mounts": [
+  	{"source": "nuget", "target": "/home/app/.nuget", "type": "volume"}
+  ],
+  "containerEnv": {
+		"DATA_PROTECTION_KEY": "HFm8fYbLyEarjjlGBj5r9Q==",
+		"SHELL": "/bin/bash"
+	},
 	"runArgs": [
 		"--name=backend-security",
 		"--hostname=security"
 	],
-  "remoteUser": "vscode"
+  "remoteUser": "app"
 }
