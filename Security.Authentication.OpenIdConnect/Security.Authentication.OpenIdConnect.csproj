@@ -3,7 +3,8 @@
   <Import Project="../Directory.Testing.props" />
 
   <PropertyGroup>
-    <Description>Security openid authentication package.</Description>
+    <Description>Security openid connect authentication package.</Description>
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

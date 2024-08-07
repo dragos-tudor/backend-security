@@ -1,22 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- <See>Security.Benchmarks/Directory.Build.props</See> -->
   <PropertyGroup Label="Project props">
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
 
-    <!-- compiling -->
     <ImplicitUsings>disable</ImplicitUsings>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Nullable>enable</Nullable>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 
+    <AnalysisMode>None</AnalysisMode>
+    <IsTestProject>false</IsTestProject>
     <IsPackable>false</IsPackable>
-    <IsTestable>false</IsTestable>
 
     <UseAppHost>false</UseAppHost>
-    <GenerateProgramFile>false</GenerateProgramFile>
+    <StartupObject>Security.Benchmarks.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
