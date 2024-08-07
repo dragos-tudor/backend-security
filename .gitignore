@@ -23,5 +23,8 @@
 # Certificates
 .certificates
 
+# Benchmark artifacts
+Security.Benchmarks/BenchmarkDotNet.Artifacts
+
 # Deno
 deno.lock
