@@ -5,6 +5,7 @@ PROJECTS=(
   "Security.Authentication.BearerToken"
   "Security.Authentication.Cookies"
   "Security.Authentication.OAuth"
+  "Security.Authentication.Remote"
   "Security.Authentication.Facebook"
   "Security.Authentication.Google"
   "Security.Authentication.Twitter"
