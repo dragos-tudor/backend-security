@@ -1,5 +1,6 @@
 
 using System.Globalization;
+using Security.Testing;
 
 namespace Microsoft.VisualStudio.TestTools.UnitTesting;
 

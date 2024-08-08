@@ -1,4 +1,4 @@
-namespace Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace Security.Testing;
 
 [Serializable]
 public sealed class AssertFailedException: Exception
