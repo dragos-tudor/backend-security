@@ -8,3 +8,7 @@ global using static Security.Authentication.OpenIdConnect.OpenIdConnectFuncs;
 namespace Security.Authentication.OpenIdConnect;
 
 public static partial class OpenIdConnectFuncs { }
+
+#if RELEASE
+  public static class Program { public static void Main() {} }
+#endif

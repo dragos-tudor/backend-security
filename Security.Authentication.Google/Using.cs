@@ -7,3 +7,7 @@ global using static Security.Authentication.OAuth.OAuthFuncs;
 namespace Security.Authentication.Google;
 
 public static partial class GoogleFuncs { }
+
+#if RELEASE
+  public static class Program { public static void Main() {} }
+#endif

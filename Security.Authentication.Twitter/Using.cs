@@ -7,3 +7,7 @@ global using static Security.Authentication.OAuth.OAuthFuncs;
 namespace Security.Authentication.Twitter;
 
 public static partial class TwitterFuncs { }
+
+#if RELEASE
+  public static class Program { public static void Main() {} }
+#endif

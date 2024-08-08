@@ -5,19 +5,21 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(Configuration)'!='Release'">
-    <PackageReference Include="MsTest" />
-    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
-    <PackageReference Include="Microsoft.CodeCoverage.MSBuild" />
-    <ProjectReference Include="../Security.Testing/Security.Testing.csproj"/>
-  </ItemGroup>
-
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <GenerateProgramFile>false</GenerateProgramFile>
     <IsTestProject>false</IsTestProject>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(Configuration)'!='Release'">
+    <PackageReference Include="MsTest" PrivateAssets="all"/>
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" PrivateAssets="all"/>
+    <PackageReference Include="Microsoft.CodeCoverage.MSBuild" PrivateAssets="all"/>
+    <ProjectReference Include="../Security.Testing/Security.Testing.csproj" PrivateAssets="all"/>
+  </ItemGroup>
+
   <ItemGroup Condition="'$(Configuration)'=='Release'">
     <Compile Remove="**/*.Tests.cs" />
+    <Compile Remove="@(RemoveExistingMicrosoftNETTestSdkProgram)" />
   </ItemGroup>
 
 </Project>

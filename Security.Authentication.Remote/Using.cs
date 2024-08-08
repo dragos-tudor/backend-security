@@ -6,3 +6,7 @@ namespace Security.Authentication.Remote;
 
 public static partial class RemoteFuncs { }
 
+#if RELEASE
+  public static class Program { public static void Main() {} }
+#endif
+

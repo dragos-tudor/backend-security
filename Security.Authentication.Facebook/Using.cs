@@ -7,3 +7,7 @@ global using static Security.Authentication.OAuth.OAuthFuncs;
 namespace Security.Authentication.Facebook;
 
 public static partial class FacebookFuncs { }
+
+#if RELEASE
+  public static class Program { public static void Main() {} }
+#endif
