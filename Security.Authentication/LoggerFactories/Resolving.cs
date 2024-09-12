@@ -11,6 +11,6 @@ partial class AuthenticationFuncs
 
   public static ILoggerFactory ResolveLoggerFactory (IServiceProvider services) => ResolveOptionalLoggerFactory(services) ?? NullLoggerFactory.Instance;
 
-  public static ILoggerFactory? ResolveOptionalLoggerFactory (IServiceProvider services) => ResolveOptionalService<ILoggerFactory>(services);
+  public static ILoggerFactory? ResolveOptionalLoggerFactory (IServiceProvider services) => ResolveService<ILoggerFactory>(services);
 
 }

@@ -13,9 +13,9 @@ partial class OpenIdConnectFuncs
     TimeProvider? timeProvider = default)
   where TOptions : OpenIdConnectOptions =>
       new(
-        httpClient ?? ResolveService<HttpClient>(services),
-        CreatePropertiesDataFormat(dataProtectionProvider ?? ResolveService<IDataProtectionProvider>(services), authOptions.SchemeName),
-        CreateStringDataFormat(dataProtectionProvider ?? ResolveService<IDataProtectionProvider>(services), authOptions.SchemeName),
-        timeProvider ?? ResolveService<TimeProvider>(services) ?? TimeProvider.System
+        httpClient ?? ResolveRequiredService<HttpClient>(services),
+        CreatePropertiesDataFormat(dataProtectionProvider ?? ResolveRequiredService<IDataProtectionProvider>(services), authOptions.SchemeName),
+        CreateStringDataFormat(dataProtectionProvider ?? ResolveRequiredService<IDataProtectionProvider>(services), authOptions.SchemeName),
+        timeProvider ?? ResolveRequiredService<TimeProvider>(services) ?? TimeProvider.System
       );
 }

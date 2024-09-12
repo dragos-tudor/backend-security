@@ -48,15 +48,15 @@ partial class CookiesFuncs
 
   public static async Task<AuthenticateResult> AuthenticateCookie (HttpContext context)
   {
-    var authOptions = ResolveService<CookieAuthenticationOptions>(context);
+    var authOptions = ResolveRequiredService<CookieAuthenticationOptions>(context);
     var authResult = await AuthenticateCookie(
       context,
       authOptions,
-      ResolveService<CookieBuilder>(context),
-      ResolveService<ICookieManager>(context),
-      ResolveService<TicketDataFormat>(context),
-      ResolveService<ITicketStore>(context),
-      ResolveService<TimeProvider>(context).GetUtcNow()
+      ResolveRequiredService<CookieBuilder>(context),
+      ResolveRequiredService<ICookieManager>(context),
+      ResolveRequiredService<TicketDataFormat>(context),
+      ResolveRequiredService<ITicketStore>(context),
+      ResolveRequiredService<TimeProvider>(context).GetUtcNow()
     );
 
     LogAuthenticationResult(ResolveCookiesLogger(context), authResult, authOptions.SchemeName, context.TraceIdentifier);

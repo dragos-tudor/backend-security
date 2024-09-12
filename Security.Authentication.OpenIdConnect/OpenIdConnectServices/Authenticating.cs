@@ -64,8 +64,8 @@ partial class OpenIdConnectFuncs
   where TOptions: OpenIdConnectOptions =>
     AuthenticateOidc(
       context,
-      ResolveService<TOptions>(context),
-      ResolveService<OpenIdConnectConfiguration>(context),
+      ResolveRequiredService<TOptions>(context),
+      ResolveRequiredService<OpenIdConnectConfiguration>(context),
       ResolveHttpClient<TOptions>(context),
       ResolvePropertiesDataFormat<TOptions>(context),
       ResolveStringDataFormat<TOptions>(context),

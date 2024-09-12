@@ -7,7 +7,7 @@ namespace Security.Authentication.OpenIdConnect;
 partial class OpenIdConnectFuncs
 {
   static OpenIdConnectDeps<TOptions> ResolveOpenIdConnectDeps<TOptions>(HttpContext context) where TOptions: OpenIdConnectOptions =>
-    ResolveService<OpenIdConnectDeps<TOptions>>(context);
+    ResolveRequiredService<OpenIdConnectDeps<TOptions>>(context);
 
   static HttpClient ResolveHttpClient<TOptions>(HttpContext context) where TOptions: OpenIdConnectOptions =>
     ResolveOpenIdConnectDeps<TOptions>(context).HttpClient;

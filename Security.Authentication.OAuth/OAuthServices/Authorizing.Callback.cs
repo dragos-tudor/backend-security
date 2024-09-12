@@ -29,7 +29,7 @@ partial class OAuthFuncs
     SignInFunc signin) where TOptions : OAuthOptions =>
       AuthorizeCallbackOAuth(
         context,
-        ResolveService<TOptions>(context),
+        ResolveRequiredService<TOptions>(context),
         authenticate,
         signin
       );

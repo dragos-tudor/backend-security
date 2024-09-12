@@ -8,6 +8,6 @@ namespace Security.Authentication.BearerToken;
 partial class BearerTokenFuncs
 {
   static JsonTypeInfo<AccessTokenResponse> ResolveAccessTokenResponseJsonTypeInfo(HttpContext context) =>
-    GetAccessTokenResponseJsonTypeInfo(ResolveService<IOptions<JsonOptions>>(context)) ??
+    GetAccessTokenResponseJsonTypeInfo(ResolveRequiredService<IOptions<JsonOptions>>(context)) ??
     AccessTokenResponseJsonMetadata.Default.AccessTokenResponse;
 }

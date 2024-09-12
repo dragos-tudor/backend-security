@@ -22,7 +22,7 @@ partial class CookiesFuncs {
         .AddSingleton((services) => cookieBuilder ?? CreateCookieBuilder())
         .AddSingleton<ICookieManager, ChunkingCookieManager>()
         .AddSingleton((services) =>
-          CreateTicketDataFormat(dataProtectionProvider ?? ResolveService<IDataProtectionProvider>(services), authOptions.SchemeName))
+          CreateTicketDataFormat(dataProtectionProvider ?? ResolveRequiredService<IDataProtectionProvider>(services), authOptions.SchemeName))
         .AddSingleton(ticketStore ?? new DefaultTicketStore())
         .AddSingleton(TimeProvider.System)
         .AddKeyedSingleton(CategoryNameLogger, (services, serviceKey) => CreateLogger(services, (string)serviceKey));

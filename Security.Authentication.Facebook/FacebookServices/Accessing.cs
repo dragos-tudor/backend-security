@@ -31,7 +31,7 @@ partial class FacebookFuncs {
       AccessFacebookUserInfo(
         accessToken,
         facebookOptions,
-        ResolveService<HttpClient>(context),
+        ResolveRequiredService<HttpClient>(context),
         cancellationToken
       );
 

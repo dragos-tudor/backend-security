@@ -32,11 +32,11 @@ partial class BearerTokenFuncs
 
   public static Task<AuthenticateResult> AuthenticateBearerToken (HttpContext context)
   {
-    var tokenOptions = ResolveService<BearerTokenOptions>(context);
+    var tokenOptions = ResolveRequiredService<BearerTokenOptions>(context);
     var authResult = AuthenticateBearerToken(
       context,
-      ResolveService<BearerTokenDataFormat>(context),
-      ResolveService<TimeProvider>(context).GetUtcNow()
+      ResolveRequiredService<BearerTokenDataFormat>(context),
+      ResolveRequiredService<TimeProvider>(context).GetUtcNow()
     );
 
     LogAuthenticationResult(ResolveBearerTokenLogger(context), authResult, tokenOptions.SchemeName, context.TraceIdentifier);

@@ -24,5 +24,5 @@ partial class CookiesFuncs
       ForbidCookie(
         context,
         authProperties,
-        ResolveService<CookieAuthenticationOptions>(context));
+        ResolveRequiredService<CookieAuthenticationOptions>(context));
 }

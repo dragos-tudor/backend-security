@@ -16,9 +16,9 @@ partial class BearerTokenFuncs {
       services
         .AddSingleton((services) => tokenOptions)
         .AddSingleton((services) =>
-          CreateBearerTokenDataFormat(dataProtectionProvider ?? ResolveService<IDataProtectionProvider>(services), tokenOptions.SchemeName))
+          CreateBearerTokenDataFormat(dataProtectionProvider ?? ResolveRequiredService<IDataProtectionProvider>(services), tokenOptions.SchemeName))
         .AddSingleton((services) =>
-          CreateRefreshTokenDataFormat(dataProtectionProvider ?? ResolveService<IDataProtectionProvider>(services), tokenOptions.SchemeName))
+          CreateRefreshTokenDataFormat(dataProtectionProvider ?? ResolveRequiredService<IDataProtectionProvider>(services), tokenOptions.SchemeName))
         .AddSingleton(TimeProvider.System)
         .AddKeyedSingleton(CategoryNameLogger, (services, serviceKey) => CreateLogger(services, (string)serviceKey));
 }

@@ -35,8 +35,8 @@ partial class OpenIdConnectFuncs {
         accessToken,
         securityToken,
         identity,
-        ResolveService<TOptions>(context),
-        ResolveService<OpenIdConnectConfiguration>(context),
+        ResolveRequiredService<TOptions>(context),
+        ResolveRequiredService<OpenIdConnectConfiguration>(context),
         ResolveHttpClient<TOptions>(context),
         cancellationToken
       );

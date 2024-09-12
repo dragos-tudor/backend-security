@@ -16,7 +16,8 @@ partial class OAuthFuncs
   where TOptions : OAuthOptions =>
       services
         .AddSingleton(authOptions)
-        .AddSingleton(services =>
-          CreateOAuthDeps(services, authOptions, httpClient, dataProtectionProvider, timeProvider))
+        .AddSingleton(services => CreatePropertiesDataFormat(dataProtectionProvider ?? ResolveRequiredService<IDataProtectionProvider>(services), authOptions.SchemeName))
+        .AddSingleton(httpClient)
+        .AddSingleton(timeProvider)
         .AddKeyedSingleton(CategoryNameLogger, (services, serviceKey) => CreateLogger(services, (string)serviceKey));
 }

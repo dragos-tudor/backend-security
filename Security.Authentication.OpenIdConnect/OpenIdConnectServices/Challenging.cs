@@ -26,5 +26,5 @@ partial class OpenIdConnectFuncs
      ChallengeOidc(
       context,
       authProperties,
-      ResolveService<TOptions>(context));
+      ResolveRequiredService<TOptions>(context));
 }

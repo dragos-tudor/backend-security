@@ -27,8 +27,8 @@ partial class TwitterFuncs {
     CancellationToken cancellationToken = default) =>
       AccessTwitterUserInfo(
         accessToken,
-        ResolveService<TwitterOptions>(context),
-        ResolveService<HttpClient>(context),
+        ResolveRequiredService<TwitterOptions>(context),
+        ResolveRequiredService<HttpClient>(context),
         cancellationToken
       );
 

@@ -37,8 +37,8 @@ partial class BearerTokenFuncs
         context,
         principal,
         authProperties ?? new AuthenticationProperties(),
-        ResolveService<BearerTokenOptions>(context),
-        ResolveService<BearerTokenDataFormat>(context),
-        ResolveService<RefreshTokenDataFormat>(context),
-        ResolveService<TimeProvider>(context).GetUtcNow());
+        ResolveRequiredService<BearerTokenOptions>(context),
+        ResolveRequiredService<BearerTokenDataFormat>(context),
+        ResolveRequiredService<RefreshTokenDataFormat>(context),
+        ResolveRequiredService<TimeProvider>(context).GetUtcNow());
 }

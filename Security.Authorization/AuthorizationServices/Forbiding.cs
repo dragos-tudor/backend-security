@@ -26,5 +26,5 @@ partial class AuthorizationFuncs
       ForbidAuth(
         context,
         authProperties,
-        ResolveService<TOptions>(context));
+        ResolveRequiredService<TOptions>(context));
 }

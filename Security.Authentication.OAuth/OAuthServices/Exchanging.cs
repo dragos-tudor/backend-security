@@ -31,7 +31,7 @@ partial class OAuthFuncs
     ExchangeCodeForTokens(
       authCode,
       authProperties,
-      ResolveService<TOptions>(context),
+      ResolveRequiredService<TOptions>(context),
       ResolveHttpClient<TOptions>(context),
       cancellationToken
     );

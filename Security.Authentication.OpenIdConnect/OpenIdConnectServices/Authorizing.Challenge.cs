@@ -44,8 +44,8 @@ partial class OpenIdConnectFuncs
       AuthorizeChallengeOidc(
         context,
         authProperties,
-        ResolveService<TOptions>(context),
-        ResolveService<OpenIdConnectConfiguration>(context),
+        ResolveRequiredService<TOptions>(context),
+        ResolveRequiredService<OpenIdConnectConfiguration>(context),
         ResolvePropertiesDataFormat<TOptions>(context),
         ResolveStringDataFormat<TOptions>(context),
         ResolveTimeProvider<TOptions>(context).GetUtcNow()

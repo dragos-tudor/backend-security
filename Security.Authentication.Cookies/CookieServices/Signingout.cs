@@ -37,10 +37,10 @@ partial class CookiesFuncs
       SignOutCookie(
         context,
         authProperties ?? CreateCookieAuthenticationProperties(),
-        ResolveService<CookieAuthenticationOptions>(context),
-        ResolveService<CookieBuilder>(context),
-        ResolveService<ICookieManager>(context),
-        ResolveService<TicketDataFormat>(context),
-        ResolveService<ITicketStore>(context)
+        ResolveRequiredService<CookieAuthenticationOptions>(context),
+        ResolveRequiredService<CookieBuilder>(context),
+        ResolveRequiredService<ICookieManager>(context),
+        ResolveRequiredService<TicketDataFormat>(context),
+        ResolveRequiredService<ITicketStore>(context)
         );
 }

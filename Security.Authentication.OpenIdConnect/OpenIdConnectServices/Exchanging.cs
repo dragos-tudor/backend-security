@@ -35,8 +35,8 @@ partial class OpenIdConnectFuncs {
       ExchangeCodeForTokens(
         authCode,
         authProperties,
-        ResolveService<TOptions>(context),
-        ResolveService<OpenIdConnectConfiguration>(context),
+        ResolveRequiredService<TOptions>(context),
+        ResolveRequiredService<OpenIdConnectConfiguration>(context),
         ResolveStringDataFormat<TOptions>(context),
         ResolveHttpClient<TOptions>(context),
         GetRequestCookies(context.Request),

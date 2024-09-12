@@ -16,7 +16,7 @@ partial class OAuthTests
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
-    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
+    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     SetAuthorizationCorrelationCookie(context, "correlation.id");
     SetAuthenticationPropertiesCorrelationId(authProperties, "correlation.id");
     SetAuthorizationQueryParams(context, ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
@@ -32,7 +32,7 @@ partial class OAuthTests
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
-    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
+    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     SetAuthorizationCorrelationCookie(context, "correlation.id");
     SetAuthenticationPropertiesCorrelationId(authProperties, "correlation.id");
     SetAuthorizationQueryParams(context, ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
@@ -47,7 +47,7 @@ partial class OAuthTests
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
-    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
+    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     SetAuthorizationQueryParams(context);
     SetAuthenticationPropertiesCorrelationId(authProperties, "correlation.id");
 
@@ -60,7 +60,7 @@ partial class OAuthTests
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
     var authProperties = new AuthenticationProperties();
-    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
+    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     SetAuthenticationPropertiesCorrelationId(authProperties, "correlation.id");
     SetAuthorizationQueryParams(context, ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
 
@@ -72,7 +72,7 @@ partial class OAuthTests
   public void Invalid_post_authorization_request__post_authorization__authorization_code_not_found_error() {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
-    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveService<IDataProtectionProvider>(context));
+    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     var (_, error) = PostAuthorization(context, authOptions, propertiesDataFormat);
 
     StringAssert.Contains(error, PostAuthorizationCodeNotFound, StringComparison.Ordinal);

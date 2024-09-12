@@ -27,7 +27,7 @@ partial class OpenIdConnectFuncs
     SignInFunc signin) where TOptions : OpenIdConnectOptions =>
       AuthorizeCallbackOidc(
         context,
-        ResolveService<TOptions>(context),
+        ResolveRequiredService<TOptions>(context),
         authenticate,
         signin
       );

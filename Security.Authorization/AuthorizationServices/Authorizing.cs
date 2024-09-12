@@ -38,8 +38,8 @@ partial class AuthorizationFuncs {
         context,
         challenge,
         forbid,
-        ResolveService<IAuthorizationPolicyProvider>(context),
-        ResolveService<IAuthorizationService>(context)
+        ResolveRequiredService<IAuthorizationPolicyProvider>(context),
+        ResolveRequiredService<IAuthorizationService>(context)
       );
 
 }

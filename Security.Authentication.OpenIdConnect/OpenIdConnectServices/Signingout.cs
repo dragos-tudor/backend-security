@@ -36,8 +36,8 @@ partial class OpenIdConnectFuncs
     SignOutOidc(
       context,
       authProperties ?? CreateAuthenticationProperties(),
-      ResolveService<TOptions>(context),
-      ResolveService<OpenIdConnectConfiguration>(context),
+      ResolveRequiredService<TOptions>(context),
+      ResolveRequiredService<OpenIdConnectConfiguration>(context),
       ResolvePropertiesDataFormat<TOptions>(context),
       signOut
     );

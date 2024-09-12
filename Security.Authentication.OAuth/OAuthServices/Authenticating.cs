@@ -57,7 +57,7 @@ partial class OAuthFuncs {
   where TOptions: OAuthOptions =>
     AuthenticateOAuth(
       context,
-      ResolveService<TOptions>(context),
+      ResolveRequiredService<TOptions>(context),
       ResolvePropertiesDataFormat<TOptions>(context),
       ResolveHttpClient<TOptions>(context),
       postAuthorize,

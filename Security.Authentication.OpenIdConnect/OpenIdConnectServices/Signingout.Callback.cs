@@ -26,7 +26,7 @@ partial class OpenIdConnectFuncs
   where TOptions : OpenIdConnectOptions =>
     SignOutCallbackOidc(
       context,
-      ResolveService<TOptions>(context),
+      ResolveRequiredService<TOptions>(context),
       ResolvePropertiesDataFormat<TOptions>(context)
     );
 }

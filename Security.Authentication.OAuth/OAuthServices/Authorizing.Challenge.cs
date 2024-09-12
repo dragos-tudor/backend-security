@@ -36,7 +36,7 @@ partial class OAuthFuncs
   public static string AuthorizeChallengeOAuth<TOptions> (HttpContext context) where TOptions: OAuthOptions =>
     AuthorizeChallengeOAuth(
       context,
-      ResolveService<TOptions>(context),
+      ResolveRequiredService<TOptions>(context),
       ResolvePropertiesDataFormat<TOptions>(context),
       ResolveTimeProvider<TOptions>(context).GetUtcNow()
     );

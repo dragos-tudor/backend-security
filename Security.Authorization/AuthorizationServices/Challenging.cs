@@ -26,5 +26,5 @@ partial class AuthorizationFuncs
       ChallengeAuth(
         context,
         authProperties,
-        ResolveService<TOptions>(context));
+        ResolveRequiredService<TOptions>(context));
 }

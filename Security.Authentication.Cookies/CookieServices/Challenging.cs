@@ -24,5 +24,5 @@ partial class CookiesFuncs
       ChallengeCookie(
         context,
         authProperties,
-        ResolveService<CookieAuthenticationOptions>(context));
+        ResolveRequiredService<CookieAuthenticationOptions>(context));
 }

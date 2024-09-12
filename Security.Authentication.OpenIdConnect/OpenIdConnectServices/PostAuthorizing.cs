@@ -65,8 +65,8 @@ partial class OpenIdConnectFuncs
   where TOptions : OpenIdConnectOptions =>
       PostAuthorization(
         context,
-        ResolveService<TOptions>(context),
-        ResolveService<OpenIdConnectConfiguration>(context),
+        ResolveRequiredService<TOptions>(context),
+        ResolveRequiredService<OpenIdConnectConfiguration>(context),
         ResolvePropertiesDataFormat<TOptions>(context),
         ResolveStringDataFormat<TOptions>(context)
       );

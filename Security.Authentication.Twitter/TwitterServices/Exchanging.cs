@@ -34,8 +34,8 @@ partial class TwitterFuncs
       ExchangeCodeForTokens(
         authCode,
         authProperties,
-        ResolveService<TwitterOptions>(context),
-        ResolveService<HttpClient>(context),
+        ResolveRequiredService<TwitterOptions>(context),
+        ResolveRequiredService<HttpClient>(context),
         cancellationToken
       );
 

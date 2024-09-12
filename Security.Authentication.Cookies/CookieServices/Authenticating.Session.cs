@@ -52,11 +52,11 @@ partial class CookiesFuncs
       AuthenticateSessionCookie(
         context,
         authOptions,
-        ResolveService<CookieBuilder>(context),
-        ResolveService<ICookieManager>(context),
-        ResolveService<TicketDataFormat>(context),
-        ResolveService<ITicketStore>(context),
-        ResolveService<TimeProvider>(context).GetUtcNow(),
+        ResolveRequiredService<CookieBuilder>(context),
+        ResolveRequiredService<ICookieManager>(context),
+        ResolveRequiredService<TicketDataFormat>(context),
+        ResolveRequiredService<ITicketStore>(context),
+        ResolveRequiredService<TimeProvider>(context).GetUtcNow(),
         ticketId
       );
 

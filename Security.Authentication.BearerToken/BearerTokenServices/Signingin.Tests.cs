@@ -47,7 +47,7 @@ partial class BearerTokenTests {
 
     var content = await ReadResponseMessageContent(response);
     var tokenResponse = GetAccessTokenResponse(content, server.Services);
-    var tokenTicket = CreateBearerTokenDataFormat(ResolveService<IDataProtectionProvider>(server.Services))
+    var tokenTicket = CreateBearerTokenDataFormat(ResolveRequiredService<IDataProtectionProvider>(server.Services))
       .Unprotect(tokenResponse!.AccessToken);
 
     Assert.IsTrue(response.IsSuccessStatusCode);
@@ -61,11 +61,11 @@ partial class BearerTokenTests {
     string responseContent,
     IServiceProvider services) =>
       JsonSerializer.Deserialize(responseContent,
-        GetAccessTokenResponseJsonTypeInfo(ResolveService<IOptions<JsonOptions>>(services))!);
+        GetAccessTokenResponseJsonTypeInfo(ResolveRequiredService<IOptions<JsonOptions>>(services))!);
 
   static AuthenticationTicket? GetAccessTokenTicket(
     AccessTokenResponse? accessTokenResponse,
     IServiceProvider services) =>
-      ResolveService<BearerTokenDataFormat>(services)
+      ResolveRequiredService<BearerTokenDataFormat>(services)
         .Unprotect(accessTokenResponse!.AccessToken);
 }
