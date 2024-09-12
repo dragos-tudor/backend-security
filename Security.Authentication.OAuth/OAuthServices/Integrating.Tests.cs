@@ -32,20 +32,18 @@ partial class OAuthTests
     var challengeResponse = await appClient.GetAsync("/challenge");
     Assert.AreEqual(HttpStatusCode.Redirect, challengeResponse.StatusCode);
 
-    var authorizationUrl = GetResponseMessageLocation(challengeResponse);
-    var authorizationResponse = await authClient.GetAsync(authorizationUrl);
-    Assert.AreEqual(HttpStatusCode.Redirect, authorizationResponse.StatusCode);
+    var authUrl = GetResponseMessageLocation(challengeResponse);
+    var authResponse = await authClient.GetAsync(authUrl);
+    Assert.AreEqual(HttpStatusCode.Redirect, authResponse.StatusCode);
 
-    var authenticateUrl = GetResponseMessageLocation(authorizationResponse);
-    var authenticationResponse = await appClient.GetAsync(authenticateUrl, GetRequestMessageCookieHeader(challengeResponse));
-    Assert.AreEqual("true", await ReadResponseMessageContent(authenticationResponse));
+    var callbackUrl = GetResponseMessageLocation(authResponse);
+    var callbackResponse = await appClient.GetAsync(callbackUrl, GetRequestMessageCookieHeader(challengeResponse));
+    Assert.AreEqual("true", await ReadResponseMessageContent(callbackResponse));
   }
 
 
-  static string GetCallbackLocation(HttpRequest request) =>
-    $"{GetQueryParamValue(request, "redirect_uri")}?state={GetQueryParamValue(request, "state")}&code=abc";
+  static string GetCallbackLocation(HttpRequest request) => $"{GetQueryParamValue(request, "redirect_uri")}?state={GetQueryParamValue(request, "state")}&code=abc";
 
-  static string GetQueryParamValue (HttpRequest request, string keyName) =>
-    request.Query[keyName]!;
+  static string GetQueryParamValue (HttpRequest request, string keyName) => request.Query[keyName]!;
 
 }

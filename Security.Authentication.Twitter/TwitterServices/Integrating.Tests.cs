@@ -42,20 +42,17 @@ partial class TwitterTests {
     var authResponse = await authClient.GetAsync(authUrl);
     Assert.AreEqual(HttpStatusCode.Redirect, authResponse.StatusCode);
 
-    var signinUrl = GetResponseMessageLocation(authResponse);
-    var signinResponse = await appClient.GetAsync(signinUrl, GetRequestMessageCookieHeader(challengeResponse));
-    Assert.AreEqual("/redirect-from", await ReadResponseMessageContent(signinResponse));
+    var callbackUrl = GetResponseMessageLocation(authResponse);
+    var callbackResponse = await appClient.GetAsync(callbackUrl, GetRequestMessageCookieHeader(challengeResponse));
+    Assert.AreEqual("/redirect-from", await ReadResponseMessageContent(callbackResponse));
   }
 
 
-  static string GetCallbackLocation(HttpRequest request) =>
-    $"{GetQueryParamValue(request, "redirect_uri")}?state={GetQueryParamValue(request, "state")}&code=abc";
+  static string GetCallbackLocation(HttpRequest request) => $"{GetQueryParamValue(request, "redirect_uri")}?state={GetQueryParamValue(request, "state")}&code=abc";
 
-  static string GetQueryParamValue (HttpRequest request, string keyName) =>
-    request.Query[keyName]!;
+  static string GetQueryParamValue (HttpRequest request, string keyName) => request.Query[keyName]!;
 
-  static ValueTask<AuthenticationTicket> SignIn(HttpContext _, ClaimsPrincipal principal, AuthenticationProperties authProperties) =>
-    new(new AuthenticationTicket(principal, authProperties, string.Empty));
+  static ValueTask<AuthenticationTicket> SignIn(HttpContext _, ClaimsPrincipal principal, AuthenticationProperties authProperties) => new(new AuthenticationTicket(principal, authProperties, string.Empty));
 
 
 }
