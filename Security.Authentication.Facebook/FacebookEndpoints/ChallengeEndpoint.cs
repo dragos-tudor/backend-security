@@ -6,5 +6,5 @@ namespace Security.Authentication.Facebook;
 partial class FacebookFuncs
 {
   public readonly static Func<HttpContext, string?> ChallengeFacebookEndpoint =
-    AuthorizeChallengeOAuth<FacebookOptions>;
+    ChallengeOAuth<FacebookOptions>;
 }

@@ -4,7 +4,7 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  public static async Task<string?> AuthorizeCallbackOidc<TOptions> (
+  public static async Task<string?> CallbackOidc<TOptions> (
     HttpContext context,
     TOptions oidcOptions,
     AuthenticateFunc authenticate,
@@ -12,7 +12,7 @@ partial class OpenIdConnectFuncs
   {
     var authResult = await authenticate(context);
     if (authResult.Succeeded)
-      await signin(context, authResult.Principal!, authResult.Properties!);
+      await signin(context, authResult.Principal!, authResult.Properties);
 
     var redirectUri = authResult.Succeeded switch {
       true => GetResponseLocation(context.Response),
@@ -21,11 +21,11 @@ partial class OpenIdConnectFuncs
     return redirectUri ?? GetCallbackRedirectUri(authResult.Properties!);
   }
 
-  public static Task<string?> AuthorizeCallbackOidc<TOptions> (
+  public static Task<string?> CallbackOidc<TOptions> (
     HttpContext context,
     AuthenticateFunc authenticate,
     SignInFunc signin) where TOptions : OpenIdConnectOptions =>
-      AuthorizeCallbackOidc(
+      CallbackOidc(
         context,
         ResolveRequiredService<TOptions>(context),
         authenticate,

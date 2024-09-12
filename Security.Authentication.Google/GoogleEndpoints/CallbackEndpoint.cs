@@ -7,5 +7,5 @@ namespace Security.Authentication.Google;
 partial class GoogleFuncs
 {
   public static Task<string?> CallbackGoogleEndpoint(HttpContext context, SignInFunc signIn) =>
-    AuthorizeCallbackOAuth<GoogleOptions>(context, AuthenticateGoogle, signIn);
+    CallbackOAuth<GoogleOptions>(context, AuthenticateGoogle, signIn);
 }

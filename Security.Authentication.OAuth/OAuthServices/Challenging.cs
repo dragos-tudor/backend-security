@@ -8,23 +8,37 @@ partial class OAuthFuncs
 {
   public static string ChallengeOAuth<TOptions> (
     HttpContext context,
-    AuthenticationProperties authProperties,
-    TOptions authOptions)
-  where TOptions : OAuthOptions
+    TOptions authOptions,
+    PropertiesDataFormat propertiesDataFormat,
+    DateTimeOffset currentUtc)
+  where TOptions: OAuthOptions
   {
-    var returnUri = GetChallengeReturnUri(context.Request, authProperties);
-    var challengePath = BuildChallengePath(authOptions, returnUri);
+    var correlationId = GenerateCorrelationId();
+    UseCorrelationCookie(context, correlationId, authOptions, currentUtc);
 
-    LogChallenged(ResolveOAuthLogger(context), authOptions.SchemeName, challengePath, context.TraceIdentifier);
-    return SetResponseRedirect(context.Response, challengePath)!;
+    var authProperties = CreateAuthenticationProperties();
+    var authParams = CreateAuthorizationParams();
+    if (ShouldUseCodeChallenge(authOptions))
+      UseCodeChallenge(authProperties, authParams, GenerateCodeVerifier());
+
+    var callbackUrl = BuildAbsoluteUrl(context.Request, authOptions.CallbackPath);
+    var redirectUri = GetRequestQueryValue(context.Request, authOptions.ReturnUrlParameter)!; // TODO: investigate security risk for absolute url
+    SetAuthorizationAuthenticationProperties(authProperties, callbackUrl, correlationId, redirectUri);
+    SetAuthorizationParams(authParams, authOptions, callbackUrl,
+      ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
+
+    var authUri = GetAuthorizationUri(authOptions, authParams);
+    LogAuthorizeChallenge(ResolveOAuthLogger(context), authOptions.SchemeName, authUri, context.TraceIdentifier);
+
+    return SetResponseRedirect(context.Response, authUri)!;
   }
 
-  public static string ChallengeOAuth<TOptions> (
-    HttpContext context,
-    AuthenticationProperties authProperties)
-  where TOptions : OAuthOptions =>
+  public static string ChallengeOAuth<TOptions> (HttpContext context) where TOptions: OAuthOptions =>
     ChallengeOAuth(
       context,
-      authProperties,
-      ResolveRequiredService<TOptions>(context));
+      ResolveRequiredService<TOptions>(context),
+      ResolvePropertiesDataFormat<TOptions>(context),
+      ResolveTimeProvider<TOptions>(context).GetUtcNow()
+    );
+
 }
