@@ -41,8 +41,7 @@ partial class OAuthFuncs {
     if(IsFailureUserInfoResult(userInfoResult)) return Fail(userInfoResult.Failure!);
     LogAccessUserInfo(logger, schemeName, requestId);
 
-    if (ShouldCleanCodeChallenge(authOptions))
-      RemoveAuthenticationPropertiesCodeVerifier(authProperties!);
+    if (ShouldCleanCodeChallenge(authOptions)) RemoveAuthenticationPropertiesCodeVerifier(authProperties!);
 
     var principal = GetClaimsPrincipal(userInfoResult)!;
     LogAuthenticated(logger, schemeName, GetPrincipalNameId(principal)!, requestId);

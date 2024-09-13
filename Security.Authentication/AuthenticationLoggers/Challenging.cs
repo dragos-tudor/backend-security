@@ -1,6 +1,4 @@
 
-using Microsoft.Extensions.Logging;
-
 namespace Security.Authentication;
 
 partial class AuthenticationFuncs

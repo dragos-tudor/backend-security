@@ -4,6 +4,4 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication;
 
-public delegate ValueTask<string> SignOutFunc(
-  HttpContext context,
-  AuthenticationProperties? authProperties = default);
+public delegate ValueTask<string> SignOutFunc (HttpContext context, AuthenticationProperties? authProperties = default);

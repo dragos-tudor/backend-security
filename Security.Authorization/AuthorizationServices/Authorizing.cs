@@ -1,45 +1,32 @@
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
-using Security.Authentication;
 
 namespace Security.Authorization;
 
-partial class AuthorizationFuncs {
-
-  static async Task<(PolicyAuthorizationResult?, ClaimsPrincipal?)> Authorize (
+partial class AuthorizationFuncs
+{
+  static async Task<(AuthenticateResult, PolicyAuthorizationResult)> Authorize (
     HttpContext context,
-    ChallengeFunc challenge,
-    ForbidFunc forbid,
     IAuthorizationPolicyProvider policyProvider,
-    IAuthorizationService authorizationService)
+    IAuthorizationService authzService)
   {
     var endpoint = MarkEndpointInvoked(context, context.GetEndpoint());
     var policy = await CombinePolicies(policyProvider, endpoint);
-    if (policy is null) return (default, default);
+    if (policy is null) return (AuthenticateResult.NoResult(), PolicyAuthorizationResult.Success());
 
     var authResult = GetAuthenticationFeature<AuthenticateResult>(context) ?? GetDefaultAuthenticateResult(context);
-    if (IsAnonymousEndpoint(endpoint)) return (default, authResult.Principal);
+    if (IsAnonymousEndpoint(endpoint)) return (authResult, PolicyAuthorizationResult.Success());
 
-    var authzResult = await AuthorizePolicy(policy, authResult, authorizationService, context, endpoint);
-    if (authzResult.Forbidden) forbid(context, GetAuthenticationProperties(authResult));
-    if (authzResult.Challenged) challenge(context, GetAuthenticationProperties(authResult));
-
-    return (authzResult, authResult.Principal);
+    var authzResult = await AuthorizePolicy(policy, authResult, authzService, context, endpoint);
+    return (authResult, authzResult);
   }
 
-  static Task<(PolicyAuthorizationResult?, ClaimsPrincipal?)> Authorize (
-    HttpContext context,
-    ChallengeFunc challenge,
-    ForbidFunc forbid) =>
-      Authorize(
-        context,
-        challenge,
-        forbid,
-        ResolveRequiredService<IAuthorizationPolicyProvider>(context),
-        ResolveRequiredService<IAuthorizationService>(context)
-      );
-
+  static Task<(AuthenticateResult, PolicyAuthorizationResult)> Authorize (HttpContext context) =>
+    Authorize(
+      context,
+      ResolveRequiredService<IAuthorizationPolicyProvider>(context),
+      ResolveRequiredService<IAuthorizationService>(context)
+    );
 }

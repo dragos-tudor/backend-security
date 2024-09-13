@@ -4,7 +4,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs
 {
-  public static async Task<string?> CallbackOAuth<TOptions> (
+  public static async Task<string> CallbackOAuth<TOptions> (
     HttpContext context,
     TOptions authOptions,
     AuthenticateFunc authenticate,
@@ -12,17 +12,14 @@ partial class OAuthFuncs
   where TOptions : OAuthOptions
   {
     var authResult = await authenticate(context);
-    if (authResult.Succeeded) {
-      await signin(context, authResult.Principal!, authResult.Properties);
-      return GetResponseLocation(context.Response) ?? GetCallbackRedirectUri(authResult.Properties);
-    }
+    if (authResult.Succeeded) await signin(context, authResult.Principal!, authResult.Properties);
+    if (!authResult.Succeeded) SetResponseRedirect(context.Response, BuildErrorPath(authOptions, authResult.Failure!));
 
-    var errorPath = BuildErrorPath(authOptions, authResult.Failure!);
-    return SetResponseRedirect(context.Response, errorPath) ?? GetCallbackRedirectUri(authResult.Properties!);
+    return GetCallbackRedirectUri(authResult.Properties!);
   }
 
 
-  public static Task<string?> CallbackOAuth<TOptions> (
+  public static Task<string> CallbackOAuth<TOptions> (
     HttpContext context,
     AuthenticateFunc authenticate,
     SignInFunc signin)

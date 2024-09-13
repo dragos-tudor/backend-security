@@ -12,7 +12,7 @@ partial class BearerTokenFuncs
   static readonly AuthenticateResult UnprotectingTokenFailedResult = Fail(UnprotectingTokenFailed);
   static readonly AuthenticateResult TokenExpiredResult = Fail(TokenExpired);
 
-  public static AuthenticateResult AuthenticateBearerToken(
+  public static AuthenticateResult AuthenticateBearerToken (
     HttpContext context,
     BearerTokenDataFormat bearerTokenProtector,
     DateTimeOffset currentUtc)

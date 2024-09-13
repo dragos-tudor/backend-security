@@ -25,8 +25,7 @@ partial class OAuthFuncs
     var callbackUrl = BuildAbsoluteUrl(context.Request, authOptions.CallbackPath);
     var redirectUri = GetRequestQueryValue(context.Request, authOptions.ReturnUrlParameter)!; // TODO: investigate security risk for absolute url
     SetAuthorizationAuthenticationProperties(authProperties, callbackUrl, correlationId, redirectUri);
-    SetAuthorizationParams(authParams, authOptions, callbackUrl,
-      ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
+    SetAuthorizationParams(authParams, authOptions, callbackUrl, ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
 
     var authUri = GetAuthorizationUri(authOptions, authParams);
     LogAuthorizeChallenge(logger, authOptions.SchemeName, authUri, context.TraceIdentifier);

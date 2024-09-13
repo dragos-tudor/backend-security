@@ -10,19 +10,17 @@ partial class AuthorizationFuncs {
 
   static async Task<PolicyAuthorizationResult> AuthorizePolicy (
     AuthorizationPolicy policy,
-    AuthenticateResult authenticateResult,
-    IAuthorizationService authorizationService,
+    AuthenticateResult authResult,
+    IAuthorizationService authzService,
     HttpContext context,
     Endpoint? endpoint)
   {
     var resource = (object?) (IsEndpointResource()? endpoint: context);
-    var authorizationResult = await authorizationService.AuthorizeAsync(context.User, resource, policy);
+    var authzResult = await authzService.AuthorizeAsync(context.User, resource, policy);
 
-    return authorizationResult.Succeeded?
-      PolicyAuthorizationResult.Success():
-      authenticateResult.Succeeded?
-        PolicyAuthorizationResult.Forbid(authorizationResult.Failure):
-        PolicyAuthorizationResult.Challenge();
+    if (authzResult.Succeeded) return PolicyAuthorizationResult.Success();
+    if (authResult.Succeeded) return PolicyAuthorizationResult.Forbid(authzResult.Failure);
+    return PolicyAuthorizationResult.Challenge();
   }
 
 }
