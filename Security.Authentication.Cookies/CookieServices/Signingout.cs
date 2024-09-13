@@ -26,7 +26,9 @@ partial class CookiesFuncs
 
     DeleteAuthenticationCookie(context, cookieManager, cookieName, cookieOptions);
     ResetResponseCacheHeaders(context.Response);
-    SetResponseRedirect(context.Response, GetRedirectUriOrQueryReturnUrl(context, authProperties, authOptions));
+
+    var redirectUri = GetRedirectUriOrQueryReturnUrl(context, authProperties, authOptions);
+    if (ExistsUri(redirectUri)) SetResponseRedirect(context.Response, redirectUri!);
 
     LogSignedOutCookie(logger, authOptions.SchemeName, context.TraceIdentifier);
     return GetResponseLocation(context.Response);

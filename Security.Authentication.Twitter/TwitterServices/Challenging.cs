@@ -6,6 +6,6 @@ namespace Security.Authentication.Twitter;
 
 partial class TwitterFuncs
 {
-  public static string ChallengeTwitter (HttpContext context, AuthenticationProperties authProperties) =>
-    ChallengeAuth (context, authProperties, ResolveRequiredService<TwitterOptions>(context), ResolveTwitterLogger(context));
+  public static string? ChallengeTwitter (HttpContext context, AuthenticationProperties? authProperties = default) =>
+    ChallengeAuth (context, ResolveRequiredService<TwitterOptions>(context), ResolveTwitterLogger(context), authProperties);
 }

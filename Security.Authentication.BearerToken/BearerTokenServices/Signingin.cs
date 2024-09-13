@@ -19,9 +19,7 @@ partial class BearerTokenFuncs
     var bearerTokenTicket = CreateBearerTokenTicket(principal, authProperties, tokenOptions);
     var refreshTokenTicket = CreateRefreshTicket(principal, tokenOptions, currentUtc);
 
-    var token = CreateAccessTokenResponse(bearerTokenTicket, refreshTokenTicket,
-      tokenOptions, bearerTokenProtector, refreshTokenProtector);
-
+    var token = CreateAccessTokenResponse(bearerTokenTicket, refreshTokenTicket, tokenOptions, bearerTokenProtector, refreshTokenProtector);
     var tokenJsonTypeInfo = ResolveAccessTokenResponseJsonTypeInfo(context);
     await WriteResponseJsonContent(context.Response, token, tokenJsonTypeInfo, context.RequestAborted);
 

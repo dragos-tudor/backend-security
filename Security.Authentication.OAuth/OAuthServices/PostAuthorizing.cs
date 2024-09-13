@@ -14,7 +14,6 @@ partial class OAuthFuncs {
   where TOptions: OAuthOptions
   {
     var authError = ValidatePostAuthorizationRequest(context);
-    if (IsAccessDeniedError(authError)) SetResponseRedirect(context.Response, authOptions.AccessDeniedPath);
     if (ExistsPostAuthorizationValidationError(authError)) return authError;
 
     var authProperties = UnprotectAuthenticationProperties(GetPostAuthorizationState(context.Request)!, propertiesDataFormat);

@@ -6,6 +6,6 @@ namespace Security.Authentication.Google;
 
 partial class GoogleFuncs
 {
-  public static string ForbidGoogle (HttpContext context, AuthenticationProperties authProperties) =>
-    ForbidAuth (context, authProperties, ResolveRequiredService<GoogleOptions>(context), ResolveGoogleLogger(context));
+  public static string? ForbidGoogle (HttpContext context, AuthenticationProperties? authProperties = default) =>
+    ForbidAuth (context, ResolveRequiredService<GoogleOptions>(context), ResolveGoogleLogger(context), authProperties);
 }

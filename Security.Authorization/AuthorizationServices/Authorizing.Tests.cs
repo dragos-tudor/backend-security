@@ -69,7 +69,7 @@ partial class AuthorizationTests {
   public async Task Unauthenticated_user__challenge_user_access_authentication_properties__dont_throw_error()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization() );
-    server.UseAuthorization((context, authProperties) => authProperties.RedirectUri!, forbidFunc);
+    server.UseAuthorization((context, authProperties) => authProperties!.RedirectUri!, forbidFunc);
     server.MapGet("/resource", (HttpContext context) => "not accesible" ).RequireAuthorization();
     await server.StartAsync();
 

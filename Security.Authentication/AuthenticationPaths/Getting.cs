@@ -7,6 +7,5 @@ namespace Security.Authentication;
 partial class AuthenticationFuncs
 {
   public static string? GetRedirectUriOrQueryReturnUrl (HttpContext context, AuthenticationProperties authProperties, AuthenticationOptions authOptions) =>
-    GetAuthenticationPropertiesRedirectUri(authProperties) ??
-    GetRequestQueryValue(context.Request, authOptions.ReturnUrlParameter);
+    GetAuthenticationPropertiesRedirectUri(authProperties) ?? GetRequestQueryValue(context.Request, authOptions.ReturnUrlParameter);
 }

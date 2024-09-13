@@ -19,8 +19,7 @@ partial class OAuthFuncs
 
     var authProperties = CreateAuthenticationProperties();
     var authParams = CreateAuthorizationParams();
-    if (ShouldUseCodeChallenge(authOptions))
-      UseCodeChallenge(authProperties, authParams, GenerateCodeVerifier());
+    if (ShouldUseCodeChallenge(authOptions)) UseCodeChallenge(authProperties, authParams, GenerateCodeVerifier());
 
     var callbackUrl = BuildAbsoluteUrl(context.Request, authOptions.CallbackPath);
     var redirectUri = GetRequestQueryValue(context.Request, authOptions.ReturnUrlParameter)!; // TODO: investigate security risk for absolute url
@@ -28,9 +27,10 @@ partial class OAuthFuncs
     SetAuthorizationParams(authParams, authOptions, callbackUrl, ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
 
     var authUri = GetAuthorizationUri(authOptions, authParams);
-    LogAuthorizeChallenge(logger, authOptions.SchemeName, authUri, context.TraceIdentifier);
+    SetResponseRedirect(context.Response, authUri);
 
-    return SetResponseRedirect(context.Response, authUri)!;
+    LogAuthorizeChallenge(logger, authOptions.SchemeName, authUri, context.TraceIdentifier);
+    return authUri;
   }
 
   public static string ChallengeOAuth<TOptions> (

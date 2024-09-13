@@ -61,6 +61,11 @@
   - to have different services from those registered on DI.
   - to encapsulate and carry on those services through the authentication process [reducing the number of parameters so].
 - *AuthenticateOAuth* oauth authentication func use template method design pattern allowing oauth libraries to override/decorate when neccessary *postAuthenticate*, *exchangeCodeForTokens* or *accessUserInfo* authentication substeps [eg. *AuthenticateTwitter*, *AuthenticateFacebook*].
+- *Challenge** and *Forbid** funcs have different behaviour based on *AuthenticationProperties* param existence. When param is not null then both *Challenge** and *Forbid** funcs redirect response to *LoginPath* respectively *AccessDeniedPath* authentication options props. When param is null then *Challenge** and *Forbid** funcs set response status code with 401 respectively 403 without redirection. For bearer tokens *Challenge** and *Forbid** use funcs without redirection.
+- redirecting funcs:
+  - *Challenge** and *Forbid** funcs [behaviour described above].
+  - *CallbackOAuth* and *CallbackOidc* funcs redirect callback authentication error to *AccessDeniedPath* or *ErrorPath* authentication options props depending of error type.
+  - *SigninCookie* and *SignoutCookie* could redirect to *AuthenticationPropeties.ReturnUri* prop or query param *ReturnUrlParameter* if one of both exists.
 - even *OAuth2* is an authorization protocol the process is named *remote authentication* because when succedded the authenticated principal is signed in.
 - even *OpenIdConnect* protocol is more secure and robust than *OAuth2* protocol is still not largely adopted by the community. The *OpenIdConnect* protocol seems to be overengineered, overcomplicated than the *OAuth2* protocol. The *OpenIdConnect* client implementation is more complicated than the *OAuth2* implementation [see *OpenIdConnectHandler.cs*]. The *OpenIdConnect* protocol was implemented to increase the understanding level of *OAuth2* protocol! making some parallels between both protocols. *OpenIdConnect* implementation needs to be tested, refined, internally used so.
 

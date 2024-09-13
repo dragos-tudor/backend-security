@@ -8,7 +8,7 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static async Task<AuthenticateResult> AuthenticateOidc<TOptions> (
+  public static async Task<AuthenticateResult> AuthenticateOidc<TOptions> (
     HttpContext context,
     TOptions oidcOptions,
     OpenIdConnectConfiguration oidcConfiguration,
@@ -60,7 +60,7 @@ partial class OpenIdConnectFuncs
     return Success(CreateAuthenticationTicket(principal, authProperties, oidcOptions.SchemeName));
   }
 
-  static Task<AuthenticateResult> AuthenticateOidc<TOptions> (
+  public static Task<AuthenticateResult> AuthenticateOidc<TOptions> (
     HttpContext context,
     ILogger logger)
   where TOptions: OpenIdConnectOptions =>

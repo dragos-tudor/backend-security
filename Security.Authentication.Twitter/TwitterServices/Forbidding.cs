@@ -6,6 +6,6 @@ namespace Security.Authentication.Twitter;
 
 partial class TwitterFuncs
 {
-  public static string ForbidTwitter (HttpContext context, AuthenticationProperties authProperties) =>
-    ForbidAuth (context, authProperties, ResolveRequiredService<TwitterOptions>(context), ResolveTwitterLogger(context));
+  public static string? ForbidTwitter (HttpContext context, AuthenticationProperties? authProperties = default) =>
+    ForbidAuth (context, ResolveRequiredService<TwitterOptions>(context), ResolveTwitterLogger(context), authProperties);
 }
