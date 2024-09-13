@@ -103,7 +103,7 @@ partial class OpenIdConnectFuncs
     SetOpenIdConnectMessageEnableTelemetry(oidcMessage, !oidcOptions.DisableTelemetry);
     SetOpenIdConnectMessageIssuerAddress(oidcMessage, oidcConfiguration.EndSessionEndpoint ?? string.Empty);
     SetOpenIdConnectMessageIdTokenHint(oidcMessage, await GetOpenIdConnectMessageIdTokenHint(context, oidcOptions));
-    SetOpenIdConnectMessagePostLogoutRedirectUri(oidcMessage, BuildAbsoluteUrl(context.Request, oidcOptions.SignOutCallbackPath));
+    SetOpenIdConnectMessagePostLogoutRedirectUri(oidcMessage, BuildAbsoluteUrl(context.Request, oidcOptions.CallbackSignOutPath));
     SetOpenIdConnectMessageState(oidcMessage, state);
     return oidcMessage;
   }

@@ -23,8 +23,8 @@ partial class OpenIdConnectFuncs
 
       CallbackPath = new PathString("/callback-oidc"),
       ChallengePath = new PathString("/challenge-oidc"),
-      SignOutChallengePath = new PathString("/signout-challenge-oidc"),
-      SignOutCallbackPath = new PathString("/signout-callback-oidc"),
+      ChallengeSignOutPath = new PathString("/signout-challenge-oidc"),
+      CallbackSignOutPath = new PathString("/signout-callback-oidc"),
       SignOutRedirectUri = "/",
 
       UsePkce = true
