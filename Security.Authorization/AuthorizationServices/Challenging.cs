@@ -7,7 +7,7 @@ namespace Security.Authorization;
 
 partial class AuthorizationFuncs
 {
-  public static string? ChallengeAuth<TOptions> (
+  public static string? ChallengeAuthorization<TOptions> (
     HttpContext context,
     AuthenticationProperties authProperties,
     TOptions authOptions
@@ -18,12 +18,12 @@ partial class AuthorizationFuncs
     return default;
   }
 
-  public static string? ChallengeAuth<TOptions> (
+  public static string? ChallengeAuthorization<TOptions> (
     HttpContext context,
     AuthenticationProperties authProperties
   ) where TOptions: Authentication.AuthenticationOptions
    =>
-      ChallengeAuth(
+      ChallengeAuthorization(
         context,
         authProperties,
         ResolveRequiredService<TOptions>(context));

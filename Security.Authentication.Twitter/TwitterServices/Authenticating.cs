@@ -10,8 +10,8 @@ partial class TwitterFuncs {
   public static Task<AuthenticateResult> AuthenticateTwitter (HttpContext context) =>
     AuthenticateOAuth<TwitterOptions>(
       context,
-      PostAuthorization<TwitterOptions>,
+      PostAuthorization,
       ExchangeTwitterCodeForTokens,
-      AccessTwitterUserInfo);
-
+      AccessTwitterUserInfo,
+      ResolveTwitterLogger(context));
 }

@@ -1,12 +1,11 @@
 
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  const string CategoryNameLogger = nameof(CookiesFuncs);
+  const string CookiesLogger = nameof(Cookies);
 
-  static ILogger ResolveCookiesLogger (HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, CategoryNameLogger);
+  static ILogger ResolveCookiesLogger (HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, CookiesLogger);
 }

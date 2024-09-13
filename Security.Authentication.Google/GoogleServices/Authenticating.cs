@@ -12,6 +12,7 @@ partial class GoogleFuncs {
       context,
       PostAuthorization,
       ExchangeCodeForTokens,
-      AccessUserInfo);
+      AccessUserInfo,
+      ResolveGoogleLogger(context));
 
 }

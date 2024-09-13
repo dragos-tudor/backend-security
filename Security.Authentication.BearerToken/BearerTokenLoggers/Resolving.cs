@@ -1,12 +1,11 @@
 
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
 namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenFuncs
 {
-  const string CategoryNameLogger = nameof(BearerTokenFuncs);
+  const string BearerTokenLogger = nameof(BearerToken);
 
-  static ILogger ResolveBearerTokenLogger (HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, CategoryNameLogger);
+  static ILogger ResolveBearerTokenLogger (HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, BearerTokenLogger);
 }

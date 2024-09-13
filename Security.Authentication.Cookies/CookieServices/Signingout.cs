@@ -14,7 +14,8 @@ partial class CookiesFuncs
     CookieBuilder cookieBuilder,
     ICookieManager cookieManager,
     TicketDataFormat ticketDataFormat,
-    ITicketStore ticketStore)
+    ITicketStore ticketStore,
+    ILogger logger)
   {
     var cookieOptions = BuildCookieOptions(cookieBuilder, authProperties, context);
     var cookieName = GetCookieName(cookieBuilder, authOptions);
@@ -27,7 +28,7 @@ partial class CookiesFuncs
     ResetResponseCacheHeaders(context.Response);
     SetResponseRedirect(context.Response, GetRedirectUriOrQueryReturnUrl(context, authProperties, authOptions));
 
-    LogSignedOutCookie(ResolveCookiesLogger(context), authOptions.SchemeName, context.TraceIdentifier);
+    LogSignedOutCookie(logger, authOptions.SchemeName, context.TraceIdentifier);
     return GetResponseLocation(context.Response);
   }
 
@@ -41,6 +42,6 @@ partial class CookiesFuncs
         ResolveRequiredService<CookieBuilder>(context),
         ResolveRequiredService<ICookieManager>(context),
         ResolveRequiredService<TicketDataFormat>(context),
-        ResolveRequiredService<ITicketStore>(context)
-        );
+        ResolveRequiredService<ITicketStore>(context),
+        ResolveCookiesLogger(context));
 }

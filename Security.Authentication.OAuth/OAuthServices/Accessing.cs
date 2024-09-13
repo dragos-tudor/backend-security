@@ -27,7 +27,7 @@ partial class OAuthFuncs {
     AccessUserInfo(
       accessToken,
       authOptions,
-      ResolveHttpClient<TOptions>(context),
+      ResolveHttpClient(context),
       cancellationToken
     );
 

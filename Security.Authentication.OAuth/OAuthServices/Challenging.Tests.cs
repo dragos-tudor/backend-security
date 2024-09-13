@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Primitives;
 using static Security.Testing.Funcs;
 
@@ -14,7 +15,7 @@ partial class OAuthTests {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions() with { AuthorizationEndpoint = "http://oauth/" };
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
-    var authorizationPath = ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now);
+    var authorizationPath = ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now, NullLogger.Instance);
 
     StringAssert.StartsWith(authorizationPath, "http://oauth/?", StringComparison.Ordinal);
   }
@@ -24,7 +25,7 @@ partial class OAuthTests {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions() with { Scope = new [] { "openid", "email" } };
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
-    var authorizationPath = ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now);
+    var authorizationPath = ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now, NullLogger.Instance);
 
     StringAssert.Contains(authorizationPath, "scope=openid%20email", StringComparison.Ordinal);
   }
@@ -34,7 +35,7 @@ partial class OAuthTests {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions() with { ClientId = "clientID" };
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
-    var authorizationPath = ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now);
+    var authorizationPath = ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now, NullLogger.Instance);
 
     StringAssert.Contains(authorizationPath, "client_id=clientID", StringComparison.Ordinal);
   }
@@ -44,7 +45,7 @@ partial class OAuthTests {
     var context = CreateHttpContext(new Uri("http://localhost"));
     var authOptions = CreateOAuthOptions() with { CallbackPath = "/callback" };
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
-    var authorizationPath = ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now);
+    var authorizationPath = ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now, NullLogger.Instance);
 
     StringAssert.Contains(authorizationPath, "redirect_uri=" + Uri.EscapeDataString("http://localhost/callback"), StringComparison.Ordinal);
   }
@@ -54,7 +55,7 @@ partial class OAuthTests {
     var context = CreateHttpContext(new Uri("http://localhost"));
     var authOptions = CreateOAuthOptions() with { UsePkce = true };
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
-    var authorizationPath = ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now);
+    var authorizationPath = ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now, NullLogger.Instance);
 
     var authProperties = propertiesDataFormat.Unprotect(QueryHelpers.ParseQuery(authorizationPath)["state"]);
     var codeChallenge = HashCodeVerifier(GetAuthenticationPropertiesCodeVerifier(authProperties!)!);
@@ -66,7 +67,7 @@ partial class OAuthTests {
     var context = CreateHttpContext(new Uri("http://localhost/challenge?returnUrl=/index"));
     var authOptions = CreateOAuthOptions();
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
-    var authorizationPath = ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now);
+    var authorizationPath = ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now, NullLogger.Instance);
     var stateParam = GetQueryStateParam(authorizationPath);
     var properties = UnprotectAuthenticationProperties(stateParam.Value!, propertiesDataFormat);
 
@@ -78,7 +79,7 @@ partial class OAuthTests {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
-    var authorizationPath = ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now);
+    var authorizationPath = ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.Now, NullLogger.Instance);
     var stateParam = GetQueryStateParam(authorizationPath);
     var properties = UnprotectAuthenticationProperties(stateParam.Value!, propertiesDataFormat)!;
 

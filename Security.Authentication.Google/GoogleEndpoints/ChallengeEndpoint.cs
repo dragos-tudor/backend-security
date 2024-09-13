@@ -5,6 +5,5 @@ namespace Security.Authentication.Google;
 
 partial class GoogleFuncs
 {
-  public readonly static Func<HttpContext, string?> ChallengeGoogleEndpoint =
-    ChallengeOAuth<GoogleOptions>;
+  public static string? ChallengeGoogleEndpoint (HttpContext context) => ChallengeOAuth<GoogleOptions>(context, ResolveGoogleLogger(context));
 }

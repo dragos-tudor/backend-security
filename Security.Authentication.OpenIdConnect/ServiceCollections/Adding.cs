@@ -19,7 +19,8 @@ partial class OpenIdConnectFuncs
       services
         .AddSingleton(authOptions)
         .AddSingleton(oidcConfiguration)
-        .AddSingleton(services =>
-          CreateOpenIdConnectDeps(services, authOptions, httpClient, dataProtectionProvider, timeProvider))
-        .AddKeyedSingleton(CategoryNameLogger, (services, serviceKey) => CreateLogger(services, (string)serviceKey));
+        .AddSingleton(httpClient)
+        .AddSingleton(services => CreatePropertiesDataFormat(dataProtectionProvider ?? ResolveRequiredService<IDataProtectionProvider>(services), authOptions.SchemeName))
+        .AddSingleton(services => CreateStringDataFormat(dataProtectionProvider ?? ResolveRequiredService<IDataProtectionProvider>(services), authOptions.SchemeName))
+        .AddSingleton(timeProvider);
 }

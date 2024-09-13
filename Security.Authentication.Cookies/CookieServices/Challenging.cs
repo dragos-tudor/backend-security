@@ -9,12 +9,13 @@ partial class CookiesFuncs
   public static string? ChallengeCookie (
     HttpContext context,
     AuthenticationProperties authProperties,
-    CookieAuthenticationOptions authOptions)
+    CookieAuthenticationOptions authOptions,
+    ILogger logger)
   {
     var returnUri = GetAuthenticationPropertiesRedirectUri(authProperties) ?? BuildRelativeUri(context.Request);
     var challengePath = BuildChallengePath(authOptions, returnUri);
 
-    LogChallenged(ResolveCookiesLogger(context), authOptions.SchemeName, challengePath, context.TraceIdentifier);
+    LogChallenged(logger, authOptions.SchemeName, challengePath, context.TraceIdentifier);
     return SetResponseRedirect(context.Response, challengePath)!;
   }
 
@@ -24,5 +25,6 @@ partial class CookiesFuncs
       ChallengeCookie(
         context,
         authProperties,
-        ResolveRequiredService<CookieAuthenticationOptions>(context));
+        ResolveRequiredService<CookieAuthenticationOptions>(context),
+        ResolveCookiesLogger(context));
 }

@@ -9,12 +9,13 @@ partial class CookiesFuncs
   public static string? ForbidCookie (
     HttpContext context,
     AuthenticationProperties authProperties,
-    CookieAuthenticationOptions authOptions)
+    CookieAuthenticationOptions authOptions,
+    ILogger logger)
   {
     var returnUri = GetAuthenticationPropertiesRedirectUri(authProperties) ?? BuildRelativeUri(context.Request);
     var forbidPath = BuildForbidPath(authOptions, returnUri);
 
-    LogForbidden(ResolveCookiesLogger(context), authOptions.SchemeName, forbidPath, context.TraceIdentifier);
+    LogForbidden(logger, authOptions.SchemeName, forbidPath, context.TraceIdentifier);
     return SetResponseRedirect(context.Response, forbidPath)!;
   }
 
@@ -24,5 +25,6 @@ partial class CookiesFuncs
       ForbidCookie(
         context,
         authProperties,
-        ResolveRequiredService<CookieAuthenticationOptions>(context));
+        ResolveRequiredService<CookieAuthenticationOptions>(context),
+        ResolveCookiesLogger(context));
 }

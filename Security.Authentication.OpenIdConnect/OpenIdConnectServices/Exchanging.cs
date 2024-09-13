@@ -37,8 +37,8 @@ partial class OpenIdConnectFuncs {
         authProperties,
         ResolveRequiredService<TOptions>(context),
         ResolveRequiredService<OpenIdConnectConfiguration>(context),
-        ResolveStringDataFormat<TOptions>(context),
-        ResolveHttpClient<TOptions>(context),
+        ResolveStringDataFormat(context),
+        ResolveHttpClient(context),
         GetRequestCookies(context.Request),
         cancellationToken
       );

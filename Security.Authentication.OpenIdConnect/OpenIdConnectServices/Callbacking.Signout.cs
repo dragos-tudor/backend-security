@@ -5,28 +5,30 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  public static string? SignOutCallbackOidc<TOptions>(
+  public static string? CallbackSignoutOidc<TOptions>(
     HttpContext context,
     TOptions oidcOptions,
-    PropertiesDataFormat propertiesDataFormat)
+    PropertiesDataFormat propertiesDataFormat,
+    ILogger logger)
   where TOptions : OpenIdConnectOptions
   {
     var callbackParams = GetQueryRequestParams(context.Request);
     var callbackMessage = CreateOpenIdConnectMessage(callbackParams);
 
     var authProperties = UnprotectAuthenticationProperties(callbackMessage.State, propertiesDataFormat);
-    var redirectUri = SetResponseRedirect(context.Response, GetCallbackRedirectUri(authProperties));
+    var redirectUri = SetResponseRedirect(context.Response, GetCallbackRedirectUri(authProperties!));
 
-    LogSignOutCallback(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, redirectUri!, context.TraceIdentifier);
+    LogSignOutCallback(logger, oidcOptions.SchemeName, redirectUri!, context.TraceIdentifier);
     return redirectUri;
   }
 
-  public static string? SignOutCallbackOidc<TOptions>(
-    HttpContext context)
+  public static string? CallbackSignoutOidc<TOptions>(
+    HttpContext context,
+    ILogger logger)
   where TOptions : OpenIdConnectOptions =>
-    SignOutCallbackOidc(
+    CallbackSignoutOidc(
       context,
       ResolveRequiredService<TOptions>(context),
-      ResolvePropertiesDataFormat<TOptions>(context)
-    );
+      ResolvePropertiesDataFormat(context),
+      logger);
 }

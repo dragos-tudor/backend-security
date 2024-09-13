@@ -6,12 +6,13 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  public static async Task<string?> SignoutChallengeOidc<TOptions>(
+  public static async Task<string?> ChallengeSignoutOidc<TOptions>(
     HttpContext context,
     AuthenticationProperties authProperties,
     TOptions oidcOptions,
     OpenIdConnectConfiguration oidcConfiguration,
-    PropertiesDataFormat propertiesDataFormat)
+    PropertiesDataFormat propertiesDataFormat,
+    ILogger logger)
   where TOptions : OpenIdConnectOptions
   {
     var signoutMessage = CreateOpenIdConnectMessage();
@@ -23,19 +24,20 @@ partial class OpenIdConnectFuncs
     if(IsEmptyString(signoutMessage.IssuerAddress)) return default;
 
     var redirectUri = await SetSignoutChallengeResponse(context, signoutMessage, oidcOptions, oidcConfiguration);
-    LogSignOutChallenge(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, redirectUri!, context.TraceIdentifier);
+    LogSignOutChallenge(logger, oidcOptions.SchemeName, redirectUri!, context.TraceIdentifier);
     return redirectUri;
   }
 
-  public static Task<string?> SignoutChallengeOidc<TOptions>(
+  public static Task<string?> ChallengeSignoutOidc<TOptions>(
     HttpContext context,
-    AuthenticationProperties? authProperties = default)
+    AuthenticationProperties authProperties,
+    ILogger logger)
   where TOptions : OpenIdConnectOptions =>
-    SignoutChallengeOidc(
+    ChallengeSignoutOidc(
       context,
-      authProperties ?? CreateAuthenticationProperties(),
+      authProperties,
       ResolveRequiredService<TOptions>(context),
       ResolveRequiredService<OpenIdConnectConfiguration>(context),
-      ResolvePropertiesDataFormat<TOptions>(context)
-    );
+      ResolvePropertiesDataFormat(context),
+      logger);
 }

@@ -32,7 +32,7 @@ partial class OAuthFuncs
       authCode,
       authProperties,
       ResolveRequiredService<TOptions>(context),
-      ResolveHttpClient<TOptions>(context),
+      ResolveHttpClient(context),
       cancellationToken
     );
 }

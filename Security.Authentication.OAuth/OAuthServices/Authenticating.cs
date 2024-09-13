@@ -15,7 +15,8 @@ partial class OAuthFuncs {
     HttpClient httpClient,
     PostAuthorizationFunc<TOptions> postAuthorize,
     ExchangeCodeForTokensFunc<TOptions> exchangeCodeForTokens,
-    AccessUserInfoFunc<TOptions> accessUserInfo)
+    AccessUserInfoFunc<TOptions> accessUserInfo,
+    ILogger logger)
   where TOptions: OAuthOptions
   {
     var cancellationToken = context.RequestAborted;
@@ -23,28 +24,28 @@ partial class OAuthFuncs {
     var schemeName = authOptions.SchemeName;
 
     var authResult = postAuthorize(context, authOptions, propertiesDataFormat);
-    if(IsFailurePostAuthorizationResult(authResult)) LogPostAuthorizationFailure(ResolveOAuthLogger(context), schemeName, authResult.Failure!, requestId);
+    if(IsFailurePostAuthorizationResult(authResult)) LogPostAuthorizationFailure(logger, schemeName, authResult.Failure!, requestId);
     if(IsFailurePostAuthorizationResult(authResult)) return Fail(authResult.Failure!);
-    LogPostAuthorization(ResolveOAuthLogger(context), schemeName, requestId);
+    LogPostAuthorization(logger, schemeName, requestId);
 
     var authProperties = GetAutheticationProperties(authResult);
     var authorizationCode = GetPostAuthorizationCode(context.Request)!;
     var tokenResult = await exchangeCodeForTokens(authorizationCode, authProperties!, authOptions, httpClient, cancellationToken);
-    if (IsFailureTokenResult(tokenResult)) LogExchangeCodeForTokensFailure(ResolveOAuthLogger(context), schemeName, tokenResult.Failure!, requestId);
+    if (IsFailureTokenResult(tokenResult)) LogExchangeCodeForTokensFailure(logger, schemeName, tokenResult.Failure!, requestId);
     if (IsFailureTokenResult(tokenResult)) return Fail(tokenResult.Failure!);
-    LogExchangeCodeForTokens(ResolveOAuthLogger(context), schemeName, requestId);
+    LogExchangeCodeForTokens(logger, schemeName, requestId);
 
     var accessToken = GetAccessToken(tokenResult);
     var userInfoResult = await accessUserInfo(accessToken!, authOptions, httpClient, cancellationToken);
-    if(IsFailureUserInfoResult(userInfoResult)) LogAccessUserInfoFailure(ResolveOAuthLogger(context), schemeName, userInfoResult.Failure!, requestId);
+    if(IsFailureUserInfoResult(userInfoResult)) LogAccessUserInfoFailure(logger, schemeName, userInfoResult.Failure!, requestId);
     if(IsFailureUserInfoResult(userInfoResult)) return Fail(userInfoResult.Failure!);
-    LogAccessUserInfo(ResolveOAuthLogger(context), schemeName, requestId);
+    LogAccessUserInfo(logger, schemeName, requestId);
 
     if (ShouldCleanCodeChallenge(authOptions))
       RemoveAuthenticationPropertiesCodeVerifier(authProperties!);
 
     var principal = GetClaimsPrincipal(userInfoResult)!;
-    LogAuthenticated(ResolveOAuthLogger(context), schemeName, GetPrincipalNameId(principal)!, requestId);
+    LogAuthenticated(logger, schemeName, GetPrincipalNameId(principal)!, requestId);
     return Success(CreateAuthenticationTicket(principal, authProperties, schemeName));
   }
 
@@ -53,15 +54,17 @@ partial class OAuthFuncs {
     HttpContext context,
     PostAuthorizationFunc<TOptions> postAuthorize,
     ExchangeCodeForTokensFunc<TOptions> exchangeCodeForTokens,
-    AccessUserInfoFunc<TOptions> accessUserInfo)
+    AccessUserInfoFunc<TOptions> accessUserInfo,
+    ILogger logger)
   where TOptions: OAuthOptions =>
     AuthenticateOAuth(
       context,
       ResolveRequiredService<TOptions>(context),
-      ResolvePropertiesDataFormat<TOptions>(context),
-      ResolveHttpClient<TOptions>(context),
+      ResolvePropertiesDataFormat(context),
+      ResolveHttpClient(context),
       postAuthorize,
       exchangeCodeForTokens,
-      accessUserInfo);
+      accessUserInfo,
+      logger);
 
 }

@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using System.Net.Http;
 using static Security.Testing.Funcs;
@@ -19,7 +20,7 @@ partial class OAuthTests
     var postAuthorize = Substitute.For<PostAuthorizationFunc<OAuthOptions>>();
     postAuthorize(default!, default!, default!).ReturnsForAnyArgs("authorize error");
 
-    var result = await AuthenticateOAuth(context, authOptions, propertiesDataFormat, httpClient, postAuthorize, default!, default!);
+    var result = await AuthenticateOAuth(context, authOptions, propertiesDataFormat, httpClient, postAuthorize, default!, default!, NullLogger.Instance);
     Assert.AreEqual("authorize error", result.Failure!.Message);
   }
 
@@ -34,7 +35,7 @@ partial class OAuthTests
     postAuthorize(default!, default!, default!).ReturnsForAnyArgs(new AuthenticationProperties());
     exchangeCodeForTokens("code", default!, default!, default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(default, "stop exec")));
 
-    await AuthenticateOAuth(context, authOptions, propertiesDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, default!);
+    await AuthenticateOAuth(context, authOptions, propertiesDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, default!, NullLogger.Instance);
     exchangeCodeForTokens.Received(1);
   }
 
@@ -51,7 +52,7 @@ partial class OAuthTests
     exchangeCodeForTokens("code", default!, default!, default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(new TokenInfo(AccessToken: "token"), default)));
     accessUserInfo("token", default!, default!)!.ReturnsForAnyArgs(ToTask(new UserInfoResult(default, "stop exec")));
 
-    await AuthenticateOAuth(context, authOptions, propertiesDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, accessUserInfo);
+    await AuthenticateOAuth(context, authOptions, propertiesDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, accessUserInfo, NullLogger.Instance);
     accessUserInfo.Received(1);
   }
 
@@ -69,7 +70,7 @@ partial class OAuthTests
     exchangeCodeForTokens("code", default!, default!, default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(new TokenInfo(AccessToken: "token"), default)));
     accessUserInfo("token", default!, default!)!.ReturnsForAnyArgs(ToTask(new UserInfoResult(principal, default)));
 
-    var result = await AuthenticateOAuth(context, authOptions, propertiesDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, accessUserInfo);
+    var result = await AuthenticateOAuth(context, authOptions, propertiesDataFormat, httpClient, postAuthorize, exchangeCodeForTokens, accessUserInfo, NullLogger.Instance);
     Assert.AreSame(principal, result.Principal);
   }
 

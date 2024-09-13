@@ -12,6 +12,6 @@ partial class FacebookFuncs {
       context,
       PostAuthorization,
       ExchangeCodeForTokens,
-      AccessFacebookUserInfo);
-
+      AccessFacebookUserInfo,
+      ResolveFacebookLogger(context));
 }

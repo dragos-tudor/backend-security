@@ -7,7 +7,7 @@ namespace Security.Authorization;
 
 partial class AuthorizationFuncs
 {
-  public static string? ForbidAuth<TOptions> (
+  public static string? ForbidAuthorization<TOptions> (
     HttpContext context,
     AuthenticationProperties authProperties,
     TOptions authOptions
@@ -18,12 +18,12 @@ partial class AuthorizationFuncs
     return default;
   }
 
-  public static string? ForbidAuth<TOptions> (
+  public static string? ForbidAuthorization<TOptions> (
     HttpContext context,
     AuthenticationProperties authProperties
   ) where TOptions: Authentication.AuthenticationOptions
    =>
-      ForbidAuth(
+      ForbidAuthorization(
         context,
         authProperties,
         ResolveRequiredService<TOptions>(context));

@@ -10,7 +10,8 @@ partial class OAuthFuncs
     HttpContext context,
     TOptions authOptions,
     PropertiesDataFormat propertiesDataFormat,
-    DateTimeOffset currentUtc)
+    DateTimeOffset currentUtc,
+    ILogger logger)
   where TOptions: OAuthOptions
   {
     var correlationId = GenerateCorrelationId();
@@ -28,17 +29,19 @@ partial class OAuthFuncs
       ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
 
     var authUri = GetAuthorizationUri(authOptions, authParams);
-    LogAuthorizeChallenge(ResolveOAuthLogger(context), authOptions.SchemeName, authUri, context.TraceIdentifier);
+    LogAuthorizeChallenge(logger, authOptions.SchemeName, authUri, context.TraceIdentifier);
 
     return SetResponseRedirect(context.Response, authUri)!;
   }
 
-  public static string ChallengeOAuth<TOptions> (HttpContext context) where TOptions: OAuthOptions =>
+  public static string ChallengeOAuth<TOptions> (
+    HttpContext context,
+    ILogger logger)
+  where TOptions: OAuthOptions =>
     ChallengeOAuth(
       context,
       ResolveRequiredService<TOptions>(context),
-      ResolvePropertiesDataFormat<TOptions>(context),
-      ResolveTimeProvider<TOptions>(context).GetUtcNow()
-    );
-
+      ResolvePropertiesDataFormat(context),
+      ResolveTimeProvider(context).GetUtcNow(),
+      logger);
 }

@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Security.Authentication.OpenIdConnect;
 
@@ -10,9 +9,8 @@ partial class OpenIdConnectFuncs
     HttpContext context,
     AuthenticationProperties authProperties,
     TOptions oidcOptions,
-    OpenIdConnectConfiguration oidcConfiguration,
-    PropertiesDataFormat propertiesDataFormat,
-    SignOutFunc signOut)
+    SignOutFunc signOut,
+    ILogger logger)
   where TOptions : OpenIdConnectOptions
   {
     var signoutParams = await GetRequestParams(context.Request, context.RequestAborted);
@@ -20,25 +18,25 @@ partial class OpenIdConnectFuncs
     var principal = GetContextUser(context);
 
     var validateError = ValidateSignoutMessage(signoutMessage, principal);
-    if (validateError is not null) LogSignedOutWithFailure(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, validateError, context.TraceIdentifier);
+    if (validateError is not null) LogSignedOutWithFailure(logger, oidcOptions.SchemeName, validateError, context.TraceIdentifier);
     if (validateError is not null) return default;
 
     var redirectUri = await signOut(context, authProperties);
-    LogSignedOut(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, redirectUri!, context.TraceIdentifier);
+    LogSignedOut(logger, oidcOptions.SchemeName, redirectUri!, context.TraceIdentifier);
     return redirectUri;
   }
 
   public static Task<string?> SignOutOidc<TOptions>(
     HttpContext context,
     SignOutFunc signOut,
-    AuthenticationProperties? authProperties = default)
+    AuthenticationProperties authProperties,
+    ILogger logger)
   where TOptions : OpenIdConnectOptions =>
     SignOutOidc(
       context,
-      authProperties ?? CreateAuthenticationProperties(),
+      authProperties,
       ResolveRequiredService<TOptions>(context),
-      ResolveRequiredService<OpenIdConnectConfiguration>(context),
-      ResolvePropertiesDataFormat<TOptions>(context),
-      signOut
+      signOut,
+      logger
     );
 }

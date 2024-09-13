@@ -17,13 +17,14 @@ partial class OpenIdConnectFuncs
     StringDataFormat stringDataFormat,
     PostAuthorizationFunc<TOptions> postAuthorize,
     ExchangeCodeForTokensFunc<TOptions> exchangeCodeForTokens,
-    AccessUserInfoFunc<TOptions> accessUserInfo)
+    AccessUserInfoFunc<TOptions> accessUserInfo,
+    ILogger logger)
   where TOptions: OpenIdConnectOptions
   {
     var authResult = await postAuthorize(context, oidcOptions, oidcConfiguration, propertiesDataFormat, stringDataFormat);
-    if(authResult.Failure is not null) LogPostAuthorizationFailure(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, authResult.Failure, context.TraceIdentifier);
+    if(authResult.Failure is not null) LogPostAuthorizationFailure(logger, oidcOptions.SchemeName, authResult.Failure, context.TraceIdentifier);
     if(authResult.Failure is not null) return Fail(authResult.Failure);
-    LogPostAuthorization(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, context.TraceIdentifier);
+    LogPostAuthorization(logger, oidcOptions.SchemeName, context.TraceIdentifier);
 
     var authInfo = GetPostAuthorizationInfo(authResult)!;
     var authProperties = authInfo.AuthProperties;
@@ -31,9 +32,9 @@ partial class OpenIdConnectFuncs
     if(ShouldExchangeCodeForTokens(authInfo)) {
       tokenResult = await exchangeCodeForTokens(authInfo.Code!, authProperties, oidcOptions,
         oidcConfiguration, stringDataFormat, httpClient, GetRequestCookies(context.Request), context.RequestAborted);
-      if(tokenResult.Failure is not null) LogExchangeCodeForTokensFailure(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, tokenResult.Failure, context.TraceIdentifier);
+      if(tokenResult.Failure is not null) LogExchangeCodeForTokensFailure(logger, oidcOptions.SchemeName, tokenResult.Failure, context.TraceIdentifier);
       if(tokenResult.Failure is not null) return Fail(tokenResult.Failure);
-      LogExchangeCodeForTokens(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, context.TraceIdentifier);
+      LogExchangeCodeForTokens(logger, oidcOptions.SchemeName, context.TraceIdentifier);
     }
 
     var tokenInfo = GetTokenInfo(tokenResult);
@@ -47,30 +48,32 @@ partial class OpenIdConnectFuncs
     var userInfoResult = default(UserInfoResult);
     if (ShouldAccessUserInfo(oidcOptions, oidcConfiguration, tokenInfo)) {
       userInfoResult = await accessUserInfo(tokenInfo!.AccessToken!, securityToken, identity, oidcOptions, oidcConfiguration, httpClient, context.RequestAborted);
-      if (userInfoResult.Failure is not null) LogAccessUserInfoFailure(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, userInfoResult.Failure, context.TraceIdentifier);
+      if (userInfoResult.Failure is not null) LogAccessUserInfoFailure(logger, oidcOptions.SchemeName, userInfoResult.Failure, context.TraceIdentifier);
       if (userInfoResult.Failure is not null) return Fail(userInfoResult.Failure);
-      LogAccessUserInfo(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, context.TraceIdentifier);
+      LogAccessUserInfo(logger, oidcOptions.SchemeName, context.TraceIdentifier);
     }
 
     var principal = userInfoResult is not null?
       GetUserInfoResultPrincipal(userInfoResult):
       BuildClaimsPrincipal(oidcOptions, identity, "{}");
-    LogAuthenticated(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
+    LogAuthenticated(logger, oidcOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
     return Success(CreateAuthenticationTicket(principal, authProperties, oidcOptions.SchemeName));
   }
 
   static Task<AuthenticateResult> AuthenticateOidc<TOptions> (
-    HttpContext context)
+    HttpContext context,
+    ILogger logger)
   where TOptions: OpenIdConnectOptions =>
     AuthenticateOidc(
       context,
       ResolveRequiredService<TOptions>(context),
       ResolveRequiredService<OpenIdConnectConfiguration>(context),
-      ResolveHttpClient<TOptions>(context),
-      ResolvePropertiesDataFormat<TOptions>(context),
-      ResolveStringDataFormat<TOptions>(context),
+      ResolveHttpClient(context),
+      ResolvePropertiesDataFormat(context),
+      ResolveStringDataFormat(context),
       PostAuthorization,
       ExchangeCodeForTokens,
-      default!
+      AccessUserInfo,
+      logger
     );
 }

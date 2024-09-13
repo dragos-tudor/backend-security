@@ -5,12 +5,7 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
-  public static ILogger ResolveLogger (IServiceProvider services, string categoryName) => ResolveOptionalLogger(services, categoryName) ?? CreateLogger(services, categoryName);
+  public static ILoggerFactory ResolveLoggerFactory (IServiceProvider services) => ResolveService<ILoggerFactory>(services) ?? NullLoggerFactory.Instance;
 
-  public static ILogger? ResolveOptionalLogger (IServiceProvider services, string categoryName) => ResolveKeyedService<ILogger>(services, categoryName);
-
-  public static ILoggerFactory ResolveLoggerFactory (IServiceProvider services) => ResolveOptionalLoggerFactory(services) ?? NullLoggerFactory.Instance;
-
-  public static ILoggerFactory? ResolveOptionalLoggerFactory (IServiceProvider services) => ResolveService<ILoggerFactory>(services);
-
+  public static ILogger ResolveLogger (IServiceProvider services, string categoryName) => ResolveKeyedService<ILogger>(services, categoryName) ?? CreateLogger(services, categoryName);
 }

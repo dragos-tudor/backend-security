@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Logging.Abstractions;
 using static Security.Testing.Funcs;
 
 namespace Security.Authentication.OAuth;
@@ -24,8 +25,8 @@ partial class OAuthTests
     var authOptions = CreateOAuthOptions() with { AuthorizationEndpoint = "http://oauth/authorize" };
     var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     using var appServer = CreateHttpServer();
-    appServer.MapGet("/challenge", (HttpContext context) => ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.UtcNow));
-    appServer.MapGet("/callback", async delegate (HttpContext context) { return (await AuthenticateOAuth(context, authOptions, propertiesDataFormat, authClient, PostAuthorization, ExchangeCodeForTokens, AccessUserInfo)).Succeeded; });
+    appServer.MapGet("/challenge", (HttpContext context) => ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.UtcNow, NullLogger.Instance));
+    appServer.MapGet("/callback", async delegate (HttpContext context) { return (await AuthenticateOAuth(context, authOptions, propertiesDataFormat, authClient, PostAuthorization, ExchangeCodeForTokens, AccessUserInfo, NullLogger.Instance)).Succeeded; });
     await appServer.StartAsync();
     using var appClient = appServer.GetTestClient();
 

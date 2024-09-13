@@ -16,7 +16,8 @@ partial class CookiesFuncs
     ICookieManager cookieManager,
     TicketDataFormat ticketDataFormat,
     ITicketStore ticketStore,
-    DateTimeOffset currentUtc)
+    DateTimeOffset currentUtc,
+    ILogger logger)
   {
     SetAuthenticationPropertiesIssued(authProperties, currentUtc);
     SetAuthenticationPropertiesExpires(authProperties, currentUtc, authOptions.ExpireTimeSpan);
@@ -39,7 +40,7 @@ partial class CookiesFuncs
     ResetResponseCacheHeaders(context.Response);
     SetResponseRedirect(context.Response, GetRedirectUriOrQueryReturnUrl(context, authProperties, authOptions));
 
-    LogSignedInCookie(ResolveCookiesLogger(context), authOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
+    LogSignedInCookie(logger, authOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
     return authTicket;
   }
 
@@ -56,5 +57,6 @@ partial class CookiesFuncs
         ResolveRequiredService<ICookieManager>(context),
         ResolveRequiredService<TicketDataFormat>(context),
         ResolveRequiredService<ITicketStore>(context),
-        ResolveRequiredService<TimeProvider>(context).GetUtcNow());
+        ResolveRequiredService<TimeProvider>(context).GetUtcNow(),
+        ResolveCookiesLogger(context));
 }

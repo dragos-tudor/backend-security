@@ -5,6 +5,5 @@ namespace Security.Authentication.Twitter;
 
 partial class TwitterFuncs
 {
-  public readonly static Func<HttpContext, string?> ChallengeTwitterEndpoint =
-    ChallengeOAuth<TwitterOptions>;
+  public static string? ChallengeTwitterEndpoint (HttpContext context) => ChallengeOAuth<TwitterOptions>(context, ResolveTwitterLogger(context));
 }

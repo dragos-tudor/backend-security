@@ -67,7 +67,7 @@ partial class OpenIdConnectFuncs
         context,
         ResolveRequiredService<TOptions>(context),
         ResolveRequiredService<OpenIdConnectConfiguration>(context),
-        ResolvePropertiesDataFormat<TOptions>(context),
-        ResolveStringDataFormat<TOptions>(context)
+        ResolvePropertiesDataFormat(context),
+        ResolveStringDataFormat(context)
       );
 }

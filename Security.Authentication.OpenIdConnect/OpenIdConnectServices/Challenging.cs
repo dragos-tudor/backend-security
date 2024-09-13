@@ -14,7 +14,8 @@ partial class OpenIdConnectFuncs
     OpenIdConnectConfiguration oidcConfiguration,
     PropertiesDataFormat propertiesDataFormat,
     StringDataFormat stringDataFormat,
-    DateTimeOffset currentUtc)
+    DateTimeOffset currentUtc,
+    ILogger logger)
   where TOptions : OpenIdConnectOptions
   {
     var challengeMessage = CreateOpenIdConnectMessage();
@@ -33,21 +34,22 @@ partial class OpenIdConnectFuncs
     var authUri = await SetAuthorizationResponse(context, challengeMessage, oidcOptions, oidcConfiguration);
     SanitizeResponse(context.Response);
 
-    LogAuthorizeChallenge(ResolveOpenIdConnectLogger(context), oidcOptions.SchemeName, authUri!, context.TraceIdentifier);
+    LogAuthorizeChallenge(logger, oidcOptions.SchemeName, authUri!, context.TraceIdentifier);
     return authUri;
   }
 
   public static ValueTask<string?> ChallengeOidc<TOptions>(
     HttpContext context,
-    AuthenticationProperties authProperties)
+    AuthenticationProperties authProperties,
+    ILogger logger)
   where TOptions : OpenIdConnectOptions =>
       ChallengeOidc(
         context,
         authProperties,
         ResolveRequiredService<TOptions>(context),
         ResolveRequiredService<OpenIdConnectConfiguration>(context),
-        ResolvePropertiesDataFormat<TOptions>(context),
-        ResolveStringDataFormat<TOptions>(context),
-        ResolveTimeProvider<TOptions>(context).GetUtcNow()
-      );
+        ResolvePropertiesDataFormat(context),
+        ResolveStringDataFormat(context),
+        ResolveTimeProvider(context).GetUtcNow(),
+        logger);
 }

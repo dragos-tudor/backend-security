@@ -43,7 +43,7 @@
   - signin/signout funcs are used on specific endpoints/controller actions implememted by devs.
 - *remote authentication process* [OAuth2 protocol]:
   - when called, the *challenge endpoint* [eg. registered with *MapFacebook*] build and send an authorization request to authorization server.
-  - after processing the authorization request the authorization server redirect response to *callback endpoint* [eg. registered with *MapFacebook*]. That endpoint receive authorization server response and call *callback func* [eg. *CallbackFacebook*, *AuthorizeCallbackOAuth*]. The *callback func* has 2 steps:
+  - after processing the authorization request the authorization server redirect response to *callback endpoint* [eg. registered with *MapFacebook*]. That endpoint receive authorization server response and call *callback func* [eg. *CallbackFacebook*, *CallbackOAuth*]. The *callback func* has 2 steps:
     - authentication: *AuthenticateOAuth* oauth authentication func has 3 substeps:
       * *PostAuthorization* - validate the authorization code and the request from the authorization server [local].
       * *ExchangeCodeForTokens* - exchange with the authorization server the authorization code for the access [and refresh] tokens [remote].
