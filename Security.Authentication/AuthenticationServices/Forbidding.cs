@@ -1,21 +1,22 @@
 
-using static System.Net.HttpStatusCode;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication;
+using static System.Net.HttpStatusCode;
 
 namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
-  public static string? ForbidAuth<TOptions> (HttpContext context, TOptions authOptions, ILogger logger, AuthenticationProperties? authProperties = default) where TOptions: AuthenticationOptions
+  public static string? ForbidAuth<TOptions> (HttpContext context, TOptions authOptions, ILogger logger) where TOptions: AuthenticationOptions
   {
-    if (!ExistsAuthenticationProperties(authProperties)) {
-      SetResponseStatus(context, Forbidden);
+    SetResponseStatus(context, Forbidden);
 
-      LogForbidden(logger, authOptions.SchemeName, context.TraceIdentifier);
-      return default;
-    }
+    LogForbidden(logger, authOptions.SchemeName, context.TraceIdentifier);
+    return default;
+  }
 
+  public static string? ForbidAuth<TOptions> (HttpContext context, TOptions authOptions, AuthenticationProperties authProperties, ILogger logger) where TOptions: AuthenticationOptions
+  {
     var returnUri = GetAuthenticationPropertiesRedirectUri(authProperties!) ?? BuildRelativeUri(context.Request);
     var forbiddenPath = BuildForbidPath(authOptions, returnUri);
     SetResponseRedirect(context.Response, forbiddenPath);

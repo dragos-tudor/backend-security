@@ -7,15 +7,16 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
-  public static string? ChallengeAuth<TOptions> (HttpContext context, TOptions authOptions, ILogger logger, AuthenticationProperties? authProperties = default) where TOptions: AuthenticationOptions
+  public static string? ChallengeAuth<TOptions> (HttpContext context, TOptions authOptions, ILogger logger) where TOptions: AuthenticationOptions
   {
-    if (!ExistsAuthenticationProperties(authProperties)) {
-      SetResponseStatus(context, Unauthorized);
+    SetResponseStatus(context, Unauthorized);
 
-      LogChallenged(logger, authOptions.SchemeName, context.TraceIdentifier);
-      return default;
-    }
+    LogChallenged(logger, authOptions.SchemeName, context.TraceIdentifier);
+    return default;
+  }
 
+  public static string? ChallengeAuth<TOptions> (HttpContext context, TOptions authOptions, AuthenticationProperties authProperties, ILogger logger) where TOptions: AuthenticationOptions
+  {
     var returnUri = GetAuthenticationPropertiesRedirectUri(authProperties!) ?? BuildRelativeUri(context.Request);
     var challengePath = BuildChallengePath(authOptions, returnUri);
     SetResponseRedirect(context.Response, challengePath);

@@ -61,7 +61,11 @@
   - to have different services from those registered on DI.
   - to encapsulate and carry on those services through the authentication process [reducing the number of parameters so].
 - *AuthenticateOAuth* oauth authentication func use template method design pattern allowing oauth libraries to override/decorate when neccessary *postAuthenticate*, *exchangeCodeForTokens* or *accessUserInfo* authentication substeps [eg. *AuthenticateTwitter*, *AuthenticateFacebook*].
-- *Challenge** and *Forbid** funcs have different behaviour based on *AuthenticationProperties* param existence. When param is not null then both *Challenge** and *Forbid** funcs redirect response to *LoginPath* respectively *AccessDeniedPath* authentication options props. When param is null then *Challenge** and *Forbid** funcs set response status code with 401 respectively 403 without redirection. For bearer tokens *Challenge** and *Forbid** use funcs without redirection.
+- generic *ChallengeAuth* and *ForbidAuth* funcs have 2 [overloaded] implementations w/wo *AuthenticationProperties* param:
+  - with *AuthenticationProperties* param funcs redirect response to *LoginPath* respectively *AccessDeniedPath* authentication options props.
+  - without *AuthenticationProperties* param funcs set response status code with 401 respectively 403 without redirection.
+  - facebook, google, twitter and bearer tokens *Challenge** and *Forbid** funcs have no redirection. webapi oriented functionality [app http clients/browser fetch consumers].
+  - cookie *ChallengeCookie* and *ForbidCookie* funcs have both implementations w/wo redirection.
 - redirecting funcs:
   - *Challenge** and *Forbid** funcs [behaviour described above].
   - *CallbackOAuth* and *CallbackOidc* funcs redirect callback authentication error to *AccessDeniedPath* or *ErrorPath* authentication options props depending of error type.

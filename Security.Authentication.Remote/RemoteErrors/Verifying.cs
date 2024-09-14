@@ -9,12 +9,9 @@ partial class RemoteFuncs
   public const string AccessDeniedToken = "access_denied";
   public const string ErrorKey = "error";
 
-  public static bool IsAccessDeniedError (HttpRequest request, string errorKey = ErrorKey) =>
-    request.Query[errorKey] == AccessDeniedToken;
+  public static bool IsAccessDeniedError (HttpRequest request, string errorKey = ErrorKey) => request.Query[errorKey] == AccessDeniedToken;
 
-  public static bool IsAccessDeniedError (string? error) =>
-    error == AccessDeniedError;
+  public static bool IsAccessDeniedError (string? error) => error == AccessDeniedError;
 
-  public static bool IsGenericError (HttpRequest request) =>
-    IsNotEmptyString(request.Query[ErrorKey]);
+  public static bool IsGenericError (HttpRequest request) => IsNotEmptyString(request.Query[ErrorKey]);
 }

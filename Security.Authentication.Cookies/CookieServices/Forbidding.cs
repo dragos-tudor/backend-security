@@ -6,6 +6,9 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  public static string? ForbidCookie (HttpContext context, AuthenticationProperties? authProperties = default) =>
-    ForbidAuth (context, ResolveRequiredService<CookieAuthenticationOptions>(context), ResolveCookiesLogger(context), authProperties);
+  public static string? ForbidCookie (HttpContext context) =>
+    ForbidAuth (context, ResolveRequiredService<CookieAuthenticationOptions>(context), ResolveCookiesLogger(context));
+
+  public static string? ForbidCookie (HttpContext context, AuthenticationProperties authProperties) =>
+    ForbidAuth (context, ResolveRequiredService<CookieAuthenticationOptions>(context), authProperties, ResolveCookiesLogger(context));
 }
