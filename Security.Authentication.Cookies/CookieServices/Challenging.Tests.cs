@@ -11,7 +11,7 @@ namespace Security.Authentication.Cookies;
 partial class CookiesTests {
 
   [TestMethod]
-  public async Task Unautenticated_user_resource_request__challenge__login_redirection()
+  public async Task Unautenticated_user_resource_request__challenge__unauthenticated_and_login_path()
   {
     using var server = CreateHttpServer(services => services.AddCookiesServices());
     var authProperties = CreateAuthenticationProperties();
@@ -21,8 +21,8 @@ partial class CookiesTests {
     using var client = server.GetTestClient();
     using var response = await client.GetAsync("/resource");
 
-    Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
-    Assert.AreEqual("/Account/Login?ReturnUrl=/resource", GetResponseMessageLocation(response));
+    Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
+    Assert.AreEqual("/Account/Login?ReturnUrl=%2Fresource", await ReadResponseMessageContent(response));
   }
 
   [TestMethod]

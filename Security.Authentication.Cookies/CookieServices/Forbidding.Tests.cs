@@ -11,7 +11,7 @@ namespace Security.Authentication.Cookies;
 partial class CookiesTests {
 
   [TestMethod]
-  public async Task Unautenticated_user_resource_request__forbid__access_denied_redirection()
+  public async Task Unautenticated_user_resource_request__forbid__forbidden_and_access_denied_path()
   {
     using var server = CreateHttpServer(services => services.AddCookiesServices());
     var authProperties = CreateAuthenticationProperties();
@@ -21,8 +21,8 @@ partial class CookiesTests {
     using var client = server.GetTestClient();
     using var response = await client.GetAsync("/resource");
 
-    Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode);
-    Assert.AreEqual("/Account/AccessDenied?ReturnUrl=/resource", GetResponseMessageLocation(response));
+    Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
+    Assert.AreEqual("/Account/AccessDenied?ReturnUrl=%2Fresource", await ReadResponseMessageContent(response));
   }
 
   [TestMethod]

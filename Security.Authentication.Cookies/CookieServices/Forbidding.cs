@@ -1,4 +1,5 @@
 
+using System.Net;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
@@ -6,9 +7,24 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  public static string? ForbidCookie (HttpContext context) =>
-    ForbidAuth (context, ResolveRequiredService<CookieAuthenticationOptions>(context), ResolveCookiesLogger(context));
+  public static string ForbidCookie (
+    HttpContext context,
+    AuthenticationProperties authProperties,
+    CookieAuthenticationOptions authOptions,
+    ILogger logger)
+  {
+    SetResponseStatus(context, HttpStatusCode.Forbidden);
+    var returnUri = GetAuthenticationPropertiesRedirectUri(authProperties!) ?? BuildRelativeUri(context.Request);
+    var forbidPath = BuildForbidPath(authOptions, returnUri);
 
-  public static string? ForbidCookie (HttpContext context, AuthenticationProperties authProperties) =>
-    ForbidAuth (context, ResolveRequiredService<CookieAuthenticationOptions>(context), authProperties, ResolveCookiesLogger(context));
+    LogForbidden(logger, authOptions.SchemeName, forbidPath, context.TraceIdentifier);
+    return forbidPath;
+  }
+
+  public static string ForbidCookie (HttpContext context, AuthenticationProperties authProperties) =>
+    ForbidCookie (
+      context,
+      authProperties,
+      ResolveRequiredService<CookieAuthenticationOptions>(context),
+      ResolveCookiesLogger(context));
 }

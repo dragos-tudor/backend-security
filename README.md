@@ -61,15 +61,14 @@
   - to have different services from those registered on DI.
   - to encapsulate and carry on those services through the authentication process [reducing the number of parameters so].
 - *AuthenticateOAuth* oauth authentication func use template method design pattern allowing oauth libraries to override/decorate when neccessary *postAuthenticate*, *exchangeCodeForTokens* or *accessUserInfo* authentication substeps [eg. *AuthenticateTwitter*, *AuthenticateFacebook*].
-- generic *ChallengeAuth* and *ForbidAuth* funcs have 2 [overloaded] implementations w/wo *AuthenticationProperties* param:
-  - with *AuthenticationProperties* param funcs redirect response to *LoginPath* respectively *AccessDeniedPath* authentication options props.
-  - without *AuthenticationProperties* param funcs set response status code with 401 respectively 403 without redirection.
-  - facebook, google, twitter and bearer tokens *Challenge** and *Forbid** funcs have no redirection. webapi oriented functionality [app http clients/browser fetch consumers].
-  - cookie *ChallengeCookie* and *ForbidCookie* funcs have both implementations w/wo redirection.
+- *Challenge** and *Forbid** funcs [excepting oauth and oidc]:
+  - webapi oriented functionality [app http clients/browser fetch consumers] => no redirection.
+  - set responses status code with 401 respectively 403.
+  - cookie *ChallengeCookie* and *ForbidCookie* funcs return *login path* and *access denied path* as text content.
 - redirecting funcs:
-  - *Challenge** and *Forbid** funcs [behaviour described above].
-  - *CallbackOAuth* and *CallbackOidc* funcs redirect callback authentication error to *AccessDeniedPath* or *ErrorPath* authentication options props depending of error type.
-  - *SigninCookie* and *SignoutCookie* could redirect to *AuthenticationPropeties.ReturnUri* prop or query param *ReturnUrlParameter* if one of both exists.
+  - *ChallengeOAuth* and *ChallengeOidc* funcs redirect to authorization server [*ChallengeOidc* could use form instead of redirection].
+  - *CallbackOAuth* and *CallbackOidc* funcs redirect to original url or when callback authentication error to *AccessDeniedPath* or *ErrorPath* authentication options props depending of error type.
+  - *SigninCookie* and *SignoutCookie* could redirect to *AuthenticationPropeties.ReturnUri* prop/query param *ReturnUrlParameter* or when none exists no redirection keeping webapi oriented functionality.
 - even *OAuth2* is an authorization protocol the process is named *remote authentication* because when succedded the authenticated principal is signed in.
 - even *OpenIdConnect* protocol is more secure and robust than *OAuth2* protocol is still not largely adopted by the community. The *OpenIdConnect* protocol seems to be overengineered, overcomplicated than the *OAuth2* protocol. The *OpenIdConnect* client implementation is more complicated than the *OAuth2* implementation [see *OpenIdConnectHandler.cs*]. The *OpenIdConnect* protocol was implemented to increase the understanding level of *OAuth2* protocol! making some parallels between both protocols. *OpenIdConnect* implementation needs to be tested, refined, internally used so.
 
