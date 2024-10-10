@@ -15,9 +15,11 @@ partial class BearerTokenFuncs
     DateTimeOffset currentUtc)
   {
     SetAuthenticationPropertiesExpires(authProperties, currentUtc, tokenOptions.BearerTokenExpiration);
-
     var bearerTokenTicket = CreateBearerTokenTicket(principal, authProperties, tokenOptions);
-    var refreshTokenTicket = CreateRefreshTicket(principal, tokenOptions, currentUtc);
+
+    var refreshAuthProperties = new AuthenticationProperties();
+    SetAuthenticationPropertiesExpires(refreshAuthProperties, currentUtc, tokenOptions.RefreshTokenExpiration);
+    var refreshTokenTicket = CreateRefreshTicket(principal, refreshAuthProperties, tokenOptions);
 
     var token = CreateAccessTokenResponse(bearerTokenTicket, refreshTokenTicket, tokenOptions, bearerTokenProtector, refreshTokenProtector);
     var tokenJsonTypeInfo = ResolveAccessTokenResponseJsonTypeInfo(context);

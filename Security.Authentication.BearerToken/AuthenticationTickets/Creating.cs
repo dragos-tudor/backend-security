@@ -12,11 +12,8 @@ partial class BearerTokenFuncs
 
   static AuthenticationTicket CreateRefreshTicket(
     ClaimsPrincipal principal,
-    BearerTokenOptions tokenOptions,
-    DateTimeOffset currentUtc)
-  {
-    var authProperties = new AuthenticationProperties();
-    SetAuthenticationPropertiesExpires(authProperties, currentUtc, tokenOptions.BearerTokenExpiration);
-    return new (principal, authProperties, $"{tokenOptions.SchemeName}:RefreshToken");
-  }
+    AuthenticationProperties authProperties,
+    BearerTokenOptions tokenOptions) =>
+      new (principal, authProperties, $"{tokenOptions.SchemeName}:RefreshToken");
+
 }
