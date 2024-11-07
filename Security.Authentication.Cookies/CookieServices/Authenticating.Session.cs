@@ -27,8 +27,8 @@ partial class CookiesFuncs
     if (sessionTicket is null) return Fail(MissingSessionTicket);
 
     var authResult = GetAuthenticationTicketState(sessionTicket, currentUtc, authOptions) switch {
-      AuthenticationTicketState.ExpiredTicket => Fail(TicketExpired),
-      AuthenticationTicketState.RenewableTicket => Success(RenewAuthenticationTicket(sessionTicket, currentUtc)),
+      AuthenticationTicketState.Expired => Fail(TicketExpired),
+      AuthenticationTicketState.Renewable => Success(RenewAuthenticationTicket(sessionTicket, currentUtc)),
       _ => Success(sessionTicket)
     };
 

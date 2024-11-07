@@ -3,8 +3,7 @@
   "customizations": {
     "vscode": {
 	    "extensions": [
-        "ms-dotnettools.csharp",
-        "icsharpcode.ilspy-vscode"
+        "ms-dotnettools.csharp"
       ]
 	  }
 	},

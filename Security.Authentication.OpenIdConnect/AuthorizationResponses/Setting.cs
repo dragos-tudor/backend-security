@@ -8,17 +8,17 @@ partial class OpenIdConnectFuncs
 {
   static async ValueTask<string?> SetAuthorizationResponse(
     HttpContext context,
-    OpenIdConnectMessage oiedMessage,
+    OpenIdConnectMessage oidcMessage,
     OpenIdConnectOptions oidcOptions,
     OpenIdConnectConfiguration oidcConfiguration)
   {
     if (IsRedirectGetOpenIdConnectAuthenticationMethod(oidcOptions))
-      return SetResponseRedirect(context.Response, oiedMessage.CreateAuthenticationRequestUrl());
+      return SetResponseRedirect(context.Response, oidcMessage.CreateAuthenticationRequestUrl());
 
     if (IsFormPostOpenIdConnectAuthenticationMethod(oidcOptions))
     {
       ResetResponseCacheHeaders(context.Response);
-      await WriteResponseTextContent(context.Response, oiedMessage.BuildFormPost(), context.RequestAborted);
+      await WriteResponseTextContent(context.Response, oidcMessage.BuildFormPost(), context.RequestAborted);
       return oidcConfiguration.AuthorizationEndpoint;
     }
 

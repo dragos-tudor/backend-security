@@ -34,8 +34,8 @@ partial class CookiesFuncs
 
     var cookieOptions = BuildCookieOptions(cookieBuilder, cookieTicket.Properties!, context);
     var authResult = GetAuthenticationTicketState(cookieTicket, currentUtc, authOptions) switch {
-      AuthenticationTicketState.ExpiredTicket => Fail(TicketExpired),
-      AuthenticationTicketState.RenewableTicket => Success(RenewAuthenticationTicket(cookieTicket, currentUtc)),
+      AuthenticationTicketState.Expired => Fail(TicketExpired),
+      AuthenticationTicketState.Renewable => Success(RenewAuthenticationTicket(cookieTicket, currentUtc)),
       _ => Success(cookieTicket)
     };
 

@@ -70,7 +70,7 @@
   - *CallbackOAuth* and *CallbackOidc* funcs redirect to original url or when callback authentication error to *AccessDeniedPath* or *ErrorPath* authentication options props depending of error type.
   - *SigninCookie* and *SignoutCookie* could redirect to *AuthenticationPropeties.ReturnUri* prop/query param *ReturnUrlParameter* or when none exists no redirection keeping webapi oriented functionality.
 - even *OAuth2* is an authorization protocol the process is named *remote authentication* because when succedded the authenticated principal is signed in.
-- even *OpenIdConnect* protocol is more secure and robust than *OAuth2* protocol is still not largely adopted by the community. The *OpenIdConnect* protocol seems to be overengineered, overcomplicated than the *OAuth2* protocol. The *OpenIdConnect* client implementation is more complicated than the *OAuth2* implementation [see *OpenIdConnectHandler.cs*]. The *OpenIdConnect* protocol was implemented to increase the understanding level of *OAuth2* protocol! making some parallels between both protocols. *OpenIdConnect* implementation needs to be tested, refined, internally used so.
+- *OpenIdConnect* module is work-in-progress.
 
 ### Project goals
 - to untangle/demystify the ASPNET authentication/authorization mechanisms and local/remote processes.
