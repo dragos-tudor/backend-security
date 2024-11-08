@@ -12,7 +12,7 @@ partial class CookiesFuncs
     string cookieName,
     TicketDataFormat ticketDataFormat)
   {
-    if(GetAuthenticationCookie(context, cookieManager, cookieName) is not string cookie) return default;
+    if(GetCookie(context, cookieManager, cookieName) is not string cookie) return default;
     if(UnprotectAuthenticationTicket(cookie, ticketDataFormat) is not AuthenticationTicket cookieTicket) return default;
     return GetSessionTicketId(cookieTicket.Principal);
   }

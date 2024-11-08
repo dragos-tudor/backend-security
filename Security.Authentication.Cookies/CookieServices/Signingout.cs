@@ -10,21 +10,20 @@ partial class CookiesFuncs
   public static async ValueTask<string?> SignOutCookie (
     HttpContext context,
     AuthenticationProperties authProperties,
-    CookieAuthenticationOptions authOptions,
-    CookieBuilder cookieBuilder,
+    AuthenticationCookieOptions authOptions,
     ICookieManager cookieManager,
     TicketDataFormat ticketDataFormat,
     ITicketStore ticketStore,
     ILogger logger)
   {
-    var cookieOptions = BuildCookieOptions(cookieBuilder, authProperties, context);
-    var cookieName = GetCookieName(cookieBuilder, authOptions);
+    var cookieName = GetCookieName(authOptions);
+    var cookieOptions = BuildCookieOptions(authProperties, context);
 
     if (IsSessionBasedCookie(ticketStore) &&
         ExtractSessionTicketId(context, cookieManager, cookieName, ticketDataFormat) is string ticketId)
       await RemoveSessionTicket(ticketStore, ticketId);
 
-    DeleteAuthenticationCookie(context, cookieManager, cookieName, cookieOptions);
+    DeleteCookie(context, cookieManager, cookieName, cookieOptions);
     ResetResponseCacheHeaders(context.Response);
 
     var redirectUri = GetRedirectUriOrQueryReturnUrl(context, authProperties, authOptions);
@@ -40,8 +39,7 @@ partial class CookiesFuncs
       SignOutCookie(
         context,
         authProperties ?? CreateCookieAuthenticationProperties(),
-        ResolveRequiredService<CookieAuthenticationOptions>(context),
-        ResolveRequiredService<CookieBuilder>(context),
+        ResolveRequiredService<AuthenticationCookieOptions>(context),
         ResolveRequiredService<ICookieManager>(context),
         ResolveRequiredService<TicketDataFormat>(context),
         ResolveRequiredService<ITicketStore>(context),

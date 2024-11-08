@@ -13,8 +13,7 @@ partial class CookiesFuncs
 
   internal static async Task<AuthenticateResult> AuthenticateSessionCookie(
     HttpContext context,
-    CookieAuthenticationOptions authOptions,
-    CookieBuilder cookieBuilder,
+    AuthenticationCookieOptions authOptions,
     ICookieManager cookieManager,
     TicketDataFormat ticketDataFormat,
     ITicketStore ticketStore,
@@ -35,11 +34,11 @@ partial class CookiesFuncs
     if (IsExpiredAuthenticationTicket(authResult)) await RemoveSessionTicket(ticketStore, ticketId, context.RequestAborted);
     if (IsRenewedAuthenticationTicket(authResult, currentUtc)) await RenewSessionTicket(ticketStore, authResult.Ticket!, ticketId, context.RequestAborted);
 
-    var cookieName = GetCookieName(cookieBuilder, authOptions);
-    var cookieOptions = BuildCookieOptions(cookieBuilder, sessionTicket.Properties!, context);
+    var cookieName = GetCookieName(authOptions);
+    var cookieOptions = BuildCookieOptions(sessionTicket.Properties!, context);
 
-    if (IsExpiredAuthenticationTicket(authResult)) DeleteAuthenticationCookie(context, cookieManager, cookieName, cookieOptions);
-    if (IsRenewedAuthenticationTicket(authResult, currentUtc)) AppendAuthenticationCookie(context, cookieManager, cookieName,
+    if (IsExpiredAuthenticationTicket(authResult)) DeleteCookie(context, cookieManager, cookieName, cookieOptions);
+    if (IsRenewedAuthenticationTicket(authResult, currentUtc)) AppendCookie(context, cookieManager, cookieName,
       ProtectAuthenticationTicket(CreateSessionIdTicket(ticketId, authOptions.SchemeName), ticketDataFormat), cookieOptions);
 
     return authResult;
@@ -47,12 +46,11 @@ partial class CookiesFuncs
 
   internal static Task<AuthenticateResult> AuthenticateSessionCookie(
     HttpContext context,
-    CookieAuthenticationOptions authOptions,
+    AuthenticationCookieOptions authOptions,
     string? ticketId) =>
       AuthenticateSessionCookie(
         context,
         authOptions,
-        ResolveRequiredService<CookieBuilder>(context),
         ResolveRequiredService<ICookieManager>(context),
         ResolveRequiredService<TicketDataFormat>(context),
         ResolveRequiredService<ITicketStore>(context),

@@ -14,33 +14,32 @@ partial class CookiesFuncs
 
   public static async ValueTask<AuthenticateResult> AuthenticateCookie (
     HttpContext context,
-    CookieAuthenticationOptions authOptions,
-    CookieBuilder cookieBuilder,
+    AuthenticationCookieOptions authOptions,
     ICookieManager cookieManager,
     TicketDataFormat ticketDataFormat,
     ITicketStore ticketStore,
     DateTimeOffset currentUtc)
   {
-    var cookieName = GetCookieName(cookieBuilder, authOptions);
-    var cookie = GetAuthenticationCookie(context, cookieManager, cookieName);
-    if (!ExistsAuthenticationCookie(cookie)) return NoResult();
+    var cookieName = GetCookieName(authOptions);
+    var cookie = GetCookie(context, cookieManager, cookieName);
+    if (!ExistsCookie(cookie)) return NoResult();
 
     var cookieTicket = UnprotectAuthenticationTicket(cookie, ticketDataFormat);
     if (!ExistsAuthenticationTicket(cookieTicket)) return Fail(UnprotectTicketFailed);
 
     if (IsSessionBasedCookie(ticketStore))
-      return await AuthenticateSessionCookie(context, authOptions, cookieBuilder, cookieManager,
+      return await AuthenticateSessionCookie(context, authOptions, cookieManager,
         ticketDataFormat, ticketStore, currentUtc, GetSessionTicketId(cookieTicket.Principal));
 
-    var cookieOptions = BuildCookieOptions(cookieBuilder, cookieTicket.Properties!, context);
+    var cookieOptions = BuildCookieOptions(cookieTicket.Properties!, context);
     var authResult = GetAuthenticationTicketState(cookieTicket, currentUtc, authOptions) switch {
       AuthenticationTicketState.Expired => Fail(TicketExpired),
       AuthenticationTicketState.Renewable => Success(RenewAuthenticationTicket(cookieTicket, currentUtc)),
       _ => Success(cookieTicket)
     };
 
-    if (IsExpiredAuthenticationTicket(authResult)) DeleteAuthenticationCookie(context, cookieManager, cookieName, cookieOptions);
-    if (IsRenewedAuthenticationTicket(authResult, currentUtc)) AppendAuthenticationCookie(context, cookieManager, cookieName,
+    if (IsExpiredAuthenticationTicket(authResult)) DeleteCookie(context, cookieManager, cookieName, cookieOptions);
+    if (IsRenewedAuthenticationTicket(authResult, currentUtc)) AppendCookie(context, cookieManager, cookieName,
       ProtectAuthenticationTicket(cookieTicket, ticketDataFormat), cookieOptions);
 
     return authResult;
@@ -48,11 +47,10 @@ partial class CookiesFuncs
 
   public static async Task<AuthenticateResult> AuthenticateCookie (HttpContext context)
   {
-    var authOptions = ResolveRequiredService<CookieAuthenticationOptions>(context);
+    var authOptions = ResolveRequiredService<AuthenticationCookieOptions>(context);
     var authResult = await AuthenticateCookie(
       context,
       authOptions,
-      ResolveRequiredService<CookieBuilder>(context),
       ResolveRequiredService<ICookieManager>(context),
       ResolveRequiredService<TicketDataFormat>(context),
       ResolveRequiredService<ITicketStore>(context),

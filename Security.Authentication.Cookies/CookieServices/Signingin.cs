@@ -11,8 +11,7 @@ partial class CookiesFuncs
     HttpContext context,
     ClaimsPrincipal principal,
     AuthenticationProperties authProperties,
-    CookieAuthenticationOptions authOptions,
-    CookieBuilder cookieBuilder,
+    AuthenticationCookieOptions authOptions,
     ICookieManager cookieManager,
     TicketDataFormat ticketDataFormat,
     ITicketStore ticketStore,
@@ -22,8 +21,8 @@ partial class CookiesFuncs
     SetAuthenticationPropertiesIssued(authProperties, currentUtc);
     SetAuthenticationPropertiesExpires(authProperties, currentUtc, authOptions.ExpireTimeSpan);
 
-    var cookieName = GetCookieName(cookieBuilder, authOptions);
-    var cookieOptions = BuildCookieOptions(cookieBuilder, authProperties, context);
+    var cookieName = GetCookieName(authOptions);
+    var cookieOptions = BuildCookieOptions(authProperties, context);
 
     var authTicket = CreateAuthenticationTicket(principal, authProperties, authOptions.SchemeName);
     var cookieTicket = IsSessionBasedCookie(ticketStore)?
@@ -36,7 +35,7 @@ partial class CookiesFuncs
       authTicket;
 
     var protectedTicket = ProtectAuthenticationTicket(cookieTicket, ticketDataFormat);
-    AppendAuthenticationCookie(context, cookieManager, cookieName, protectedTicket, cookieOptions);
+    AppendCookie(context, cookieManager, cookieName, protectedTicket, cookieOptions);
     ResetResponseCacheHeaders(context.Response);
 
     var redirectUri = GetRedirectUriOrQueryReturnUrl(context, authProperties, authOptions);
@@ -54,8 +53,7 @@ partial class CookiesFuncs
         context,
         principal,
         authProperties ?? CreateCookieAuthenticationProperties(),
-        ResolveRequiredService<CookieAuthenticationOptions>(context),
-        ResolveRequiredService<CookieBuilder>(context),
+        ResolveRequiredService<AuthenticationCookieOptions>(context),
         ResolveRequiredService<ICookieManager>(context),
         ResolveRequiredService<TicketDataFormat>(context),
         ResolveRequiredService<ITicketStore>(context),

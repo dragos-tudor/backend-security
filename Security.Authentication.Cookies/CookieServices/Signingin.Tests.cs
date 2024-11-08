@@ -16,7 +16,7 @@ partial class CookiesTests {
   [TestMethod]
   public async Task Signin_request__signin__authentication_cookie()
   {
-    var cookieOptions = CreateCookieAuthenticationOptions() with { SchemeName = "CookiesScheme" };
+    var cookieOptions = CreateAuthenticationCookieOptions("CookieName", "CookiesScheme");
     using var server = CreateHttpServer(services => services.AddCookiesServices(cookieOptions));
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("CookiesScheme", "user")).ToString());
@@ -26,7 +26,7 @@ partial class CookiesTests {
     using var response = await client.PostAsync("/api/account/signin");
 
     Assert.IsTrue(response.IsSuccessStatusCode);
-    StringAssert.Contains(GetResponseMessageCookie(response), "CookiesScheme", StringComparison.Ordinal);
+    StringAssert.Contains(GetResponseMessageCookie(response), "CookieName", StringComparison.Ordinal);
     StringAsserts.NotContains(GetResponseMessageCookie(response)!, "expires=Thu, 01 Jan 1970", StringComparison.Ordinal);
   }
 
@@ -34,7 +34,7 @@ partial class CookiesTests {
   public async Task Signin_non_persisting_cookie_request__signin__non_persisted_authentication_cookie()
   {
     var nonPersistedProps = new AuthenticationProperties(){ IsPersistent = false };
-    using var server = CreateHttpServer(services => services.AddCookiesServices(CreateCookieAuthenticationOptions()));
+    using var server = CreateHttpServer(services => services.AddCookiesServices(CreateAuthenticationCookieOptions()));
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal(CookieAuthenticationDefaults.AuthenticationScheme, "user"), nonPersistedProps).ToString());
     await server.StartAsync();
@@ -50,7 +50,7 @@ partial class CookiesTests {
   public async Task Signin_request_with_return_url__signin__response_redirected_to_return_url()
   {
     var GetAuthProperties = (HttpContext context) => new AuthenticationProperties() { RedirectUri  = context.Request.Form["redirect_url"] };
-    using var server = CreateHttpServer(services => services.AddCookiesServices(CreateCookieAuthenticationOptions()));
+    using var server = CreateHttpServer(services => services.AddCookiesServices(CreateAuthenticationCookieOptions()));
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/api/accounts/signin", (HttpContext context) => SignInCookie(context,
       CreateNamedClaimsPrincipal(CookieAuthenticationDefaults.AuthenticationScheme, "user"),
@@ -69,7 +69,7 @@ partial class CookiesTests {
   public async Task Signin_session_based_request__signin__session_based_authentication_cookie()
   {
     var ticketStore = new FakeTicketStore();
-    using var server = CreateHttpServer(services => services.AddCookiesServices(CreateCookieAuthenticationOptions(), ticketStore));
+    using var server = CreateHttpServer(services => services.AddCookiesServices(CreateAuthenticationCookieOptions(), ticketStore));
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal(CookieAuthenticationDefaults.AuthenticationScheme, "user")).ToString());
     await server.StartAsync();
@@ -86,7 +86,7 @@ partial class CookiesTests {
   public async Task Signin_twice_session_based_request__signin__session_based_authentication_cookie()
   {
     var ticketStore = new FakeTicketStore();
-    var cookieOptions = CreateCookieAuthenticationOptions() with { SchemeName = "CookiesScheme" };
+    var cookieOptions = CreateAuthenticationCookieOptions() with { SchemeName = "CookiesScheme" };
     using var server = CreateHttpServer(services => services.AddCookiesServices(cookieOptions, ticketStore));
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("CookiesScheme", "user")).ToString());

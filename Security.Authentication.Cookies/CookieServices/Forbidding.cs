@@ -10,7 +10,7 @@ partial class CookiesFuncs
   public static string ForbidCookie (
     HttpContext context,
     AuthenticationProperties authProperties,
-    CookieAuthenticationOptions authOptions,
+    AuthenticationCookieOptions authOptions,
     ILogger logger)
   {
     SetResponseStatus(context, HttpStatusCode.Forbidden);
@@ -25,6 +25,6 @@ partial class CookiesFuncs
     ForbidCookie (
       context,
       authProperties,
-      ResolveRequiredService<CookieAuthenticationOptions>(context),
+      ResolveRequiredService<AuthenticationCookieOptions>(context),
       ResolveCookiesLogger(context));
 }

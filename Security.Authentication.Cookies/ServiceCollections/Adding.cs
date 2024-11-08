@@ -9,17 +9,16 @@ namespace Security.Authentication.Cookies;
 partial class CookiesFuncs {
 
   public static IServiceCollection AddCookiesServices (this IServiceCollection services) =>
-      AddCookiesServices(services, CreateCookieAuthenticationOptions());
+      AddCookiesServices(services, CreateAuthenticationCookieOptions());
 
   public static IServiceCollection AddCookiesServices (
     this IServiceCollection services,
-    CookieAuthenticationOptions authOptions,
+    AuthenticationCookieOptions authOptions,
     ITicketStore? ticketStore = default,
     CookieBuilder? cookieBuilder = default,
     IDataProtectionProvider? dataProtectionProvider = default) =>
       services
         .AddSingleton((services) => authOptions)
-        .AddSingleton((services) => cookieBuilder ?? CreateCookieBuilder())
         .AddSingleton<ICookieManager, ChunkingCookieManager>()
         .AddSingleton((services) =>
           CreateTicketDataFormat(dataProtectionProvider ?? ResolveRequiredService<IDataProtectionProvider>(services), authOptions.SchemeName))
