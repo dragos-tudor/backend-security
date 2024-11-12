@@ -16,10 +16,4 @@ partial class BearerTokenFuncs
     LogChallenged(logger, authOptions.SchemeName, context.TraceIdentifier);
     return string.Empty;
   }
-
-  public static string ChallengeBearerToken(HttpContext context) =>
-    ChallengeBearerToken(
-      context,
-      ResolveRequiredService<BearerTokenOptions>(context),
-      ResolveBearerTokenLogger(context));
 }

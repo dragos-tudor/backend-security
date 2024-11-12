@@ -29,18 +29,4 @@ partial class BearerTokenFuncs
     LogSignInBearerToken(logger, tokenOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
     return bearerTokenTicket;
   }
-
-  public static Task<AuthenticationTicket> SignInBearerToken(
-    HttpContext context,
-    ClaimsPrincipal principal,
-    AuthenticationProperties? authProperties = default) =>
-      SignInBearerToken(
-        context,
-        principal,
-        authProperties ?? new AuthenticationProperties(),
-        ResolveRequiredService<BearerTokenOptions>(context),
-        ResolveRequiredService<TimeProvider>(context).GetUtcNow(),
-        ResolveRequiredService<BearerTokenDataFormat>(context),
-        ResolveRequiredService<RefreshTokenDataFormat>(context),
-        ResolveBearerTokenLogger(context));
 }

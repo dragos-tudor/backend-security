@@ -21,16 +21,4 @@ partial class BearerTokenFuncs
 
     return Success(authTicket!);
   }
-
-  public static Task<AuthenticateResult> AuthenticateBearerToken(HttpContext context) =>
-    LogAuthentication(
-      ResolveBearerTokenLogger(context),
-      AuthenticateBearerToken(
-        context,
-        ResolveRequiredService<TimeProvider>(context).GetUtcNow(),
-        ResolveRequiredService<BearerTokenDataFormat>(context)
-      ),
-      ResolveRequiredService<BearerTokenOptions>(context).SchemeName,
-      context.TraceIdentifier
-    ).ToTask();
 }

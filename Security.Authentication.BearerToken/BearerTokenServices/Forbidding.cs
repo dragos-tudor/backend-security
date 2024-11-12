@@ -15,10 +15,4 @@ partial class BearerTokenFuncs
     LogForbidden(logger, authOptions.SchemeName, context.TraceIdentifier);
     return string.Empty;
   }
-
-  public static string ForbidBearerToken(HttpContext context) =>
-    ForbidBearerToken(
-      context,
-      ResolveRequiredService<BearerTokenOptions>(context),
-      ResolveBearerTokenLogger(context));
 }
