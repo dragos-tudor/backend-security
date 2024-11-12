@@ -11,9 +11,9 @@ partial class BearerTokenFuncs
     BearerTokenDataFormat bearerTokenProtector,
     RefreshTokenDataFormat refreshTokenProtector)
     =>
-      new (){
+      new(){
         AccessToken = bearerTokenProtector.Protect(bearerTokenTicket),
-        ExpiresIn = (long)tokenOptions.BearerTokenExpiration.TotalSeconds,
+        ExpiresIn =(long)tokenOptions.BearerTokenExpiration.TotalSeconds,
         RefreshToken = refreshTokenProtector.Protect(refreshTokenTicket),
       };
 }

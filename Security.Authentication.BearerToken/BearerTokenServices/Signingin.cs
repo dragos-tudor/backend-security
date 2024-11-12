@@ -10,9 +10,10 @@ partial class BearerTokenFuncs
     ClaimsPrincipal principal,
     AuthenticationProperties authProperties,
     BearerTokenOptions tokenOptions,
+    DateTimeOffset currentUtc,
     BearerTokenDataFormat bearerTokenProtector,
     RefreshTokenDataFormat refreshTokenProtector,
-    DateTimeOffset currentUtc)
+    ILogger logger)
   {
     SetAuthenticationPropertiesExpires(authProperties, currentUtc, tokenOptions.BearerTokenExpiration);
     var bearerTokenTicket = CreateBearerTokenTicket(principal, authProperties, tokenOptions);
@@ -21,15 +22,15 @@ partial class BearerTokenFuncs
     SetAuthenticationPropertiesExpires(refreshAuthProperties, currentUtc, tokenOptions.RefreshTokenExpiration);
     var refreshTokenTicket = CreateRefreshTicket(principal, refreshAuthProperties, tokenOptions);
 
-    var token = CreateAccessTokenResponse(bearerTokenTicket, refreshTokenTicket, tokenOptions, bearerTokenProtector, refreshTokenProtector);
-    var tokenJsonTypeInfo = ResolveAccessTokenResponseJsonTypeInfo(context);
-    await WriteResponseJsonContent(context.Response, token, tokenJsonTypeInfo, context.RequestAborted);
+    var accessToken = CreateAccessTokenResponse(bearerTokenTicket, refreshTokenTicket, tokenOptions, bearerTokenProtector, refreshTokenProtector);
+    var accessTokenJsonType = ResolveAccessTokenResponseJsonTypeInfo(context);
+    await WriteResponseJsonContent(context.Response, accessToken, accessTokenJsonType, context.RequestAborted);
 
-    LogSignInBearerToken(ResolveBearerTokenLogger(context), tokenOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
+    LogSignInBearerToken(logger, tokenOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
     return bearerTokenTicket;
   }
 
-  public static Task<AuthenticationTicket> SignInBearerToken (
+  public static Task<AuthenticationTicket> SignInBearerToken(
     HttpContext context,
     ClaimsPrincipal principal,
     AuthenticationProperties? authProperties = default) =>
@@ -38,7 +39,8 @@ partial class BearerTokenFuncs
         principal,
         authProperties ?? new AuthenticationProperties(),
         ResolveRequiredService<BearerTokenOptions>(context),
+        ResolveRequiredService<TimeProvider>(context).GetUtcNow(),
         ResolveRequiredService<BearerTokenDataFormat>(context),
         ResolveRequiredService<RefreshTokenDataFormat>(context),
-        ResolveRequiredService<TimeProvider>(context).GetUtcNow());
+        ResolveBearerTokenLogger(context));
 }

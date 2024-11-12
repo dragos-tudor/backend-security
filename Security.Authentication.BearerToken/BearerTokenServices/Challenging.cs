@@ -5,7 +5,7 @@ namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenFuncs
 {
-  public static string ChallengeBearerToken (
+  public static string ChallengeBearerToken(
     HttpContext context,
     BearerTokenOptions authOptions,
     ILogger logger)
@@ -17,8 +17,8 @@ partial class BearerTokenFuncs
     return string.Empty;
   }
 
-  public static string ChallengeBearerToken (HttpContext context) =>
-    ChallengeBearerToken (
+  public static string ChallengeBearerToken(HttpContext context) =>
+    ChallengeBearerToken(
       context,
       ResolveRequiredService<BearerTokenOptions>(context),
       ResolveBearerTokenLogger(context));

@@ -8,12 +8,12 @@ partial class BearerTokenFuncs
     ClaimsPrincipal principal,
     AuthenticationProperties authProperties,
     BearerTokenOptions tokenOptions) =>
-      new (principal, authProperties, $"{tokenOptions.SchemeName}:AccessToken");
+      new(principal, authProperties, $"{tokenOptions.SchemeName}:AccessToken");
 
   static AuthenticationTicket CreateRefreshTicket(
     ClaimsPrincipal principal,
     AuthenticationProperties authProperties,
     BearerTokenOptions tokenOptions) =>
-      new (principal, authProperties, $"{tokenOptions.SchemeName}:RefreshToken");
+      new(principal, authProperties, $"{tokenOptions.SchemeName}:RefreshToken");
 
 }

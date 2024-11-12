@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using static Microsoft.AspNetCore.Authentication.AuthenticateResult;
@@ -6,40 +7,30 @@ namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenFuncs
 {
-  internal const string UnprotectingTokenFailed = "Unprotecting token failed";
-  internal const string TokenExpired = "Token expired";
-
-  static readonly AuthenticateResult UnprotectingTokenFailedResult = Fail(UnprotectingTokenFailed);
-  static readonly AuthenticateResult TokenExpiredResult = Fail(TokenExpired);
-
-  public static AuthenticateResult AuthenticateBearerToken (
+  public static AuthenticateResult AuthenticateBearerToken(
     HttpContext context,
-    BearerTokenDataFormat bearerTokenProtector,
-    DateTimeOffset currentUtc)
+    DateTimeOffset currentUtc,
+    BearerTokenDataFormat bearerTokenProtector)
   {
-    var authorization = GetRequestAuthorizationHeader(context.Request);
-    var bearerToken = GetAuthorizationBearerToken(authorization);
-    if (bearerToken is null) return NoResult();
+    var(authTicket, error) = ExtractAuthenticationTicket(context, bearerTokenProtector);
+    if(error == NoToken) return NoResult();
+    if(error is not null) return Fail(error);
 
-    var ticket = bearerTokenProtector.Unprotect(bearerToken);
-    var expiresUtc = GetAuthenticationTicketExpires(ticket);
+    var validationError = ValidateAuthenticationTicket(currentUtc, authTicket!);
+    if(validationError is not null) return Fail(validationError);
 
-    if (expiresUtc is null) return UnprotectingTokenFailedResult;
-    if (currentUtc >= expiresUtc) return TokenExpiredResult;
-
-    return Success(ticket!);
+    return Success(authTicket!);
   }
 
-  public static Task<AuthenticateResult> AuthenticateBearerToken (HttpContext context)
-  {
-    var tokenOptions = ResolveRequiredService<BearerTokenOptions>(context);
-    var authResult = AuthenticateBearerToken(
-      context,
-      ResolveRequiredService<BearerTokenDataFormat>(context),
-      ResolveRequiredService<TimeProvider>(context).GetUtcNow()
-    );
-
-    LogAuthenticationResult(ResolveBearerTokenLogger(context), authResult, tokenOptions.SchemeName, context.TraceIdentifier);
-    return Task.FromResult(authResult);
-  }
+  public static Task<AuthenticateResult> AuthenticateBearerToken(HttpContext context) =>
+    LogAuthentication(
+      ResolveBearerTokenLogger(context),
+      AuthenticateBearerToken(
+        context,
+        ResolveRequiredService<TimeProvider>(context).GetUtcNow(),
+        ResolveRequiredService<BearerTokenDataFormat>(context)
+      ),
+      ResolveRequiredService<BearerTokenOptions>(context).SchemeName,
+      context.TraceIdentifier
+    ).ToTask();
 }

@@ -6,10 +6,10 @@ namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenFuncs {
 
-  public static IServiceCollection AddBearerTokenServices (this IServiceCollection services) =>
+  public static IServiceCollection AddBearerTokenServices(this IServiceCollection services) =>
       AddBearerTokenServices(services, CreateBearerTokenOptions());
 
-  public static IServiceCollection AddBearerTokenServices (
+  public static IServiceCollection AddBearerTokenServices(
     this IServiceCollection services,
     BearerTokenOptions tokenOptions,
     IDataProtectionProvider? dataProtectionProvider = default) =>
@@ -20,5 +20,5 @@ partial class BearerTokenFuncs {
         .AddSingleton((services) =>
           CreateRefreshTokenDataFormat(dataProtectionProvider ?? ResolveRequiredService<IDataProtectionProvider>(services), tokenOptions.SchemeName))
         .AddSingleton(TimeProvider.System)
-        .AddKeyedSingleton(BearerTokenLogger, (services, serviceKey) => CreateLogger(services, (string)serviceKey));
+        .AddKeyedSingleton(BearerTokenLogger,(services, serviceKey) => CreateLogger(services,(string)serviceKey));
 }

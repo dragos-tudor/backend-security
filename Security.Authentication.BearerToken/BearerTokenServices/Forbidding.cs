@@ -5,19 +5,19 @@ namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenFuncs
 {
-  public static string ForbidBearerToken (
+  public static string ForbidBearerToken(
     HttpContext context,
     BearerTokenOptions authOptions,
     ILogger logger)
   {
     SetResponseStatus(context, HttpStatusCode.Forbidden);
 
-    LogChallenged(logger, authOptions.SchemeName, context.TraceIdentifier);
+    LogForbidden(logger, authOptions.SchemeName, context.TraceIdentifier);
     return string.Empty;
   }
 
-  public static string ForbidBearerToken (HttpContext context) =>
-    ForbidBearerToken (
+  public static string ForbidBearerToken(HttpContext context) =>
+    ForbidBearerToken(
       context,
       ResolveRequiredService<BearerTokenOptions>(context),
       ResolveBearerTokenLogger(context));

@@ -19,7 +19,7 @@ partial class BearerTokenTests
     var context = new DefaultHttpContext();
     context.Request.Headers.Authorization = BearerTokenName + bearerTokenProtector.Protect(ticket);
 
-    var authResult = AuthenticateBearerToken(context, bearerTokenProtector, DateTime.UtcNow);
+    var authResult = AuthenticateBearerToken(context, DateTime.UtcNow, bearerTokenProtector);
     Assert.AreEqual("user", GetPrincipalName(authResult.Principal));
   }
 
@@ -28,8 +28,8 @@ partial class BearerTokenTests
   {
     using var server = CreateHttpServer(services => services.AddBearerTokenServices());
     server.UseAuthentication(AuthenticateBearerToken);
-    server.MapPost("/account/signin", (HttpContext context) => SignInBearerToken(context, CreateNamedClaimsPrincipal("user")));
-    server.MapGet("/resource", (HttpContext context) => GetPrincipalName(context.User) ?? "unauthenticated" );
+    server.MapPost("/account/signin",(HttpContext context) => SignInBearerToken(context, CreateNamedClaimsPrincipal("user")));
+    server.MapGet("/resource",(HttpContext context) => GetPrincipalName(context.User) ?? "unauthenticated" );
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -37,7 +37,7 @@ partial class BearerTokenTests
     var content = await ReadResponseMessageContent(signinResponse);
 
     var tokenResponse = GetAccessTokenResponse(content, server.Services);
-    using var response = await client.GetAsync("/resource", (HeaderNames.Authorization, BearerTokenName + tokenResponse!.AccessToken));
+    using var response = await client.GetAsync("/resource",(HeaderNames.Authorization, BearerTokenName + tokenResponse!.AccessToken));
 
     Assert.AreEqual("user", await ReadResponseMessageContent(response));
   }
@@ -46,7 +46,7 @@ partial class BearerTokenTests
   public void Authentication_request_without_authorization_header__authenticate__no_authentication_result()
   {
     var context = new DefaultHttpContext();
-    var authResult = AuthenticateBearerToken(context, default!, DateTime.UtcNow);
+    var authResult = AuthenticateBearerToken(context, DateTime.UtcNow, default!);
 
     Assert.IsTrue(authResult.None);
   }
@@ -58,7 +58,7 @@ partial class BearerTokenTests
     var context = new DefaultHttpContext();
     context.Request.Headers.Authorization = BearerTokenName;
 
-    var authResult = AuthenticateBearerToken(context, bearerTokenProtector, DateTime.UtcNow);
+    var authResult = AuthenticateBearerToken(context, DateTime.UtcNow, bearerTokenProtector);
     Assert.AreEqual(UnprotectingTokenFailed, authResult.Failure!.Message);
   }
 
@@ -71,7 +71,7 @@ partial class BearerTokenTests
     var context = new DefaultHttpContext();
     context.Request.Headers.Authorization = BearerTokenName + bearerTokenProtector.Protect(expiredTicket);
 
-    var authResult = AuthenticateBearerToken(context, bearerTokenProtector, DateTime.UtcNow);
+    var authResult = AuthenticateBearerToken(context, DateTime.UtcNow, bearerTokenProtector);
     Assert.AreEqual(TokenExpired, authResult.Failure!.Message);
   }
 }
