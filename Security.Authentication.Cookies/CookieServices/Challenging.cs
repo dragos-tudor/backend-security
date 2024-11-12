@@ -21,11 +21,4 @@ partial class CookiesFuncs
     LogChallenged(logger, authOptions.SchemeName, challengePath, context.TraceIdentifier);
     return challengePath;
   }
-
-  public static string ChallengeCookie(HttpContext context, AuthenticationProperties authProperties) =>
-    ChallengeCookie(
-      context,
-      authProperties,
-      ResolveRequiredService<AuthenticationCookieOptions>(context),
-      ResolveCookiesLogger(context));
 }

@@ -26,13 +26,4 @@ partial class CookiesFuncs
     LogSignedOutCookie(logger, authOptions.SchemeName, context.TraceIdentifier);
     return true;
   }
-
-  public static ValueTask<bool> SignOutCookie(HttpContext context) =>
-    SignOutCookie(
-      context,
-      ResolveRequiredService<AuthenticationCookieOptions>(context),
-      ResolveRequiredService<ICookieManager>(context),
-      ResolveRequiredService<TicketDataFormat>(context),
-      ResolveRequiredService<ITicketStore>(context),
-      ResolveCookiesLogger(context));
 }

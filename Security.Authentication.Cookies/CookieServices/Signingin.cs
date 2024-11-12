@@ -29,19 +29,4 @@ partial class CookiesFuncs
     LogSignedInCookie(logger, authOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
     return authTicket;
   }
-
-  public static ValueTask<AuthenticationTicket> SignInCookie(
-    HttpContext context,
-    ClaimsPrincipal principal,
-    AuthenticationProperties? authProperties = default) =>
-      SignInCookie(
-        context,
-        principal,
-        authProperties ?? CreateCookieAuthenticationProperties(),
-        ResolveRequiredService<AuthenticationCookieOptions>(context),
-        ResolveRequiredService<TimeProvider>(context).GetUtcNow(),
-        ResolveRequiredService<ICookieManager>(context),
-        ResolveRequiredService<TicketDataFormat>(context),
-        ResolveRequiredService<ITicketStore>(context),
-        ResolveCookiesLogger(context));
 }

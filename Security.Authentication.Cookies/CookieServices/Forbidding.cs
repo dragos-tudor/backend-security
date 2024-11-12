@@ -21,11 +21,4 @@ partial class CookiesFuncs
     LogForbidden(logger, authOptions.SchemeName, forbidPath, context.TraceIdentifier);
     return forbidPath;
   }
-
-  public static string ForbidCookie(HttpContext context, AuthenticationProperties authProperties) =>
-    ForbidCookie(
-      context,
-      authProperties,
-      ResolveRequiredService<AuthenticationCookieOptions>(context),
-      ResolveCookiesLogger(context));
 }
