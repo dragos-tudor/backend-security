@@ -5,13 +5,9 @@ using Microsoft.Extensions.Primitives;
 
 namespace Security.Testing;
 
-partial class Funcs {
+partial class Funcs
+{
+  static StringValues GetResponseCookies(HttpResponse response) => response.Headers.SetCookie;
 
-  static StringValues GetResponseCookies (HttpResponse response) =>
-    response.Headers.SetCookie;
-
-  public static string? GetResponseCookie(HttpResponse response, string cookieName) =>
-    GetResponseCookies(response)
-      .FirstOrDefault(IsCookieStartingWithName(cookieName)!);
-
+  public static string? GetResponseCookie(HttpResponse response, string cookieName) => GetResponseCookies(response).FirstOrDefault(IsCookieStartingWithName(cookieName)!);
 }

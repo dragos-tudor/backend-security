@@ -8,10 +8,10 @@ partial class AuthorizationFuncs {
 
   const string SuppressUseHttpContextAsAuthorizationResource = "Microsoft.AspNetCore.Authorization.SuppressUseHttpContextAsAuthorizationResource";
 
-  static bool IsAnonymousEndpoint (Endpoint? endpoint) =>
+  static bool IsAnonymousEndpoint(Endpoint? endpoint) =>
     GetEndpointMetadata<IAllowAnonymous>(endpoint) is not null;
 
-  static bool IsEndpointResource () =>
+  static bool IsEndpointResource() =>
     AppContext.TryGetSwitch(SuppressUseHttpContextAsAuthorizationResource, out var useEndpointAsResource) &&
     useEndpointAsResource;
 

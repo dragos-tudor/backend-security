@@ -6,7 +6,7 @@ namespace Security.Authorization;
 
 partial class AuthorizationFuncs {
 
-  static Task<AuthorizationPolicy?> CombinePolicies (
+  static Task<AuthorizationPolicy?> CombinePolicies(
     IAuthorizationPolicyProvider policyProvider,
     Endpoint? endpoint) =>
       AuthorizationPolicy.CombineAsync(

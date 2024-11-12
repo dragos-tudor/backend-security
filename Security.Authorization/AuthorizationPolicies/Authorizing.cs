@@ -8,18 +8,18 @@ namespace Security.Authorization;
 
 partial class AuthorizationFuncs {
 
-  static async Task<PolicyAuthorizationResult> AuthorizePolicy (
+  static async Task<PolicyAuthorizationResult> AuthorizePolicy(
     AuthorizationPolicy policy,
     AuthenticateResult authResult,
     IAuthorizationService authzService,
     HttpContext context,
     Endpoint? endpoint)
   {
-    var resource = (object?) (IsEndpointResource()? endpoint: context);
+    var resource =(object?)(IsEndpointResource()? endpoint: context);
     var authzResult = await authzService.AuthorizeAsync(context.User, resource, policy);
 
-    if (authzResult.Succeeded) return PolicyAuthorizationResult.Success();
-    if (authResult.Succeeded) return PolicyAuthorizationResult.Forbid(authzResult.Failure);
+    if(authzResult.Succeeded) return PolicyAuthorizationResult.Success();
+    if(authResult.Succeeded) return PolicyAuthorizationResult.Forbid(authzResult.Failure);
     return PolicyAuthorizationResult.Challenge();
   }
 

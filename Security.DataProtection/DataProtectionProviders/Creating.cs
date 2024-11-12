@@ -5,15 +5,15 @@ namespace Security.DataProtection;
 
 partial class DataProtectionFuncs {
 
-  public static IDataProtectionProvider CreateDataProtectionProvider () =>
+  public static IDataProtectionProvider CreateDataProtectionProvider() =>
     CreateDataProtectionProvider(new DirectoryInfo(Environment.CurrentDirectory));
 
-  public static IDataProtectionProvider CreateDataProtectionProvider<TEncryptor> (DirectoryInfo keysDirectory) where TEncryptor: IXmlEncryptor, new() =>
-    DataProtectionProvider.Create(keysDirectory, (builder) =>
+  public static IDataProtectionProvider CreateDataProtectionProvider<TEncryptor>(DirectoryInfo keysDirectory) where TEncryptor: IXmlEncryptor, new() =>
+    DataProtectionProvider.Create(keysDirectory,(builder) =>
       builder.ProtectKeysWithSecret<TEncryptor>(keysDirectory));
 
-  public static IDataProtectionProvider CreateDataProtectionProvider (DirectoryInfo keysDirectory) =>
-    DataProtectionProvider.Create(keysDirectory, (builder) =>
+  public static IDataProtectionProvider CreateDataProtectionProvider(DirectoryInfo keysDirectory) =>
+    DataProtectionProvider.Create(keysDirectory,(builder) =>
       builder.ProtectKeysWithSecret(keysDirectory));
 
 }

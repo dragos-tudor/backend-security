@@ -35,7 +35,7 @@ public class SignInBenchmarks
   }
 
   [Benchmark(Baseline = true)]
-  public async Task FPSignin ()
+  public async Task FPSignin()
   {
     var context = new DefaultHttpContext(){RequestServices = myServices};
     await SignInCookie(
@@ -45,7 +45,7 @@ public class SignInBenchmarks
   }
 
   [Benchmark]
-  public async Task OOPSignin ()
+  public async Task OOPSignin()
   {
     var context = new DefaultHttpContext(){RequestServices = msServices};
     await authenticationService.SignInAsync(

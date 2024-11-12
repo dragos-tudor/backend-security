@@ -4,7 +4,7 @@ namespace Security.DataProtection;
 
 partial class DataProtectionFuncs {
 
-  public static byte[] EncryptBytes (SymmetricAlgorithm algorithm, byte[] unencryptedBytes, SymmetricEncryptionType encryptionType) =>
+  public static byte[] EncryptBytes(SymmetricAlgorithm algorithm, byte[] unencryptedBytes, SymmetricEncryptionType encryptionType) =>
     encryptionType switch {
       SymmetricEncryptionType.CBC => algorithm.EncryptCbc(unencryptedBytes, algorithm.IV),
       SymmetricEncryptionType.ECB => algorithm.EncryptEcb(unencryptedBytes, PaddingMode.None),
@@ -12,7 +12,7 @@ partial class DataProtectionFuncs {
       _ => algorithm.DecryptEcb(unencryptedBytes, PaddingMode.None)
     };
 
-  public static string EncryptString (SymmetricAlgorithm algorithm, string unencryptedText, SymmetricEncryptionType encryptionType) =>
+  public static string EncryptString(SymmetricAlgorithm algorithm, string unencryptedText, SymmetricEncryptionType encryptionType) =>
     DecodeToBase64(EncryptBytes(algorithm, EncodeFromBase64(unencryptedText), encryptionType));
 
 }

@@ -5,9 +5,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Security.Testing;
 
-partial class Funcs {
-
-  public static WebApplication CreateHttpServer (
+partial class Funcs
+{
+  public static WebApplication CreateHttpServer(
     Action<IServiceCollection>? configServices = default,
     LogLevel minimumLogLevel = LogLevel.None)
   {
@@ -21,6 +21,5 @@ partial class Funcs {
       .SkipUsingAuthenticationMiddlewares()
       .SkipUsingAuthorizationMiddlewares();
   }
-
 }
 

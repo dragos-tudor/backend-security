@@ -5,7 +5,7 @@ namespace Security.DataProtection;
 
 partial class DataProtectionFuncs {
 
-  static SymmetricAlgorithm CreateAlgorithm (SymmetricAlgorithmType algorithmType) =>
+  static SymmetricAlgorithm CreateAlgorithm(SymmetricAlgorithmType algorithmType) =>
     algorithmType switch {
       SymmetricAlgorithmType.Aes => Aes.Create(),
       // SymmetricAlgorithmType.RC2 => RC2.Create(),
@@ -13,7 +13,7 @@ partial class DataProtectionFuncs {
       _ => Aes.Create()
     };
 
-  public static SymmetricAlgorithm CreateSymmetricAlgorithm (SymmetricAlgorithmType algorithmType, byte[] key) {
+  public static SymmetricAlgorithm CreateSymmetricAlgorithm(SymmetricAlgorithmType algorithmType, byte[] key) {
     var algorithm = CreateAlgorithm(algorithmType);
     algorithm.Key = key;
     return algorithm;

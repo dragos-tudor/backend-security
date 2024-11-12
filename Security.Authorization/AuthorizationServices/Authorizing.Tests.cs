@@ -15,16 +15,16 @@ namespace Security.Authorization;
 
 partial class AuthorizationTests {
 
-  static readonly ChallengeFunc challegeFunc = (context, authProperties) => (context.Response.StatusCode = StatusCodes.Status401Unauthorized).ToString(CultureInfo.InvariantCulture);
-  static readonly ForbidFunc forbidFunc = (context, authProperties) => (context.Response.StatusCode = StatusCodes.Status403Forbidden).ToString(CultureInfo.InvariantCulture);
+  static readonly ChallengeFunc challegeFunc =(context, authProperties) =>(context.Response.StatusCode = StatusCodes.Status401Unauthorized).ToString(CultureInfo.InvariantCulture);
+  static readonly ForbidFunc forbidFunc =(context, authProperties) =>(context.Response.StatusCode = StatusCodes.Status403Forbidden).ToString(CultureInfo.InvariantCulture);
 
   [TestMethod]
   public async Task Authenticated_user__access_private_resource__user_authorized()
   {
     using var server = CreateHttpServer(services => services.AddAuthorization().AddAuthentication().AddCookie() );
     server.UseAuthentication().UseAuthorization(challegeFunc, forbidFunc);
-    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreateClaimsPrincipal("user")));
-    server.MapGet("/resource", (HttpContext context) => "private" ).RequireAuthorization();
+    server.MapPost("/account/login",(HttpContext context) => context.SignInAsync(CreateClaimsPrincipal("user")));
+    server.MapGet("/resource",(HttpContext context) => "private" ).RequireAuthorization();
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -40,7 +40,7 @@ partial class AuthorizationTests {
   {
     using var server = CreateHttpServer(services => services.AddAuthorization() );
     server.UseAuthorization(challegeFunc, forbidFunc);
-    server.MapGet("/resource", (HttpContext context) => "public" ).AllowAnonymous();
+    server.MapGet("/resource",(HttpContext context) => "public" ).AllowAnonymous();
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -55,7 +55,7 @@ partial class AuthorizationTests {
   {
     using var server = CreateHttpServer(services => services.AddAuthorization() );
     server.UseAuthorization(challegeFunc, forbidFunc);
-    server.MapGet("/resource", (HttpContext context) => "not accesible" ).RequireAuthorization();
+    server.MapGet("/resource",(HttpContext context) => "not accesible" ).RequireAuthorization();
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -70,7 +70,7 @@ partial class AuthorizationTests {
   {
     using var server = CreateHttpServer(services => services.AddAuthorization() );
     server.UseAuthorization((context, authProperties) => authProperties!.RedirectUri!, forbidFunc);
-    server.MapGet("/resource", (HttpContext context) => "not accesible" ).RequireAuthorization();
+    server.MapGet("/resource",(HttpContext context) => "not accesible" ).RequireAuthorization();
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -84,8 +84,8 @@ partial class AuthorizationTests {
   {
     using var server = CreateHttpServer(services => services.AddAuthorization(options => options.AddPolicy("role policy", policy => policy.RequireRole("admin"))).AddAuthentication().AddCookie());
     server.UseAuthentication().UseAuthorization(challegeFunc, forbidFunc);
-    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreateClaimsPrincipal("user")) );
-    server.MapGet("/resource", (HttpContext context) => "not accesible").RequireAuthorization("role policy");
+    server.MapPost("/account/login",(HttpContext context) => context.SignInAsync(CreateClaimsPrincipal("user")) );
+    server.MapGet("/resource",(HttpContext context) => "not accesible").RequireAuthorization("role policy");
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -101,8 +101,8 @@ partial class AuthorizationTests {
   {
     using var server = CreateHttpServer(services => services.AddAuthorization(options => options.AddPolicy("role policy", policy => policy.RequireRole("admin"))).AddAuthentication().AddCookie());
     server.UseAuthentication().UseAuthorization(challegeFunc, forbidFunc);
-    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreateClaimsPrincipal("user", "admin")) );
-    server.MapGet("/resource", (HttpContext context) => "private").RequireAuthorization("role policy");
+    server.MapPost("/account/login",(HttpContext context) => context.SignInAsync(CreateClaimsPrincipal("user", "admin")) );
+    server.MapGet("/resource",(HttpContext context) => "private").RequireAuthorization("role policy");
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -119,8 +119,8 @@ partial class AuthorizationTests {
   {
     using var server = CreateHttpServer(services => services.AddAuthorization(options => options.AddPolicy("claim policy", policy => policy.RequireClaim("custom claim", "value"))).AddAuthentication().AddCookie());
     server.UseAuthentication().UseAuthorization(challegeFunc, forbidFunc);
-    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreateClaimsPrincipalWithClaim("custom claim", "value")) );
-    server.MapGet("/resource", (HttpContext context) => "private").RequireAuthorization("claim policy");
+    server.MapPost("/account/login",(HttpContext context) => context.SignInAsync(CreateClaimsPrincipalWithClaim("custom claim", "value")) );
+    server.MapGet("/resource",(HttpContext context) => "private").RequireAuthorization("claim policy");
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -139,8 +139,8 @@ partial class AuthorizationTests {
       .AddAuthorization(options => options.AddPolicy("req policy", policy => policy.AddRequirements([new MinimumAgeRequirement(21)])))
       .AddAuthentication().AddCookie());
     server.UseAuthentication().UseAuthorization(challegeFunc, forbidFunc);
-    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreateClaimsPrincipalWithClaim(ClaimTypes.DateOfBirth, DateTime.Now.AddYears(-23).ToString(CultureInfo.InvariantCulture))) );
-    server.MapGet("/resource", (HttpContext context) => "private").RequireAuthorization("req policy");
+    server.MapPost("/account/login",(HttpContext context) => context.SignInAsync(CreateClaimsPrincipalWithClaim(ClaimTypes.DateOfBirth, DateTime.Now.AddYears(-23).ToString(CultureInfo.InvariantCulture))) );
+    server.MapGet("/resource",(HttpContext context) => "private").RequireAuthorization("req policy");
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -156,8 +156,8 @@ partial class AuthorizationTests {
   {
     using var server = CreateHttpServer(services => services.AddAuthorization().AddAuthentication().AddCookie());
     server.UseAuthentication().UseAuthorization();
-    server.MapPost("/account/login", (HttpContext context) => context.SignInAsync(CreateClaimsPrincipal("user", "admin")));
-    server.MapGet("/resource", (HttpContext context) => "private").RequireAuthorization();
+    server.MapPost("/account/login",(HttpContext context) => context.SignInAsync(CreateClaimsPrincipal("user", "admin")));
+    server.MapGet("/resource",(HttpContext context) => "private").RequireAuthorization();
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -167,11 +167,11 @@ partial class AuthorizationTests {
     Assert.AreEqual("private", await ReadResponseMessageContent(response));
   }
 
-  static ClaimsPrincipal CreateClaimsPrincipal (string userName, string? roleName = "role") =>
-    new (new ClaimsIdentity(new List<Claim>{ new (ClaimTypes.Name, userName), new (ClaimTypes.Role, roleName!)}, "Cookies"));
+  static ClaimsPrincipal CreateClaimsPrincipal(string userName, string? roleName = "role") =>
+    new(new ClaimsIdentity(new List<Claim>{ new(ClaimTypes.Name, userName), new(ClaimTypes.Role, roleName!)}, "Cookies"));
 
-  static ClaimsPrincipal CreateClaimsPrincipalWithClaim (string claimType, string claimValue) =>
-    new (new ClaimsIdentity(new List<Claim>{ new (claimType, claimValue!) }, "Cookies"));
+  static ClaimsPrincipal CreateClaimsPrincipalWithClaim(string claimType, string claimValue) =>
+    new(new ClaimsIdentity(new List<Claim>{ new(claimType, claimValue!) }, "Cookies"));
 
   internal sealed class MinimumAgeRequirement : IAuthorizationRequirement
   {
@@ -188,13 +188,13 @@ partial class AuthorizationTests {
         MinimumAgeRequirement requirement)
     {
         var dateOfBirthClaim = context.User.FindFirst(c => c.Type == ClaimTypes.DateOfBirth);
-        if (dateOfBirthClaim is null) return Task.CompletedTask;
+        if(dateOfBirthClaim is null) return Task.CompletedTask;
 
         var dateOfBirth = Convert.ToDateTime(dateOfBirthClaim.Value, CultureInfo.InvariantCulture);
         int calculatedAge = DateTime.Today.Year - dateOfBirth.Year;
 
-        if (dateOfBirth > DateTime.Today.AddYears(-calculatedAge)) calculatedAge--;
-        if (calculatedAge >= requirement.MinimumAge) context.Succeed(requirement);
+        if(dateOfBirth > DateTime.Today.AddYears(-calculatedAge)) calculatedAge--;
+        if(calculatedAge >= requirement.MinimumAge) context.Succeed(requirement);
 
         return Task.CompletedTask;
     }

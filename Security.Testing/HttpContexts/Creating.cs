@@ -5,9 +5,10 @@ using Microsoft.Extensions.Time.Testing;
 
 namespace Security.Testing;
 
-partial class Funcs {
-
-  public static HttpContext CreateHttpContext () {
+partial class Funcs
+{
+  public static HttpContext CreateHttpContext()
+  {
     var services = new ServiceCollection()
       .AddSingleton<TimeProvider, FakeTimeProvider>()
       .AddDataProtection($"{Environment.CurrentDirectory}/keys")
@@ -15,7 +16,8 @@ partial class Funcs {
     return new DefaultHttpContext() { RequestServices = services };
   }
 
-  public static HttpContext CreateHttpContext (Uri uri) {
+  public static HttpContext CreateHttpContext(Uri uri)
+  {
     var context = CreateHttpContext();
     context.Request.Scheme = uri.Scheme;
     context.Request.Host = new HostString(uri.Host);
@@ -23,6 +25,5 @@ partial class Funcs {
     context.Request.Query = new QueryCollection(QueryHelpers.ParseQuery(uri.Query));
     return context;
   }
-
 }
 

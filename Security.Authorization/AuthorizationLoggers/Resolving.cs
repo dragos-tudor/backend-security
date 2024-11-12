@@ -8,5 +8,5 @@ partial class AuthorizationFuncs
 {
   const string CategoryNameLogger = nameof(AuthorizationFuncs);
 
-  static ILogger ResolveAuthorizationLogger (HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, CategoryNameLogger);
+  static ILogger ResolveAuthorizationLogger(HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, CategoryNameLogger);
 }

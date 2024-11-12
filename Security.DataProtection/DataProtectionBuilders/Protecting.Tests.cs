@@ -9,12 +9,12 @@ partial class DataProtectionTests {
   static readonly string keysPath = $"{Environment.CurrentDirectory}/keys";
   static readonly DirectoryInfo keysDirectory = new(keysPath);
 
-  static DataProtectionTests () {
+  static DataProtectionTests() {
     if(!keysDirectory.Exists) keysDirectory.Create();
   }
 
   [TestMethod]
-  public void Data_protectors_with_same_purpose__protect_input__unprotect_output_succeded () {
+  public void Data_protectors_with_same_purpose__protect_input__unprotect_output_succeded() {
 
     var provider = CreateDataProtectionProvider<XmlEncryptor>(keysDirectory);
     var protector1 = provider.CreateProtector("token");
@@ -27,7 +27,7 @@ partial class DataProtectionTests {
   }
 
   [TestMethod]
-  public void Data_protectors_providers_with_same_directory_and_same_purpose__protect_input__unprotect_output_succeded () {
+  public void Data_protectors_providers_with_same_directory_and_same_purpose__protect_input__unprotect_output_succeded() {
 
     var provider1 = CreateDataProtectionProvider<XmlEncryptor>(keysDirectory);
     var provider2 = CreateDataProtectionProvider<XmlEncryptor>(keysDirectory);
@@ -41,7 +41,7 @@ partial class DataProtectionTests {
   }
 
   [TestMethod]
-  public void Data_protectors_with_different_purposes__protect_input__unprotect_output_failed () {
+  public void Data_protectors_with_different_purposes__protect_input__unprotect_output_failed() {
 
     var provider = CreateDataProtectionProvider<XmlEncryptor>(keysDirectory);
     var protector1 = provider.CreateProtector("cookie");

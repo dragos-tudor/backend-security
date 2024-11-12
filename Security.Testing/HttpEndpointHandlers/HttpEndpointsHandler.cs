@@ -4,8 +4,8 @@ using static Security.Testing.Funcs;
 
 namespace Security.Testing;
 
-public class HttpEndpointsHandler(IEnumerable<HttpEndpoint> endpoints) : HttpMessageHandler {
-
+public class HttpEndpointsHandler(IEnumerable<HttpEndpoint> endpoints) : HttpMessageHandler
+{
   readonly IEnumerable<HttpEndpoint> Endpoints = endpoints;
 
   protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken = default) =>

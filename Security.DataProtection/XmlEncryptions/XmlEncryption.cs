@@ -6,9 +6,9 @@ namespace Security.DataProtection;
 public abstract class XmlEncryption {
 
   static readonly byte[] SecretKey = EncodeFromBase64(GetDataProtectionKey());
-  protected static byte[] GetAlgorithmKey () => SecretKey;
+  protected static byte[] GetAlgorithmKey() => SecretKey;
 
-  protected static SymmetricAlgorithmType GetAlgorithmType () => SymmetricAlgorithmType.Aes;
+  protected static SymmetricAlgorithmType GetAlgorithmType() => SymmetricAlgorithmType.Aes;
   protected static SymmetricEncryptionType GetEncryptionType() => SymmetricEncryptionType.ECB;
 
 }

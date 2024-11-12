@@ -5,6 +5,5 @@ namespace Security.Testing;
 
 partial class Funcs
 {
-  public static FakeTimeProvider ResolveFakeTimeProvider(IServiceProvider services) =>
-    (FakeTimeProvider)services.GetRequiredService<TimeProvider>();
+  public static FakeTimeProvider ResolveFakeTimeProvider(IServiceProvider services) => (FakeTimeProvider)services.GetRequiredService<TimeProvider>();
 }
