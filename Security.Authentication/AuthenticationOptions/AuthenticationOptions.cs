@@ -10,5 +10,5 @@ public abstract record AuthenticationOptions
   public PathString ErrorPath { get; init; } = "/error";
 
   public string ReturnUrlParameter { get; init; } = "returnUrl";
-  public string SchemeName { get; init; } = default!;
+  public required string SchemeName { get; init; } = default!;
 }

@@ -6,7 +6,7 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
-  static async Task AuthenticationMiddleware (AuthenticateFunc authenticate, HttpContext context, RequestDelegate next)
+  static async Task AuthenticationMiddleware(AuthenticateFunc authenticate, HttpContext context, RequestDelegate next)
   {
     var authResult = await authenticate(context);
     if(authResult.Succeeded) SetAuthenticationFeature(context, authResult);

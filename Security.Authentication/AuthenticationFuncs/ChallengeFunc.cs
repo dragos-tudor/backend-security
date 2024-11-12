@@ -3,4 +3,4 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication;
 
-public delegate string ChallengeFunc (HttpContext context, AuthenticationProperties? authProperties = default);
+public delegate string ChallengeFunc(HttpContext context, AuthenticationProperties? authProperties = default);

@@ -5,4 +5,4 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication;
 
-public delegate Task<AuthenticateResult> AuthenticateFunc (HttpContext context);
+public delegate Task<AuthenticateResult> AuthenticateFunc(HttpContext context);

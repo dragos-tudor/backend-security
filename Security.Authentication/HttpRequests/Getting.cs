@@ -5,6 +5,5 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
-  public static IRequestCookieCollection GetRequestCookies (HttpRequest request) =>
-    request.Cookies;
+  public static IRequestCookieCollection GetRequestCookies(HttpRequest request) => request.Cookies;
 }

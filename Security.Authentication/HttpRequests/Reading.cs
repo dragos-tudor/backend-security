@@ -6,6 +6,5 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
-  public static Task<IFormCollection> ReadRequestForm(HttpRequest request, CancellationToken cancellationToken = default) =>
-    request.ReadFormAsync(cancellationToken);
+  public static Task<IFormCollection> ReadRequestForm(HttpRequest request, CancellationToken cancellationToken = default) => request.ReadFormAsync(cancellationToken);
 }

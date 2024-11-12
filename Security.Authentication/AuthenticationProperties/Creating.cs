@@ -4,6 +4,5 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
-  public static AuthenticationProperties CreateAuthenticationProperties() =>
-    new ();
+  public static AuthenticationProperties CreateAuthenticationProperties() => new();
 }

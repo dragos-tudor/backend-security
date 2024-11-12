@@ -5,6 +5,6 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
-  public static void GenerateRandomBytes (byte[] data) =>
+  public static void GenerateRandomBytes(byte[] data) =>
     RandomNumberGenerator.Fill(data);
 }
