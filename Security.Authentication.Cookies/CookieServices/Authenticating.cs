@@ -12,52 +12,47 @@ partial class CookiesFuncs
   internal const string TicketExpired = "Ticket expired";
   internal const string UnprotectTicketFailed = "Unprotect ticket failed";
 
-  public static async ValueTask<AuthenticateResult> AuthenticateCookie (
+  public static async ValueTask<AuthenticateResult> AuthenticateCookie(
     HttpContext context,
     AuthenticationCookieOptions authOptions,
+    DateTimeOffset currentUtc,
     ICookieManager cookieManager,
-    TicketDataFormat ticketDataFormat,
-    ITicketStore ticketStore,
-    DateTimeOffset currentUtc)
+    TicketDataFormat ticketDataProtector,
+    ITicketStore ticketStore)
   {
-    var cookieName = GetCookieName(authOptions);
-    var cookie = GetCookie(context, cookieManager, cookieName);
-    if (!ExistsCookie(cookie)) return NoResult();
+    var(authTicket, error) = ExtractAuthenticationTicket(context, authOptions, cookieManager, ticketDataProtector);
+    if(error == NoCookie) return NoResult();
+    if(error is not null) return Fail(error);
 
-    var cookieTicket = UnprotectAuthenticationTicket(cookie, ticketDataFormat);
-    if (!ExistsAuthenticationTicket(cookieTicket)) return Fail(UnprotectTicketFailed);
+    if(IsSessionBasedTicket(ticketStore))
+      return await AuthenticateSessionCookie(context, authOptions, authTicket, currentUtc, cookieManager, ticketDataProtector, ticketStore);
 
-    if (IsSessionBasedCookie(ticketStore))
-      return await AuthenticateSessionCookie(context, authOptions, cookieManager,
-        ticketDataFormat, ticketStore, currentUtc, GetSessionTicketId(cookieTicket.Principal));
+    var authTicketState = GetAuthenticationTicketState(authTicket, currentUtc, authOptions);
+    if(authTicketState == AuthenticationTicketState.Valid) return Success(authTicket);
+    if(authTicketState == AuthenticationTicketState.Expired) {
+      CleanAuthenticationTicket(context, authTicket, authOptions, cookieManager);
+      return Fail(TicketExpired);
+    }
 
-    var cookieOptions = BuildCookieOptions(cookieTicket.Properties!, context);
-    var authResult = GetAuthenticationTicketState(cookieTicket, currentUtc, authOptions) switch {
-      AuthenticationTicketState.Expired => Fail(TicketExpired),
-      AuthenticationTicketState.Renewable => Success(RenewAuthenticationTicket(cookieTicket, currentUtc)),
-      _ => Success(cookieTicket)
-    };
+    var renewedAuthTicket = RenewAuthenticationTicket(authTicket, currentUtc);
+    UseAuthenticationTicket(context, renewedAuthTicket, authOptions, cookieManager, ticketDataProtector);
+    ResetResponseCacheHeaders(context.Response);
 
-    if (IsExpiredAuthenticationTicket(authResult)) DeleteCookie(context, cookieManager, cookieName, cookieOptions);
-    if (IsRenewedAuthenticationTicket(authResult, currentUtc)) AppendCookie(context, cookieManager, cookieName,
-      ProtectAuthenticationTicket(cookieTicket, ticketDataFormat), cookieOptions);
-
-    return authResult;
+    return Success(renewedAuthTicket);
   }
 
-  public static async Task<AuthenticateResult> AuthenticateCookie (HttpContext context)
-  {
-    var authOptions = ResolveRequiredService<AuthenticationCookieOptions>(context);
-    var authResult = await AuthenticateCookie(
-      context,
-      authOptions,
-      ResolveRequiredService<ICookieManager>(context),
-      ResolveRequiredService<TicketDataFormat>(context),
-      ResolveRequiredService<ITicketStore>(context),
-      ResolveRequiredService<TimeProvider>(context).GetUtcNow()
+  public static async Task<AuthenticateResult> AuthenticateCookie(HttpContext context) =>
+    LogAuthentication(
+      ResolveCookiesLogger(context),
+      await AuthenticateCookie(
+        context,
+        ResolveRequiredService<AuthenticationCookieOptions>(context),
+        ResolveRequiredService<TimeProvider>(context).GetUtcNow(),
+        ResolveRequiredService<ICookieManager>(context),
+        ResolveRequiredService<TicketDataFormat>(context),
+        ResolveRequiredService<ITicketStore>(context)
+      ),
+      ResolveRequiredService<AuthenticationCookieOptions>(context).SchemeName,
+      context.TraceIdentifier
     );
-
-    LogAuthenticationResult(ResolveCookiesLogger(context), authResult, authOptions.SchemeName, context.TraceIdentifier);
-    return authResult;
-  }
 }

@@ -5,9 +5,5 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  static Task<string> SetSessionTicket(
-    ITicketStore ticketStore,
-    AuthenticationTicket ticket,
-    CancellationToken cancellationToken = default) =>
-      ticketStore.SetTicket(ticket, cancellationToken);
+  static Task<string> SetSessionTicket(ITicketStore ticketStore, AuthenticationTicket ticket, CancellationToken cancellationToken = default) => ticketStore.SetTicket(ticket, cancellationToken);
 }

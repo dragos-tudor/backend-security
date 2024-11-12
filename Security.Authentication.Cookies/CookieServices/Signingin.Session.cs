@@ -7,7 +7,7 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  public static async ValueTask<AuthenticationTicket> SignInCookie(
+  public static async Task<AuthenticationTicket> SignInSessionCookie(
     HttpContext context,
     ClaimsPrincipal principal,
     AuthenticationProperties authProperties,
@@ -18,26 +18,26 @@ partial class CookiesFuncs
     ITicketStore ticketStore,
     ILogger logger)
   {
-    if(IsSessionBasedTicket(ticketStore))
-      return await SignInSessionCookie(context, principal, authProperties, authOptions, currentUtc, cookieManager, ticketDataProtector, ticketStore, logger);
-
-    var authTicket = CreateAuthenticationTicket(principal, authProperties, authOptions.SchemeName);
     SetAuthenticationPropertiesExpiration(authProperties, currentUtc, authOptions.ExpireTimeSpan);
-    UseAuthenticationTicket(context, authTicket, authOptions, cookieManager, ticketDataProtector);
+    var sessionTicket = CreateAuthenticationTicket(principal, authProperties, authOptions.SchemeName);
+    var sessionId = await SetSessionTicket(ticketStore, sessionTicket, context.RequestAborted);
+
+    var sessionTicketId = CreateSessionTicketId(sessionId, authOptions.SchemeName);
+    UseAuthenticationTicket(context, sessionTicketId, authOptions, cookieManager, ticketDataProtector);
     ResetResponseCacheHeaders(context.Response);
 
     LogSignedInCookie(logger, authOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
-    return authTicket;
+    return sessionTicketId;
   }
 
-  public static ValueTask<AuthenticationTicket> SignInCookie(
+  public static Task<AuthenticationTicket> SignInSessionCookie(
     HttpContext context,
     ClaimsPrincipal principal,
-    AuthenticationProperties? authProperties = default) =>
-      SignInCookie(
+    AuthenticationProperties authProperties) =>
+      SignInSessionCookie(
         context,
         principal,
-        authProperties ?? CreateCookieAuthenticationProperties(),
+        authProperties,
         ResolveRequiredService<AuthenticationCookieOptions>(context),
         ResolveRequiredService<TimeProvider>(context).GetUtcNow(),
         ResolveRequiredService<ICookieManager>(context),

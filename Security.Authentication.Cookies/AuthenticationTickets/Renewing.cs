@@ -4,11 +4,10 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  static AuthenticationTicket RenewAuthenticationTicket(AuthenticationTicket ticket, DateTimeOffset currentUtc)
+  static AuthenticationTicket RenewAuthenticationTicket(AuthenticationTicket authTicket, DateTimeOffset currentUtc)
   {
-    var expiresAfter = GetAuthenticationPropertiesExpiresAfter(ticket.Properties);
-    SetAuthenticationPropertiesIssued(ticket.Properties, currentUtc);
-    SetAuthenticationPropertiesExpires(ticket.Properties, currentUtc, expiresAfter);
-    return ticket;
+    var expiresAfter = GetAuthenticationPropertiesExpiresAfter(authTicket.Properties);
+    SetAuthenticationPropertiesExpiration(authTicket.Properties, currentUtc, expiresAfter);
+    return authTicket;
   }
 }

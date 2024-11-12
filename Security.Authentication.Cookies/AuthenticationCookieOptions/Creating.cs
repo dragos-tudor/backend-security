@@ -5,8 +5,8 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  public static AuthenticationCookieOptions CreateAuthenticationCookieOptions (string? cookieName = default, string schemeName = CookieAuthenticationDefaults.AuthenticationScheme) =>
-    new () {
+  public static AuthenticationCookieOptions CreateAuthenticationCookieOptions(string? cookieName = default, string schemeName = CookieAuthenticationDefaults.AuthenticationScheme) =>
+    new() {
       CookieName = cookieName ?? $"{CookieAuthenticationDefaults.CookiePrefix}{CookieAuthenticationDefaults.AuthenticationScheme}",
       AccessDeniedPath = CookieAuthenticationDefaults.AccessDeniedPath,
       LoginPath = CookieAuthenticationDefaults.LoginPath,

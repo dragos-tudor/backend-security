@@ -8,54 +8,53 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  internal const string MissingSessionTicketId = "Missing session ticket id";
+  internal const string MissingSessionId = "Missing session id";
   internal const string MissingSessionTicket = "Missing session ticket";
 
-  internal static async Task<AuthenticateResult> AuthenticateSessionCookie(
+  public static async Task<AuthenticateResult> AuthenticateSessionCookie(
     HttpContext context,
     AuthenticationCookieOptions authOptions,
-    ICookieManager cookieManager,
-    TicketDataFormat ticketDataFormat,
-    ITicketStore ticketStore,
+    AuthenticationTicket sessionTicketId,
     DateTimeOffset currentUtc,
-    string? ticketId)
+    ICookieManager cookieManager,
+    TicketDataFormat ticketDataProtector,
+    ITicketStore ticketStore)
   {
-    if (ticketId is null) return Fail(MissingSessionTicketId);
+    var sessionId = GetSessionId(sessionTicketId);
+    if(sessionId is null) return Fail(MissingSessionId);
 
-    var sessionTicket = await GetSessionTicket(ticketStore, ticketId, context.RequestAborted);
-    if (sessionTicket is null) return Fail(MissingSessionTicket);
+    var sessionTicket = await GetSessionTicket(ticketStore, sessionId, context.RequestAborted);
+    if(sessionTicket is null) return Fail(MissingSessionTicket);
 
-    var authResult = GetAuthenticationTicketState(sessionTicket, currentUtc, authOptions) switch {
-      AuthenticationTicketState.Expired => Fail(TicketExpired),
-      AuthenticationTicketState.Renewable => Success(RenewAuthenticationTicket(sessionTicket, currentUtc)),
-      _ => Success(sessionTicket)
-    };
+    var sessionTicketState = GetAuthenticationTicketState(sessionTicket, currentUtc, authOptions);
+    if(sessionTicketState == AuthenticationTicketState.Valid) return Success(sessionTicket);
+    if(sessionTicketState == AuthenticationTicketState.Expired) {
+      await CleanSessionTicket(context, sessionTicket, sessionId, authOptions, cookieManager, ticketStore);
+      return Fail(TicketExpired);
+    }
 
-    if (IsExpiredAuthenticationTicket(authResult)) await RemoveSessionTicket(ticketStore, ticketId, context.RequestAborted);
-    if (IsRenewedAuthenticationTicket(authResult, currentUtc)) await RenewSessionTicket(ticketStore, authResult.Ticket!, ticketId, context.RequestAborted);
+    var renewedSessionTicketId = RenewAuthenticationTicket(sessionTicketId, currentUtc);
+    UseAuthenticationTicket(context, renewedSessionTicketId, authOptions, cookieManager, ticketDataProtector);
 
-    var cookieName = GetCookieName(authOptions);
-    var cookieOptions = BuildCookieOptions(sessionTicket.Properties!, context);
+    var renewedSessionTicket = RenewAuthenticationTicket(sessionTicket, currentUtc);
+    await RenewSessionTicket(ticketStore, renewedSessionTicket, sessionId, context.RequestAborted);
+    ResetResponseCacheHeaders(context.Response);
 
-    if (IsExpiredAuthenticationTicket(authResult)) DeleteCookie(context, cookieManager, cookieName, cookieOptions);
-    if (IsRenewedAuthenticationTicket(authResult, currentUtc)) AppendCookie(context, cookieManager, cookieName,
-      ProtectAuthenticationTicket(CreateSessionIdTicket(ticketId, authOptions.SchemeName), ticketDataFormat), cookieOptions);
-
-    return authResult;
+    return Success(renewedSessionTicket);
   }
 
-  internal static Task<AuthenticateResult> AuthenticateSessionCookie(
+  public static Task<AuthenticateResult> AuthenticateSessionCookie(
     HttpContext context,
     AuthenticationCookieOptions authOptions,
-    string? ticketId) =>
+    AuthenticationTicket sessionTicketId) =>
       AuthenticateSessionCookie(
         context,
         authOptions,
+        sessionTicketId,
+        ResolveRequiredService<TimeProvider>(context).GetUtcNow(),
         ResolveRequiredService<ICookieManager>(context),
         ResolveRequiredService<TicketDataFormat>(context),
-        ResolveRequiredService<ITicketStore>(context),
-        ResolveRequiredService<TimeProvider>(context).GetUtcNow(),
-        ticketId
+        ResolveRequiredService<ITicketStore>(context)
       );
 
 }

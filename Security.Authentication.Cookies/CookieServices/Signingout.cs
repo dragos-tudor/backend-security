@@ -1,4 +1,5 @@
 
+#nullable disable
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
@@ -7,41 +8,31 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  public static async ValueTask<string?> SignOutCookie (
+  public static async ValueTask<bool> SignOutCookie(
     HttpContext context,
-    AuthenticationProperties authProperties,
     AuthenticationCookieOptions authOptions,
     ICookieManager cookieManager,
-    TicketDataFormat ticketDataFormat,
+    TicketDataFormat ticketDataProtector,
     ITicketStore ticketStore,
     ILogger logger)
   {
-    var cookieName = GetCookieName(authOptions);
-    var cookieOptions = BuildCookieOptions(authProperties, context);
+    var(authTicket, error) = ExtractAuthenticationTicket(context, authOptions, cookieManager, ticketDataProtector);
+    if(error is not null) return false;
 
-    if (IsSessionBasedCookie(ticketStore) &&
-        ExtractSessionTicketId(context, cookieManager, cookieName, ticketDataFormat) is string ticketId)
-      await RemoveSessionTicket(ticketStore, ticketId);
+    if(IsSessionBasedTicket(ticketStore)) await CleanSessionTicket(context, authTicket, GetSessionId(authTicket), authOptions, cookieManager, ticketStore);
+    if(!IsSessionBasedTicket(ticketStore)) CleanAuthenticationTicket(context, authTicket, authOptions, cookieManager);
 
-    DeleteCookie(context, cookieManager, cookieName, cookieOptions);
     ResetResponseCacheHeaders(context.Response);
-
-    var redirectUri = GetRedirectUriOrQueryReturnUrl(context, authProperties, authOptions);
-    if (ExistsUri(redirectUri)) SetResponseRedirect(context.Response, redirectUri!);
-
     LogSignedOutCookie(logger, authOptions.SchemeName, context.TraceIdentifier);
-    return GetResponseLocation(context.Response);
+    return true;
   }
 
-  public static ValueTask<string?> SignOutCookie (
-    HttpContext context,
-    AuthenticationProperties? authProperties = default) =>
-      SignOutCookie(
-        context,
-        authProperties ?? CreateCookieAuthenticationProperties(),
-        ResolveRequiredService<AuthenticationCookieOptions>(context),
-        ResolveRequiredService<ICookieManager>(context),
-        ResolveRequiredService<TicketDataFormat>(context),
-        ResolveRequiredService<ITicketStore>(context),
-        ResolveCookiesLogger(context));
+  public static ValueTask<bool> SignOutCookie(HttpContext context) =>
+    SignOutCookie(
+      context,
+      ResolveRequiredService<AuthenticationCookieOptions>(context),
+      ResolveRequiredService<ICookieManager>(context),
+      ResolveRequiredService<TicketDataFormat>(context),
+      ResolveRequiredService<ITicketStore>(context),
+      ResolveCookiesLogger(context));
 }

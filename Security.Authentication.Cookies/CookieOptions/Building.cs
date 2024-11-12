@@ -6,7 +6,7 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  static CookieOptions BuildCookieOptions (AuthenticationProperties authProperties, HttpContext context)
+  static CookieOptions BuildCookieOptions(AuthenticationProperties authProperties, HttpContext context)
   {
     var cookieOptions = CreateCookieOptions();
     var cookieOptionsExpire = IsAuthenticationPropertiesPersistent(authProperties!) ? GetAuthenticationPropertiesExpires(authProperties!) : default;

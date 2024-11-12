@@ -1,28 +1,22 @@
 
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Security.Authentication.Cookies;
 
-partial class CookiesFuncs {
-
-  public static IServiceCollection AddCookiesServices (this IServiceCollection services) =>
-      AddCookiesServices(services, CreateAuthenticationCookieOptions());
-
-  public static IServiceCollection AddCookiesServices (
+partial class CookiesFuncs
+{
+  public static IServiceCollection AddCookiesServices(
     this IServiceCollection services,
-    AuthenticationCookieOptions authOptions,
+    AuthenticationCookieOptions? authOptions = default,
     ITicketStore? ticketStore = default,
-    CookieBuilder? cookieBuilder = default,
-    IDataProtectionProvider? dataProtectionProvider = default) =>
+    ICookieManager? cookieManager = default) =>
       services
-        .AddSingleton((services) => authOptions)
-        .AddSingleton<ICookieManager, ChunkingCookieManager>()
-        .AddSingleton((services) =>
-          CreateTicketDataFormat(dataProtectionProvider ?? ResolveRequiredService<IDataProtectionProvider>(services), authOptions.SchemeName))
+        .AddSingleton(authOptions ?? CreateAuthenticationCookieOptions())
+        .AddSingleton(cookieManager ?? new ChunkingCookieManager())
         .AddSingleton(ticketStore ?? new DefaultTicketStore())
-        .AddSingleton(TimeProvider.System)
-        .AddKeyedSingleton(CookiesLogger, (services, serviceKey) => CreateLogger(services, (string)serviceKey));
+        .AddSingleton((services) => CreateTicketDataFormat(ResolveRequiredService<IDataProtectionProvider>(services), ResolveRequiredService<AuthenticationCookieOptions>(services).SchemeName))
+        .AddKeyedSingleton(CookiesLogger,(services, serviceKey) => CreateLogger(services,(string)serviceKey))
+        .TryAddSingleton(TimeProvider.System);
 }

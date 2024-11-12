@@ -7,22 +7,23 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  public static string ForbidCookie (
+  public static string ForbidCookie(
     HttpContext context,
     AuthenticationProperties authProperties,
     AuthenticationCookieOptions authOptions,
     ILogger logger)
   {
     SetResponseStatus(context, HttpStatusCode.Forbidden);
-    var returnUri = GetAuthenticationPropertiesRedirectUri(authProperties!) ?? BuildRelativeUri(context.Request);
-    var forbidPath = BuildForbidPath(authOptions, returnUri);
+
+    var returnUri = GetAuthenticationPropertiesRedirectUri(authProperties!) ?? GetRelativeUri(context.Request);
+    var forbidPath = GetForbidPath(authOptions, returnUri);
 
     LogForbidden(logger, authOptions.SchemeName, forbidPath, context.TraceIdentifier);
     return forbidPath;
   }
 
-  public static string ForbidCookie (HttpContext context, AuthenticationProperties authProperties) =>
-    ForbidCookie (
+  public static string ForbidCookie(HttpContext context, AuthenticationProperties authProperties) =>
+    ForbidCookie(
       context,
       authProperties,
       ResolveRequiredService<AuthenticationCookieOptions>(context),

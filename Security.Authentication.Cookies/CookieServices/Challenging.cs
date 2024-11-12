@@ -7,22 +7,23 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  public static string ChallengeCookie (
+  public static string ChallengeCookie(
     HttpContext context,
     AuthenticationProperties authProperties,
     AuthenticationCookieOptions authOptions,
     ILogger logger)
   {
     SetResponseStatus(context, HttpStatusCode.Unauthorized);
-    var returnUri = GetAuthenticationPropertiesRedirectUri(authProperties!) ?? BuildRelativeUri(context.Request);
-    var challengePath = BuildChallengePath(authOptions, returnUri);
+
+    var returnUri = GetAuthenticationPropertiesRedirectUri(authProperties!) ?? GetRelativeUri(context.Request);
+    var challengePath = GetChallengePath(authOptions, returnUri);
 
     LogChallenged(logger, authOptions.SchemeName, challengePath, context.TraceIdentifier);
     return challengePath;
   }
 
-  public static string ChallengeCookie (HttpContext context, AuthenticationProperties authProperties) =>
-    ChallengeCookie (
+  public static string ChallengeCookie(HttpContext context, AuthenticationProperties authProperties) =>
+    ChallengeCookie(
       context,
       authProperties,
       ResolveRequiredService<AuthenticationCookieOptions>(context),

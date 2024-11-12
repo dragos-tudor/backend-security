@@ -16,8 +16,9 @@ partial class CookiesTests
     var context = new DefaultHttpContext() { RequestServices = BuildServiceProvider(authOptions, ticketStore) };
     var ticket = CreateAuthenticationTicket(new ClaimsPrincipal(), new AuthenticationProperties(), authOptions.SchemeName);
     var ticketId = await ticketStore.SetTicket(ticket);
+    var sessionTicketId = CreateSessionTicketId(ticketId, authOptions.SchemeName);
 
-    var result = await AuthenticateSessionCookie(context, authOptions, ticketId);
+    var result = await AuthenticateSessionCookie(context, authOptions, sessionTicketId);
     Assert.IsTrue(result.Succeeded);
     Assert.AreEqual(ticket, result.Ticket);
   }
@@ -30,8 +31,9 @@ partial class CookiesTests
     var context = new DefaultHttpContext() { RequestServices = BuildServiceProvider(authOptions, ticketStore) };
     var ticket = CreateAuthenticationTicket(new ClaimsPrincipal(), new AuthenticationProperties(), authOptions.SchemeName);
     var ticketId = await ticketStore.SetTicket(ticket);
+    var sessionTicketId = CreateSessionTicketId(ticketId, authOptions.SchemeName);
 
-    await AuthenticateSessionCookie(context, authOptions, ticketId);
+    await AuthenticateSessionCookie(context, authOptions, sessionTicketId);
     Assert.IsNotNull(await ticketStore.GetTicket(ticketId));
   }
 
@@ -43,8 +45,9 @@ partial class CookiesTests
     var context = new DefaultHttpContext() { RequestServices = BuildServiceProvider(authOptions, ticketStore) };
     var ticket = CreateAuthenticationTicket(new ClaimsPrincipal(), new AuthenticationProperties() { ExpiresUtc = DateTime.Now.AddMinutes(-1) }, authOptions.SchemeName);
     var ticketId = await ticketStore.SetTicket(ticket);
+    var sessionTicketId = CreateSessionTicketId(ticketId, authOptions.SchemeName);
 
-    var result = await AuthenticateSessionCookie(context, authOptions, ticketId);
+    var result = await AuthenticateSessionCookie(context, authOptions, sessionTicketId);
     Assert.AreEqual(TicketExpired, result.Failure!.Message);
   }
 
@@ -56,8 +59,9 @@ partial class CookiesTests
     var context = new DefaultHttpContext() { RequestServices = BuildServiceProvider(authOptions, ticketStore) };
     var ticket = CreateAuthenticationTicket(new ClaimsPrincipal(), new AuthenticationProperties() { ExpiresUtc = DateTime.Now.AddMinutes(-1) }, authOptions.SchemeName);
     var ticketId = await ticketStore.SetTicket(ticket);
+    var sessionTicketId = CreateSessionTicketId(ticketId, authOptions.SchemeName);
 
-    await AuthenticateSessionCookie(context, authOptions, ticketId);
+    await AuthenticateSessionCookie(context, authOptions, sessionTicketId);
     Assert.IsNull(await ticketStore.GetTicket(ticketId));
   }
 
@@ -74,8 +78,9 @@ partial class CookiesTests
     var ticket = CreateAuthenticationTicket(new ClaimsPrincipal(), authProperties, authOptions.SchemeName);
     var ticketId = await ticketStore.SetTicket(ticket);
     var initialExpiresUtc = authProperties.ExpiresUtc;
+    var sessionTicketId = CreateSessionTicketId(ticketId, authOptions.SchemeName);
 
-    var result = await AuthenticateSessionCookie(context, authOptions, ticketId);
+    var result = await AuthenticateSessionCookie(context, authOptions, sessionTicketId);
     Assert.IsTrue(result.Succeeded);
     Assert.AreEqual(ticket, result.Ticket);
     Assert.IsTrue(initialExpiresUtc < ticket.Properties.ExpiresUtc);
@@ -93,8 +98,9 @@ partial class CookiesTests
     };
     var ticket = CreateAuthenticationTicket(new ClaimsPrincipal(), authProperties, authOptions.SchemeName);
     var ticketId = await ticketStore.SetTicket(ticket);
+    var sessionTicketId = CreateSessionTicketId(ticketId, authOptions.SchemeName);
 
-    await AuthenticateSessionCookie(context, authOptions, ticketId);
+    await AuthenticateSessionCookie(context, authOptions, sessionTicketId);
     Assert.IsNotNull(await ticketStore.GetTicket(ticketId));
   }
 
@@ -103,21 +109,10 @@ partial class CookiesTests
   {
     var authOptions = CreateAuthenticationCookieOptions();
     var context = new DefaultHttpContext();
+    var sessionTicketId = CreateSessionTicketId("", authOptions.SchemeName);
 
-    var result = await AuthenticateSessionCookie(context, authOptions,
-      default!, default!, new FakeTicketStore(), DateTime.UtcNow, string.Empty);
+    var result = await AuthenticateSessionCookie(context, authOptions, sessionTicketId, DateTime.UtcNow, default!, default!, new FakeTicketStore());
     Assert.AreEqual(MissingSessionTicket, result.Failure!.Message);
-  }
-
-  [TestMethod]
-  public async Task No_session_ticket_id__authenticate_session_based_cookie__missing_session_ticket_id_failure()
-  {
-    var authOptions = CreateAuthenticationCookieOptions();
-    var context = new DefaultHttpContext();
-
-    var result = await AuthenticateSessionCookie(context, authOptions,
-      default!, default!, default!, DateTime.UtcNow, default);
-    Assert.AreEqual(MissingSessionTicketId, result.Failure!.Message);
   }
 
   static ServiceProvider BuildServiceProvider(AuthenticationCookieOptions authOptions, FakeTicketStore ticketStore) =>

@@ -15,7 +15,7 @@ partial class CookiesTests {
   {
     using var server = CreateHttpServer(services => services.AddCookiesServices());
     var authProperties = CreateAuthenticationProperties();
-    server.MapGet("/resource", (HttpContext context) => ChallengeCookie(context, authProperties));
+    server.MapGet("/resource",(HttpContext context) => ChallengeCookie(context, authProperties));
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -29,7 +29,7 @@ partial class CookiesTests {
   public async Task Unautenticated_user_resource_request__challenge__login_redirection_microsoft()
   {
     using var server = CreateHttpServer(services => services.AddAuthentication().AddCookie());
-    server.MapGet("/resource", (HttpContext context) => context.ChallengeAsync());
+    server.MapGet("/resource",(HttpContext context) => context.ChallengeAsync());
     await server.StartAsync();
 
     using var client = server.GetTestClient();

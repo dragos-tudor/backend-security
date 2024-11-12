@@ -7,5 +7,5 @@ partial class CookiesFuncs
 {
   const string CookiesLogger = nameof(Cookies);
 
-  static ILogger ResolveCookiesLogger (HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, CookiesLogger);
+  static ILogger ResolveCookiesLogger(HttpContext context) => ResolveLogger(context.RequestServices, CookiesLogger);
 }
