@@ -6,13 +6,13 @@ partial class AuthenticationFuncs
 {
   const string FormMimeType = "application/x-www-form-urlencoded";
 
-  static bool IsFormContentTypeRequest(HttpRequest request) =>(request.ContentType ?? string.Empty).StartsWith(FormMimeType, StringComparison.OrdinalIgnoreCase);
+  static bool IsFormContentTypeHttpRequest(HttpRequest request) =>(request.ContentType ?? string.Empty).StartsWith(FormMimeType, StringComparison.OrdinalIgnoreCase);
 
-  public static bool IsFormPostRequest(HttpRequest request) => IsPostRequest(request) && IsFormContentTypeRequest(request) && IsReadableBodyRequest(request);
+  public static bool IsFormPostHttpRequest(HttpRequest request) => IsPostHttpRequest(request) && IsFormContentTypeHttpRequest(request) && IsReadableBodyHttpRequest(request);
 
-  public static bool IsGetRequest(HttpRequest request) => HttpMethods.IsGet(request.Method);
+  public static bool IsGetHttpRequest(HttpRequest request) => HttpMethods.IsGet(request.Method);
 
-  public static bool IsPostRequest(HttpRequest request) => HttpMethods.IsPost(request.Method);
+  public static bool IsPostHttpRequest(HttpRequest request) => HttpMethods.IsPost(request.Method);
 
-  public static bool IsReadableBodyRequest(HttpRequest request) => request.Body.CanRead;
+  public static bool IsReadableBodyHttpRequest(HttpRequest request) => request.Body.CanRead;
 }

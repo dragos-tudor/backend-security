@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Twitter;
 
-partial class TwitterFuncs {
-
-  public static Task<AuthenticateResult> AuthenticateTwitter (HttpContext context) =>
+partial class TwitterFuncs
+{
+  public static Task<AuthenticateResult> AuthenticateTwitter(HttpContext context) =>
     AuthenticateOAuth<TwitterOptions>(
       context,
       PostAuthorization,

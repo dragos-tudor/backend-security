@@ -8,18 +8,18 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
-  public static ValueTask WriteResponseTextContent(
+  public static ValueTask WriteHttpResponseTextContent(
     HttpResponse response,
     string content,
     CancellationToken cancellationToken = default)
   {
     var buffer = Encoding.UTF8.GetBytes(content);
-    SetResponseContentLength(response, buffer.Length);
-    SetResponseContentType(response, "text/html;charset=UTF-8");
+    SetHttpResponseContentLength(response, buffer.Length);
+    SetHttpResponseContentType(response, "text/html;charset=UTF-8");
     return response.Body.WriteAsync(buffer, cancellationToken);
   }
 
-  public static Task WriteResponseJsonContent<TValue>(
+  public static Task WriteHttpResponseJsonContent<TValue>(
     HttpResponse response,
     TValue value,
     JsonTypeInfo<TValue> jsonTypeInfo,

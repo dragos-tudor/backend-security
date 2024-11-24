@@ -7,5 +7,5 @@ partial class GoogleFuncs
 {
   const string GoogleLogger = nameof(Google);
 
-  static ILogger ResolveGoogleLogger (HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, GoogleLogger);
+  static ILogger ResolveGoogleLogger(HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, GoogleLogger);
 }

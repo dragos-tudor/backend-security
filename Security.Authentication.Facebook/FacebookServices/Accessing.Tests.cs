@@ -1,4 +1,5 @@
 
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
@@ -9,42 +10,37 @@ using static Security.Testing.Funcs;
 
 namespace Security.Authentication.Facebook;
 
-partial class FacebookTests {
-
+partial class FacebookTests
+{
   [TestMethod]
-  public async Task Access_token__access_user_informations__token_endpoint_receive_access_token () {
+  public async Task Access_token__access_user_informations__token_endpoint_receive_access_token()
+  {
     using var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {query = request.RequestUri}));
-    var authOptions = CreateFacebookOptions("", "secret") with { UserInformationEndpoint = "http://oauth/userinfo" };
-    MapJsonClaim(authOptions, "query");
+    var authOptions = CreateFacebookOptions("", "secret") with { UserInfoEndpoint = "http://oauth/userinfo", ClaimMappers = [new JsonKeyClaimMapper("query_type", "query")] };
 
-    var result = await AccessFacebookUserInfo("token", authOptions, httpClient);
-    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "query")?.Value, "access_token=token", StringComparison.InvariantCulture);
+    var (claims, _) = await AccessFacebookUserInfo("token", authOptions, httpClient);
+    StringAssert.Contains(GetSecurityClaim(claims, "query_type")?.Value, "access_token=token", StringComparison.InvariantCulture);
   }
 
   [TestMethod]
-  public async Task App_secret_proof__access_user_informations__token_endpoint_receive_app_secret_proof () {
+  public async Task App_secret_proof__access_user_informations__token_endpoint_receive_app_secret_proof()
+  {
     using var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {secret_proof = request.RequestUri}));
-    var authOptions = CreateFacebookOptions("", "secret") with { UserInformationEndpoint = "http://oauth/userinfo" };
-    MapJsonClaim(authOptions, "secret_proof");
+    var authOptions = CreateFacebookOptions("", "secret") with { UserInfoEndpoint = "http://oauth/userinfo", ClaimMappers = [new JsonKeyClaimMapper("secret_proof_type", "secret_proof")] };
 
-    var result = await AccessFacebookUserInfo(string.Empty, authOptions, httpClient);
-    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "secret_proof")?.Value, "appsecret_proof=", StringComparison.InvariantCulture);
+    var (claims, _) = await AccessFacebookUserInfo(string.Empty, authOptions, httpClient);
+    StringAssert.Contains(GetSecurityClaim(claims, "secret_proof_type")?.Value, "appsecret_proof=", StringComparison.InvariantCulture);
   }
 
   [TestMethod]
-  public async Task Facebook_fields__access_user_informations__token_endpoint_receive_fields () {
+  public async Task Facebook_fields__access_user_informations__token_endpoint_receive_fields()
+  {
     using var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {fields = request.RequestUri}));
-    var authOptions = CreateFacebookOptions("", "secret") with { UserInformationEndpoint = "http://oauth/userinfo" };
-    MapJsonClaim(authOptions, "fields");
+    var authOptions = CreateFacebookOptions("", "secret") with { UserInfoEndpoint = "http://oauth/userinfo", ClaimMappers = [new JsonKeyClaimMapper("fields_type", "fields")] };
 
-    var result = await AccessFacebookUserInfo(string.Empty, authOptions, httpClient);
-    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "fields")?.Value, "fields=name,email", StringComparison.InvariantCulture);
+    var (claims, _) = await AccessFacebookUserInfo(string.Empty, authOptions, httpClient);
+    StringAssert.Contains(GetSecurityClaim(claims, "fields_type")?.Value, "fields=name%2Cemail", StringComparison.InvariantCulture);
   }
 
-  static Claim GetSecurityClaim(ClaimsPrincipal principal, string claimType) =>
-    principal.Claims.FirstOrDefault(claim => claim.Type == claimType);
-
-  static void MapJsonClaim(FacebookOptions facebookOptions, string claimType, string jsonKey = default) =>
-    facebookOptions.ClaimActions.MapJsonKey(claimType, jsonKey ?? claimType);
-
+  static Claim GetSecurityClaim(IEnumerable<Claim> claims, string claimType) => claims.FirstOrDefault(claim => claim.Type == claimType);
 }

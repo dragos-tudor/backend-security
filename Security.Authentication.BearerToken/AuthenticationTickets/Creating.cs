@@ -6,14 +6,14 @@ partial class BearerTokenFuncs
 {
   static AuthenticationTicket CreateBearerTokenTicket(
     ClaimsPrincipal principal,
-    AuthenticationProperties authProperties,
+    AuthenticationProperties authProps,
     BearerTokenOptions tokenOptions) =>
-      new(principal, authProperties, $"{tokenOptions.SchemeName}:AccessToken");
+      new(principal, authProps, $"{tokenOptions.SchemeName}:AccessToken");
 
   static AuthenticationTicket CreateRefreshTicket(
     ClaimsPrincipal principal,
-    AuthenticationProperties authProperties,
+    AuthenticationProperties authProps,
     BearerTokenOptions tokenOptions) =>
-      new(principal, authProperties, $"{tokenOptions.SchemeName}:RefreshToken");
+      new(principal, authProps, $"{tokenOptions.SchemeName}:RefreshToken");
 
 }

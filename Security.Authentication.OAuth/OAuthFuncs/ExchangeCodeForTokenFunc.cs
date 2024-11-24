@@ -5,10 +5,9 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.OAuth;
 
-public delegate Task<TokenResult> ExchangeCodeForTokensFunc<TOptions> (
+public delegate Task<TokenResult> ExchangeCodeForTokensFunc<TOptions>(
   string authCode,
-  AuthenticationProperties authProperties,
+  AuthenticationProperties authProps,
   TOptions authOptions,
   HttpClient httpClient,
-  CancellationToken cancellationToken = default
-) where TOptions: OAuthOptions;
+  CancellationToken cancellationToken = default) where TOptions: OAuthOptions;

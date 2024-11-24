@@ -1,5 +1,5 @@
 {
-	"image": "mcr.microsoft.com/dotnet/sdk:8.0.303-bookworm-slim",
+	"image": "mcr.microsoft.com/dotnet/sdk:9.0.100-bookworm-slim",
   "customizations": {
     "vscode": {
 	    "extensions": [

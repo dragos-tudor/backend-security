@@ -6,25 +6,27 @@ namespace Security.Authentication.Google;
 
 partial class GoogleFuncs {
 
-  public static GoogleOptions CreateGoogleOptions (
+  public static GoogleOptions CreateGoogleOptions(
     string clientId,
     string clientSecret,
     string schemeName = GoogleDefaults.AuthenticationScheme) =>
-      new () {
+      new() {
         AuthorizationEndpoint = GoogleDefaults.AuthorizationEndpoint,
         TokenEndpoint = GoogleDefaults.TokenEndpoint,
-        UserInformationEndpoint = GoogleDefaults.UserInformationEndpoint,
+        UserInfoEndpoint = GoogleDefaults.UserInfoEndpoint,
 
         ClientId = clientId,
         ClientSecret = clientSecret,
 
         ChallengePath = new PathString(GoogleDefaults.ChallengePath),
-        ClaimActions = MapGoogleClaimActions(new ClaimActionCollection()),
+        ClaimMappers = GetGoogleClaimMappers(),
         CallbackPath = new PathString(GoogleDefaults.CallbackPath),
 
+        ResponseType = OAuthResponseType.Code,
         SchemeName = schemeName,
         Scope = new [] { "openid", "profile", "email" },
-        ScopeSeparator = ' '
+        ScopeSeparator = ' ',
+        // UsePkce = true
       };
 
 }

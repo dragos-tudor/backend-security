@@ -9,7 +9,7 @@
       </Include>
       <Exclude>
         <ModulePath>.*\\Security\.Authentication\.dll$</ModulePath>
-        <ModulePath>.*\\Security\.Authentication\.Remote\.dll$</ModulePath>
+        <ModulePath>.*\\Security\.Authentication\.Base\.dll$</ModulePath>
         <ModulePath>.*\\Security\.Testing\.dll$</ModulePath>
       </Exclude>
     </ModulePaths>

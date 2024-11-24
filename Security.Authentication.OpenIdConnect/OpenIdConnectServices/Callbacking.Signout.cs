@@ -8,27 +8,17 @@ partial class OpenIdConnectFuncs
   public static string? CallbackSignoutOidc<TOptions>(
     HttpContext context,
     TOptions oidcOptions,
-    PropertiesDataFormat propertiesDataFormat,
+    PropertiesDataFormat authPropsProtector,
     ILogger logger)
   where TOptions : OpenIdConnectOptions
   {
-    var callbackParams = GetQueryRequestParams(context.Request);
+    var callbackParams = GetHttpRequestQueryParams(context.Request);
     var callbackMessage = CreateOpenIdConnectMessage(callbackParams);
 
-    var authProperties = UnprotectAuthenticationProperties(callbackMessage.State, propertiesDataFormat);
-    var redirectUri = SetResponseRedirect(context.Response, GetCallbackRedirectUri(authProperties!));
+    var authProps = UnprotectAuthProps(callbackMessage.State, authPropsProtector);
+    var redirectUri = SetHttpResponseRedirect(context.Response, GetAuthPropsRedirectUri(authProps)!);
 
     LogSignOutCallback(logger, oidcOptions.SchemeName, redirectUri!, context.TraceIdentifier);
     return redirectUri;
   }
-
-  public static string? CallbackSignoutOidc<TOptions>(
-    HttpContext context,
-    ILogger logger)
-  where TOptions : OpenIdConnectOptions =>
-    CallbackSignoutOidc(
-      context,
-      ResolveRequiredService<TOptions>(context),
-      ResolvePropertiesDataFormat(context),
-      logger);
 }

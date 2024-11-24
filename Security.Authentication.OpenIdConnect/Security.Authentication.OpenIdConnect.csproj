@@ -11,7 +11,7 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
-    <ProjectReference Include="../Security.Authentication.Remote/Security.Authentication.Remote.csproj" />
+    <ProjectReference Include="../Security.Authentication.OAuth.Base/Security.Authentication.OAuth.Base.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,8 +5,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs
 {
-  public delegate string? ChallengeOAuthFunc<TOptions> (
+  public delegate string? ChallengeOAuthFunc<TOptions>(
     HttpContext context,
-    AuthenticationProperties authProperties)
-  where TOptions: OAuthOptions;
+    AuthenticationProperties authProps) where TOptions : OAuthOptions;
 }

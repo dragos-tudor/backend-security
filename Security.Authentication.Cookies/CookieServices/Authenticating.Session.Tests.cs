@@ -14,12 +14,12 @@ partial class CookiesTests
     var authOptions = CreateAuthenticationCookieOptions();
     var ticketStore = new FakeTicketStore();
     var context = new DefaultHttpContext() { RequestServices = BuildServiceProvider(authOptions, ticketStore) };
-    var ticket = CreateAuthenticationTicket(new ClaimsPrincipal(), new AuthenticationProperties(), authOptions.SchemeName);
+    var ticket = CreateAuthenticationTicket(new ClaimsPrincipal(), CreateAuthProps(), authOptions.SchemeName);
     var ticketId = await ticketStore.SetTicket(ticket);
     var sessionTicketId = CreateSessionTicketId(ticketId, authOptions.SchemeName);
 
     var result = await AuthenticateSessionCookie(context, authOptions, sessionTicketId);
-    Assert.IsTrue(result.Succeeded);
+    Assert.IsNull(result.Failure);
     Assert.AreEqual(ticket, result.Ticket);
   }
 
@@ -29,7 +29,7 @@ partial class CookiesTests
     var authOptions = CreateAuthenticationCookieOptions();
     var ticketStore = new FakeTicketStore();
     var context = new DefaultHttpContext() { RequestServices = BuildServiceProvider(authOptions, ticketStore) };
-    var ticket = CreateAuthenticationTicket(new ClaimsPrincipal(), new AuthenticationProperties(), authOptions.SchemeName);
+    var ticket = CreateAuthenticationTicket(new ClaimsPrincipal(), CreateAuthProps(), authOptions.SchemeName);
     var ticketId = await ticketStore.SetTicket(ticket);
     var sessionTicketId = CreateSessionTicketId(ticketId, authOptions.SchemeName);
 
@@ -48,7 +48,7 @@ partial class CookiesTests
     var sessionTicketId = CreateSessionTicketId(ticketId, authOptions.SchemeName);
 
     var result = await AuthenticateSessionCookie(context, authOptions, sessionTicketId);
-    Assert.AreEqual(TicketExpired, result.Failure!.Message);
+    Assert.AreEqual(TicketExpired, result.Failure?.Message);
   }
 
   [TestMethod]
@@ -71,32 +71,32 @@ partial class CookiesTests
     var authOptions = CreateAuthenticationCookieOptions();
     var ticketStore = new FakeTicketStore();
     var context = new DefaultHttpContext() { RequestServices = BuildServiceProvider(authOptions, ticketStore) };
-    var authProperties = new AuthenticationProperties() {
+    var authProps = new AuthenticationProperties() {
       IssuedUtc = DateTime.Now.AddMinutes(-1),
       ExpiresUtc = DateTime.Now.AddMinutes(1)
     };
-    var ticket = CreateAuthenticationTicket(new ClaimsPrincipal(), authProperties, authOptions.SchemeName);
+    var ticket = CreateAuthenticationTicket(new ClaimsPrincipal(), authProps, authOptions.SchemeName);
     var ticketId = await ticketStore.SetTicket(ticket);
-    var initialExpiresUtc = authProperties.ExpiresUtc;
+    var initialExpiresUtc = authProps.ExpiresUtc;
     var sessionTicketId = CreateSessionTicketId(ticketId, authOptions.SchemeName);
 
     var result = await AuthenticateSessionCookie(context, authOptions, sessionTicketId);
-    Assert.IsTrue(result.Succeeded);
+    Assert.IsNull(result.Failure);
     Assert.AreEqual(ticket, result.Ticket);
     Assert.IsTrue(initialExpiresUtc < ticket.Properties.ExpiresUtc);
   }
 
   [TestMethod]
-  public async Task Renewable_session_ticket__authenticate_session_based_cookie__slid_session_ticket_kept_in__store()
+  public async Task Renewable_session_ticket__authenticate_session_based_cookie__slide_session_ticket_kept_in__store()
   {
     var authOptions = CreateAuthenticationCookieOptions();
     var ticketStore = new FakeTicketStore();
     var context = new DefaultHttpContext() { RequestServices = BuildServiceProvider(authOptions, ticketStore) };
-    var authProperties = new AuthenticationProperties() {
+    var authProps = new AuthenticationProperties() {
       IssuedUtc = DateTime.Now.AddMinutes(-1),
       ExpiresUtc = DateTime.Now.AddMinutes(1)
     };
-    var ticket = CreateAuthenticationTicket(new ClaimsPrincipal(), authProperties, authOptions.SchemeName);
+    var ticket = CreateAuthenticationTicket(new ClaimsPrincipal(), authProps, authOptions.SchemeName);
     var ticketId = await ticketStore.SetTicket(ticket);
     var sessionTicketId = CreateSessionTicketId(ticketId, authOptions.SchemeName);
 

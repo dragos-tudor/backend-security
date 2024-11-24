@@ -4,7 +4,8 @@ global using System.Security.Claims;
 global using System.Threading.Tasks;
 global using Microsoft.Extensions.Logging;
 global using static Security.Authentication.AuthenticationFuncs;
-global using static Security.Authentication.Remote.RemoteFuncs;
+global using static Security.Authentication.OAuth.OAuthBaseFuncs;
+global using OAuthParamNames = Security.Authentication.OAuth.OAuthParameterNames;
 global using static Security.Authentication.OAuth.OAuthFuncs;
 
 namespace Security.Authentication.OAuth;

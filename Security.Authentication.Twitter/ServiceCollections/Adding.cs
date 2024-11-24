@@ -7,7 +7,7 @@ namespace Security.Authentication.Twitter;
 
 partial class TwitterFuncs
 {
-  public static IServiceCollection AddTwitterServices (
+  public static IServiceCollection AddTwitterServices(
     this IServiceCollection services,
     TwitterOptions twitterOptions,
     HttpClient? httpClient = default,

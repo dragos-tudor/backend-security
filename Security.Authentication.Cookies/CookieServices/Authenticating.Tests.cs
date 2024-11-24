@@ -104,7 +104,7 @@ partial class CookiesTests
   public async Task Authenticated_user_with_expired_authentication_cookie__authenticate__unauthenticated_user()
   {
     var expireCookieTicket = TimeSpan.FromMinutes(10);
-    using var server = CreateHttpServer(services => services.AddCookiesServices((CreateAuthenticationCookieOptions()) with { ExpireTimeSpan = expireCookieTicket }));
+    using var server = CreateHttpServer(services => services.AddCookiesServices((CreateAuthenticationCookieOptions()) with { ExpireAfter = expireCookieTicket }));
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
     server.MapGet("/resource",(HttpContext context) => GetPrincipalIdentity(context.User)!.IsAuthenticated ? "auth" : "unauth");
@@ -123,7 +123,7 @@ partial class CookiesTests
   {
     var expireCookieTicket = TimeSpan.FromMinutes(10);
     using var server = CreateHttpServer(services => services.AddCookiesServices(
-      CreateAuthenticationCookieOptions() with { ExpireTimeSpan = expireCookieTicket },
+      CreateAuthenticationCookieOptions() with { ExpireAfter = expireCookieTicket },
       new FakeTicketStore()));
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
@@ -144,7 +144,7 @@ partial class CookiesTests
     var ticketStore = new FakeTicketStore();
     var expireCookieTicket = TimeSpan.FromMinutes(10);
     using var server = CreateHttpServer(services => services.AddCookiesServices(
-      CreateAuthenticationCookieOptions() with { ExpireTimeSpan = expireCookieTicket },
+      CreateAuthenticationCookieOptions() with { ExpireAfter = expireCookieTicket },
       ticketStore));
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
@@ -168,7 +168,7 @@ partial class CookiesTests
   {
     var expireCookieTicket = TimeSpan.FromMinutes(10);
     using var server = CreateHttpServer(services => services.AddCookiesServices(
-      CreateAuthenticationCookieOptions() with { ExpireTimeSpan = expireCookieTicket },
+      CreateAuthenticationCookieOptions() with { ExpireAfter = expireCookieTicket },
       new FakeTicketStore()));
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
@@ -188,7 +188,7 @@ partial class CookiesTests
   {
     var expireCookieTicket = TimeSpan.FromMinutes(10);
     using var server = CreateHttpServer(services => services.AddCookiesServices(
-      CreateAuthenticationCookieOptions() with { ExpireTimeSpan = expireCookieTicket },
+      CreateAuthenticationCookieOptions() with { ExpireAfter = expireCookieTicket },
       new FakeTicketStore()));
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
@@ -245,6 +245,6 @@ partial class CookiesTests
   }
 
   static ClaimsPrincipal CreateNamedClaimsPrincipal(string name, string schemeName = CookieAuthenticationDefaults.AuthenticationScheme) =>
-    CreatePrincipal(schemeName, new [] { CreateNameClaim(name) });
+    CreatePrincipal(schemeName, [CreateNameClaim(name)]);
 
 }

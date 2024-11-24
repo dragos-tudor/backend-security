@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Facebook;
 
-partial class FacebookFuncs {
-
-  public static Task<AuthenticateResult> AuthenticateFacebook (HttpContext context) =>
+partial class FacebookFuncs
+{
+  public static Task<AuthenticateResult> AuthenticateFacebook(HttpContext context) =>
     AuthenticateOAuth<FacebookOptions>(
       context,
       PostAuthorization,

@@ -11,5 +11,5 @@ public static class TwitterDefaults
 
   internal const string AuthorizationEndpoint = "https://twitter.com/i/oauth2/authorize";
   internal const string TokenEndpoint = "https://api.twitter.com/2/oauth2/token";
-  internal const string UserInformationEndpoint = "https://api.twitter.com/2/users/me";
+  internal const string UserInfoEndpoint = "https://api.twitter.com/2/users/me";
 }

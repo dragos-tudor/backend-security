@@ -6,18 +6,14 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static TimeSpan? GetAuthenticationPropertiesMaxAge(AuthenticationProperties authProperties) =>
-    GetAuthenticationPropertiesParam<TimeSpan>(authProperties, OpenIdConnectParameterNames.MaxAge);
+  static TimeSpan? GetAuthPropsMaxAge(AuthenticationProperties authProps) => GetAuthPropsParam<TimeSpan>(authProps, OidcParamNames.MaxAge);
 
-  static string? GetAuthenticationPropertiesPrompt(AuthenticationProperties authProperties) =>
-    GetAuthenticationPropertiesParam<string>(authProperties, OpenIdConnectParameterNames.Prompt);
+  static string? GetAuthPropsPrompt(AuthenticationProperties authProps) => GetAuthPropsParam<string>(authProps, OidcParamNames.Prompt);
 
-  static string? GetAuthenticationPropertiesRedirectUriForCode(AuthenticationProperties authProperties) =>
-    GetAuthenticationPropertiesItem(authProperties, OpenIdConnectDefaults.RedirectUriForCodePropertiesKey);
+  static ICollection<string>? GetAuthPropsScope(AuthenticationProperties authProps) => GetAuthPropsParam<ICollection<string>>(authProps, OidcParamNames.Scope);
 
-  static ICollection<string>? GetAuthenticationPropertiesScope(AuthenticationProperties authProperties) =>
-    GetAuthenticationPropertiesParam<ICollection<string>>(authProperties, OpenIdConnectParameterNames.Scope);
 
-  static string? GetAuthenticationPropertiesUserState(AuthenticationProperties authProperties) =>
-    GetAuthenticationPropertiesItem(authProperties, OpenIdConnectDefaults.UserStatePropertiesKey);
+  static string? GetAuthPropsRedirectUriForCode(AuthenticationProperties authProps) => GetAuthPropsItem(authProps, OidcDefaults.RedirectUriForCodeProperties);
+
+  static string? GetAuthPropsUserState(AuthenticationProperties authProps) => GetAuthPropsItem(authProps, OidcDefaults.UserStateProperties);
 }

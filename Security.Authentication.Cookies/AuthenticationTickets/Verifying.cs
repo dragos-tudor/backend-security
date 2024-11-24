@@ -23,8 +23,7 @@ partial class CookiesFuncs
     GetAuthenticationTicketTimeElapsed(ticket, currentUtc) >
     GetAuthenticationTicketTimeRemaining(ticket, currentUtc);
 
-  internal static bool IsRenewableAuthenticationTicket(AuthenticationTicket ticket, DateTimeOffset currentUtc, bool slidingExpiration = true) =>
-    AllowAuthenticationTicketSlideExpiration(slidingExpiration) &&
+  internal static bool IsRenewableAuthenticationTicket(AuthenticationTicket ticket, DateTimeOffset currentUtc) =>
     AllowAuthenticationTicketRefresh(ticket) &&
     IsSetAuthenticationTicketIssued(ticket) &&
     IsSetAuthenticationTicketExpires(ticket) &&

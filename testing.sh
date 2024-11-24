@@ -4,8 +4,9 @@ WORKSPACE_DIR=/workspaces/backend-security/
 PROJECTS=(
   "Security.Authentication.BearerToken"
   "Security.Authentication.Cookies"
+  "Security.Authentication.Oauth.Base"
   "Security.Authentication.OAuth"
-  "Security.Authentication.Remote"
+  "Security.Authentication.OpenIdConnect"
   "Security.Authentication.Facebook"
   "Security.Authentication.Google"
   "Security.Authentication.Twitter"

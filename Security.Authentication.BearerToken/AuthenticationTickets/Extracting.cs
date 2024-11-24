@@ -11,8 +11,8 @@ partial class BearerTokenFuncs
 
   static(AuthenticationTicket? authTicket, string? error) ExtractAuthenticationTicket(HttpContext context, BearerTokenDataFormat bearerTokenProtector)
   {
-    var authorization = GetRequestAuthorizationHeader(context.Request);
-    var bearerToken = GetAuthorizationBearerToken(authorization);
+    var authorization = GetHttpRequestAuthorization(context.Request);
+    var bearerToken = GetHttpRequestBearerToken(authorization);
     if(bearerToken is null) return(default, NoToken);
 
     var authTicket = bearerTokenProtector.Unprotect(bearerToken);

@@ -10,7 +10,7 @@ partial class AuthenticationFuncs
     authResult switch {
       var result when result.Succeeded => $"authentication succedded: {GetPrincipalNameId(authResult.Principal)}",
       var result when result.None => "no authentication",
-      _ => $"authentication failure: {authResult.Failure!.Message}"
+      _ => $"authentication failure: {GetAuthenticateResultFailure(authResult)}"
     };
 
   public static Task<AuthenticateResult> ToTask(this AuthenticateResult authResult) => Task.FromResult(authResult);

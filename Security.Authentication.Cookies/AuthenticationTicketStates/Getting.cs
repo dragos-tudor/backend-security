@@ -10,7 +10,7 @@ partial class CookiesFuncs
     AuthenticationCookieOptions authOptions)
   {
     if(IsExpiredAuthenticationTicket(ticket, currentUtc)) return AuthenticationTicketState.Expired;
-    if(IsRenewableAuthenticationTicket(ticket, currentUtc, authOptions.SlidingExpiration)) return AuthenticationTicketState.Renewable;
+    if(IsRenewableAuthenticationTicket(ticket, currentUtc)) return AuthenticationTicketState.Renewable;
     return AuthenticationTicketState.Valid;
   }
 }

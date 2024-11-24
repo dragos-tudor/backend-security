@@ -5,8 +5,7 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static JsonDocument ParseJsonUserInfoData(string content) =>
-    JsonDocument.Parse(content);
+  static JsonDocument ParseJsonUserInfoData(string content) => JsonDocument.Parse(content);
 
   static JsonDocument ParseJwtUserInfoData(string content)
   {
@@ -17,12 +16,8 @@ partial class OpenIdConnectFuncs
 
   static JsonDocument? ParseUserInfoData(string content, string? contentType)
   {
-    if (IsJsonContentTypeUserInfoResponse(contentType))
-      return ParseJsonUserInfoData(content);
-
-    if (IsJwtContentTypeUserInfoResponse(contentType))
-      return ParseJwtUserInfoData(content);
-
+    if(IsJsonContentTypeHttpResponse(contentType)) return ParseJsonUserInfoData(content);
+    if(IsJwtContentTypeHttpResponse(contentType)) return ParseJwtUserInfoData(content);
     return default;
   }
 }

@@ -8,8 +8,8 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  internal const string MissingSessionId = "Missing session id";
-  internal const string MissingSessionTicket = "Missing session ticket";
+  internal const string MissingSessionId = "missing session id";
+  internal const string MissingSessionTicket = "missing session ticket";
 
   public static async Task<AuthenticateResult> AuthenticateSessionCookie(
     HttpContext context,
@@ -17,7 +17,7 @@ partial class CookiesFuncs
     AuthenticationTicket sessionTicketId,
     DateTimeOffset currentUtc,
     ICookieManager cookieManager,
-    TicketDataFormat ticketDataProtector,
+    TicketDataFormat authTicketProtector,
     ITicketStore ticketStore)
   {
     var sessionId = GetSessionId(sessionTicketId);
@@ -29,16 +29,17 @@ partial class CookiesFuncs
     var sessionTicketState = GetAuthenticationTicketState(sessionTicket, currentUtc, authOptions);
     if(sessionTicketState == AuthenticationTicketState.Valid) return Success(sessionTicket);
     if(sessionTicketState == AuthenticationTicketState.Expired) {
-      await CleanSessionTicket(context, sessionTicket, sessionId, authOptions, cookieManager, ticketStore);
+      await RemoveSessionTicket(ticketStore, sessionId, context.RequestAborted);
+      CleanAuthenticationCookie(context, authOptions, cookieManager);
       return Fail(TicketExpired);
     }
 
-    var renewedSessionTicketId = RenewAuthenticationTicket(sessionTicketId, currentUtc);
-    UseAuthenticationTicket(context, renewedSessionTicketId, authOptions, cookieManager, ticketDataProtector);
+    var renewedSessionTicketId = RenewAuthenticationTicket(sessionTicketId, authOptions, currentUtc);
+    SetAuthenticationCookie(context, renewedSessionTicketId, authOptions, currentUtc, cookieManager, authTicketProtector);
 
-    var renewedSessionTicket = RenewAuthenticationTicket(sessionTicket, currentUtc);
+    var renewedSessionTicket = RenewAuthenticationTicket(sessionTicket, authOptions, currentUtc);
     await RenewSessionTicket(ticketStore, renewedSessionTicket, sessionId, context.RequestAborted);
-    ResetResponseCacheHeaders(context.Response);
+    ResetHttpResponseCacheHeaders(context.Response);
 
     return Success(renewedSessionTicket);
   }

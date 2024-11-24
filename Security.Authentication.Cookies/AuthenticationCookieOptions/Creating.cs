@@ -5,15 +5,13 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
+  static readonly TimeSpan DefaultExpiresAfter = TimeSpan.FromMinutes(30);
+
   public static AuthenticationCookieOptions CreateAuthenticationCookieOptions(string? cookieName = default, string schemeName = CookieAuthenticationDefaults.AuthenticationScheme) =>
     new() {
       CookieName = cookieName ?? $"{CookieAuthenticationDefaults.CookiePrefix}{CookieAuthenticationDefaults.AuthenticationScheme}",
-      AccessDeniedPath = CookieAuthenticationDefaults.AccessDeniedPath,
-      LoginPath = CookieAuthenticationDefaults.LoginPath,
-      LogoutPath = CookieAuthenticationDefaults.LogoutPath,
       ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter,
-      ExpireTimeSpan = TimeSpan.FromMinutes(30),
-      SlidingExpiration = true,
+      ExpireAfter = DefaultExpiresAfter,
       SchemeName = schemeName
     };
 }

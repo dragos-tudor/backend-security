@@ -8,19 +8,25 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  public static async ValueTask<bool> SignOutSessionCookie(
+  public static async Task<bool> SignOutSessionCookie(
     HttpContext context,
     AuthenticationCookieOptions authOptions,
-    AuthenticationTicket sessionIdTicket,
+    AuthenticationTicket sessionTicketId,
     ICookieManager cookieManager,
-    TicketDataFormat ticketDataProtector,
+    TicketDataFormat authTicketProtector,
     ITicketStore ticketStore,
     ILogger logger)
   {
-    await CleanSessionTicket(context, sessionIdTicket, GetSessionId(sessionIdTicket), authOptions, cookieManager, ticketStore);
-    ResetResponseCacheHeaders(context.Response);
+    var sessionId = GetSessionId(sessionTicketId);
+    if (sessionId is null) return false;
 
-    LogSignedOutCookie(logger, authOptions.SchemeName, context.TraceIdentifier);
+    var sessionTicket = await GetSessionTicket(ticketStore, sessionId, context.RequestAborted);
+    await RemoveSessionTicket(ticketStore, sessionId, context.RequestAborted);
+
+    CleanAuthenticationCookie(context, authOptions, cookieManager);
+    ResetHttpResponseCacheHeaders(context.Response);
+
+    LogSignedOutCookie(logger, authOptions.SchemeName, GetPrincipalNameId(sessionTicket.Principal), context.TraceIdentifier);
     return true;
   }
 }

@@ -6,12 +6,12 @@ using static Microsoft.AspNetCore.Authentication.AuthenticateResult;
 
 namespace Security.Authentication.OAuth;
 
-partial class OAuthFuncs {
-
-  public static async Task<AuthenticateResult> AuthenticateOAuth<TOptions> (
+partial class OAuthFuncs
+{
+  public static async Task<AuthenticateResult> AuthenticateOAuth<TOptions>(
     HttpContext context,
     TOptions authOptions,
-    PropertiesDataFormat propertiesDataFormat,
+    PropertiesDataFormat authPropsProtector,
     HttpClient httpClient,
     PostAuthorizationFunc<TOptions> postAuthorize,
     ExchangeCodeForTokensFunc<TOptions> exchangeCodeForTokens,
@@ -23,47 +23,23 @@ partial class OAuthFuncs {
     var requestId = context.TraceIdentifier;
     var schemeName = authOptions.SchemeName;
 
-    var authResult = postAuthorize(context, authOptions, propertiesDataFormat);
-    if(IsPostAuthorizationResultFailure(authResult)) LogPostAuthorizationFailure(logger, schemeName, authResult.Failure!, requestId);
-    if(IsPostAuthorizationResultFailure(authResult)) return Fail(authResult.Failure!);
+    var (authProps, authError) = postAuthorize(context, authOptions, authPropsProtector);
+    if(authError is not null) return Fail(authError);
     LogPostAuthorization(logger, schemeName, requestId);
 
-    var authProperties = GetAutheticationProperties(authResult);
-    var authorizationCode = GetPostAuthorizationCode(context.Request)!;
-    var tokenResult = await exchangeCodeForTokens(authorizationCode, authProperties!, authOptions, httpClient, cancellationToken);
-    if (IsTokenResultFailure(tokenResult)) LogExchangeCodeForTokensFailure(logger, schemeName, tokenResult.Failure!, requestId);
-    if (IsTokenResultFailure(tokenResult)) return Fail(tokenResult.Failure!);
+    var authCode = GetAuthorizationCode(context.Request)!;
+    var (tokenInfo, tokenError) = await exchangeCodeForTokens(authCode, authProps!, authOptions, httpClient, cancellationToken);
+    if(tokenError is not null) return Fail(tokenError);
     LogExchangeCodeForTokens(logger, schemeName, requestId);
 
-    var accessToken = GetAccessToken(tokenResult);
-    var userInfoResult = await accessUserInfo(accessToken!, authOptions, httpClient, cancellationToken);
-    if(IsUserInfoResultFailure(userInfoResult)) LogAccessUserInfoFailure(logger, schemeName, userInfoResult.Failure!, requestId);
-    if(IsUserInfoResultFailure(userInfoResult)) return Fail(userInfoResult.Failure!);
+    var accessToken = GetAccessToken(tokenInfo!);
+    var (userClaims, userInfoError) = await accessUserInfo(accessToken!, authOptions, httpClient, cancellationToken);
+    if(userInfoError is not null) return Fail(userInfoError!);
     LogAccessUserInfo(logger, schemeName, requestId);
 
-    if (ShouldCleanCodeChallenge(authOptions)) RemoveAuthenticationPropertiesCodeVerifier(authProperties!);
+    if(ShouldCleanCodeChallenge(authOptions)) UnsetAuthPropsCodeVerifier(authProps!);
 
-    var principal = GetClaimsPrincipal(userInfoResult)!;
-    LogAuthenticated(logger, schemeName, GetPrincipalNameId(principal)!, requestId);
-    return Success(CreateAuthenticationTicket(principal, authProperties, schemeName));
+    var principal = CreatePrincipal(schemeName, userClaims);
+    return Success(CreateAuthenticationTicket(principal, authProps, schemeName));
   }
-
-
-  public static Task<AuthenticateResult> AuthenticateOAuth<TOptions> (
-    HttpContext context,
-    PostAuthorizationFunc<TOptions> postAuthorize,
-    ExchangeCodeForTokensFunc<TOptions> exchangeCodeForTokens,
-    AccessUserInfoFunc<TOptions> accessUserInfo,
-    ILogger logger)
-  where TOptions: OAuthOptions =>
-    AuthenticateOAuth(
-      context,
-      ResolveRequiredService<TOptions>(context),
-      ResolvePropertiesDataFormat(context),
-      ResolveHttpClient(context),
-      postAuthorize,
-      exchangeCodeForTokens,
-      accessUserInfo,
-      logger);
-
 }

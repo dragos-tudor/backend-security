@@ -8,21 +8,20 @@ using static Security.Testing.Funcs;
 
 namespace Security.Authentication.Cookies;
 
-partial class CookiesTests {
-
+partial class CookiesTests
+{
   [TestMethod]
-  public async Task Unautenticated_user_resource_request__forbid__forbidden_and_access_denied_path()
+  public async Task Unautenticated_user_resource_request__forbid__forbidden()
   {
     using var server = CreateHttpServer(services => services.AddCookiesServices());
-    var authProperties = CreateAuthenticationProperties();
-    server.MapGet("/resource",(HttpContext context) => ForbidCookie(context, authProperties));
+    var authProps = CreateAuthProps();
+    server.MapGet("/resource",(HttpContext context) => ForbidCookie(context));
     await server.StartAsync();
 
     using var client = server.GetTestClient();
     using var response = await client.GetAsync("/resource");
 
     Assert.AreEqual(HttpStatusCode.Forbidden, response.StatusCode);
-    Assert.AreEqual("/Account/AccessDenied?ReturnUrl=%2Fresource", await ReadResponseMessageContent(response));
   }
 
   [TestMethod]

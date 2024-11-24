@@ -6,28 +6,30 @@ namespace Security.Authentication.Facebook;
 
 partial class FacebookFuncs {
 
-  public static FacebookOptions CreateFacebookOptions (
+  public static FacebookOptions CreateFacebookOptions(
     string appId,
     string appSecret,
     string schemeName = FacebookDefaults.AuthenticationScheme) =>
-      new () {
+      new() {
         AuthorizationEndpoint = FacebookDefaults.AuthorizationEndpoint,
         TokenEndpoint = FacebookDefaults.TokenEndpoint,
-        UserInformationEndpoint = FacebookDefaults.UserInformationEndpoint,
+        UserInfoEndpoint = FacebookDefaults.UserInfoEndpoint,
 
         ClientId = appId,
         ClientSecret = appSecret,
 
         ChallengePath = new PathString(FacebookDefaults.ChallengePath),
-        ClaimActions = MapFacebookClaimActions(new ClaimActionCollection()),
+        ClaimMappers = GetFacebookClaimMappers(),
         CallbackPath = new PathString(FacebookDefaults.CallbackPath),
 
-        Fields = [ "name", "email" ],
+        Fields = ["name", "email"],
+        ResponseType = OAuthResponseType.Code,
         SchemeName = schemeName,
-        Scope = ["email" ],
-        ScopeSeparator = ',',
 
+        Scope = ["email"],
+        ScopeSeparator = ',',
         SendAppSecretProof = true
+        // UsePkce = true
       };
 
 }

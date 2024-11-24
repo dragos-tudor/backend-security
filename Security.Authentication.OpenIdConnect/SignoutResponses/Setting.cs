@@ -6,19 +6,19 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static async ValueTask<string> SetChallengeSignoutResponse (
+  static async ValueTask<string> SetChallengeSignoutResponse(
     HttpContext context,
     OpenIdConnectMessage oidcMessage,
     OpenIdConnectOptions oidcOptions,
     OpenIdConnectConfiguration oidcConfiguration)
   {
-    if (IsRedirectGetOpenIdConnectAuthenticationMethod(oidcOptions))
-      return SetResponseRedirect(context.Response, oidcMessage.CreateLogoutRequestUrl())!;
+    if(IsRedirectGetAuthMethod(oidcOptions))
+      return SetHttpResponseRedirect(context.Response, oidcMessage.CreateLogoutRequestUrl())!;
 
-    if (IsFormPostOpenIdConnectAuthenticationMethod(oidcOptions))
+    if(IsFormPostAuthMethod(oidcOptions))
     {
-      ResetResponseCacheHeaders(context.Response);
-      await WriteResponseTextContent(context.Response, oidcMessage.BuildFormPost(), context.RequestAborted);
+      ResetHttpResponseCacheHeaders(context.Response);
+      await WriteHttpResponseTextContent(context.Response, oidcMessage.BuildFormPost(), context.RequestAborted);
       return oidcConfiguration.EndSessionEndpoint;
     }
 

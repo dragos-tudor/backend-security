@@ -1,19 +1,17 @@
 using System.Net;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Net.Http.Headers;
 
 namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenFuncs
 {
-  public static string ChallengeBearerToken(
+  public static void ChallengeBearerToken(
     HttpContext context,
     BearerTokenOptions authOptions,
     ILogger logger)
   {
-    SetWWWAuthenticateResponseHeader(context, "Bearer");
-    SetResponseStatus(context, HttpStatusCode.Unauthorized);
-
-    LogChallenged(logger, authOptions.SchemeName, context.TraceIdentifier);
-    return string.Empty;
+    SetHttpResponseHeader(context, HeaderNames.WWWAuthenticate, BearerName);
+    ChallengeAuth(context, authOptions, logger);
   }
 }

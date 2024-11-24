@@ -1,40 +1,30 @@
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-#nullable disable
 
 namespace Security.Authentication.OAuth;
 
-partial class OAuthFuncs {
-
-  public static PostAuthorizationResult PostAuthorization<TOptions> (
+partial class OAuthFuncs
+{
+  public static AuthorizationResult PostAuthorization<TOptions>(
     HttpContext context,
     TOptions authOptions,
-    PropertiesDataFormat propertiesDataFormat)
+    PropertiesDataFormat authPropsProtector)
   where TOptions: OAuthOptions
   {
-    var authError = ValidatePostAuthorizationRequest(context);
-    if (ExistsPostAuthorizationValidationError(authError)) return authError;
+    var authError = ValidateAuthorizationResponse(context.Request);
+    if(authError is not null) return authError;
 
-    var authProperties = UnprotectAuthenticationProperties(GetPostAuthorizationState(context.Request)!, propertiesDataFormat);
-    if (!ExistAuthenticationProperties(authProperties)) return UnprotectAuthorizationStateFailed;
+    var authProps = UnprotectAuthProps(GetAuthorizationState(context.Request)!, authPropsProtector);
+    if(authProps is null) return UnprotectStateFailed;
 
-    var correlationError = ValidateCorrelationCookie(context.Request, authProperties);
-    if (ExistsCorrelationCookieValidationError(correlationError)) return correlationError;
+    var correlationError = ValidateCorrelationCookie(context.Request, authProps);
+    if(correlationError is not null) return correlationError;
 
-    var correlationId = GetAuthenticationPropertiesCorrelationId(authProperties);
-    CleanCorrelationCookie(context, authOptions, correlationId);
-    RemoveAuthenticationPropertiesCorrelationId(authProperties);
+    var correlationId = GetAuthPropsCorrelationId(authProps);
+    DeleteCorrelationCookie(context, authOptions, correlationId);
+    UnsetAuthPropsCorrelationId(authProps);
 
-    return authProperties;
+    return authProps;
   }
-
-  public static PostAuthorizationResult PostAuthorization<TOptions> (
-    HttpContext context)
-  where TOptions: OAuthOptions =>
-    PostAuthorization(
-      context,
-      ResolveRequiredService<TOptions>(context),
-      ResolvePropertiesDataFormat(context)
-    );
 }

@@ -8,20 +8,19 @@ using static Security.Testing.Funcs;
 
 namespace Security.Authentication.Twitter;
 
-partial class TwitterTests {
-
+partial class TwitterTests
+{
   [TestMethod]
-  public async Task User_credentials__exchange_code_for_tokens__endpoint_receive_credentials () {
+  public async Task User_credentials__exchange_code_for_tokens__endpoint_receive_credentials() {
     using var authServer = CreateHttpServer();
-    authServer.MapPost("/token", (HttpContext context) => new {token_type = context.Request.Headers.Authorization[0], access_token = string.Empty} );
+    authServer.MapPost("/token",(HttpContext context) => new {token_type = context.Request.Headers.Authorization[0], access_token = "a"} );
     await authServer.StartAsync();
     using var authClient = authServer.GetTestClient();
 
     var authOptions = CreateTwitterOptions("id", "secret") with { TokenEndpoint = "http://oauth/token" };
-    var authProperties = new AuthenticationProperties();
-    var result = await ExchangeTwitterCodeForTokens(string.Empty, authProperties, authOptions, authClient);
+    var authProps = new AuthenticationProperties();
+    var (tokenInfo, _) = await ExchangeTwitterCodeForTokens(string.Empty, authProps, authOptions, authClient);
 
-    Assert.AreEqual("Basic " + GetTwitterCredentials("id", "secret"), result.Success!.TokenType);
+    Assert.AreEqual("Basic " + GetTwitterCredentials("id", "secret"), tokenInfo!.TokenType);
   }
-
 }

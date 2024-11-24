@@ -9,7 +9,7 @@ namespace Security.Authentication.OpenIdConnect;
 partial class OpenIdConnectTests {
 
   [TestMethod]
-  public async Task Id_token_with_json_web_key__validate_token__validation_result() {
+  public async Task Id_token_with_shared_private_key__validate_token__validation_result() {
 
     // https://www.googleapis.com/oauth2/v3/certs
     var jsonStringKey = "{\"e\": \"AQAB\", \"kty\": \"RSA\", \"n\": \"tLZpmdBD-qb8fwqg-DKX8ljpCAAv5n9s5N-JBzOIu3Ry1au3diX_AXKcnpqWJt3Mh3lT4x-zKl4SLpcjpSHYdim4tmqKucUupLTXS-yIqGBw2xDaI0GpYd8QFiFAxTAcwrEoCdl3BGGojo4zmARcHBe_IfeQls097Um3Xu2uiD0RehagoXnDhzk54WAvN05GXJ1xzzx6B7H_fclXcUYb5p5n7SgPDUchTDsDFGCI60Sqqz10d_GNcceThotlXRXcGVlTQ9AGJ_ejzkLWE7NiJc7ZWkrufsNKvVsWT12y66u0VWeopuQZxqSoHIRvSZ71JsBT3dAN897ViZtyYdWoqQ\" }";

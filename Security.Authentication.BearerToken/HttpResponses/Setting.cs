@@ -8,7 +8,7 @@ partial class BearerTokenFuncs
 {
   static HttpContext SetWWWAuthenticateResponseHeader(HttpContext context, string headerValue)
   {
-    SetResponseHeader(context, HeaderNames.WWWAuthenticate, headerValue);
+    SetHttpResponseHeader(context, HeaderNames.WWWAuthenticate, headerValue);
     return context;
   }
 }

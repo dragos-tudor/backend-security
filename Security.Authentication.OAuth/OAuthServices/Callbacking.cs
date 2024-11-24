@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Http;
+#nullable disable
 
 namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs
 {
-  public static async Task<string> CallbackOAuth<TOptions> (
+  public static async Task<string> CallbackOAuth<TOptions>(
     HttpContext context,
     TOptions authOptions,
     AuthenticateFunc authenticate,
@@ -12,21 +13,16 @@ partial class OAuthFuncs
   where TOptions : OAuthOptions
   {
     var authResult = await authenticate(context);
-    if (authResult.Succeeded) await signin(context, authResult.Principal!, authResult.Properties);
-    if (!authResult.Succeeded) SetResponseRedirect(context.Response, BuildErrorPath(authOptions, authResult.Failure!));
+    if(!authResult.Succeeded) {
+      var failure = GetAuthenticateResultFailure(authResult);
 
-    return GetCallbackRedirectUri(authResult.Properties!);
+      var redirectUriWithError = GetOAuthRedirectUriWithError(authResult.Properties, failure);
+      return SetHttpResponseRedirect(context.Response, redirectUriWithError);
+    }
+
+    await signin(context, authResult.Principal!, authResult.Properties);
+
+    var redirectUri = GetOAuthRedirectUri(authResult.Properties);
+    return  SetHttpResponseRedirect(context.Response, redirectUri);
   }
-
-
-  public static Task<string> CallbackOAuth<TOptions> (
-    HttpContext context,
-    AuthenticateFunc authenticate,
-    SignInFunc signin)
-  where TOptions : OAuthOptions =>
-    CallbackOAuth(
-      context,
-      ResolveRequiredService<TOptions>(context),
-      authenticate,
-      signin);
 }

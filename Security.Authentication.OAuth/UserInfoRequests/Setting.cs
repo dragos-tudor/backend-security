@@ -1,14 +1,19 @@
 
 using System.Net.Http;
-using System.Net.Http.Headers;
+using System.Net.Mime;
 
 namespace Security.Authentication.OAuth;
 
-partial class OAuthFuncs {
+partial class OAuthFuncs
+{
+  const string Bearer = "Bearer";
 
-  static void SetUserInfoRequestBearer(HttpRequestMessage request, string accessTokenHeader, string accessToken) =>
-    request.Headers.Authorization = new AuthenticationHeaderValue(accessTokenHeader, accessToken);
-
-  static void SetUserInfoRequestAcceptType(HttpRequestMessage request, string mediaType) =>
-    request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(mediaType));
+  public static HttpRequestMessage SetUserInfoRequest(
+    HttpRequestMessage request,
+    string accessToken)
+  {
+    SetHttpRequestAcceptType(request, MediaTypeNames.Application.Json);
+    SetHttpRequestAuthorization(request, Bearer, accessToken);
+    return request;
+  }
 }

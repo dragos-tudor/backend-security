@@ -1,6 +1,4 @@
 
-using System.Collections.Generic;
-using System.Net;
 using System.Net.Http;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -33,10 +31,9 @@ partial class CookiesTests {
   [TestMethod]
   public async Task Signin_non_persisting_cookie_request__signin__non_persisted_authentication_cookie()
   {
-    var nonPersistedProps = new AuthenticationProperties(){ IsPersistent = false };
-    using var server = CreateHttpServer(services => services.AddCookiesServices(CreateAuthenticationCookieOptions()));
+    using var server = CreateHttpServer(services => services.AddCookiesServices(CreateAuthenticationCookieOptions() with { ExpireAfter = null }));
     server.UseAuthentication(AuthenticateCookie);
-    server.MapPost("/api/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal(CookieAuthenticationDefaults.AuthenticationScheme, "user"), nonPersistedProps).ToString());
+    server.MapPost("/api/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal(CookieAuthenticationDefaults.AuthenticationScheme, "user")).ToString());
     await server.StartAsync();
 
     using var client = server.GetTestClient();

@@ -8,8 +8,8 @@ partial class AuthorizationFuncs
   static async Task AuthorizationMiddleware(ChallengeFunc challenge, ForbidFunc forbid, HttpContext context, RequestDelegate next)
   {
     var(authResult, authzResult) = await Authorize(context);
-    if(IsAuthorizationChallenged(authzResult)) challenge(context, GetAuthenticationProperties(authResult));
-    if(IsAuthorizationForbidden(authzResult)) forbid(context, GetAuthenticationProperties(authResult));
+    if(IsAuthorizationChallenged(authzResult)) challenge(context);
+    if(IsAuthorizationForbidden(authzResult)) forbid(context);
 
     var principal = authResult.Principal;
     if(ExistsPrincipal(principal)) SetContextUser(context, principal);

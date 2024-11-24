@@ -1,24 +1,15 @@
 
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Mime;
+using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.OAuth;
 
-partial class OAuthFuncs {
-
+partial class OAuthFuncs
+{
   public static HttpRequestMessage BuildTokenRequest(
-    string tokenEndpoint,
-    IDictionary<string, string> tokenParams,
-    Version requestVersion)
-  {
-    var tokenRequest = CreateTokenRequest(tokenEndpoint);
-
-    SetTokenRequestAcceptType(tokenRequest, MediaTypeNames.Application.Json);
-    SetTokenRequestVersion(tokenRequest, requestVersion);
-    SetTokenRequestContent(tokenRequest, tokenParams);
-
-    return tokenRequest;
-  }
-
+    OAuthOptions authOptions,
+    OAuthParams tokenParams,
+    Version requestVersion) =>
+      SetTokenRequest(CreateHttpPostRequest(authOptions.TokenEndpoint), tokenParams, requestVersion);
 }

@@ -1,7 +1,6 @@
 
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Security.Authentication.OpenIdConnect;
 
@@ -9,47 +8,42 @@ partial class OpenIdConnectFuncs
 {
   public static async ValueTask<string?> ChallengeOidc<TOptions>(
     HttpContext context,
-    AuthenticationProperties authProperties,
+    AuthenticationProperties authProps,
     TOptions oidcOptions,
-    OpenIdConnectConfiguration oidcConfiguration,
-    PropertiesDataFormat propertiesDataFormat,
-    StringDataFormat stringDataFormat,
     DateTimeOffset currentUtc,
+    PropertiesDataFormat authPropsProtector,
+    StringDataFormat stringProtector,
     ILogger logger)
   where TOptions : OpenIdConnectOptions
   {
-    var challengeMessage = CreateOpenIdConnectMessage();
-    UseCorrelationCookie(context, GenerateCorrelationId(), oidcOptions, currentUtc);
+    // TODO: validate OpenIdConnectOptions [request type == authorization code flow, absolute uri == AuthorizationEndpoint, scopes supported, code challenge method supported]
 
-    if (ShouldUseCodeChallenge(oidcOptions))
-      UseCodeChallenge(authProperties, challengeMessage.Parameters, GenerateCodeVerifier());
+    var correlationId = GenerateCorrelationId();
+    UseCorrelationCookie(context, oidcOptions, correlationId, currentUtc);
+    SetAuthPropsCorrelationId(authProps, correlationId);
 
-    if (ShouldUseNonce(oidcOptions))
-      UseNonce(context, GenerateNonce(), challengeMessage, oidcOptions, stringDataFormat, currentUtc);
+    var oidcParams = CreateOidcParams();
+    if(ShouldUseCodeChallenge(oidcOptions)) UseCodeChallenge(oidcParams, authProps, GenerateCodeVerifier());
 
-    SetAuthorizationAuthenticationProperties(authProperties, GetRequestUrl(context.Request), challengeMessage.RedirectUri, challengeMessage.State);
-    SetAuthorizationOpenIdConnectMessage(challengeMessage, context, authProperties, oidcOptions, oidcConfiguration,
-      ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
+    var callbackUrl = GetAbsoluteUrl(context.Request, oidcOptions.CallbackPath);
+    var redirectUri = GetHttpRequestQueryValue(context.Request, oidcOptions.ReturnUrlParameter)!;
+    SetAuthorizationAuthProps(authProps, redirectUri, callbackUrl);
 
-    var authUri = await SetAuthorizationResponse(context, challengeMessage, oidcOptions, oidcConfiguration);
-    SanitizeResponse(context.Response);
+    SetAuthorizationOidcParams(oidcParams, authProps, oidcOptions, authPropsProtector, callbackUrl);
+    SetOAuthParams(oidcParams, oidcOptions.AdditionalAuthorizationParameters);
 
-    LogAuthorizeChallenge(logger, oidcOptions.SchemeName, authUri!, context.TraceIdentifier);
-    return authUri;
+    // TODO: implement PAR support [https://datatracker.ietf.org/doc/html/rfc9126]
+
+    if(IsRedirectGetAuthMethod(oidcOptions))
+      SetHttpResponseRedirect(context.Response, BuildHttpRequestUri(oidcOptions.AuthorizationEndpoint, oidcParams!));
+
+    if(IsFormPostAuthMethod(oidcOptions))
+    {
+      ResetHttpResponseCacheHeaders(context.Response);
+      await WriteHttpResponseTextContent(context.Response, BuildHttpRequestFormPost(oidcOptions.AuthorizationEndpoint, oidcParams), context.RequestAborted);
+    }
+
+    LogAuthorizeChallenge(logger, oidcOptions.SchemeName, GetHttpResponseLocation(context.Response)!, GetHttpResponseSetCookie(context.Response)!, context.TraceIdentifier);
+    return oidcOptions.AuthorizationEndpoint;
   }
-
-  public static ValueTask<string?> ChallengeOidc<TOptions>(
-    HttpContext context,
-    AuthenticationProperties authProperties,
-    ILogger logger)
-  where TOptions : OpenIdConnectOptions =>
-      ChallengeOidc(
-        context,
-        authProperties,
-        ResolveRequiredService<TOptions>(context),
-        ResolveRequiredService<OpenIdConnectConfiguration>(context),
-        ResolvePropertiesDataFormat(context),
-        ResolveStringDataFormat(context),
-        ResolveTimeProvider(context).GetUtcNow(),
-        logger);
 }

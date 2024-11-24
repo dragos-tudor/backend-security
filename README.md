@@ -1,4 +1,6 @@
 
+# OpenIdConnect wip
+
 ## ASPNET Security libraries
 - simplified ASPNET Security-like libraries.
 - rewritten from scratch ASPNET Security libraries.
@@ -32,7 +34,7 @@
 - *intermediate-level* functions use imperative/declarative style [eg. *SetAuthorizationParams*].
 - *low-level* functions usually use imperative style and are one-liners [eg. *IsSecuredCookie*].
   - usually pure [without side effects] or semi-pure functions [side effects on parameters].
-- *high-intermediate-low-level* hierarchy design I named it **lego principle**. It could be seen also as a **functions-pyramid** having at the base *low-level* functions.
+- *high-intermediate-low-level* hierarchy design I named it **lego principle**. It could be seen also as a **functions pyramid** having at the base *low-level* functions.
 - **no else** strategy [0 (zero) else branches].
 
 ### Processes
@@ -55,22 +57,23 @@
 ### Remarks
 - *completely* rewritten authentication mechanism.
 - *partially* rewritten authorization mechamism [keeping compatibility with ASPNET authorization policies mechanism].
-- cookie authentication services *surgically* implement session-based cookies feature [using *IsSessionBasedCookie* func]. Authenticating, signingin and signingout services are completely independent each other [no dependencies on HttpContext features]. Authentication session-based cookies service is completely isolated.
+- cookie authentication services *surgically* implement session-based cookies feature [using *IsSessionBasedCookie* func]. Authenticating, signingin and signingout services are completely independent each other [no dependencies on HttpContext features]. *AuthenticationSessionCookie*, *SignInSessionCookie* and *SignOutSessionCookie* session-based cookies services are completely isolated from non-session based versions.
 - authentication options implementation contains only data [eg. *CookieAuthenticationOptions*]. Cookie authentication services [non DI-based ones] receive all dependencies as parameters.
 - Microsoft ASPNET authentication options implementation contains data and behaviour/services [eg. *SessionStore*, *TicketDataFormat*, *SystemClock* for *CookieAuthenticationOptions*]. This design have some advantages comparing with my implementation allowing options:
   - to have different services from those registered on DI.
   - to encapsulate and carry on those services through the authentication process [reducing the number of parameters so].
 - *AuthenticateOAuth* oauth authentication func use template method design pattern allowing oauth libraries to override/decorate when neccessary *postAuthenticate*, *exchangeCodeForTokens* or *accessUserInfo* authentication substeps [eg. *AuthenticateTwitter*, *AuthenticateFacebook*].
-- *Challenge** and *Forbid** funcs [excepting oauth and oidc]:
-  - webapi oriented functionality [app http clients/browser fetch consumers] => no redirection.
-  - set responses status code with 401 respectively 403.
-  - cookie *ChallengeCookie* and *ForbidCookie* funcs return *login path* and *access denied path* as text content.
-- redirecting funcs:
+- redirecting remarks:
   - *ChallengeOAuth* and *ChallengeOidc* funcs redirect to authorization server [*ChallengeOidc* could use form instead of redirection].
   - *CallbackOAuth* and *CallbackOidc* funcs redirect to original url or when callback authentication error to *AccessDeniedPath* or *ErrorPath* authentication options props depending of error type.
-  - *SigninCookie* and *SignoutCookie* could redirect to *AuthenticationPropeties.ReturnUri* prop/query param *ReturnUrlParameter* or when none exists no redirection keeping webapi oriented functionality.
-- even *OAuth2* is an authorization protocol the process is named *remote authentication* because when succedded the authenticated principal is signed in.
-- *OpenIdConnect* module is work-in-progress.
+  - *SigninCookie*, *SignOutCookie*, *Challenge**, *Forbid** etc. no redirections [webapi oriented functionality]. when redirections are neccessary those funcs could be decorated and redirected to *AuthenticationProperties.RedirectUri* or to *AuthenticationOptions.ReturnUrlParameter* query parameter.
+- cookies remarks:
+  - *AuthenticationCookieOptions.ExpiresAfter* single place to control *AuthenticationTicket* [cookies] persistency.
+  - *AuthenticationCookieOptions.CookieName* single place to control cookies names.
+- oidc remarks:
+  - *pkce* is the recommended solution regarding security for *authorization code* flow.
+  - *implicit* and *hybrid* flows not supported based on oidc best practices [even supported by [oidc rfc](https://openid.net/specs/openid-connect-core-1_0.html#AuthRequest)].
+  - *nonce* is not neccessary because *implicit* and *hybrid* are only flows with required *nonce* parameter.
 
 ### Project goals
 - to untangle/demystify the ASPNET authentication/authorization mechanisms and local/remote processes.

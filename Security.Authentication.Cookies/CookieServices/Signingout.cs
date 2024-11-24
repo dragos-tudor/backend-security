@@ -12,20 +12,20 @@ partial class CookiesFuncs
     HttpContext context,
     AuthenticationCookieOptions authOptions,
     ICookieManager cookieManager,
-    TicketDataFormat ticketDataProtector,
+    TicketDataFormat authTicketProtector,
     ITicketStore ticketStore,
     ILogger logger)
   {
-    var(authTicket, error) = ExtractAuthenticationTicket(context, authOptions, cookieManager, ticketDataProtector);
+    var(authTicket, error) = ExtractAuthenticationCookieTicket(context, authOptions, cookieManager, authTicketProtector);
     if(error is not null) return false;
 
     if(IsSessionBasedTicket(ticketStore))
-      return await SignOutSessionCookie(context, authOptions, authTicket, cookieManager, ticketDataProtector, ticketStore, logger);
+      return await SignOutSessionCookie(context, authOptions, authTicket, cookieManager, authTicketProtector, ticketStore, logger);
 
-    CleanAuthenticationTicket(context, authTicket, authOptions, cookieManager);
-    ResetResponseCacheHeaders(context.Response);
+    CleanAuthenticationCookie(context, authOptions, cookieManager);
+    ResetHttpResponseCacheHeaders(context.Response);
 
-    LogSignedOutCookie(logger, authOptions.SchemeName, context.TraceIdentifier);
+    LogSignedOutCookie(logger, authOptions.SchemeName, GetPrincipalNameId(authTicket.Principal)!, context.TraceIdentifier);
     return true;
   }
 }

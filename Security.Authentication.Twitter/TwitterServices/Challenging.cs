@@ -7,20 +7,5 @@ namespace Security.Authentication.Twitter;
 
 partial class TwitterFuncs
 {
-  public static string ChallengeTwitter (
-    HttpContext context,
-    TwitterOptions authOptions,
-    ILogger logger)
-  {
-    SetResponseStatus(context, HttpStatusCode.Unauthorized);
-
-    LogChallenged(logger, authOptions.SchemeName, context.TraceIdentifier);
-    return string.Empty;
-  }
-
-  public static string ChallengeTwitter (HttpContext context) =>
-    ChallengeTwitter (
-      context,
-      ResolveRequiredService<TwitterOptions>(context),
-      ResolveTwitterLogger(context));
+  public static void ChallengeTwitter(HttpContext context, TwitterOptions authOptions, ILogger logger) => ChallengeAuth(context, authOptions, logger);
 }

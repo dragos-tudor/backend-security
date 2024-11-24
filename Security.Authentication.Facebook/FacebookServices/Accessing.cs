@@ -7,32 +7,19 @@ using Security.Authentication.OAuth;
 
 namespace Security.Authentication.Facebook;
 
-partial class FacebookFuncs {
-
-  public static async Task<UserInfoResult> AccessFacebookUserInfo (
+partial class FacebookFuncs
+{
+  public static async Task<UserInfoResult> AccessFacebookUserInfo(
     string accessToken,
     FacebookOptions facebookOptions,
     HttpClient httpClient,
     CancellationToken cancellationToken = default)
   {
-    var userInfoParams = BuildFacebookUserInfoParams(facebookOptions, accessToken);
-    var requestUri = AddQueryString(facebookOptions.UserInformationEndpoint, userInfoParams);
+    var requestParams = BuildFacebookUserInfoParams(facebookOptions, accessToken);
+    var requestUri = BuildHttpRequestUri(facebookOptions.UserInfoEndpoint, requestParams);
     var request = BuildUserInfoRequest(requestUri, accessToken);
 
-    using var response = await SendUserInfoRequest(request, httpClient, cancellationToken);
+    using var response = await SendHttpRequest(request, httpClient, cancellationToken);
     return await HandleUserInfoResponse(response, facebookOptions, cancellationToken);
   }
-
-  public static Task<UserInfoResult> AccessFacebookUserInfo (
-    HttpContext context,
-    string accessToken,
-    FacebookOptions facebookOptions,
-    CancellationToken cancellationToken = default) =>
-      AccessFacebookUserInfo(
-        accessToken,
-        facebookOptions,
-        ResolveRequiredService<HttpClient>(context),
-        cancellationToken
-      );
-
 }

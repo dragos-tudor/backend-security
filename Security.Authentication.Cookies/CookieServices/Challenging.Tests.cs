@@ -11,18 +11,17 @@ namespace Security.Authentication.Cookies;
 partial class CookiesTests {
 
   [TestMethod]
-  public async Task Unautenticated_user_resource_request__challenge__unauthenticated_and_login_path()
+  public async Task Unautenticated_user_resource_request__challenge__unauthenticated()
   {
     using var server = CreateHttpServer(services => services.AddCookiesServices());
-    var authProperties = CreateAuthenticationProperties();
-    server.MapGet("/resource",(HttpContext context) => ChallengeCookie(context, authProperties));
+    var authProps = CreateAuthProps();
+    server.MapGet("/resource",(HttpContext context) => ChallengeCookie(context));
     await server.StartAsync();
 
     using var client = server.GetTestClient();
     using var response = await client.GetAsync("/resource");
 
     Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
-    Assert.AreEqual("/Account/Login?ReturnUrl=%2Fresource", await ReadResponseMessageContent(response));
   }
 
   [TestMethod]

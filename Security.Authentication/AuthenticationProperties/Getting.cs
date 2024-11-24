@@ -5,13 +5,9 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
-  public static string? GetAuthenticationPropertiesItem(AuthenticationProperties authProperties, string key) => authProperties.GetString(key);
+  public static string? GetAuthPropsItem(AuthenticationProperties authProps, string key) => authProps.GetString(key);
 
-  public static T? GetAuthenticationPropertiesParam<T>(AuthenticationProperties authProperties, string key) => authProperties.GetParameter<T>(key);
+  public static T? GetAuthPropsParam<T>(AuthenticationProperties authProps, string key) => authProps.GetParameter<T>(key);
 
-  public static DateTimeOffset? GetAuthenticationPropertiesExpires(AuthenticationProperties authProperties) => authProperties.ExpiresUtc?.ToUniversalTime();
-
-  public static TimeSpan? GetAuthenticationPropertiesExpiresAfter(AuthenticationProperties authProperties) => authProperties.ExpiresUtc - authProperties.IssuedUtc;
-
-  public static string? GetAuthenticationPropertiesRedirectUri(AuthenticationProperties authProperties) => authProperties.RedirectUri;
+  public static string? GetAuthPropsRedirectUri(AuthenticationProperties authProps) => authProps.RedirectUri;
 }

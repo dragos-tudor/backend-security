@@ -13,20 +13,21 @@ namespace Security.Authentication.OAuth;
 partial class OAuthTests
 {
   [TestMethod]
-  public async Task OAuth_authentication__execute_authentication_flow__authentication_succedded () {
+  public async Task OAuth_authentication__execute_authentication_flow__authentication_succedded()
+  {
     using var authServer = CreateHttpServer();
-    authServer.MapGet("/authorize", (HttpContext context) => SetResponseRedirect(context.Response, GetCallbackLocation(context.Request)) );
-    authServer.MapPost("/token", (HttpContext request) => JsonSerializer.Serialize(new { access_token = "token" }));
-    authServer.MapGet("/userinfo", (HttpContext request) => JsonSerializer.Serialize(new { email = "email", username = "username" }));
+    authServer.MapGet("/authorize",(HttpContext context) => SetHttpResponseRedirect(context.Response, GetCallbackLocation(context.Request)) );
+    authServer.MapPost("/token",(HttpContext request) => JsonSerializer.Serialize(new { access_token = "token" }));
+    authServer.MapGet("/userinfo",(HttpContext request) => JsonSerializer.Serialize(new { email = "email", username = "username" }));
     await authServer.StartAsync();
     using var authClient = authServer.GetTestClient();
 
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions() with { AuthorizationEndpoint = "http://oauth/authorize" };
-    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
+    var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     using var appServer = CreateHttpServer();
-    appServer.MapGet("/challenge", (HttpContext context) => ChallengeOAuth(context, authOptions, propertiesDataFormat, DateTimeOffset.UtcNow, NullLogger.Instance));
-    appServer.MapGet("/callback", async delegate (HttpContext context) { return (await AuthenticateOAuth(context, authOptions, propertiesDataFormat, authClient, PostAuthorization, ExchangeCodeForTokens, AccessUserInfo, NullLogger.Instance)).Succeeded; });
+    appServer.MapGet("/challenge",(HttpContext context) => ChallengeOAuth(context, CreateAuthProps(), authOptions, DateTimeOffset.UtcNow, authPropsProtector, NullLogger.Instance));
+    appServer.MapGet("/callback", async delegate(HttpContext context) { return(await AuthenticateOAuth(context, authOptions, authPropsProtector, authClient, PostAuthorization, ExchangeCodeForTokens, AccessUserInfo, NullLogger.Instance)).Succeeded; });
     await appServer.StartAsync();
     using var appClient = appServer.GetTestClient();
 
@@ -45,6 +46,6 @@ partial class OAuthTests
 
   static string GetCallbackLocation(HttpRequest request) => $"{GetQueryParamValue(request, "redirect_uri")}?state={GetQueryParamValue(request, "state")}&code=abc";
 
-  static string GetQueryParamValue (HttpRequest request, string keyName) => request.Query[keyName]!;
+  static string GetQueryParamValue(HttpRequest request, string keyName) => request.Query[keyName]!;
 
 }

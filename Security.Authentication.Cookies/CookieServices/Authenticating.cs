@@ -9,34 +9,34 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  internal const string TicketExpired = "Ticket expired";
-  internal const string UnprotectTicketFailed = "Unprotect ticket failed";
+  internal const string TicketExpired = "ticket expired";
+  internal const string UnprotectTicketFailed = "unprotect ticket failed";
 
   public static async ValueTask<AuthenticateResult> AuthenticateCookie(
     HttpContext context,
     AuthenticationCookieOptions authOptions,
     DateTimeOffset currentUtc,
     ICookieManager cookieManager,
-    TicketDataFormat ticketDataProtector,
+    TicketDataFormat authTicketProtector,
     ITicketStore ticketStore)
   {
-    var(authTicket, error) = ExtractAuthenticationTicket(context, authOptions, cookieManager, ticketDataProtector);
+    var (authTicket, error) = ExtractAuthenticationCookieTicket(context, authOptions, cookieManager, authTicketProtector);
     if(error == NoCookie) return NoResult();
     if(error is not null) return Fail(error);
 
     if(IsSessionBasedTicket(ticketStore))
-      return await AuthenticateSessionCookie(context, authOptions, authTicket, currentUtc, cookieManager, ticketDataProtector, ticketStore);
+      return await AuthenticateSessionCookie(context, authOptions, authTicket, currentUtc, cookieManager, authTicketProtector, ticketStore);
 
     var authTicketState = GetAuthenticationTicketState(authTicket, currentUtc, authOptions);
     if(authTicketState == AuthenticationTicketState.Valid) return Success(authTicket);
     if(authTicketState == AuthenticationTicketState.Expired) {
-      CleanAuthenticationTicket(context, authTicket, authOptions, cookieManager);
+      CleanAuthenticationCookie(context, authOptions, cookieManager);
       return Fail(TicketExpired);
     }
 
-    var renewedAuthTicket = RenewAuthenticationTicket(authTicket, currentUtc);
-    UseAuthenticationTicket(context, renewedAuthTicket, authOptions, cookieManager, ticketDataProtector);
-    ResetResponseCacheHeaders(context.Response);
+    var renewedAuthTicket = RenewAuthenticationTicket(authTicket, authOptions, currentUtc);
+    SetAuthenticationCookie(context, renewedAuthTicket, authOptions, currentUtc, cookieManager, authTicketProtector);
+    ResetHttpResponseCacheHeaders(context.Response);
 
     return Success(renewedAuthTicket);
   }

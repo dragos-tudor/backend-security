@@ -10,4 +10,12 @@ dotnet_diagnostic.CA1055.severity = none # Design: URI return values should not 
 dotnet_diagnostic.CA1056.severity = none # Design: URI properties should not be strings
 dotnet_diagnostic.CA1062.severity = none # Design: Validate arguments of public methods [non-nullable reference types => clear intention => no rule]
 dotnet_diagnostic.CA2007.severity = none # Reliability: Do not directly await a Task
+dotnet_diagnostic.CA1515.severity = none # Consider making public types internal
 dotnet_diagnostic.CA2007.exclude_async_void_methods = false # CA2007 rule option
+
+dotnet_diagnostic.IDE0160.severity = none # Convert to block scoped namespace
+dotnet_diagnostic.IDE0008.severity = none # Use explicit type
+dotnet_diagnostic.IDE0040.severity = none # Add accessibility modifiers
+dotnet_diagnostic.IDE0022.severity = none # Use block body for method
+dotnet_diagnostic.IDE0130.severity = none # Namespace does not match folder structure
+dotnet_diagnostic.IDE0058.severity = none

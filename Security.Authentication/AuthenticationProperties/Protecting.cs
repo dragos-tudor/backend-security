@@ -5,5 +5,5 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
-  public static string ProtectAuthenticationProperties(AuthenticationProperties authProperties, PropertiesDataFormat propertiesDataFormat) => propertiesDataFormat.Protect(authProperties);
+  public static string ProtectAuthProps(AuthenticationProperties authProps, PropertiesDataFormat propDataProtector) => propDataProtector.Protect(authProps);
 }

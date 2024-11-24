@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App"></FrameworkReference>
-    <ProjectReference Include="../Security.Authentication.Remote/Security.Authentication.Remote.csproj" />
+    <ProjectReference Include="../Security.Authentication.OAuth.Base/Security.Authentication.OAuth.Base.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)'=='Debug'">

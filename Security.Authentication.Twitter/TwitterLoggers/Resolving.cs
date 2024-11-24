@@ -7,5 +7,5 @@ partial class TwitterFuncs
 {
   const string TwitterLogger = nameof(Twitter);
 
-  static ILogger ResolveTwitterLogger (HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, TwitterLogger);
+  static ILogger ResolveTwitterLogger(HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, TwitterLogger);
 }

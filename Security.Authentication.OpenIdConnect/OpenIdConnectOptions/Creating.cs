@@ -6,27 +6,33 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static OpenIdConnectOptions CreateOpenIdConnectOptions(string clientId, string clientSecret) =>
-    new () {
+  static OpenIdConnectOptions CreateOpenIdConnectOptions(OpenIdConnectConfiguration oidcConfig, string clientId, string clientSecret) =>
+    new() {
       ClientId = clientId,
       ClientSecret = clientSecret,
 
-      AuthenticationMethod = OpenIdConnectRedirectBehaviour.RedirectGet,
-      ClaimActions = MapOpenIdConnectClaimActions([]),
-      NonceLifetime = TimeSpan.FromMinutes(15),
-      DisableTelemetry = true,
+      AuthorizationEndpoint = oidcConfig.AuthorizationEndpoint,
+      TokenEndpoint = oidcConfig.TokenEndpoint,
+      UserInfoEndpoint = oidcConfig.UserInfoEndpoint,
 
-      ResponseMode = OpenIdConnectResponseMode.FormPost,
-      ResponseType = OpenIdConnectResponseType.IdToken,
-      RequireNonce = true,
-      Scope =  ["openid", "profile"],
-
-      CallbackPath = new PathString("/callback-oidc"),
       ChallengePath = new PathString("/challenge-oidc"),
-      ChallengeSignOutPath = new PathString("/signout-challenge-oidc"),
-      CallbackSignOutPath = new PathString("/signout-callback-oidc"),
-      SignOutRedirectUri = "/",
+      ChallengeSignOutPath = new PathString("/challenge-signout-oidc"),
+      CallbackPath = new PathString("/callback-oidc"),
+      CallbackSignOutPath = new PathString("/callback-signout-oidc"),
 
+      AuthenticationMethod = OpenIdConnectRedirectBehaviour.RedirectGet,
+      ClaimActions = GetOpenIdConnectClaimActions(),
+      DisableTelemetry = false,
+
+      Issuer = oidcConfig.Issuer,
+      SigningKeys = oidcConfig.SigningKeys,
+
+      Prompt = OpenIdConnectPrompt.Login,
+      ResponseMode = OpenIdConnectResponseMode.FormPost,
+      ResponseType = OpenIdConnectResponseType.Code,
+
+      SchemeName = OidcDefaults.AuthenticationScheme,
+      Scope =  [OpenIdConnectScope.OpenId, OpenIdConnectScope.Profile],
       UsePkce = true
     };
 }

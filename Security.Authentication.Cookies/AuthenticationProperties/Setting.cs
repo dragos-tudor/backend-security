@@ -5,9 +5,10 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  static DateTimeOffset? SetAuthenticationPropertiesExpiration(AuthenticationProperties authProperties, DateTimeOffset currentUtc, TimeSpan? expiresAfter)
+  static AuthenticationProperties SetAuthPropsExpiration(AuthenticationProperties authProps, DateTimeOffset currentUtc, TimeSpan? expiresAfter)
   {
-    SetAuthenticationPropertiesIssued(authProperties, currentUtc);
-    return SetAuthenticationPropertiesExpires(authProperties, currentUtc, expiresAfter);
+    SetAuthPropsIssued(authProps, currentUtc);
+    if(expiresAfter is not null) SetAuthPropsExpires(authProps, currentUtc, expiresAfter.Value);
+    return authProps;
   }
 }

@@ -9,22 +9,16 @@ using static Security.Testing.Funcs;
 
 namespace Security.Authentication.Twitter;
 
-partial class TwitterTests {
-
+partial class TwitterTests
+{
   [TestMethod]
-  public async Task Optional_query_params__access_user_informations__token_endpoint_receive_optional_params () {
-    using var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {query = request.RequestUri}));
-    var authOptions = CreateTwitterOptions("", "secret") with { UserInformationEndpoint = "http://oauth/userinfo", UserFields = new [] { "field1" } };
-    MapJsonClaim(authOptions, "query");
+  public async Task Optional_query_params__access_user_informations__token_endpoint_receive_optional_params() {
+    using var httpClient = CreateHttpClient("http://oauth", "/userinfo",(request) => JsonContent.Create(new {query = request.RequestUri}));
+    var authOptions = CreateTwitterOptions("", "secret") with { UserInfoEndpoint = "http://oauth/userinfo", UserFields = new [] { "field1" }, ClaimMappers = [new JsonKeyClaimMapper("query_type", "query")] };
 
-    var result = await AccessTwitterUserInfo(string.Empty, authOptions, httpClient);
-    StringAssert.Contains(GetSecurityClaim(GetClaimsPrincipal(result), "query")?.Value, "user.fields=field1", StringComparison.Ordinal);
+    var (claims, _) = await AccessTwitterUserInfo(string.Empty, authOptions, httpClient);
+    StringAssert.Contains(GetSecurityClaim(claims, "query_type")?.Value, "user.fields=field1", StringComparison.Ordinal);
   }
 
-  static Claim GetSecurityClaim(ClaimsPrincipal principal, string claimType) =>
-    principal.Claims.FirstOrDefault(claim => claim.Type == claimType);
-
-  static void MapJsonClaim(TwitterOptions twitterOptions, string claimType, string jsonKey = default) =>
-    twitterOptions.ClaimActions.MapJsonKey(claimType, jsonKey ?? claimType);
-
+  static Claim GetSecurityClaim(IEnumerable<Claim> claims, string claimType) => claims.FirstOrDefault(claim => claim.Type == claimType);
 }

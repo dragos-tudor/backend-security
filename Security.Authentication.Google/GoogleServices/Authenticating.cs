@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Google;
 
-partial class GoogleFuncs {
-
-  public static Task<AuthenticateResult> AuthenticateGoogle (HttpContext context) =>
+partial class GoogleFuncs
+{
+  public static Task<AuthenticateResult> AuthenticateGoogle(HttpContext context) =>
     AuthenticateOAuth<GoogleOptions>(
       context,
       PostAuthorization,

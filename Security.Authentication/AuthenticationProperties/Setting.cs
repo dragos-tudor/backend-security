@@ -5,16 +5,15 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
-  public static string SetAuthenticationPropertiesItem(AuthenticationProperties authProperties, string key, string value) { authProperties.SetString(key, value); return value; }
+  public static string? SetAuthPropsItem(AuthenticationProperties authProps, string key, string? value) { authProps.SetString(key, value); return value; }
 
-  public static T SetAuthenticationPropertiesParam<T>(AuthenticationProperties authProperties, string key, T value) { authProperties.SetParameter(key, value); return value; }
+  public static T SetAuthPropsParam<T>(AuthenticationProperties authProps, string key, T value) { authProps.SetParameter(key, value); return value; }
 
-  public static DateTimeOffset? SetAuthenticationPropertiesExpires(AuthenticationProperties authProperties, DateTimeOffset expires) => authProperties.ExpiresUtc = expires;
+  public static DateTimeOffset? SetAuthPropsExpires(AuthenticationProperties authProps, DateTimeOffset? expires) => authProps.ExpiresUtc = expires;
 
-  public static DateTimeOffset? SetAuthenticationPropertiesExpires(AuthenticationProperties authProperties, DateTimeOffset issuedUtc, TimeSpan? expiresAfter) =>
-    expiresAfter is not null? authProperties.ExpiresUtc = issuedUtc.Add(expiresAfter.Value): authProperties.ExpiresUtc;
+  public static DateTimeOffset? SetAuthPropsExpires(AuthenticationProperties authProps, DateTimeOffset issuedUtc, TimeSpan expiresAfter) => authProps.ExpiresUtc = issuedUtc.Add(expiresAfter);
 
-  public static DateTimeOffset? SetAuthenticationPropertiesIssued(AuthenticationProperties authProperties, DateTimeOffset issued) => authProperties.IssuedUtc = issued;
+  public static DateTimeOffset? SetAuthPropsIssued(AuthenticationProperties authProps, DateTimeOffset issued) => authProps.IssuedUtc = issued;
 
-  public static string SetAuthenticationPropertiesRedirectUri(AuthenticationProperties authProperties, string redirectUri) => authProperties.RedirectUri ??= redirectUri;
+  public static string SetAuthPropsRedirectUri(AuthenticationProperties authProps, string redirectUri) => authProps.RedirectUri ??= redirectUri;
 }

@@ -6,7 +6,7 @@ namespace Security.Authentication.Facebook;
 
 partial class FacebookFuncs
 {
-  public static IServiceCollection AddFacebookServices (
+  public static IServiceCollection AddFacebookServices(
     this IServiceCollection services,
     FacebookOptions facebookOptions,
     HttpClient? httpClient = default,

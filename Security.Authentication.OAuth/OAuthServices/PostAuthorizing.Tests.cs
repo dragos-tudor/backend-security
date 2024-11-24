@@ -12,33 +12,35 @@ namespace Security.Authentication.OAuth;
 partial class OAuthTests
 {
   [TestMethod]
-  public void Post_authorization_request_with_correlation_cookie__post_authorization__deleted_correlation_cookie() {
+  public void Post_authorization_request_with_correlation_cookie__post_authorization__deleted_correlation_cookie()
+  {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
-    var authProperties = new AuthenticationProperties();
-    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
+    var authProps = new AuthenticationProperties();
+    var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     SetAuthorizationCorrelationCookie(context, "correlation.id");
-    SetAuthenticationPropertiesCorrelationId(authProperties, "correlation.id");
-    SetAuthorizationQueryParams(context, ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
+    SetAuthPropsCorrelationId(authProps, "correlation.id");
+    SetAuthorizationQueryParams(context, ProtectAuthProps(authProps, authPropsProtector));
 
-    var (_, _) = PostAuthorization(context, authOptions, propertiesDataFormat);
+    var (_, _) = PostAuthorization(context, authOptions, authPropsProtector);
     var correlationCookie = GetResponseCookie(context.Response, GetCorrelationCookieName("correlation.id"));
 
     StringAssert.Contains(correlationCookie, "expires=Thu, 01 Jan 1970", StringComparison.Ordinal);
   }
 
   [TestMethod]
-  public void Post_authorization_request_with_correlation_id__post_authorization__deleted_correlation_id() {
+  public void Post_authorization_request_with_correlation_id__post_authorization__deleted_correlation_id()
+  {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
-    var authProperties = new AuthenticationProperties();
-    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
+    var authProps = new AuthenticationProperties();
+    var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     SetAuthorizationCorrelationCookie(context, "correlation.id");
-    SetAuthenticationPropertiesCorrelationId(authProperties, "correlation.id");
-    SetAuthorizationQueryParams(context, ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
+    SetAuthPropsCorrelationId(authProps, "correlation.id");
+    SetAuthorizationQueryParams(context, ProtectAuthProps(authProps, authPropsProtector));
 
-    var (authProperties2, _) = PostAuthorization(context, authOptions, propertiesDataFormat);
-    Assert.IsNull(GetAuthenticationPropertiesCorrelationId(authProperties2!));
+    var (authProps2, _) = PostAuthorization(context, authOptions, authPropsProtector);
+    Assert.IsNull(GetAuthPropsCorrelationId(authProps2!));
   }
 
   [TestMethod]
@@ -46,36 +48,38 @@ partial class OAuthTests
   {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
-    var authProperties = new AuthenticationProperties();
-    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
+    var authProps = new AuthenticationProperties();
+    var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     SetAuthorizationQueryParams(context);
-    SetAuthenticationPropertiesCorrelationId(authProperties, "correlation.id");
+    SetAuthPropsCorrelationId(authProps, "correlation.id");
 
-    var (_, error) = PostAuthorization(context, authOptions, propertiesDataFormat);
-    Assert.AreEqual(error, UnprotectAuthorizationStateFailed);
+    var (_, error) = PostAuthorization(context, authOptions, authPropsProtector);
+    Assert.AreEqual(error, UnprotectStateFailed);
   }
 
   [TestMethod]
-  public void Post_authorization_request_without_correlation_cookie__post_authorization__correlation_cookie_error() {
+  public void Post_authorization_request_without_correlation_cookie__post_authorization__correlation_cookie_error()
+  {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
-    var authProperties = new AuthenticationProperties();
-    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
-    SetAuthenticationPropertiesCorrelationId(authProperties, "correlation.id");
-    SetAuthorizationQueryParams(context, ProtectAuthenticationProperties(authProperties, propertiesDataFormat));
+    var authProps = new AuthenticationProperties();
+    var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
+    SetAuthPropsCorrelationId(authProps, "correlation.id");
+    SetAuthorizationQueryParams(context, ProtectAuthProps(authProps, authPropsProtector));
 
-    var (_, error) = PostAuthorization(context, authOptions, propertiesDataFormat);
-    StringAssert.Contains(error, "Correlation cookie", StringComparison.Ordinal);
+    var (_, error) = PostAuthorization(context, authOptions, authPropsProtector);
+    StringAssert.Contains(error, "correlation cookie", StringComparison.Ordinal);
   }
 
   [TestMethod]
-  public void Invalid_post_authorization_request__post_authorization__authorization_code_not_found_error() {
+  public void Invalid_post_authorization_request__post_authorization__authorization_code_not_found_error()
+  {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
-    var propertiesDataFormat = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
-    var (_, error) = PostAuthorization(context, authOptions, propertiesDataFormat);
+    var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
+    var (_, error) = PostAuthorization(context, authOptions, authPropsProtector);
 
-    StringAssert.Contains(error, PostAuthorizationCodeNotFound, StringComparison.Ordinal);
+    StringAssert.Contains(error, AuthorizationCodeNotFound, StringComparison.Ordinal);
   }
 
   static void SetAuthorizationCorrelationCookie(HttpContext context, string correlationId) =>

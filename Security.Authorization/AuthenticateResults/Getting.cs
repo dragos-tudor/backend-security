@@ -7,7 +7,7 @@ namespace Security.Authorization;
 partial class AuthorizationFuncs
 {
   static AuthenticationProperties GetAuthenticationProperties(AuthenticateResult authResult) =>
-    authResult.Properties ?? CreateAuthenticationProperties();
+    authResult.Properties ?? CreateAuthProps();
 
   public static AuthenticateResult GetDefaultAuthenticateResult(HttpContext context) =>
    IsAuthenticatedPrincipal(context.User)?

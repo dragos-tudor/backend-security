@@ -7,5 +7,5 @@ partial class FacebookFuncs
 {
   const string FacebookLogger = nameof(Facebook);
 
-  static ILogger ResolveFacebookLogger (HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, FacebookLogger);
+  static ILogger ResolveFacebookLogger(HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, FacebookLogger);
 }

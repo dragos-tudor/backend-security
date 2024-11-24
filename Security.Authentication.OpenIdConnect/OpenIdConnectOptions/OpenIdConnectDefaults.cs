@@ -5,12 +5,12 @@ namespace Security.Authentication.OpenIdConnect;
 
 public static class OpenIdConnectDefaults
 {
-  public const string AuthenticationPropertiesKey = "OpenIdConnect.AuthenticationProperties";
+  public const string AuthenticationProperties = "OpenIdConnect.AuthenticationProperties";
   public const string AuthenticationScheme = "OpenIdConnect";
 
   public const string DisplayName = "OpenIdConnect";
   public const string CookieNoncePrefix = ".AspNetCore.OpenIdConnect.Nonce.";
 
-  public const string RedirectUriForCodePropertiesKey = "OpenIdConnect.Code.RedirectUri";
-  public const string UserStatePropertiesKey = "OpenIdConnect.Userstate";
+  public const string RedirectUriForCodeProperties = "OpenIdConnect.Code.RedirectUri";
+  public const string UserStateProperties = "OpenIdConnect.Userstate";
 }

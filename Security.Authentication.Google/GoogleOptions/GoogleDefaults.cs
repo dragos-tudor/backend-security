@@ -11,5 +11,5 @@ public static class GoogleDefaults
 
   internal const string AuthorizationEndpoint = "https://accounts.google.com/o/oauth2/v2/auth";
   internal const string TokenEndpoint = "https://oauth2.googleapis.com/token";
-  internal const string UserInformationEndpoint = "https://www.googleapis.com/oauth2/v2/userinfo";
+  internal const string UserInfoEndpoint = "https://www.googleapis.com/oauth2/v2/userinfo";
 }
