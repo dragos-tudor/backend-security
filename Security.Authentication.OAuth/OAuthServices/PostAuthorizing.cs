@@ -13,13 +13,13 @@ partial class OAuthFuncs
   where TOptions: OAuthOptions
   {
     var authError = ValidateAuthorizationResponse(context.Request);
-    if(authError is not null) return authError;
+    if (authError is not null) return authError;
 
     var authProps = UnprotectAuthProps(GetAuthorizationState(context.Request)!, authPropsProtector);
-    if(authProps is null) return UnprotectStateFailed;
+    if (authProps is null) return UnprotectStateFailed;
 
     var correlationError = ValidateCorrelationCookie(context.Request, authProps);
-    if(correlationError is not null) return correlationError;
+    if (correlationError is not null) return correlationError;
 
     var correlationId = GetAuthPropsCorrelationId(authProps);
     DeleteCorrelationCookie(context, authOptions, correlationId);

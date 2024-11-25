@@ -20,5 +20,5 @@ partial class BearerTokenFuncs {
         .AddSingleton((services) =>
           CreateRefreshTokenDataFormat(dataProtectionProvider ?? ResolveRequiredService<IDataProtectionProvider>(services), tokenOptions.SchemeName))
         .AddSingleton(TimeProvider.System)
-        .AddKeyedSingleton(BearerTokenLogger,(services, serviceKey) => CreateLogger(services,(string)serviceKey));
+        .AddKeyedSingleton(BearerTokenLogger, (services, serviceKey) => CreateLogger(services, (string)serviceKey));
 }

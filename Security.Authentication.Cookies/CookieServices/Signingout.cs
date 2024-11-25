@@ -17,9 +17,9 @@ partial class CookiesFuncs
     ILogger logger)
   {
     var(authTicket, error) = ExtractAuthenticationCookieTicket(context, authOptions, cookieManager, authTicketProtector);
-    if(error is not null) return false;
+    if (error is not null) return false;
 
-    if(IsSessionBasedTicket(ticketStore))
+    if (IsSessionBasedTicket(ticketStore))
       return await SignOutSessionCookie(context, authOptions, authTicket, cookieManager, authTicketProtector, ticketStore, logger);
 
     CleanAuthenticationCookie(context, authOptions, cookieManager);

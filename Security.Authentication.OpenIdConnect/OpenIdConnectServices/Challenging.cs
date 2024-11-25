@@ -23,7 +23,7 @@ partial class OpenIdConnectFuncs
     SetAuthPropsCorrelationId(authProps, correlationId);
 
     var oidcParams = CreateOidcParams();
-    if(ShouldUseCodeChallenge(oidcOptions)) UseCodeChallenge(oidcParams, authProps, GenerateCodeVerifier());
+    if (ShouldUseCodeChallenge(oidcOptions)) UseCodeChallenge(oidcParams, authProps, GenerateCodeVerifier());
 
     var callbackUrl = GetAbsoluteUrl(context.Request, oidcOptions.CallbackPath);
     var redirectUri = GetHttpRequestQueryValue(context.Request, oidcOptions.ReturnUrlParameter)!;
@@ -34,10 +34,10 @@ partial class OpenIdConnectFuncs
 
     // TODO: implement PAR support [https://datatracker.ietf.org/doc/html/rfc9126]
 
-    if(IsRedirectGetAuthMethod(oidcOptions))
+    if (IsRedirectGetAuthMethod(oidcOptions))
       SetHttpResponseRedirect(context.Response, BuildHttpRequestUri(oidcOptions.AuthorizationEndpoint, oidcParams!));
 
-    if(IsFormPostAuthMethod(oidcOptions))
+    if (IsFormPostAuthMethod(oidcOptions))
     {
       ResetHttpResponseCacheHeaders(context.Response);
       await WriteHttpResponseTextContent(context.Response, BuildHttpRequestFormPost(oidcOptions.AuthorizationEndpoint, oidcParams), context.RequestAborted);

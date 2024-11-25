@@ -14,10 +14,10 @@ partial class AuthorizationFuncs
   {
     var endpoint = MarkEndpointInvoked(context, context.GetEndpoint());
     var policy = await CombinePolicies(policyProvider, endpoint);
-    if(policy is null) return(AuthenticateResult.NoResult(), PolicyAuthorizationResult.Success());
+    if (policy is null) return(AuthenticateResult.NoResult(), PolicyAuthorizationResult.Success());
 
     var authResult = GetAuthenticationFeature<AuthenticateResult>(context) ?? GetDefaultAuthenticateResult(context);
-    if(IsAnonymousEndpoint(endpoint)) return(authResult, PolicyAuthorizationResult.Success());
+    if (IsAnonymousEndpoint(endpoint)) return(authResult, PolicyAuthorizationResult.Success());
 
     var authzResult = await AuthorizePolicy(policy, authResult, authzService, context, endpoint);
     return(authResult, authzResult);

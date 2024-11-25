@@ -13,11 +13,11 @@ partial class BearerTokenFuncs
     BearerTokenDataFormat bearerTokenProtector)
   {
     var(authTicket, error) = ExtractAuthenticationTicket(context, bearerTokenProtector);
-    if(error == NoToken) return NoResult();
-    if(error is not null) return Fail(error);
+    if (error == NoToken) return NoResult();
+    if (error is not null) return Fail(error);
 
     var validationError = ValidateAuthenticationTicket(currentUtc, authTicket!);
-    if(validationError is not null) return Fail(validationError);
+    if (validationError is not null) return Fail(validationError);
 
     return Success(authTicket!);
   }

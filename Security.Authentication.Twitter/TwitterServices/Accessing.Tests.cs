@@ -13,7 +13,7 @@ partial class TwitterTests
 {
   [TestMethod]
   public async Task Optional_query_params__access_user_informations__token_endpoint_receive_optional_params() {
-    using var httpClient = CreateHttpClient("http://oauth", "/userinfo",(request) => JsonContent.Create(new {query = request.RequestUri}));
+    using var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {query = request.RequestUri}));
     var authOptions = CreateTwitterOptions("", "secret") with { UserInfoEndpoint = "http://oauth/userinfo", UserFields = new [] { "field1" }, ClaimMappers = [new JsonKeyClaimMapper("query_type", "query")] };
 
     var (claims, _) = await AccessTwitterUserInfo(string.Empty, authOptions, httpClient);

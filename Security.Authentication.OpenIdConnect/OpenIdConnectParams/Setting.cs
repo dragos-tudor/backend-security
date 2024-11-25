@@ -34,8 +34,8 @@ partial class OpenIdConnectFuncs
   //   SetOAuthParam(authParams, State, state);
   //   SetOAuthParam(authParams, Resource, oidcOptions.Resource!);
 
-  //   if(!oidcOptions.DisableTelemetry) SetTelemetryOIDCParams(authParams);
-  //   if(IsResponseModeSettable(oidcOptions)) SetOAuthParam(authParams, ResponseMode, oidcOptions.ResponseMode);
+  //   if (!oidcOptions.DisableTelemetry) SetTelemetryOIDCParams(authParams);
+  //   if (IsResponseModeSettable(oidcOptions)) SetOAuthParam(authParams, ResponseMode, oidcOptions.ResponseMode);
 
   //   return authParams;
   // }
@@ -59,7 +59,7 @@ partial class OpenIdConnectFuncs
   //   SetOAuthParam(oidcParams, PostLogoutRedirectUri, GetAbsoluteUrl(context.Request, oidcOptions.CallbackSignOutPath));
   //   SetOAuthParam(oidcParams, State, state);
 
-  //   if(!oidcOptions.DisableTelemetry) SetTelemetryOIDCParams(oidcParams);
+  //   if (!oidcOptions.DisableTelemetry) SetTelemetryOIDCParams(oidcParams);
   //   return oidcParams;
   // }
 }

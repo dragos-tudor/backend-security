@@ -19,7 +19,7 @@ partial class OAuthFuncs
     SetOAuthParam(authParams, OAuthParamNames.GrantType, GrantAuthorizationCode);
     SetOAuthParam(authParams, OAuthParamNames.AuthorizationCode, authCode);
     SetOAuthParam(authParams, OAuthParamNames.RedirectUri, GetAuthPropsCallbackUri(authProps)!);
-    if(ShouldUseCodeChallenge(authOptions)) SetOAuthParam(authParams, OAuthParamNames.CodeVerifier, GetAuthPropsCodeVerifier(authProps)!);
+    if (ShouldUseCodeChallenge(authOptions)) SetOAuthParam(authParams, OAuthParamNames.CodeVerifier, GetAuthPropsCodeVerifier(authProps)!);
     return authParams;
   }
 }

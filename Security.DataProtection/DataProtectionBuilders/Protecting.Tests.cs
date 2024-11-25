@@ -10,7 +10,7 @@ partial class DataProtectionTests {
   static readonly DirectoryInfo keysDirectory = new(keysPath);
 
   static DataProtectionTests() {
-    if(!keysDirectory.Exists) keysDirectory.Create();
+    if (!keysDirectory.Exists) keysDirectory.Create();
   }
 
   [TestMethod]

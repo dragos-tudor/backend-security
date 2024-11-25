@@ -24,8 +24,8 @@ partial class OpenIdConnectFuncs
     SetOAuthParam(oidcParams, OAuthParamNames.Scope, GetOidcParamScope(authProps, oidcOptions));
     SetOAuthParam(oidcParams, OAuthParamNames.State, authPropsProtector.Protect(authProps));
 
-    if(GetOidcParamMaxAge(authProps, oidcOptions) is string maxAge) SetOAuthParam(oidcParams, OidcParamNames.MaxAge, maxAge);
-    if(!oidcOptions.DisableTelemetry) {
+    if (GetOidcParamMaxAge(authProps, oidcOptions) is string maxAge) SetOAuthParam(oidcParams, OidcParamNames.MaxAge, maxAge);
+    if (!oidcOptions.DisableTelemetry) {
       SetOAuthParam(oidcParams, OidcParamNames.SkuTelemetry, IdentityModelTelemetryUtil.ClientSku);
       SetOAuthParam(oidcParams, OidcParamNames.VersionTelemetry, IdentityModelTelemetryUtil.ClientVer);
     }

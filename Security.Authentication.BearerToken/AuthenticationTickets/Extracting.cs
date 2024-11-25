@@ -13,10 +13,10 @@ partial class BearerTokenFuncs
   {
     var authorization = GetHttpRequestAuthorization(context.Request);
     var bearerToken = GetHttpRequestBearerToken(authorization);
-    if(bearerToken is null) return(default, NoToken);
+    if (bearerToken is null) return(default, NoToken);
 
     var authTicket = bearerTokenProtector.Unprotect(bearerToken);
-    if(authTicket is null) return(default, UnprotectingTokenFailed);
+    if (authTicket is null) return(default, UnprotectingTokenFailed);
 
     return(authTicket, default);
   }

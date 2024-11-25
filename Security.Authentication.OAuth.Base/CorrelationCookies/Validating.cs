@@ -16,14 +16,14 @@ partial class OAuthBaseFuncs {
     var cookieName = GetCorrelationCookieName(correlationId);
     var cookieContent = GetCookieContent(request, cookieName);
 
-    if(IsEmptyCorrelationContent(cookieContent)) return CorrelationCookieNotFound;
-    if(!IsCorrelationContentMatch(cookieContent!)) return UnexpectedCorrelationCookieContent;
+    if (IsEmptyCorrelationContent(cookieContent)) return CorrelationCookieNotFound;
+    if (!IsCorrelationContentMatch(cookieContent!)) return UnexpectedCorrelationCookieContent;
     return default;
   }
 
   public static string? ValidateCorrelationCookie(HttpRequest request, AuthenticationProperties authProps) {
-    if(GetAuthPropsCorrelationId(authProps!) is not string correlationId) return CorrelationIdKeyNotFound;
-    if(ValidateCorrelationCookie(request, correlationId) is string correlationError) return $"{CorrelationFailed} {correlationError}";
+    if (GetAuthPropsCorrelationId(authProps!) is not string correlationId) return CorrelationIdKeyNotFound;
+    if (ValidateCorrelationCookie(request, correlationId) is string correlationError) return $"{CorrelationFailed} {correlationError}";
     return default;
   }
 }

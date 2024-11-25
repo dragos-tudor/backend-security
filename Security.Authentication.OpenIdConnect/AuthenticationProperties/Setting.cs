@@ -12,10 +12,10 @@ partial class OpenIdConnectFuncs
     string? idToken,
     TokenInfo tokenInfo)
   {
-    if(IsNotEmptyString(idToken)) SetAuthPropsItem(authProps, OidcParamNames.IdToken, idToken);
-    if(IsNotEmptyString(tokenInfo.TokenType)) SetAuthPropsItem(authProps, OidcParamNames.TokenType, tokenInfo.TokenType);
-    if(IsNotEmptyString(tokenInfo.AccessToken)) SetAuthPropsItem(authProps, OidcParamNames.AccessToken, tokenInfo.AccessToken);
-    if(IsNotEmptyString(tokenInfo.RefreshToken)) SetAuthPropsItem(authProps, OidcParamNames.RefreshToken, tokenInfo.RefreshToken);
+    if (IsNotEmptyString(idToken)) SetAuthPropsItem(authProps, OidcParamNames.IdToken, idToken);
+    if (IsNotEmptyString(tokenInfo.TokenType)) SetAuthPropsItem(authProps, OidcParamNames.TokenType, tokenInfo.TokenType);
+    if (IsNotEmptyString(tokenInfo.AccessToken)) SetAuthPropsItem(authProps, OidcParamNames.AccessToken, tokenInfo.AccessToken);
+    if (IsNotEmptyString(tokenInfo.RefreshToken)) SetAuthPropsItem(authProps, OidcParamNames.RefreshToken, tokenInfo.RefreshToken);
     return authProps;
   }
 
@@ -23,8 +23,8 @@ partial class OpenIdConnectFuncs
     AuthenticationProperties authProps,
     SecurityToken securityToken)
   {
-    if(HasSecurityTokenValidFrom(securityToken)) SetAuthPropsIssued(authProps, securityToken.ValidFrom);
-    if(HasSecurityTokenValidTo(securityToken)) SetAuthPropsExpires(authProps, securityToken.ValidTo);
+    if (HasSecurityTokenValidFrom(securityToken)) SetAuthPropsIssued(authProps, securityToken.ValidFrom);
+    if (HasSecurityTokenValidTo(securityToken)) SetAuthPropsExpires(authProps, securityToken.ValidTo);
     return authProps;
   }
 
@@ -33,8 +33,8 @@ partial class OpenIdConnectFuncs
     OpenIdConnectMessage oidcMessage,
     OpenIdConnectOptions oidcOptions)
   {
-    if(IsNotEmptyString(oidcMessage.SessionState)) SetAuthPropsItem(authProps, OpenIdConnectSessionProperties.SessionState, oidcMessage.SessionState);
-    if(IsNotEmptyString(oidcOptions.CheckSessionIframe)) SetAuthPropsItem(authProps, OpenIdConnectSessionProperties.CheckSessionIFrame, oidcOptions.CheckSessionIframe);
+    if (IsNotEmptyString(oidcMessage.SessionState)) SetAuthPropsItem(authProps, OpenIdConnectSessionProperties.SessionState, oidcMessage.SessionState);
+    if (IsNotEmptyString(oidcOptions.CheckSessionIframe)) SetAuthPropsItem(authProps, OpenIdConnectSessionProperties.CheckSessionIFrame, oidcOptions.CheckSessionIframe);
     return authProps;
   }
 
@@ -44,7 +44,7 @@ partial class OpenIdConnectFuncs
     string alternateRedirectUri)
   {
     SetAuthPropsRedirectUri(authProps, redirectUri);
-    if(IsEmptyUri(GetAuthPropsRedirectUri(authProps)))
+    if (IsEmptyUri(GetAuthPropsRedirectUri(authProps)))
       SetAuthPropsRedirectUri(authProps, alternateRedirectUri);
     return authProps;
   }

@@ -7,7 +7,7 @@ namespace Security.Authentication.Facebook;
 partial class FacebookFuncs
 {
   static RouteHandlerBuilder MapCallbackFacebook(this IEndpointRouteBuilder endpoints, PathString pattern, SignInFunc signIn) =>
-    endpoints.MapGet(pattern,(Delegate)((HttpContext context) => CallbackFacebookEndpoint(context, signIn)));
+    endpoints.MapGet(pattern, (Delegate)((HttpContext context) => CallbackFacebookEndpoint(context, signIn)));
 
   static RouteHandlerBuilder MapChallengeFacebook(this IEndpointRouteBuilder endpoints, PathString pattern) =>
     endpoints.MapGet(pattern, ChallengeFacebookEndpoint);

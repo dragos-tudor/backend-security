@@ -12,10 +12,10 @@ partial class OpenIdConnectFuncs
     OpenIdConnectOptions oidcOptions,
     OpenIdConnectConfiguration oidcConfiguration)
   {
-    if(IsRedirectGetAuthMethod(oidcOptions))
+    if (IsRedirectGetAuthMethod(oidcOptions))
       return SetHttpResponseRedirect(context.Response, oidcMessage.CreateLogoutRequestUrl())!;
 
-    if(IsFormPostAuthMethod(oidcOptions))
+    if (IsFormPostAuthMethod(oidcOptions))
     {
       ResetHttpResponseCacheHeaders(context.Response);
       await WriteHttpResponseTextContent(context.Response, oidcMessage.BuildFormPost(), context.RequestAborted);

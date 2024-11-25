@@ -7,7 +7,7 @@ namespace Security.Authentication.Twitter;
 partial class TwitterFuncs
 {
   static RouteHandlerBuilder MapCallbackTwitter(this IEndpointRouteBuilder endpoints, PathString pattern, SignInFunc signIn) =>
-    endpoints.MapGet(pattern,(Delegate)((HttpContext context) => CallbackTwitterEndpoint(context, signIn)));
+    endpoints.MapGet(pattern, (Delegate)((HttpContext context) => CallbackTwitterEndpoint(context, signIn)));
 
   static RouteHandlerBuilder MapChallengeTwitter(this IEndpointRouteBuilder endpoints, PathString pattern) =>
     endpoints.MapGet(pattern, ChallengeTwitterEndpoint);

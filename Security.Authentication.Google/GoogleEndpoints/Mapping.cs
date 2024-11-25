@@ -7,7 +7,7 @@ namespace Security.Authentication.Google;
 partial class GoogleFuncs
 {
   static RouteHandlerBuilder MapCallbackGoogle(this IEndpointRouteBuilder endpoints, PathString pattern, SignInFunc signIn) =>
-    endpoints.MapGet(pattern,(Delegate)((HttpContext context) => CallbackGoogleEndpoint(context, signIn)));
+    endpoints.MapGet(pattern, (Delegate)((HttpContext context) => CallbackGoogleEndpoint(context, signIn)));
 
   static RouteHandlerBuilder MapChallengeGoogle(this IEndpointRouteBuilder endpoints, PathString pattern) =>
     endpoints.MapGet(pattern, ChallengeGoogleEndpoint);

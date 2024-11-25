@@ -28,8 +28,8 @@ partial class BearerTokenTests
   {
     using var server = CreateHttpServer(services => services.AddBearerTokenServices());
     server.UseAuthentication(AuthenticateBearerToken);
-    server.MapPost("/account/signin",(HttpContext context) => SignInBearerToken(context, CreateNamedClaimsPrincipal("user")));
-    server.MapGet("/resource",(HttpContext context) => GetPrincipalName(context.User) ?? "unauthenticated" );
+    server.MapPost("/account/signin", (HttpContext context) => SignInBearerToken(context, CreateNamedClaimsPrincipal("user")));
+    server.MapGet("/resource", (HttpContext context) => GetPrincipalName(context.User) ?? "unauthenticated" );
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -37,7 +37,7 @@ partial class BearerTokenTests
     var content = await ReadResponseMessageContent(signinResponse);
 
     var tokenResponse = GetAccessTokenResponse(content, server.Services);
-    using var response = await client.GetAsync("/resource",(HeaderNames.Authorization, BearerName + tokenResponse!.AccessToken));
+    using var response = await client.GetAsync("/resource", (HeaderNames.Authorization, BearerName + tokenResponse!.AccessToken));
 
     Assert.AreEqual("user", await ReadResponseMessageContent(response));
   }

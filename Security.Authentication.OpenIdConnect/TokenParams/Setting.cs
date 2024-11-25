@@ -18,7 +18,7 @@ partial class OpenIdConnectFuncs
     SetOAuthParam(oidcParams, OidcParamNames.Code, authCode);
     SetOAuthParam(oidcParams, OidcParamNames.GrantType, OpenIdConnectGrantTypes.AuthorizationCode);
     SetOAuthParam(oidcParams, OidcParamNames.RedirectUri, GetAuthPropsRedirectUriForCode(authProps)!);
-    if(!oidcOptions.DisableTelemetry) {
+    if (!oidcOptions.DisableTelemetry) {
       SetOAuthParam(oidcParams, OidcParamNames.SkuTelemetry, IdentityModelTelemetryUtil.ClientSku);
       SetOAuthParam(oidcParams, OidcParamNames.VersionTelemetry, IdentityModelTelemetryUtil.ClientVer);
     }

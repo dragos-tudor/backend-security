@@ -17,7 +17,7 @@ partial class OpenIdConnectFuncs
   where TOptions : OpenIdConnectOptions
   {
     var tokenError = ValidateTokenResponse(response);
-    if(tokenError is not null) return tokenError;
+    if (tokenError is not null) return tokenError;
 
     var responseContent = await ReadHttpResponseContent(response, cancellationToken);
     var tokenMessage = CreateOpenIdConnectMessage(responseContent);
@@ -25,7 +25,7 @@ partial class OpenIdConnectFuncs
     var securityToken = ToJwtSecurityToken(validationResult.SecurityToken);
     ValidateTokenMessageProtocol(tokenMessage, oidcOptions, securityToken);
 
-    if(ShouldUseTokenLifetime(oidcOptions))
+    if (ShouldUseTokenLifetime(oidcOptions))
       SetAuthPropsTokenLifetime(authProps, validationResult.SecurityToken!);
 
     return CreateTokenInfo(tokenMessage, validationResult, securityToken);

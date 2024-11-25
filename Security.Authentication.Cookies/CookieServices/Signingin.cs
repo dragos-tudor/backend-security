@@ -18,7 +18,7 @@ partial class CookiesFuncs
     ITicketStore ticketStore,
     ILogger logger)
   {
-    if(IsSessionBasedTicket(ticketStore))
+    if (IsSessionBasedTicket(ticketStore))
       return await SignInSessionCookie(context, principal, authProps, authOptions, currentUtc, cookieManager, authTicketProtector, ticketStore, logger);
 
     var authTicket = CreateAuthenticationTicket(principal, authProps, authOptions.SchemeName);

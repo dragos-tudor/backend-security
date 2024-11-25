@@ -14,7 +14,7 @@ partial class OAuthTests {
   [TestMethod]
   public async Task Token_endpoint_request_with_code__exchange_code_for_tokens__endpoint_receive_code()
   {
-    using var httpClient = CreateHttpClient("http://oauth", "/token",(request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a"}));
+    using var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a"}));
     var authOptions = CreateOAuthOptions();
     var authProps = new AuthenticationProperties();
     var (tokenInfo, _) = await ExchangeCodeForTokens("abc", authProps, authOptions, httpClient);
@@ -25,7 +25,7 @@ partial class OAuthTests {
   [TestMethod]
   public async Task Token_endpoint_request_with_redirect_uri__exchange_code_for_tokens__endpoint_receive_redirect_uri()
   {
-    using var httpClient = CreateHttpClient("http://oauth", "/token",(request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a", }));
+    using var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a", }));
     var authOptions = CreateOAuthOptions();
     var authProps = new AuthenticationProperties(new Dictionary<string, string?>() { {CallbackUri, "http://localhost/callback"} });
     var (tokenInfo, _) = await ExchangeCodeForTokens(string.Empty, authProps, authOptions, httpClient);
@@ -36,7 +36,7 @@ partial class OAuthTests {
   [TestMethod]
   public async Task Token_endpoint_request_with_client_id__exchange_code_for_tokens__endpoint_receive_client_id()
   {
-    using var httpClient = CreateHttpClient("http://oauth", "/token",(request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a"}));
+    using var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a"}));
     var authOptions = CreateOAuthOptions();
     var authProps = new AuthenticationProperties();
     var (tokenInfo, _) = await ExchangeCodeForTokens("abc", authProps, authOptions, httpClient);
@@ -47,7 +47,7 @@ partial class OAuthTests {
   [TestMethod]
   public async Task Token_endpoint_request_with_client_secret__exchange_code_for_tokens__endpoint_receive_client_secret()
   {
-    using var httpClient = CreateHttpClient("http://oauth", "/token",(request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a"}));
+    using var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a"}));
     var authOptions = CreateOAuthOptions();
     var authProps = new AuthenticationProperties();
     var (tokenInfo, _) = await ExchangeCodeForTokens("abc", authProps, authOptions, httpClient);
@@ -108,7 +108,7 @@ partial class OAuthTests {
   public async Task Authentication_options_using_pkcs__exchange_code_for_tokens__endpoint_receive_code_verifier()
   {
     using var authServer = CreateHttpServer();
-    authServer.MapPost("/token",(HttpContext context) => new {token_type = context.Request.Form[OAuthParamNames.CodeVerifier][0], access_token = "a"} );
+    authServer.MapPost("/token", (HttpContext context) => new {token_type = context.Request.Form[OAuthParamNames.CodeVerifier][0], access_token = "a"} );
     await authServer.StartAsync();
     using var authClient = authServer.GetTestClient();
 

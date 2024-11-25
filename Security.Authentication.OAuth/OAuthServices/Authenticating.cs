@@ -24,20 +24,20 @@ partial class OAuthFuncs
     var schemeName = authOptions.SchemeName;
 
     var (authProps, authError) = postAuthorize(context, authOptions, authPropsProtector);
-    if(authError is not null) return Fail(authError);
+    if (authError is not null) return Fail(authError);
     LogPostAuthorization(logger, schemeName, requestId);
 
     var authCode = GetAuthorizationCode(context.Request)!;
     var (tokenInfo, tokenError) = await exchangeCodeForTokens(authCode, authProps!, authOptions, httpClient, cancellationToken);
-    if(tokenError is not null) return Fail(tokenError);
+    if (tokenError is not null) return Fail(tokenError);
     LogExchangeCodeForTokens(logger, schemeName, requestId);
 
     var accessToken = GetAccessToken(tokenInfo!);
     var (userClaims, userInfoError) = await accessUserInfo(accessToken!, authOptions, httpClient, cancellationToken);
-    if(userInfoError is not null) return Fail(userInfoError!);
+    if (userInfoError is not null) return Fail(userInfoError!);
     LogAccessUserInfo(logger, schemeName, requestId);
 
-    if(ShouldCleanCodeChallenge(authOptions)) UnsetAuthPropsCodeVerifier(authProps!);
+    if (ShouldCleanCodeChallenge(authOptions)) UnsetAuthPropsCodeVerifier(authProps!);
 
     var principal = CreatePrincipal(schemeName, userClaims);
     return Success(CreateAuthenticationTicket(principal, authProps, schemeName));

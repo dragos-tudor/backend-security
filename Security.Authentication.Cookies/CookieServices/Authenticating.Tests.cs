@@ -15,8 +15,8 @@ partial class CookiesTests
   {
     using var server = CreateHttpServer(services => services.AddCookiesServices(CreateAuthenticationCookieOptions()));
     server.UseAuthentication(AuthenticateCookie);
-    server.MapPost("/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
-    server.MapGet("/resource",(HttpContext context) => GetPrincipalName(context.User) );
+    server.MapPost("/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
+    server.MapGet("/resource", (HttpContext context) => GetPrincipalName(context.User) );
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -31,8 +31,8 @@ partial class CookiesTests
   {
     using var server = CreateHttpServer(services => services.AddCookiesServices(CreateAuthenticationCookieOptions(), new FakeTicketStore()));
     server.UseAuthentication(AuthenticateCookie);
-    server.MapPost("/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
-    server.MapGet("/resource",(HttpContext context) => GetPrincipalName(context.User) );
+    server.MapPost("/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
+    server.MapGet("/resource", (HttpContext context) => GetPrincipalName(context.User) );
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -47,8 +47,8 @@ partial class CookiesTests
   {
     using var server = CreateHttpServer(services => services.AddAuthentication().AddCookie());
     server.UseAuthentication();
-    server.MapPost("/account/signin",(HttpContext context) => context.SignInAsync(CreatePrincipal("Cookies", new [] { CreateNameClaim("user") } )) );
-    server.MapGet("/resource",(HttpContext context) => GetPrincipalName(context.User) );
+    server.MapPost("/account/signin", (HttpContext context) => context.SignInAsync(CreatePrincipal("Cookies", new [] { CreateNameClaim("user") } )) );
+    server.MapGet("/resource", (HttpContext context) => GetPrincipalName(context.User) );
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -62,12 +62,12 @@ partial class CookiesTests
   public async Task Authenticated_user_by_some_api__access_other_api_resource__authenticated_user()
   {
     using var identityServer = CreateHttpServer(services => services.AddCookiesServices());
-    identityServer.MapPost("/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString() );
+    identityServer.MapPost("/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString() );
     await identityServer.StartAsync();
 
     using var apiServer = CreateHttpServer(services => services.AddCookiesServices());
     apiServer.UseAuthentication(AuthenticateCookie);
-    apiServer.MapGet("/resource",(HttpContext context) => GetPrincipalName(context.User) );
+    apiServer.MapGet("/resource", (HttpContext context) => GetPrincipalName(context.User) );
     await apiServer.StartAsync();
 
     using var identityClient = identityServer.GetTestClient();
@@ -83,12 +83,12 @@ partial class CookiesTests
   public async Task Authenticated_user_by_some_api__access_other_api_resource__authenticated_user_microsoft()
   {
     using var identityServer = CreateHttpServer(services => services.AddAuthentication().AddCookie());
-    identityServer.MapPost("/account/signin",(HttpContext context) => context.SignInAsync(CreatePrincipal("Cookies", new [] { CreateNameClaim("user") })) );
+    identityServer.MapPost("/account/signin", (HttpContext context) => context.SignInAsync(CreatePrincipal("Cookies", new [] { CreateNameClaim("user") })) );
     await identityServer.StartAsync();
 
     using var apiServer = CreateHttpServer(services => services.AddAuthentication().AddCookie());
     apiServer.UseAuthentication();
-    apiServer.MapGet("/resource",(HttpContext context) => GetPrincipalName(context.User));
+    apiServer.MapGet("/resource", (HttpContext context) => GetPrincipalName(context.User));
     await apiServer.StartAsync();
 
     using var identityClient = identityServer.GetTestClient();
@@ -106,8 +106,8 @@ partial class CookiesTests
     var expireCookieTicket = TimeSpan.FromMinutes(10);
     using var server = CreateHttpServer(services => services.AddCookiesServices((CreateAuthenticationCookieOptions()) with { ExpireAfter = expireCookieTicket }));
     server.UseAuthentication(AuthenticateCookie);
-    server.MapPost("/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
-    server.MapGet("/resource",(HttpContext context) => GetPrincipalIdentity(context.User)!.IsAuthenticated ? "auth" : "unauth");
+    server.MapPost("/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
+    server.MapGet("/resource", (HttpContext context) => GetPrincipalIdentity(context.User)!.IsAuthenticated ? "auth" : "unauth");
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -126,8 +126,8 @@ partial class CookiesTests
       CreateAuthenticationCookieOptions() with { ExpireAfter = expireCookieTicket },
       new FakeTicketStore()));
     server.UseAuthentication(AuthenticateCookie);
-    server.MapPost("/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
-    server.MapGet("/resource",(HttpContext context) => GetPrincipalIdentity(context.User)!.IsAuthenticated ? "auth" : "unauth");
+    server.MapPost("/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
+    server.MapGet("/resource", (HttpContext context) => GetPrincipalIdentity(context.User)!.IsAuthenticated ? "auth" : "unauth");
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -147,8 +147,8 @@ partial class CookiesTests
       CreateAuthenticationCookieOptions() with { ExpireAfter = expireCookieTicket },
       ticketStore));
     server.UseAuthentication(AuthenticateCookie);
-    server.MapPost("/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
-    server.MapGet("/resource",(HttpContext context) => GetPrincipalIdentity(context.User)!.IsAuthenticated ? "auth" : "unauth");
+    server.MapPost("/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
+    server.MapGet("/resource", (HttpContext context) => GetPrincipalIdentity(context.User)!.IsAuthenticated ? "auth" : "unauth");
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -171,8 +171,8 @@ partial class CookiesTests
       CreateAuthenticationCookieOptions() with { ExpireAfter = expireCookieTicket },
       new FakeTicketStore()));
     server.UseAuthentication(AuthenticateCookie);
-    server.MapPost("/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
-    server.MapGet("/resource",(HttpContext context) => GetPrincipalIdentity(context.User)!.IsAuthenticated ? "auth" : "unauth");
+    server.MapPost("/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
+    server.MapGet("/resource", (HttpContext context) => GetPrincipalIdentity(context.User)!.IsAuthenticated ? "auth" : "unauth");
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -191,8 +191,8 @@ partial class CookiesTests
       CreateAuthenticationCookieOptions() with { ExpireAfter = expireCookieTicket },
       new FakeTicketStore()));
     server.UseAuthentication(AuthenticateCookie);
-    server.MapPost("/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
-    server.MapGet("/resource",(HttpContext context) => GetPrincipalIdentity(context.User)!.IsAuthenticated ? "auth" : "unauth");
+    server.MapPost("/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user")).ToString());
+    server.MapGet("/resource", (HttpContext context) => GetPrincipalIdentity(context.User)!.IsAuthenticated ? "auth" : "unauth");
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -211,8 +211,8 @@ partial class CookiesTests
     var expireCookieTicket = TimeSpan.FromMinutes(10);
     using var server = CreateHttpServer(services => services.AddAuthentication().AddCookie(o => o.ExpireTimeSpan = expireCookieTicket));
     server.UseAuthentication();
-    server.MapPost("/account/signin",(HttpContext context) => context.SignInAsync(CreatePrincipal("Cookies", new [] { CreateNameClaim("user") } )) );
-    server.MapGet("/resource",(HttpContext context) => GetPrincipalIdentity(context.User)!.IsAuthenticated ? "auth" : "unauth");
+    server.MapPost("/account/signin", (HttpContext context) => context.SignInAsync(CreatePrincipal("Cookies", new [] { CreateNameClaim("user") } )) );
+    server.MapGet("/resource", (HttpContext context) => GetPrincipalIdentity(context.User)!.IsAuthenticated ? "auth" : "unauth");
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -227,12 +227,12 @@ partial class CookiesTests
   public async Task Authenticated_user_by_identity_api__interop_authenticate__authenticated_user()
   {
     using var identityServer = CreateHttpServer(services => services.AddCookiesServices());
-    identityServer.MapPost("/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user", "Cookies")).ToString() );
+    identityServer.MapPost("/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("user", "Cookies")).ToString() );
     await identityServer.StartAsync();
 
     using var apiServer = CreateHttpServer(services => services.AddAuthentication().AddCookie());
     apiServer.UseAuthentication();
-    apiServer.MapGet("/resource",(HttpContext context) => GetPrincipalName(context.User));
+    apiServer.MapGet("/resource", (HttpContext context) => GetPrincipalName(context.User));
     await apiServer.StartAsync();
 
     using var identityClient = identityServer.GetTestClient();

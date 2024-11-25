@@ -19,7 +19,7 @@ partial class AuthenticationFuncs
 
     foreach (var queryParam in queryParams)
     {
-      if(queryParam.Value is null) continue;
+      if (queryParam.Value is null) continue;
       queryBuilder.Append(hasQuerySeparator? "&": "?");
       queryBuilder.Append(Uri.EscapeDataString(queryParam.Key));
       queryBuilder.Append('=');

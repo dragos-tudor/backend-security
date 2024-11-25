@@ -21,15 +21,15 @@ partial class CookiesFuncs
     ITicketStore ticketStore)
   {
     var (authTicket, error) = ExtractAuthenticationCookieTicket(context, authOptions, cookieManager, authTicketProtector);
-    if(error == NoCookie) return NoResult();
-    if(error is not null) return Fail(error);
+    if (error == NoCookie) return NoResult();
+    if (error is not null) return Fail(error);
 
-    if(IsSessionBasedTicket(ticketStore))
+    if (IsSessionBasedTicket(ticketStore))
       return await AuthenticateSessionCookie(context, authOptions, authTicket, currentUtc, cookieManager, authTicketProtector, ticketStore);
 
     var authTicketState = GetAuthenticationTicketState(authTicket, currentUtc, authOptions);
-    if(authTicketState == AuthenticationTicketState.Valid) return Success(authTicket);
-    if(authTicketState == AuthenticationTicketState.Expired) {
+    if (authTicketState == AuthenticationTicketState.Valid) return Success(authTicket);
+    if (authTicketState == AuthenticationTicketState.Expired) {
       CleanAuthenticationCookie(context, authOptions, cookieManager);
       return Fail(TicketExpired);
     }

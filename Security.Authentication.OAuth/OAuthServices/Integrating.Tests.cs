@@ -16,9 +16,9 @@ partial class OAuthTests
   public async Task OAuth_authentication__execute_authentication_flow__authentication_succedded()
   {
     using var authServer = CreateHttpServer();
-    authServer.MapGet("/authorize",(HttpContext context) => SetHttpResponseRedirect(context.Response, GetCallbackLocation(context.Request)) );
-    authServer.MapPost("/token",(HttpContext request) => JsonSerializer.Serialize(new { access_token = "token" }));
-    authServer.MapGet("/userinfo",(HttpContext request) => JsonSerializer.Serialize(new { email = "email", username = "username" }));
+    authServer.MapGet("/authorize", (HttpContext context) => SetHttpResponseRedirect(context.Response, GetCallbackLocation(context.Request)) );
+    authServer.MapPost("/token", (HttpContext request) => JsonSerializer.Serialize(new { access_token = "token" }));
+    authServer.MapGet("/userinfo", (HttpContext request) => JsonSerializer.Serialize(new { email = "email", username = "username" }));
     await authServer.StartAsync();
     using var authClient = authServer.GetTestClient();
 
@@ -26,7 +26,7 @@ partial class OAuthTests
     var authOptions = CreateOAuthOptions() with { AuthorizationEndpoint = "http://oauth/authorize" };
     var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     using var appServer = CreateHttpServer();
-    appServer.MapGet("/challenge",(HttpContext context) => ChallengeOAuth(context, CreateAuthProps(), authOptions, DateTimeOffset.UtcNow, authPropsProtector, NullLogger.Instance));
+    appServer.MapGet("/challenge", (HttpContext context) => ChallengeOAuth(context, CreateAuthProps(), authOptions, DateTimeOffset.UtcNow, authPropsProtector, NullLogger.Instance));
     appServer.MapGet("/callback", async delegate(HttpContext context) { return(await AuthenticateOAuth(context, authOptions, authPropsProtector, authClient, PostAuthorization, ExchangeCodeForTokens, AccessUserInfo, NullLogger.Instance)).Succeeded; });
     await appServer.StartAsync();
     using var appClient = appServer.GetTestClient();

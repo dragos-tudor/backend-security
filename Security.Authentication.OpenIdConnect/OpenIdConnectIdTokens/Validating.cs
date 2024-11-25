@@ -18,14 +18,14 @@ partial class OpenIdConnectFuncs
 
     var tokenHandler = new JwtSecurityTokenHandler();
     var validationResult = await tokenHandler.ValidateTokenAsync(idToken, validationParameters);
-    if(!IsSuccessTokenValidationResult(validationResult))
+    if (!IsSuccessTokenValidationResult(validationResult))
       return validationResult;
 
-    if(!IsValidTokenValidationResult(validationResult))
+    if (!IsValidTokenValidationResult(validationResult))
       return SetTokenValidationResultException(validationResult, $"Id token is invalid: '{idToken}'.");
 
     var securityToken = validationResult.SecurityToken;
-    if(!IsJsonWebToken(securityToken))
+    if (!IsJsonWebToken(securityToken))
       return SetTokenValidationResultException(validationResult, $"Validated security token should be JsonWebToken, but is '{securityToken?.GetType()}");
 
     return validationResult;

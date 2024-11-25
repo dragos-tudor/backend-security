@@ -20,20 +20,20 @@ partial class OpenIdConnectFuncs
     StringDataFormat stringDataFormat)
   where TOptions : OpenIdConnectOptions
   {
-    if(IsOAuthError(context.Request)) return GetOAuthErrorType(context.Request);
+    if (IsOAuthError(context.Request)) return GetOAuthErrorType(context.Request);
 
     var authResponse = await GetHttpRequestParams(context.Request, context.RequestAborted);
-    if(authResponse is null) return InvalidAuthorizationResponse;
+    if (authResponse is null) return InvalidAuthorizationResponse;
 
     var authData = ToOpenIdConnectData(authResponse);
     var state = GetOidcDataState(authData);
-    if(state is null) return InvalidState;
+    if (state is null) return InvalidState;
 
     var authProps = UnprotectAuthProps(state!, authPropsProtector);
-    if(authProps is null) return UnprotectStateFailed;
+    if (authProps is null) return UnprotectStateFailed;
 
     var correlationError = ValidateCorrelationCookie(context.Request, authProps);
-    if(correlationError is not null) return correlationError;
+    if (correlationError is not null) return correlationError;
 
     var correlationId = GetAuthPropsCorrelationId(authProps);
     DeleteCorrelationCookie(context, oidcOptions, correlationId);

@@ -13,7 +13,7 @@ partial class OAuthFuncs
   where TOptions : OAuthOptions
   {
     var authResult = await authenticate(context);
-    if(!authResult.Succeeded) {
+    if (!authResult.Succeeded) {
       var failure = GetAuthenticateResultFailure(authResult);
 
       var redirectUriWithError = GetOAuthRedirectUriWithError(authResult.Properties, failure);

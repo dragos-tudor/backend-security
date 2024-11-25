@@ -17,14 +17,14 @@ partial class OpenIdConnectFuncs
   where TOptions : OpenIdConnectOptions
   {
     var userInfoError = ValidateUserInfoResponse(response);
-    if(userInfoError is not null) return userInfoError;
+    if (userInfoError is not null) return userInfoError;
 
     var responseContent = await ReadHttpResponseContent(response, cancellationToken);
     ValidateUserInfoMessageProtocol(responseContent, securityToken);
 
     var contentType = GetHttpResponseContentType(response);
     var userData = ParseUserInfoData(responseContent, contentType);
-    if(userData is null) return UnableToParseUserInfoData;
+    if (userData is null) return UnableToParseUserInfoData;
     using(userData)
       AddClaimsIdentityClaims(identity, userData.RootElement, oidcOptions);
 

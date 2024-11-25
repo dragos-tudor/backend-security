@@ -11,9 +11,9 @@ partial class OAuthFuncs
 
   internal static string? ValidateAuthorizationResponse(HttpRequest request)
   {
-    if(IsOAuthError(request)) return GetOAuthErrorType(request);
-    if(!ExistsAuthorizationCode(request)) return AuthorizationCodeNotFound;
-    if(!ExistsAuthorizationState(request)) return InvalidState;
+    if (IsOAuthError(request)) return GetOAuthErrorType(request);
+    if (!ExistsAuthorizationCode(request)) return AuthorizationCodeNotFound;
+    if (!ExistsAuthorizationState(request)) return InvalidState;
     return default;
   }
 }

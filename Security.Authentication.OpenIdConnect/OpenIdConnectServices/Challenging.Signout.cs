@@ -19,7 +19,7 @@ partial class OpenIdConnectFuncs
     await SetSignoutChallengeOpenIdConnectMessage(signoutMessage, context, oidcOptions, oidcConfiguration,
       ProtectAuthProps(authProps, propertiesDataFormat));
 
-    if(IsEmptyString(signoutMessage.IssuerAddress)) return default;
+    if (IsEmptyString(signoutMessage.IssuerAddress)) return default;
 
     var redirectUri = await SetChallengeSignoutResponse(context, signoutMessage, oidcOptions, oidcConfiguration);
     LogSignOutChallenge(logger, oidcOptions.SchemeName, redirectUri!, context.TraceIdentifier);

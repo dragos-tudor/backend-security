@@ -18,8 +18,8 @@ partial class AuthorizationFuncs {
     var resource =(object?)(IsEndpointResource()? endpoint: context);
     var authzResult = await authzService.AuthorizeAsync(context.User, resource, policy);
 
-    if(authzResult.Succeeded) return PolicyAuthorizationResult.Success();
-    if(authResult.Succeeded) return PolicyAuthorizationResult.Forbid(authzResult.Failure);
+    if (authzResult.Succeeded) return PolicyAuthorizationResult.Success();
+    if (authResult.Succeeded) return PolicyAuthorizationResult.Forbid(authzResult.Failure);
     return PolicyAuthorizationResult.Challenge();
   }
 

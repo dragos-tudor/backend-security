@@ -20,7 +20,7 @@ public static class StringAsserts
   {
     ArgumentException.ThrowIfNullOrEmpty(value, nameof(value));
     ArgumentException.ThrowIfNullOrEmpty(substring, nameof(substring));
-    if(value.Contains(substring, comparisonType))
+    if (value.Contains(substring, comparisonType))
     {
       // TODO: handle null parameters
       var formatProvider = CultureInfo.InvariantCulture;

@@ -12,7 +12,7 @@ partial class OpenIdConnectFuncs
     SignInFunc signin) where TOptions : OpenIdConnectOptions
   {
     var authResult = await authenticate(context);
-    if(!authResult.Succeeded) {
+    if (!authResult.Succeeded) {
       var failure = GetAuthenticateResultFailure(authResult);
 
       var redirectUriWithError = GetOAuthRedirectUriWithError(authResult.Properties, failure);

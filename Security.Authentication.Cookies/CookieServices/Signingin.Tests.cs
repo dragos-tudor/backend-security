@@ -17,7 +17,7 @@ partial class CookiesTests {
     var cookieOptions = CreateAuthenticationCookieOptions("CookieName", "CookiesScheme");
     using var server = CreateHttpServer(services => services.AddCookiesServices(cookieOptions));
     server.UseAuthentication(AuthenticateCookie);
-    server.MapPost("/api/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("CookiesScheme", "user")).ToString());
+    server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("CookiesScheme", "user")).ToString());
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -33,7 +33,7 @@ partial class CookiesTests {
   {
     using var server = CreateHttpServer(services => services.AddCookiesServices(CreateAuthenticationCookieOptions() with { ExpireAfter = null }));
     server.UseAuthentication(AuthenticateCookie);
-    server.MapPost("/api/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal(CookieAuthenticationDefaults.AuthenticationScheme, "user")).ToString());
+    server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal(CookieAuthenticationDefaults.AuthenticationScheme, "user")).ToString());
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -49,7 +49,7 @@ partial class CookiesTests {
     var ticketStore = new FakeTicketStore();
     using var server = CreateHttpServer(services => services.AddCookiesServices(CreateAuthenticationCookieOptions(), ticketStore));
     server.UseAuthentication(AuthenticateCookie);
-    server.MapPost("/api/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal(CookieAuthenticationDefaults.AuthenticationScheme, "user")).ToString());
+    server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal(CookieAuthenticationDefaults.AuthenticationScheme, "user")).ToString());
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -67,7 +67,7 @@ partial class CookiesTests {
     var cookieOptions = CreateAuthenticationCookieOptions() with { SchemeName = "CookiesScheme" };
     using var server = CreateHttpServer(services => services.AddCookiesServices(cookieOptions, ticketStore));
     server.UseAuthentication(AuthenticateCookie);
-    server.MapPost("/api/account/signin",(HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("CookiesScheme", "user")).ToString());
+    server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("CookiesScheme", "user")).ToString());
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -83,7 +83,7 @@ partial class CookiesTests {
   public async Task Signin_request__signin__authentication_cookie_microsoft()
   {
     using var server = CreateHttpServer(services => services.AddAuthentication().AddCookie(o => o.Cookie.Name = "CookiesScheme"));
-    server.MapPost("/api/account/signin",(HttpContext context) => context.SignInAsync(CreatePrincipal("CookiesScheme", new [] { CreateNameClaim("user") })));
+    server.MapPost("/api/account/signin", (HttpContext context) => context.SignInAsync(CreatePrincipal("CookiesScheme", new [] { CreateNameClaim("user") })));
     await server.StartAsync();
 
     using var client = server.GetTestClient();

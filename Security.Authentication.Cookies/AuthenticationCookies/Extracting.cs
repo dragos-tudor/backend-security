@@ -18,10 +18,10 @@ partial class CookiesFuncs
   {
     var authCookieName = GetAuthenticationCookieName(authOptions);
     var authCookie = GetCookie(context, cookieManager, authCookieName);
-    if(authCookie is null) return(default, NoCookie);
+    if (authCookie is null) return(default, NoCookie);
 
     var authTicket = authTicketProtector.Unprotect(authCookie);
-    if(authTicket is null) return(default, UnprotectingCookieFailed);
+    if (authTicket is null) return(default, UnprotectingCookieFailed);
 
     return(authTicket, default);
   }

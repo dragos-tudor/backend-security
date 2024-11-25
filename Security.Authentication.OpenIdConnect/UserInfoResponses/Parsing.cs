@@ -16,8 +16,8 @@ partial class OpenIdConnectFuncs
 
   static JsonDocument? ParseUserInfoData(string content, string? contentType)
   {
-    if(IsJsonContentTypeHttpResponse(contentType)) return ParseJsonUserInfoData(content);
-    if(IsJwtContentTypeHttpResponse(contentType)) return ParseJwtUserInfoData(content);
+    if (IsJsonContentTypeHttpResponse(contentType)) return ParseJsonUserInfoData(content);
+    if (IsJwtContentTypeHttpResponse(contentType)) return ParseJwtUserInfoData(content);
     return default;
   }
 }

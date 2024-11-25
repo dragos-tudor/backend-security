@@ -18,8 +18,8 @@ partial class OpenIdConnectFuncs
     var principal = GetContextUser(context);
 
     var validateError = ValidateSignoutMessage(signoutMessage, principal);
-    if(validateError is not null) LogSignedOutWithFailure(logger, oidcOptions.SchemeName, validateError, context.TraceIdentifier);
-    if(validateError is not null) return validateError;
+    if (validateError is not null) LogSignedOutWithFailure(logger, oidcOptions.SchemeName, validateError, context.TraceIdentifier);
+    if (validateError is not null) return validateError;
 
     await signOut(context, authProps);
     LogSignedOut(logger, oidcOptions.SchemeName, redirectUri!, context.TraceIdentifier);

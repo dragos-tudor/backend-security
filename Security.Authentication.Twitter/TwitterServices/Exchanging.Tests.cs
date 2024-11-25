@@ -13,7 +13,7 @@ partial class TwitterTests
   [TestMethod]
   public async Task User_credentials__exchange_code_for_tokens__endpoint_receive_credentials() {
     using var authServer = CreateHttpServer();
-    authServer.MapPost("/token",(HttpContext context) => new {token_type = context.Request.Headers.Authorization[0], access_token = "a"} );
+    authServer.MapPost("/token", (HttpContext context) => new {token_type = context.Request.Headers.Authorization[0], access_token = "a"} );
     await authServer.StartAsync();
     using var authClient = authServer.GetTestClient();
 

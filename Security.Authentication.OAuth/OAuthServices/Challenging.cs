@@ -20,10 +20,10 @@ partial class OAuthFuncs
     SetAuthPropsCorrelationId(authProps, correlationId);
 
     var authParams = CreateOAuthParams();
-    if(ShouldUseCodeChallenge(authOptions)) UseCodeChallenge(authParams, authProps, GenerateCodeVerifier());
+    if (ShouldUseCodeChallenge(authOptions)) UseCodeChallenge(authParams, authProps, GenerateCodeVerifier());
 
     var redirectUri = GetHttpRequestQueryValue(context.Request, authOptions.ReturnUrlParameter)!; // TODO: investigate security risk for absolute url
-    if(!ExistsAuthPropsRedirectUri(authProps)) SetAuthPropsRedirectUri(authProps, redirectUri);
+    if (!ExistsAuthPropsRedirectUri(authProps)) SetAuthPropsRedirectUri(authProps, redirectUri);
 
     var callbackUrl = GetAbsoluteUrl(context.Request, authOptions.CallbackPath);
     SetAuthorizationOAuthParams(authParams, authOptions, authProps, authPropsProtector, callbackUrl);

@@ -17,9 +17,9 @@ partial class GoogleTests
   [TestMethod]
   public async Task Google_authentication__execute_authentication_flow__authentication_succedded() {
     using var authServer = CreateHttpServer();
-    authServer.MapGet("/authorize",(HttpContext context) => SetHttpResponseRedirect(context.Response, GetCallbackLocation(context.Request)) );
-    authServer.MapPost("/token",(HttpContext request) => JsonSerializer.Serialize(new { access_token = "token" }));
-    authServer.MapGet("/userinfo",(HttpContext request) => JsonSerializer.Serialize(new { email = "email", username = "username" }));
+    authServer.MapGet("/authorize", (HttpContext context) => SetHttpResponseRedirect(context.Response, GetCallbackLocation(context.Request)) );
+    authServer.MapPost("/token", (HttpContext request) => JsonSerializer.Serialize(new { access_token = "token" }));
+    authServer.MapGet("/userinfo", (HttpContext request) => JsonSerializer.Serialize(new { email = "email", username = "username" }));
     await authServer.StartAsync();
     using var authClient = authServer.GetTestClient();
 

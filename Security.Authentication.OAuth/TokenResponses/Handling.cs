@@ -19,8 +19,8 @@ partial class OAuthFuncs
     using var tokenResponse = Parse(responseContent);
     var tokenElement = tokenResponse.RootElement;
 
-    if(!IsSuccessHttpResponse(response)) return GetOAuthErrorType(tokenElement);
-    if(!ExistsAccessToken(tokenElement)) return AccessTokenNotFound;
+    if (!IsSuccessHttpResponse(response)) return GetOAuthErrorType(tokenElement);
+    if (!ExistsAccessToken(tokenElement)) return AccessTokenNotFound;
 
     return CreateTokenInfo(tokenElement);
   }

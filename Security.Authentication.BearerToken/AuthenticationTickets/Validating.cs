@@ -11,8 +11,8 @@ partial class BearerTokenFuncs
   static string? ValidateAuthenticationTicket(DateTimeOffset currentUtc, AuthenticationTicket authTicket)
   {
     var expiresUtc = GetAuthenticationTicketExpires(authTicket!);
-    if(expiresUtc is null) return MissingTokenExpires;
-    if(currentUtc >= expiresUtc) return TokenExpired;
+    if (expiresUtc is null) return MissingTokenExpires;
+    if (currentUtc >= expiresUtc) return TokenExpired;
     return default;
   }
 }

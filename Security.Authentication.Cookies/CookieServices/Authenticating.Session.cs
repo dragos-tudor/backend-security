@@ -21,14 +21,14 @@ partial class CookiesFuncs
     ITicketStore ticketStore)
   {
     var sessionId = GetSessionId(sessionTicketId);
-    if(sessionId is null) return Fail(MissingSessionId);
+    if (sessionId is null) return Fail(MissingSessionId);
 
     var sessionTicket = await GetSessionTicket(ticketStore, sessionId, context.RequestAborted);
-    if(sessionTicket is null) return Fail(MissingSessionTicket);
+    if (sessionTicket is null) return Fail(MissingSessionTicket);
 
     var sessionTicketState = GetAuthenticationTicketState(sessionTicket, currentUtc, authOptions);
-    if(sessionTicketState == AuthenticationTicketState.Valid) return Success(sessionTicket);
-    if(sessionTicketState == AuthenticationTicketState.Expired) {
+    if (sessionTicketState == AuthenticationTicketState.Valid) return Success(sessionTicket);
+    if (sessionTicketState == AuthenticationTicketState.Expired) {
       await RemoveSessionTicket(ticketStore, sessionId, context.RequestAborted);
       CleanAuthenticationCookie(context, authOptions, cookieManager);
       return Fail(TicketExpired);

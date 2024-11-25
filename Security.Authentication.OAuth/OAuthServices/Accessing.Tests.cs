@@ -12,7 +12,7 @@ partial class OAuthTests
 {
   [TestMethod]
   public async Task User_info_endpoint_request_with_token__access_user_informations__endpoint_receive_access_token() {
-    using var httpClient = CreateHttpClient("http://oauth", "/userinfo",(request) => JsonContent.Create(new {
+    using var httpClient = CreateHttpClient("http://oauth", "/userinfo", (request) => JsonContent.Create(new {
       scheme = request.Headers.Authorization.Scheme,
       parameter = request.Headers.Authorization.Parameter
     }));

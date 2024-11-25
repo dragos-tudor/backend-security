@@ -17,6 +17,6 @@ partial class CookiesFuncs
         .AddSingleton(cookieManager ?? new ChunkingCookieManager())
         .AddSingleton(ticketStore ?? new DefaultTicketStore())
         .AddSingleton((services) => CreateTicketDataFormat(ResolveRequiredService<IDataProtectionProvider>(services), ResolveRequiredService<AuthenticationCookieOptions>(services).SchemeName))
-        .AddKeyedSingleton(CookiesLogger,(services, serviceKey) => CreateLogger(services,(string)serviceKey))
+        .AddKeyedSingleton(CookiesLogger, (services, serviceKey) => CreateLogger(services, (string)serviceKey))
         .TryAddSingleton(TimeProvider.System);
 }

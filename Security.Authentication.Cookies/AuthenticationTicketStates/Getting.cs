@@ -9,8 +9,8 @@ partial class CookiesFuncs
     DateTimeOffset currentUtc,
     AuthenticationCookieOptions authOptions)
   {
-    if(IsExpiredAuthenticationTicket(ticket, currentUtc)) return AuthenticationTicketState.Expired;
-    if(IsRenewableAuthenticationTicket(ticket, currentUtc)) return AuthenticationTicketState.Renewable;
+    if (IsExpiredAuthenticationTicket(ticket, currentUtc)) return AuthenticationTicketState.Expired;
+    if (IsRenewableAuthenticationTicket(ticket, currentUtc)) return AuthenticationTicketState.Renewable;
     return AuthenticationTicketState.Valid;
   }
 }

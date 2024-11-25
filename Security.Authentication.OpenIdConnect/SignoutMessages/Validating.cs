@@ -14,12 +14,12 @@ partial class OpenIdConnectFuncs
   static string? ValidateSignoutMessage(OpenIdConnectMessage oidcMessage, ClaimsPrincipal? principal)
   {
     var sessionId = GetPrincipalClaimValue(principal, JwtRegisteredClaimNames.Sid);
-    if(IsEmptyString(sessionId)) return OidcSignOutSessionIdMissing;
-    if(oidcMessage.Sid != sessionId) return OidcSignOutSessionIdInvalid;
+    if (IsEmptyString(sessionId)) return OidcSignOutSessionIdMissing;
+    if (oidcMessage.Sid != sessionId) return OidcSignOutSessionIdInvalid;
 
     var issuer = GetPrincipalClaimValue(principal, JwtRegisteredClaimNames.Iss);
-    if(IsEmptyString(issuer)) return OidcSignOutIssuerMissing;
-    if(oidcMessage.Iss != issuer) return OidcSignOutIssuerInvalid;
+    if (IsEmptyString(issuer)) return OidcSignOutIssuerMissing;
+    if (oidcMessage.Iss != issuer) return OidcSignOutIssuerInvalid;
 
     return default;
   }
