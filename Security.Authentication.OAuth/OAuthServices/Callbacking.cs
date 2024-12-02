@@ -7,16 +7,15 @@ partial class OAuthFuncs
 {
   public static async Task<string> CallbackOAuth<TOptions>(
     HttpContext context,
-    TOptions authOptions,
     AuthenticateFunc authenticate,
     SignInFunc signin)
   where TOptions : OAuthOptions
   {
     var authResult = await authenticate(context);
-    if (!authResult.Succeeded) {
-      var failure = GetAuthenticateResultFailure(authResult);
+    var authError = GetAuthenticateResultError(authResult);
 
-      var redirectUriWithError = GetOAuthRedirectUriWithError(authResult.Properties, failure);
+    if (authError is not null) {
+      var redirectUriWithError = GetOAuthRedirectUriWithError(authResult.Properties, authError);
       return SetHttpResponseRedirect(context.Response, redirectUriWithError);
     }
 

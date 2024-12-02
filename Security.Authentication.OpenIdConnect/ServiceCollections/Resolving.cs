@@ -10,7 +10,5 @@ partial class OpenIdConnectFuncs
 
   static PropertiesDataFormat ResolvePropertiesDataFormat(HttpContext context) => ResolveRequiredService<PropertiesDataFormat>(context);
 
-  static StringDataFormat ResolveStringDataFormat(HttpContext context) => ResolveRequiredService<StringDataFormat>(context);
-
   static TimeProvider ResolveTimeProvider(HttpContext context) => ResolveRequiredService<TimeProvider>(context);
 }

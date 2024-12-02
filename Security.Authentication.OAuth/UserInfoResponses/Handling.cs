@@ -12,12 +12,10 @@ partial class OAuthFuncs
     OAuthOptions authOptions,
     CancellationToken cancellationToken = default)
   {
-    var responseContent = await ReadHttpResponseContent(response, cancellationToken);
-    using var userInfoResponse = Parse(responseContent);
-    var userData = userInfoResponse.RootElement;
+    using var userResponse = await ReadHttpResponseJsonResponse(response, cancellationToken);
+    var userData = userResponse.RootElement;
 
-    return IsSuccessHttpResponse(response)?
-      MapOAuthOptionsClaims(authOptions, userData):
-      GetOAuthErrorType(userData);
+    if (!IsSuccessHttpResponse(response)) return GetOAuthErrorType(userData);
+    return MapOAuthOptionsClaims(authOptions, userData);
   }
 }

@@ -17,6 +17,5 @@ partial class OpenIdConnectFuncs
         ResolveRequiredService<TOptions>(context),
         ResolveTimeProvider(context).GetUtcNow(),
         ResolvePropertiesDataFormat(context),
-        ResolveStringDataFormat(context),
         logger);
 }

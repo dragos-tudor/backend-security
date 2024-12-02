@@ -7,10 +7,7 @@ public static class OpenIdConnectDefaults
 {
   public const string AuthenticationProperties = "OpenIdConnect.AuthenticationProperties";
   public const string AuthenticationScheme = "OpenIdConnect";
-
   public const string DisplayName = "OpenIdConnect";
-  public const string CookieNoncePrefix = ".AspNetCore.OpenIdConnect.Nonce.";
-
   public const string RedirectUriForCodeProperties = "OpenIdConnect.Code.RedirectUri";
   public const string UserStateProperties = "OpenIdConnect.Userstate";
 }

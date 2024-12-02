@@ -1,6 +1,9 @@
 
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Security.Authentication.OpenIdConnect;
 
@@ -30,6 +33,13 @@ partial class OpenIdConnectFuncs
       Prompt = OpenIdConnectPrompt.Login,
       ResponseMode = OpenIdConnectResponseMode.FormPost,
       ResponseType = OpenIdConnectResponseType.Code,
+
+      TokenHandler = new JsonWebTokenHandler{ MapInboundClaims = JwtSecurityTokenHandler.DefaultMapInboundClaims },
+      TokenValidationParameters = new TokenValidationParameters() {
+        IssuerSigningKeys = oidcConfig.SigningKeys,
+        RequireSignedTokens = false, // http://openid.net/specs/openid-connect-core-1_0.html#IDTokenValidation
+        ValidIssuer = oidcConfig.Issuer
+      },
 
       SchemeName = OidcDefaults.AuthenticationScheme,
       Scope =  [OpenIdConnectScope.OpenId, OpenIdConnectScope.Profile],

@@ -10,15 +10,15 @@ partial class OpenIdConnectFuncs {
 
   public static async Task<UserInfoResult> AccessUserInfo<TOptions>(
     string accessToken,
-    JwtSecurityToken securityToken,
-    ClaimsIdentity identity,
     TOptions oidcOptions,
+    OpenIdConnectValidationOptions validationOptions,
+    JwtSecurityToken idToken,
     HttpClient httpClient,
     CancellationToken cancellationToken = default)
   where TOptions: OpenIdConnectOptions
   {
-    using var request = BuildUserInfoRequest(oidcOptions.UserInfoEndpoint, accessToken, httpClient.DefaultRequestVersion);
+    using var request = BuildUserInfoRequest(oidcOptions.UserInfoEndpoint, accessToken);
     using var response = await SendHttpRequest(request, httpClient, cancellationToken);
-    return await HandleUserInfoResponse(response, identity, securityToken, oidcOptions, cancellationToken);
+    return await HandleUserInfoResponse(response, oidcOptions, validationOptions, idToken, cancellationToken);
   }
 }

@@ -8,7 +8,7 @@ partial class OAuthFuncs
 {
   public static async Task<AuthenticateResult> AuthenticateOAuth<TOptions>(
     HttpContext context,
-    PostAuthorizationFunc<TOptions> postAuthorize,
+    PostAuthorizeFunc<TOptions> postAuthorize,
     ExchangeCodeForTokensFunc<TOptions> exchangeCodeForTokens,
     AccessUserInfoFunc<TOptions> accessUserInfo,
     ILogger logger)

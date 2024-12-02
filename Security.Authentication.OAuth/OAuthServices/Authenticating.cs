@@ -13,7 +13,7 @@ partial class OAuthFuncs
     TOptions authOptions,
     PropertiesDataFormat authPropsProtector,
     HttpClient httpClient,
-    PostAuthorizationFunc<TOptions> postAuthorize,
+    PostAuthorizeFunc<TOptions> postAuthorize,
     ExchangeCodeForTokensFunc<TOptions> exchangeCodeForTokens,
     AccessUserInfoFunc<TOptions> accessUserInfo,
     ILogger logger)
@@ -23,22 +23,22 @@ partial class OAuthFuncs
     var requestId = context.TraceIdentifier;
     var schemeName = authOptions.SchemeName;
 
-    var (authProps, authError) = postAuthorize(context, authOptions, authPropsProtector);
+    var (authProps, code, authError) = postAuthorize(context, authOptions, authPropsProtector);
     if (authError is not null) return Fail(authError);
-    LogPostAuthorization(logger, schemeName, requestId);
+    LogPostAuthorize(logger, schemeName, requestId);
 
-    var authCode = GetAuthorizationCode(context.Request)!;
-    var (tokenInfo, tokenError) = await exchangeCodeForTokens(authCode, authProps!, authOptions, httpClient, cancellationToken);
+    var (tokens, tokenError) = await exchangeCodeForTokens(code!, authProps!, authOptions, httpClient, cancellationToken);
     if (tokenError is not null) return Fail(tokenError);
     LogExchangeCodeForTokens(logger, schemeName, requestId);
 
-    var accessToken = GetAccessToken(tokenInfo!);
+    if (ShouldCleanCodeChallenge(authOptions)) RemoveAuthPropsCodeVerifier(authProps!);
+
+    var accessToken = GetAccessToken(tokens!);
     var (userClaims, userInfoError) = await accessUserInfo(accessToken!, authOptions, httpClient, cancellationToken);
     if (userInfoError is not null) return Fail(userInfoError!);
     LogAccessUserInfo(logger, schemeName, requestId);
 
-    if (ShouldCleanCodeChallenge(authOptions)) UnsetAuthPropsCodeVerifier(authProps!);
-
+    // TODO: apply claim actions/mappers
     var principal = CreatePrincipal(schemeName, userClaims);
     return Success(CreateAuthenticationTicket(principal, authProps, schemeName));
   }

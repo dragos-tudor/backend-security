@@ -12,7 +12,6 @@ partial class OpenIdConnectFuncs
     TOptions oidcOptions,
     DateTimeOffset currentUtc,
     PropertiesDataFormat authPropsProtector,
-    StringDataFormat stringProtector,
     ILogger logger)
   where TOptions : OpenIdConnectOptions
   {

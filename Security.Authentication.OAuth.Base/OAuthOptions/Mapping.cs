@@ -6,8 +6,8 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthBaseFuncs
 {
-  public static Claim[] MapOAuthOptionsClaims(OAuthOptions authOptions, JsonElement jsonData) =>
+  public static Claim[] MapOAuthOptionsClaims(OAuthOptions authOptions, JsonElement claims) =>
     authOptions.ClaimMappers
-      .SelectMany(mapper => MapClaim(mapper, jsonData, GetClaimsIssuer(authOptions)))
+      .SelectMany(mapper => MapClaim(mapper, claims, GetClaimsIssuer(authOptions)))
       .ToArray();
 }

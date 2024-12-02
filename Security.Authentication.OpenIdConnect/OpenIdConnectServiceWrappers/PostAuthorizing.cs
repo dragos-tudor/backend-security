@@ -6,13 +6,13 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  public static Task<AuthorizationResult> PostAuthorization<TOptions>(
+  public static Task<PostAuthorizeResult> PostAuthorize<TOptions>(
     HttpContext context)
   where TOptions : OpenIdConnectOptions =>
-      PostAuthorization(
+      PostAuthorize(
         context,
         ResolveRequiredService<TOptions>(context),
-        ResolvePropertiesDataFormat(context),
-        ResolveStringDataFormat(context)
+        ResolveRequiredService<OpenIdConnectValidationOptions>(context),
+        ResolvePropertiesDataFormat(context)
       );
 }

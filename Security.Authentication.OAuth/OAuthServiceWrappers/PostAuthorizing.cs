@@ -6,10 +6,10 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs
 {
-  public static AuthorizationResult PostAuthorization<TOptions>(
+  public static PostAuthorizeResult PostAuthorize<TOptions>(
     HttpContext context)
   where TOptions: OAuthOptions =>
-    PostAuthorization(
+    PostAuthorize(
       context,
       ResolveRequiredService<TOptions>(context),
       ResolvePropertiesDataFormat(context)

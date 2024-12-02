@@ -11,37 +11,36 @@ partial class OpenIdConnectFuncs
   public static async Task<AuthenticateResult> AuthenticateOidc<TOptions>(
     HttpContext context,
     TOptions oidcOptions,
+    OpenIdConnectValidationOptions validationOptions,
     HttpClient httpClient,
-    PropertiesDataFormat propertiesDataFormat,
-    StringDataFormat stringDataFormat,
-    PostAuthorizationFunc<TOptions> postAuthorize,
+    PropertiesDataFormat authPropsProtector,
+    PostAuthorizeFunc<TOptions> postAuthorize,
     ExchangeCodeForTokensFunc<TOptions> exchangeCodeForTokens,
     AccessUserInfoFunc<TOptions> accessUserInfo,
     ILogger logger)
   where TOptions: OpenIdConnectOptions
   {
-    var (authProps, oidcData, authError) = await postAuthorize(context, oidcOptions, propertiesDataFormat, stringDataFormat);
+    var (authProps, code, authError) = await postAuthorize(context, oidcOptions, validationOptions, authPropsProtector);
     if (authError is not null) return Fail(authError);
-    LogPostAuthorization(logger, oidcOptions.SchemeName, context.TraceIdentifier);
+    LogPostAuthorize(logger, oidcOptions.SchemeName, context.TraceIdentifier);
 
-    var authCode = GetOidcDataAuthorizationCode(oidcData);
-    var (tokenInfo, tokenError) = await exchangeCodeForTokens(authCode, authProps, oidcOptions, stringDataFormat, httpClient, context.RequestAborted);
+    var (tokens, idToken, tokenError) = await exchangeCodeForTokens(code, authProps, oidcOptions, validationOptions, httpClient, context.RequestAborted);
     if (tokenError is not null) return Fail(tokenError);
     LogExchangeCodeForTokens(logger, oidcOptions.SchemeName, context.TraceIdentifier);
 
-    var idToken = tokenInfo.IdToken;
-    if (ShouldCleanCodeChallenge(oidcOptions)) UnsetAuthPropsCodeVerifier(authProps);
-    if (ShouldSaveTokens(oidcOptions)) SetAuthPropsTokens(authProps, idToken, tokenInfo);
+    if (ShouldCleanCodeChallenge(oidcOptions)) RemoveAuthPropsCodeVerifier(authProps);
+    if (ShouldSaveTokens(oidcOptions)) SetAuthPropsTokens(authProps, tokens!);
 
-    if (ShouldAccessUserInfo(oidcOptions)) {
-      var () = await accessUserInfo(tokenInfo!.AccessToken!, securityToken, identity, oidcOptions, httpClient, context.RequestAborted);
-      if (userInfoResult.Error is not null) return Fail(userInfoResult.Error);
+    if (ShouldGetUserInfoClaims(oidcOptions)) {
+      var (claims, userInfoError) = await accessUserInfo(tokens!.AccessToken!, oidcOptions, validationOptions, idToken, httpClient, context.RequestAborted);
+      if (userInfoError is not null) return Fail(userInfoError);
+
+      // TODO: add claims to idToken and apply claims actions/mappers
       LogAccessUserInfo(logger, oidcOptions.SchemeName, context.TraceIdentifier);
     }
 
-    var principal = userInfoResult is not null?
-      GetUserInfoResultPrincipal(userInfoResult):
-      BuildClaimsPrincipal(oidcOptions, identity, "{}");
-    return Success(CreateAuthenticationTicket(principal, authProps, oidcOptions.SchemeName));
+    var principal = CreatePrincipal(oidcOptions.SchemeName, idToken.Claims);
+    var ticket = CreateAuthenticationTicket(principal, authProps, oidcOptions.SchemeName);
+    return Success(ticket);
   }
 }

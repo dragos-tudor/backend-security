@@ -17,7 +17,7 @@ partial class OAuthTests
   public async Task Post_authorize_fail__authenticate__result_authorization_error() {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
-    var postAuthorize = Substitute.For<PostAuthorizationFunc<OAuthOptions>>();
+    var postAuthorize = Substitute.For<PostAuthorizeFunc<OAuthOptions>>();
     postAuthorize(default!, default!, default!).ReturnsForAnyArgs("authorize error");
 
     var result = await AuthenticateOAuth(context, authOptions, authPropsProtector, httpClient, postAuthorize, default!, default!, NullLogger.Instance);
@@ -28,11 +28,10 @@ partial class OAuthTests
   public async Task Authorization_code__authenticate__exchange_authorization_code_for_tokens() {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
-    SetAuthorizationQueryParams(context, code: "code");
 
-    var postAuthorize = Substitute.For<PostAuthorizationFunc<OAuthOptions>>();
+    var postAuthorize = Substitute.For<PostAuthorizeFunc<OAuthOptions>>();
     var exchangeCodeForTokens = Substitute.For<ExchangeCodeForTokensFunc<OAuthOptions>>();
-    postAuthorize(default!, default!, default!).ReturnsForAnyArgs(new AuthenticationProperties());
+    postAuthorize(default!, default!, default!).ReturnsForAnyArgs(new PostAuthorizeResult(new AuthenticationProperties(), "code"));
     exchangeCodeForTokens("code", default!, default!, default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(default, "stop exec")));
 
     await AuthenticateOAuth(context, authOptions, authPropsProtector, httpClient, postAuthorize, exchangeCodeForTokens, default!, NullLogger.Instance);
@@ -43,13 +42,12 @@ partial class OAuthTests
   public async Task Access_token__authenticate__access_user_information_with_access_token() {
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
-    SetAuthorizationQueryParams(context, code: "code");
 
-    var postAuthorize = Substitute.For<PostAuthorizationFunc<OAuthOptions>>();
+    var postAuthorize = Substitute.For<PostAuthorizeFunc<OAuthOptions>>();
     var exchangeCodeForTokens = Substitute.For<ExchangeCodeForTokensFunc<OAuthOptions>>();
     var accessUserInfo = Substitute.For<AccessUserInfoFunc<OAuthOptions>>();
-    postAuthorize(default!, default!, default!).ReturnsForAnyArgs(new AuthenticationProperties());
-    exchangeCodeForTokens("code", default!, default!, default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(new TokenInfo(AccessToken: "token"), default)));
+    postAuthorize(default!, default!, default!).ReturnsForAnyArgs(new PostAuthorizeResult(new AuthenticationProperties(), "code"));
+    exchangeCodeForTokens("code", default!, default!, default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(new OAuthTokens(AccessToken: "token"), default)));
     accessUserInfo("token", default!, default!)!.ReturnsForAnyArgs(ToTask(new UserInfoResult(default, "stop exec")));
 
     await AuthenticateOAuth(context, authOptions, authPropsProtector, httpClient, postAuthorize, exchangeCodeForTokens, accessUserInfo, NullLogger.Instance);
@@ -61,13 +59,12 @@ partial class OAuthTests
     var context = CreateHttpContext();
     var authOptions = CreateOAuthOptions();
     Claim[] claims = [CreateClaim("a", "1", authOptions.SchemeName)];
-    SetAuthorizationQueryParams(context, code: "code");
 
-    var postAuthorize = Substitute.For<PostAuthorizationFunc<OAuthOptions>>();
+    var postAuthorize = Substitute.For<PostAuthorizeFunc<OAuthOptions>>();
     var exchangeCodeForTokens = Substitute.For<ExchangeCodeForTokensFunc<OAuthOptions>>();
     var accessUserInfo = Substitute.For<AccessUserInfoFunc<OAuthOptions>>();
-    postAuthorize(default!, default!, default!).ReturnsForAnyArgs(new AuthenticationProperties());
-    exchangeCodeForTokens("code", default!, default!, default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(new TokenInfo(AccessToken: "token"), default)));
+    postAuthorize(default!, default!, default!).ReturnsForAnyArgs(new PostAuthorizeResult(new AuthenticationProperties(), "code"));
+    exchangeCodeForTokens("code", default!, default!, default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(new OAuthTokens(AccessToken: "token"), default)));
     accessUserInfo("token", default!, default!)!.ReturnsForAnyArgs(ToTask(new UserInfoResult(claims)));
 
     var result = await AuthenticateOAuth(context, authOptions, authPropsProtector, httpClient, postAuthorize, exchangeCodeForTokens, accessUserInfo, NullLogger.Instance);

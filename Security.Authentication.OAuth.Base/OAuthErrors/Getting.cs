@@ -20,7 +20,7 @@ partial class OAuthBaseFuncs
 
   public static string GetOAuthErrorType(HttpRequest request) => request.Query[ErrorTypeToken]!;
 
-  public static string GetOAuthErrorType(JsonElement response) => response.GetString(ErrorTypeToken)!;
+  public static string GetOAuthErrorType(JsonElement data) => data.GetString(ErrorTypeToken)!;
 
   public static string? GetOAuthErrorUri(HttpRequest request) => request.Query[ErrorUriToken];
 

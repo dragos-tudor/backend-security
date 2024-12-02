@@ -7,15 +7,15 @@ partial class OpenIdConnectFuncs
 {
   public static async Task<string> CallbackOidc<TOptions>(
     HttpContext context,
-    TOptions oidcOptions,
     AuthenticateFunc authenticate,
-    SignInFunc signin) where TOptions : OpenIdConnectOptions
+    SignInFunc signin)
+  where TOptions : OpenIdConnectOptions
   {
     var authResult = await authenticate(context);
-    if (!authResult.Succeeded) {
-      var failure = GetAuthenticateResultFailure(authResult);
+    var authError = GetAuthenticateResultError(authResult);
 
-      var redirectUriWithError = GetOAuthRedirectUriWithError(authResult.Properties, failure);
+    if (authError is not null) {
+      var redirectUriWithError = GetOAuthRedirectUriWithError(authResult.Properties, authError);
       return SetHttpResponseRedirect(context.Response, redirectUriWithError);
     }
 

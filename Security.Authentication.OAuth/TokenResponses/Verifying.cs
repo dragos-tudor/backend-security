@@ -6,5 +6,5 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs
 {
-  static bool ExistsAccessToken(JsonElement response) => IsNotEmptyString(response.GetString(OAuthParamNames.AccessToken));
+  static bool ExistsAccessToken(JsonElement data) => IsNotEmptyString(data.GetString(OAuthParamNames.AccessToken));
 }

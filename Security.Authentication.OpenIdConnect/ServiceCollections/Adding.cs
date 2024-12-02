@@ -11,16 +11,15 @@ partial class OpenIdConnectFuncs
   public static IServiceCollection AddOpenIdConnectServices<TOptions>(
     this IServiceCollection services,
     TOptions authOptions,
-    OpenIdConnectConfiguration oidcConfiguration,
+    OpenIdConnectValidationOptions validationOptions,
     HttpClient? httpClient = default,
     IDataProtectionProvider? dataProtectionProvider = default,
     TimeProvider? timeProvider = default)
   where TOptions : OpenIdConnectOptions =>
       services
         .AddSingleton(authOptions)
-        .AddSingleton(oidcConfiguration)
+        .AddSingleton(validationOptions)
         .AddSingleton(httpClient)
         .AddSingleton(services => CreatePropertiesDataFormat(dataProtectionProvider ?? ResolveRequiredService<IDataProtectionProvider>(services), authOptions.SchemeName))
-        .AddSingleton(services => CreateStringDataFormat(dataProtectionProvider ?? ResolveRequiredService<IDataProtectionProvider>(services), authOptions.SchemeName))
         .AddSingleton(timeProvider);
 }

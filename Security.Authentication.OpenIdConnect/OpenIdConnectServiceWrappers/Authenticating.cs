@@ -13,10 +13,10 @@ partial class OpenIdConnectFuncs
     AuthenticateOidc(
       context,
       ResolveRequiredService<TOptions>(context),
+      ResolveRequiredService<OpenIdConnectValidationOptions>(context),
       ResolveHttpClient(context),
       ResolvePropertiesDataFormat(context),
-      ResolveStringDataFormat(context),
-      PostAuthorization,
+      PostAuthorize,
       ExchangeCodeForTokens,
       AccessUserInfo,
       logger

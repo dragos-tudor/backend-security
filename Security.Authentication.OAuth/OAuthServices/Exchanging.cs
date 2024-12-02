@@ -8,14 +8,14 @@ namespace Security.Authentication.OAuth;
 partial class OAuthFuncs
 {
   public static async Task<TokenResult> ExchangeCodeForTokens<TOptions>(
-    string authCode,
+    string code,
     AuthenticationProperties authProps,
     TOptions authOptions,
     HttpClient httpClient,
     CancellationToken cancellationToken = default)
   where TOptions: OAuthOptions
   {
-    var tokenParams = BuildTokenParams(authProps, authOptions, authCode);
+    var tokenParams = BuildTokenParams(authProps, authOptions, code);
     using var request = BuildTokenRequest(authOptions, tokenParams, httpClient.DefaultRequestVersion);
 
     using var response = await SendHttpRequest(request, httpClient, cancellationToken);

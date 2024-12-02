@@ -12,7 +12,8 @@ partial class OpenIdConnectFuncs
     HttpResponseMessage response,
     AuthenticationProperties authProps,
     TOptions oidcOptions,
-    StringDataFormat stringDataFormat,
+    OpenIdConnectValidationOptions oidcValidationOptions,
+    string code,
     CancellationToken cancellationToken = default)
   where TOptions : OpenIdConnectOptions
   {
@@ -20,14 +21,21 @@ partial class OpenIdConnectFuncs
     if (tokenError is not null) return tokenError;
 
     var responseContent = await ReadHttpResponseContent(response, cancellationToken);
-    var tokenMessage = CreateOpenIdConnectMessage(responseContent);
+    var oidcData = ToOpenIdConnectData(responseContent);
+    var rawIdToken = GetOidcDataIdToken(oidcData);
+    var accessToken = GetOidcDataAccessToken(oidcData);
 
-    var securityToken = ToJwtSecurityToken(validationResult.SecurityToken);
-    ValidateTokenMessageProtocol(tokenMessage, oidcOptions, securityToken);
+    var securityResult = await oidcOptions.TokenHandler.ValidateTokenAsync(rawIdToken, oidcOptions.TokenValidationParameters);
+    if (securityResult.Exception is not null) return securityResult.Exception;
+
+    var idToken = ToJwtSecurityToken(securityResult.SecurityToken);
+    var validationError = ValidateTokenResponse(oidcValidationOptions, idToken, accessToken!, oidcOptions.ClientId, code);
+    if (validationError is not null) return validationError;
 
     if (ShouldUseTokenLifetime(oidcOptions))
-      SetAuthPropsTokenLifetime(authProps, validationResult.SecurityToken!);
+      SetAuthPropsTokenLifetime(authProps, idToken!);
 
-    return CreateTokenInfo(tokenMessage, validationResult, securityToken);
+    var identity = securityResult.ClaimsIdentity;
+    return new (CreateOidcTokens(oidcData), idToken, default);
   }
 }

@@ -10,17 +10,18 @@ namespace Security.Authentication.OpenIdConnect;
 partial class OpenIdConnectFuncs {
 
   public static async Task<TokenResult> ExchangeCodeForTokens<TOptions>(
-    string authCode,
+    string code,
     AuthenticationProperties authProps,
     TOptions oidcOptions,
-    StringDataFormat stringDataFormat,
+    OpenIdConnectValidationOptions validationOptions,
     HttpClient httpClient,
     CancellationToken cancellationToken = default)
   where TOptions: OpenIdConnectOptions
   {
-    var tokenParams = BuildTokenParams(authProps, oidcOptions, authCode);
-    using var request = BuildTokenRequest(oidcConfiguration.TokenEndpoint, tokenParams, httpClient.DefaultRequestVersion);
+    var tokenParams = BuildTokenParams(authProps, oidcOptions, code);
+    using var request = BuildTokenRequest(oidcOptions, tokenParams, httpClient.DefaultRequestVersion);
+
     using var response = await SendHttpRequest(request, httpClient, cancellationToken);
-    return await HandleTokenResponse(response, authProps, oidcOptions, stringDataFormat, cancellationToken);
+    return await HandleTokenResponse(response, authProps, oidcOptions, validationOptions, code, cancellationToken);
   }
 }

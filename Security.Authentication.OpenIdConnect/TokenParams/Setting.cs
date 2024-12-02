@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
@@ -7,7 +8,7 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  public static OAuthParams SetTokenParams(
+  public static OidcParams SetTokenParams(
     OidcParams oidcParams,
     AuthenticationProperties authProps,
     OpenIdConnectOptions oidcOptions,
@@ -18,6 +19,7 @@ partial class OpenIdConnectFuncs
     SetOAuthParam(oidcParams, OidcParamNames.Code, authCode);
     SetOAuthParam(oidcParams, OidcParamNames.GrantType, OpenIdConnectGrantTypes.AuthorizationCode);
     SetOAuthParam(oidcParams, OidcParamNames.RedirectUri, GetAuthPropsRedirectUriForCode(authProps)!);
+    if (ShouldUseCodeChallenge(oidcOptions)) SetOAuthParam(oidcParams, OAuthParamNames.CodeVerifier, GetAuthPropsCodeVerifier(authProps)!);
     if (!oidcOptions.DisableTelemetry) {
       SetOAuthParam(oidcParams, OidcParamNames.SkuTelemetry, IdentityModelTelemetryUtil.ClientSku);
       SetOAuthParam(oidcParams, OidcParamNames.VersionTelemetry, IdentityModelTelemetryUtil.ClientVer);

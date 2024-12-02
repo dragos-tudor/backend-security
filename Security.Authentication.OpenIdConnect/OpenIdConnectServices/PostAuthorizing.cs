@@ -9,15 +9,15 @@ namespace Security.Authentication.OpenIdConnect;
 partial class OpenIdConnectFuncs
 {
   internal const string AuthorizationCodeNotFound = "oidc authorization code was not found";
+  internal const string InvalidAuthorizationResponse = "invaliud oidc authorization response [no params]";
   internal const string InvalidState = "oidc state was missing or invalid";
-  internal const string InvalidAuthorizationResponse = "invaliud oidc authorization response";
   internal const string UnprotectStateFailed = "unprotect oidc state failed";
 
-  public static async Task<AuthorizationResult> PostAuthorization<TOptions>(
+  public static async Task<PostAuthorizeResult> PostAuthorize<TOptions>(
     HttpContext context,
     TOptions oidcOptions,
-    PropertiesDataFormat authPropsProtector,
-    StringDataFormat stringDataFormat)
+    OpenIdConnectValidationOptions validationOptions,
+    PropertiesDataFormat authPropsProtector)
   where TOptions : OpenIdConnectOptions
   {
     if (IsOAuthError(context.Request)) return GetOAuthErrorType(context.Request);
@@ -32,13 +32,21 @@ partial class OpenIdConnectFuncs
     var authProps = UnprotectAuthProps(state!, authPropsProtector);
     if (authProps is null) return UnprotectStateFailed;
 
+    var code = GetOidcDataAuthorizationCode(authData);
+    var validationError = ValidateAuthenticationResponse(validationOptions, code, state);
+    if (validationError is not null) return validationError;
+
     var correlationError = ValidateCorrelationCookie(context.Request, authProps);
     if (correlationError is not null) return correlationError;
 
     var correlationId = GetAuthPropsCorrelationId(authProps);
     DeleteCorrelationCookie(context, oidcOptions, correlationId);
-    UnsetAuthPropsCorrelationId(authProps);
+    RemoveAuthPropsCorrelationId(authProps);
 
-    return new (authProps, authData);
+    var userState = GetAuthPropsUserState(authProps);
+    SetOidcDataState(authData, userState!);
+    SetAuthPropsSession(authProps, oidcOptions, authData);
+
+    return new (authProps, code);
   }
 }

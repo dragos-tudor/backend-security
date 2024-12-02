@@ -9,13 +9,12 @@ partial class OpenIdConnectFuncs
 {
   static AuthenticationProperties SetAuthPropsTokens(
     AuthenticationProperties authProps,
-    string? idToken,
-    TokenInfo tokenInfo)
+    OidcTokens tokens)
   {
-    if (IsNotEmptyString(idToken)) SetAuthPropsItem(authProps, OidcParamNames.IdToken, idToken);
-    if (IsNotEmptyString(tokenInfo.TokenType)) SetAuthPropsItem(authProps, OidcParamNames.TokenType, tokenInfo.TokenType);
-    if (IsNotEmptyString(tokenInfo.AccessToken)) SetAuthPropsItem(authProps, OidcParamNames.AccessToken, tokenInfo.AccessToken);
-    if (IsNotEmptyString(tokenInfo.RefreshToken)) SetAuthPropsItem(authProps, OidcParamNames.RefreshToken, tokenInfo.RefreshToken);
+    if (IsNotEmptyString(tokens.IdToken)) SetAuthPropsItem(authProps, OidcParamNames.IdToken, tokens.IdToken);
+    if (IsNotEmptyString(tokens.TokenType)) SetAuthPropsItem(authProps, OidcParamNames.TokenType, tokens.TokenType);
+    if (IsNotEmptyString(tokens.AccessToken)) SetAuthPropsItem(authProps, OidcParamNames.AccessToken, tokens.AccessToken);
+    if (IsNotEmptyString(tokens.RefreshToken)) SetAuthPropsItem(authProps, OidcParamNames.RefreshToken, tokens.RefreshToken);
     return authProps;
   }
 
@@ -28,24 +27,13 @@ partial class OpenIdConnectFuncs
     return authProps;
   }
 
-  static AuthenticationProperties SetPostAuthorizationAuthProps(
+  static AuthenticationProperties SetAuthPropsSession(
     AuthenticationProperties authProps,
-    OpenIdConnectMessage oidcMessage,
-    OpenIdConnectOptions oidcOptions)
+    OpenIdConnectOptions oidcOptions,
+    OidcData oidcData)
   {
-    if (IsNotEmptyString(oidcMessage.SessionState)) SetAuthPropsItem(authProps, OpenIdConnectSessionProperties.SessionState, oidcMessage.SessionState);
+    if (GetOidcDataSessionState(oidcData) is string sessionState) SetAuthPropsItem(authProps, OpenIdConnectSessionProperties.SessionState, sessionState);
     if (IsNotEmptyString(oidcOptions.CheckSessionIframe)) SetAuthPropsItem(authProps, OpenIdConnectSessionProperties.CheckSessionIFrame, oidcOptions.CheckSessionIframe);
-    return authProps;
-  }
-
-  static AuthenticationProperties SetSignoutChallengeAuthProps(
-    AuthenticationProperties authProps,
-    string redirectUri,
-    string alternateRedirectUri)
-  {
-    SetAuthPropsRedirectUri(authProps, redirectUri);
-    if (IsEmptyUri(GetAuthPropsRedirectUri(authProps)))
-      SetAuthPropsRedirectUri(authProps, alternateRedirectUri);
     return authProps;
   }
 }

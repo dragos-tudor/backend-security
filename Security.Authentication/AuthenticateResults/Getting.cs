@@ -5,5 +5,5 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
-  public static string? GetAuthenticateResultFailure (AuthenticateResult authResult) => authResult.Failure?.Message;
+  public static string? GetAuthenticateResultError (AuthenticateResult authResult) => authResult.Failure?.Message;
 }

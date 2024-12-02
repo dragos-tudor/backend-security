@@ -10,18 +10,16 @@ partial class OpenIdConnectFuncs
 {
   public static Task<TokenResult> ExchangeCodeForTokens<TOptions>(
     HttpContext context,
-    string authCode,
+    string code,
     AuthenticationProperties authProps,
     CancellationToken cancellationToken = default)
   where TOptions: OpenIdConnectOptions =>
       ExchangeCodeForTokens(
-        authCode,
+        code,
         authProps,
         ResolveRequiredService<TOptions>(context),
-        ResolveRequiredService<OpenIdConnectConfiguration>(context),
-        ResolveStringDataFormat(context),
+        ResolveRequiredService<OpenIdConnectValidationOptions>(context),
         ResolveHttpClient(context),
-        GetHttpRequestCookies(context.Request),
         cancellationToken
       );
 

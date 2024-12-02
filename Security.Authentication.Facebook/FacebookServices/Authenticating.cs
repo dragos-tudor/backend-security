@@ -10,7 +10,7 @@ partial class FacebookFuncs
   public static Task<AuthenticateResult> AuthenticateFacebook(HttpContext context) =>
     AuthenticateOAuth<FacebookOptions>(
       context,
-      PostAuthorization,
+      PostAuthorize,
       ExchangeCodeForTokens,
       AccessFacebookUserInfo,
       ResolveFacebookLogger(context));

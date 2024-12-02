@@ -1,13 +1,14 @@
 
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.OpenIdConnect;
 
-public record class TokenResult(TokenInfo? TokenInfo, string? Error)
+public record class TokenResult(OidcTokens? Tokens, JwtSecurityToken? IdToken, string? Error)
 {
-  public static implicit operator TokenResult(string error) => new(default, error);
+  public static implicit operator TokenResult(Exception exception) => new(default, default, exception.ToString());
 
-  public static implicit operator TokenResult(TokenInfo? tokenInfo) => new(tokenInfo, default);
+  public static implicit operator TokenResult(string error) => new(default, default, error);
 
-  public void Deconstruct(out TokenInfo? tokenInfo, out string? error) { tokenInfo = TokenInfo; error = Error;  }
+  public void Deconstruct(out OidcTokens? tokens, out JwtSecurityToken? idToken, out string? error) { tokens = Tokens; idToken = IdToken; error = Error;  }
 }
