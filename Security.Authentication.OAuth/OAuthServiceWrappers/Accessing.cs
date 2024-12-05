@@ -9,12 +9,12 @@ partial class OAuthFuncs
   public static Task<UserInfoResult> AccessUserInfo<TOptions>(
     HttpContext context,
     string accessToken,
-    TOptions authOptions,
+    TOptions oauthOptions,
     CancellationToken cancellationToken = default)
   where TOptions: OAuthOptions =>
     AccessUserInfo(
       accessToken,
-      authOptions,
+      oauthOptions,
       ResolveHttpClient(context),
       cancellationToken
     );

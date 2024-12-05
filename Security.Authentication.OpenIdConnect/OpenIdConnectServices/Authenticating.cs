@@ -35,7 +35,6 @@ partial class OpenIdConnectFuncs
       var (claims, userInfoError) = await accessUserInfo(tokens!.AccessToken!, oidcOptions, validationOptions, idToken, httpClient, context.RequestAborted);
       if (userInfoError is not null) return Fail(userInfoError);
 
-      // TODO: add claims to idToken and apply claims actions/mappers
       LogAccessUserInfo(logger, oidcOptions.SchemeName, context.TraceIdentifier);
     }
 

@@ -6,14 +6,14 @@ namespace Security.Authentication.OAuth;
 partial class OAuthBaseFuncs
 {
   public static string UseCodeChallenge(
-    OAuthParams authParams,
+    OAuthParams oauthParams,
     AuthenticationProperties authProps,
     string codeVerifier)
   {
     var codeChallenge = HashCodeVerifier(codeVerifier);
     SetAuthPropsCodeVerifier(authProps, codeVerifier);
-    SetOAuthParam(authParams, OAuthParamNames.CodeChallengeMethod, OAuthParamNames.CodeChallengeMethodS256);
-    SetOAuthParam(authParams, OAuthParamNames.CodeChallenge, codeChallenge);
+    SetOAuthParam(oauthParams, OAuthParamNames.CodeChallengeMethod, OAuthParamNames.CodeChallengeMethodS256);
+    SetOAuthParam(oauthParams, OAuthParamNames.CodeChallenge, codeChallenge);
     return codeChallenge;
   }
 }

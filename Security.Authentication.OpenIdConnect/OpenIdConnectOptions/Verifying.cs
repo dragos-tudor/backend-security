@@ -13,7 +13,5 @@ partial class OpenIdConnectFuncs
 
   static bool ShouldGetUserInfoClaims(OpenIdConnectOptions oidcOptions) => oidcOptions.GetClaimsFromUserInfoEndpoint;
 
-  static bool ShouldSaveTokens(OpenIdConnectOptions oidcOptions) => oidcOptions.SaveTokens;
-
   static bool ShouldUseTokenLifetime(OpenIdConnectOptions oidcOptions) => oidcOptions.UseTokenLifetime;
 }

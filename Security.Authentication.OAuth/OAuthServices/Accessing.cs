@@ -8,12 +8,12 @@ partial class OAuthFuncs
 {
   public static async Task<UserInfoResult> AccessUserInfo<TOptions>(
     string accessToken,
-    TOptions authOptions,
+    TOptions oauthOptions,
     HttpClient httpClient,
     CancellationToken cancellationToken = default) where TOptions: OAuthOptions
   {
-    using var request = BuildUserInfoRequest(authOptions.UserInfoEndpoint, accessToken);
+    using var request = BuildUserInfoRequest(oauthOptions.UserInfoEndpoint, accessToken);
     using var response = await SendHttpRequest(request, httpClient, cancellationToken);
-    return await HandleUserInfoResponse(response, authOptions, cancellationToken);
+    return await HandleUserInfoResponse(response, oauthOptions, cancellationToken);
   }
 }

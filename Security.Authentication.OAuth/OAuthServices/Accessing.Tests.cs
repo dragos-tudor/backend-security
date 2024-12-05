@@ -16,39 +16,39 @@ partial class OAuthTests
       scheme = request.Headers.Authorization.Scheme,
       parameter = request.Headers.Authorization.Parameter
     }));
-    var authOptions = CreateOAuthOptions() with { ClaimMappers = [new JsonKeyClaimMapper("schemeType", "scheme"), new JsonKeyClaimMapper("parameterType", "parameter")] };
-    var (claims, _) = await AccessUserInfo("token_abc", authOptions, httpClient);
+    var oauthOptions = CreateOAuthOptions() with { ClaimMappers = [new JsonClaimMapper("schemeType", "scheme"), new JsonClaimMapper("parameterType", "parameter")] };
+    var (claims, _) = await AccessUserInfo("token_abc", oauthOptions, httpClient);
 
-    Assert.AreEqual("Bearer", claims.FirstOrDefault(c => c.Type == "schemeType").Value);
-    Assert.AreEqual("token_abc", claims.FirstOrDefault(c => c.Type == "parameterType").Value);
+    Assert.AreEqual("Bearer", claims.FirstOrDefault(c => c.Type == "schemeType")?.Value);
+    Assert.AreEqual("token_abc", claims.FirstOrDefault(c => c.Type == "parameterType")?.Value);
   }
 
   [TestMethod]
   public async Task Authentication_options_without_claims_issuer__access_user_informations__principal_with_scheme_name_as_issuer() {
     using var endpointResponse = JsonContent.Create(new {test = "abc"});
     using var httpClient = CreateHttpClient("http://oauth", "/userinfo", endpointResponse);
-    var authOptions = CreateOAuthOptions() with { ClaimMappers = [new JsonKeyClaimMapper("testType", "test")] };
+    var oauthOptions = CreateOAuthOptions() with { ClaimMappers = [new JsonClaimMapper("testType", "test")] };
 
-    var (claims, _) = await AccessUserInfo(string.Empty, authOptions, httpClient);
-    Assert.AreEqual(authOptions.SchemeName, claims.FirstOrDefault(c => c.Type == "testType").Issuer);
+    var (claims, _) = await AccessUserInfo(string.Empty, oauthOptions, httpClient);
+    Assert.AreEqual(oauthOptions.SchemeName, claims.FirstOrDefault(c => c.Type == "testType")?.Issuer);
   }
 
   [TestMethod]
   public async Task Authentication_options_with_claims_issuer__access_user_informations__principal_with_options_issuer() {
     using var endpointResponse = JsonContent.Create(new {test = "abc"});
     using var httpClient = CreateHttpClient("http://oauth", "/userinfo", endpointResponse);
-    var authOptions = CreateOAuthOptions() with { ClaimsIssuer = "issuer", ClaimMappers = [new JsonKeyClaimMapper("testType", "test")] };
+    var oauthOptions = CreateOAuthOptions() with { ClaimsIssuer = "issuer", ClaimMappers = [new JsonClaimMapper("testType", "test")] };
 
-    var (claims, _) = await AccessUserInfo(string.Empty, authOptions, httpClient);
-    Assert.AreEqual("issuer", claims.FirstOrDefault(c => c.Type == "testType").Issuer);
+    var (claims, _) = await AccessUserInfo(string.Empty, oauthOptions, httpClient);
+    Assert.AreEqual("issuer", claims.FirstOrDefault(c => c.Type == "testType")?.Issuer);
   }
 
   [TestMethod]
   public async Task User_info_endpoint_response_with_generic_error__access_user_informations__client_receive_error() {
     using var endpointResponse = JsonContent.Create(new {error = "abc"});
     using var httpClient = CreateHttpClient("http://oauth", "/userinfo", endpointResponse, 400);
-    var authOptions = CreateOAuthOptions();
-    var (_, error) = await AccessUserInfo(string.Empty, authOptions, httpClient);
+    var oauthOptions = CreateOAuthOptions();
+    var (_, error) = await AccessUserInfo(string.Empty, oauthOptions, httpClient);
 
     Assert.AreEqual(error, "abc");
   }

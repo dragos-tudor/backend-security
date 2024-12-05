@@ -6,10 +6,9 @@ namespace Security.Authentication.Twitter;
 
 partial class TwitterFuncs
 {
-  static IEnumerable<ClaimMapper> GetTwitterClaimMappers() =>
-    [
-      new JsonSubKeyClaimMapper(ClaimTypes.Name, "data", "username"),
-      new JsonSubKeyClaimMapper(ClaimTypes.NameIdentifier, "data", "id"),
-      new JsonSubKeyClaimMapper("urn:twitter:name", "data", "name")
-    ];
+  static IEnumerable<ClaimMapper> GetTwitterClaimMappers() => [
+    new JsonClaimMapper(ClaimTypes.Name, "data:username"),
+    new JsonClaimMapper(ClaimTypes.NameIdentifier, "data:id"),
+    new JsonClaimMapper("urn:twitter:name", "data:name")
+  ];
 }

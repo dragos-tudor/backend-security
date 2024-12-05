@@ -24,6 +24,11 @@ partial class OpenIdConnectFuncs
 
     var validationError = ValidateUserInfoResponse(validationOptions, idToken, userToken!);
     if (!IsSuccessHttpResponse(response)) return GetOAuthErrorType(userToken);
-    return MapOAuthOptionsClaims(oidcOptions, userToken);
+
+    var rawClaims = ToJsonDictionary(userToken);
+    var mappedClaims = ApplyClaimMappers(oidcOptions.ClaimMappers, rawClaims, GetClaimsIssuer(oidcOptions));
+    var claims = ApplyClaimActions(oidcOptions.ClaimActions, mappedClaims);
+
+    return claims.ToArray();
   }
 }

@@ -6,18 +6,18 @@ namespace Security.Authentication.OAuth;
 partial class OAuthFuncs
 {
   public static OAuthParams SetAuthorizationOAuthParams(
-    OAuthParams authParams,
-    OAuthOptions authOptions,
+    OAuthParams oauthParams,
+    OAuthOptions oauthOptions,
     AuthenticationProperties authProps,
     PropertiesDataFormat authPropsProtector,
     string callbackUrl)
   {
     // https://www.ietf.org/rfc/rfc6749.txt [Authorization Request page 25]
-    SetOAuthParam(authParams, OAuthParamNames.ClientId, authOptions.ClientId);
-    SetOAuthParam(authParams, OAuthParamNames.ResponseType, authOptions.ResponseType);
-    SetOAuthParam(authParams, OAuthParamNames.RedirectUri, callbackUrl);
-    SetOAuthParam(authParams, OAuthParamNames.Scope, FormatOAuthScopes(authOptions));
-    SetOAuthParam(authParams, OAuthParamNames.State, ProtectAuthProps(authProps, authPropsProtector));
-    return authParams;
+    SetOAuthParam(oauthParams, OAuthParamNames.ClientId, oauthOptions.ClientId);
+    SetOAuthParam(oauthParams, OAuthParamNames.ResponseType, oauthOptions.ResponseType);
+    SetOAuthParam(oauthParams, OAuthParamNames.RedirectUri, callbackUrl);
+    SetOAuthParam(oauthParams, OAuthParamNames.Scope, FormatOAuthScopes(oauthOptions));
+    SetOAuthParam(oauthParams, OAuthParamNames.State, ProtectAuthProps(authProps, authPropsProtector));
+    return oauthParams;
   }
 }

@@ -15,14 +15,14 @@ partial class OAuthTests
   public void Post_authorization_request_with_correlation_cookie__post_authorize__deleted_correlation_cookie()
   {
     var context = CreateHttpContext();
-    var authOptions = CreateOAuthOptions();
+    var oauthOptions = CreateOAuthOptions();
     var authProps = new AuthenticationProperties();
     var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     SetAuthorizationCorrelationCookie(context, "correlation.id");
     SetAuthPropsCorrelationId(authProps, "correlation.id");
     SetAuthorizationQueryParams(context, ProtectAuthProps(authProps, authPropsProtector));
 
-    var (_, _,_) = PostAuthorize(context, authOptions, authPropsProtector);
+    var (_, _,_) = PostAuthorize(context, oauthOptions, authPropsProtector);
     var correlationCookie = GetResponseCookie(context.Response, GetCorrelationCookieName("correlation.id"));
 
     StringAssert.Contains(correlationCookie, "expires=Thu, 01 Jan 1970", StringComparison.Ordinal);
@@ -32,14 +32,14 @@ partial class OAuthTests
   public void Post_authorization_request_with_correlation_id__post_authorize__deleted_correlation_id()
   {
     var context = CreateHttpContext();
-    var authOptions = CreateOAuthOptions();
+    var oauthOptions = CreateOAuthOptions();
     var authProps = new AuthenticationProperties();
     var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     SetAuthorizationCorrelationCookie(context, "correlation.id");
     SetAuthPropsCorrelationId(authProps, "correlation.id");
     SetAuthorizationQueryParams(context, ProtectAuthProps(authProps, authPropsProtector));
 
-    var (authProps2, _, _) = PostAuthorize(context, authOptions, authPropsProtector);
+    var (authProps2, _, _) = PostAuthorize(context, oauthOptions, authPropsProtector);
     Assert.IsNull(GetAuthPropsCorrelationId(authProps2!));
   }
 
@@ -47,13 +47,13 @@ partial class OAuthTests
   public void Post_authorization_request_without_state__post_authorize__unprotect_state_failed_error()
   {
     var context = CreateHttpContext();
-    var authOptions = CreateOAuthOptions();
+    var oauthOptions = CreateOAuthOptions();
     var authProps = new AuthenticationProperties();
     var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     SetAuthorizationQueryParams(context);
     SetAuthPropsCorrelationId(authProps, "correlation.id");
 
-    var (_, _, error) = PostAuthorize(context, authOptions, authPropsProtector);
+    var (_, _, error) = PostAuthorize(context, oauthOptions, authPropsProtector);
     Assert.AreEqual(error, UnprotectStateFailed);
   }
 
@@ -61,13 +61,13 @@ partial class OAuthTests
   public void Post_authorization_request_without_correlation_cookie__post_authorize__correlation_cookie_error()
   {
     var context = CreateHttpContext();
-    var authOptions = CreateOAuthOptions();
+    var oauthOptions = CreateOAuthOptions();
     var authProps = new AuthenticationProperties();
     var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     SetAuthPropsCorrelationId(authProps, "correlation.id");
     SetAuthorizationQueryParams(context, ProtectAuthProps(authProps, authPropsProtector));
 
-    var (_, _, error) = PostAuthorize(context, authOptions, authPropsProtector);
+    var (_, _, error) = PostAuthorize(context, oauthOptions, authPropsProtector);
     StringAssert.Contains(error, "correlation cookie", StringComparison.Ordinal);
   }
 
@@ -75,9 +75,9 @@ partial class OAuthTests
   public void Invalid_post_authorization_request__post_authorize__authorization_code_not_found_error()
   {
     var context = CreateHttpContext();
-    var authOptions = CreateOAuthOptions();
+    var oauthOptions = CreateOAuthOptions();
     var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
-    var (_, _, error) = PostAuthorize(context, authOptions, authPropsProtector);
+    var (_, _, error) = PostAuthorize(context, oauthOptions, authPropsProtector);
 
     StringAssert.Contains(error, AuthorizationCodeNotFound, StringComparison.Ordinal);
   }

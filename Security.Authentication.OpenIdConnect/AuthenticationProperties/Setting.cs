@@ -12,10 +12,7 @@ partial class OpenIdConnectFuncs
     OidcTokens tokens)
   {
     if (IsNotEmptyString(tokens.IdToken)) SetAuthPropsItem(authProps, OidcParamNames.IdToken, tokens.IdToken);
-    if (IsNotEmptyString(tokens.TokenType)) SetAuthPropsItem(authProps, OidcParamNames.TokenType, tokens.TokenType);
-    if (IsNotEmptyString(tokens.AccessToken)) SetAuthPropsItem(authProps, OidcParamNames.AccessToken, tokens.AccessToken);
-    if (IsNotEmptyString(tokens.RefreshToken)) SetAuthPropsItem(authProps, OidcParamNames.RefreshToken, tokens.RefreshToken);
-    return authProps;
+    return OAuthBaseFuncs.SetAuthPropsTokens(authProps, (OAuthTokens)tokens);
   }
 
   static AuthenticationProperties SetAuthPropsTokenLifetime(

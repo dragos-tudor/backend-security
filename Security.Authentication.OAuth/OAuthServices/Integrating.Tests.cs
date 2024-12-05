@@ -23,11 +23,11 @@ partial class OAuthTests
     using var authClient = authServer.GetTestClient();
 
     var context = CreateHttpContext();
-    var authOptions = CreateOAuthOptions() with { AuthorizationEndpoint = "http://oauth/authorize" };
+    var oauthOptions = CreateOAuthOptions() with { AuthorizationEndpoint = "http://oauth/authorize" };
     var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     using var appServer = CreateHttpServer();
-    appServer.MapGet("/challenge", (HttpContext context) => ChallengeOAuth(context, CreateAuthProps(), authOptions, DateTimeOffset.UtcNow, authPropsProtector, NullLogger.Instance));
-    appServer.MapGet("/callback", async delegate(HttpContext context) { return(await AuthenticateOAuth(context, authOptions, authPropsProtector, authClient, PostAuthorize, ExchangeCodeForTokens, AccessUserInfo, NullLogger.Instance)).Succeeded; });
+    appServer.MapGet("/challenge", (HttpContext context) => ChallengeOAuth(context, CreateAuthProps(), oauthOptions, DateTimeOffset.UtcNow, authPropsProtector, NullLogger.Instance));
+    appServer.MapGet("/callback", async delegate(HttpContext context) { return(await AuthenticateOAuth(context, oauthOptions, authPropsProtector, authClient, PostAuthorize, ExchangeCodeForTokens, AccessUserInfo, NullLogger.Instance)).Succeeded; });
     await appServer.StartAsync();
     using var appClient = appServer.GetTestClient();
 

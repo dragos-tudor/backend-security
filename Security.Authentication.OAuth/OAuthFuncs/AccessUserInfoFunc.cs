@@ -6,7 +6,7 @@ namespace Security.Authentication.OAuth;
 
 public delegate Task<UserInfoResult> AccessUserInfoFunc<TOptions>(
     string accessToken,
-    TOptions authOptions,
+    TOptions oauthOptions,
     HttpClient httpClient,
     CancellationToken cancellationToken = default)
   where TOptions: OAuthOptions;

@@ -10,7 +10,7 @@ partial class OAuthFuncs
 {
   public static async Task<AuthenticateResult> AuthenticateOAuth<TOptions>(
     HttpContext context,
-    TOptions authOptions,
+    TOptions oauthOptions,
     PropertiesDataFormat authPropsProtector,
     HttpClient httpClient,
     PostAuthorizeFunc<TOptions> postAuthorize,
@@ -21,24 +21,24 @@ partial class OAuthFuncs
   {
     var cancellationToken = context.RequestAborted;
     var requestId = context.TraceIdentifier;
-    var schemeName = authOptions.SchemeName;
+    var schemeName = oauthOptions.SchemeName;
 
-    var (authProps, code, authError) = postAuthorize(context, authOptions, authPropsProtector);
+    var (authProps, code, authError) = postAuthorize(context, oauthOptions, authPropsProtector);
     if (authError is not null) return Fail(authError);
     LogPostAuthorize(logger, schemeName, requestId);
 
-    var (tokens, tokenError) = await exchangeCodeForTokens(code!, authProps!, authOptions, httpClient, cancellationToken);
+    var (tokens, tokenError) = await exchangeCodeForTokens(code!, authProps!, oauthOptions, httpClient, cancellationToken);
     if (tokenError is not null) return Fail(tokenError);
     LogExchangeCodeForTokens(logger, schemeName, requestId);
 
-    if (ShouldCleanCodeChallenge(authOptions)) RemoveAuthPropsCodeVerifier(authProps!);
+    if (ShouldCleanCodeChallenge(oauthOptions)) RemoveAuthPropsCodeVerifier(authProps!);
+    if (ShouldSaveTokens(oauthOptions)) SetAuthPropsTokens(authProps!, tokens!);
 
     var accessToken = GetAccessToken(tokens!);
-    var (userClaims, userInfoError) = await accessUserInfo(accessToken!, authOptions, httpClient, cancellationToken);
+    var (userClaims, userInfoError) = await accessUserInfo(accessToken!, oauthOptions, httpClient, cancellationToken);
     if (userInfoError is not null) return Fail(userInfoError!);
     LogAccessUserInfo(logger, schemeName, requestId);
 
-    // TODO: apply claim actions/mappers
     var principal = CreatePrincipal(schemeName, userClaims);
     return Success(CreateAuthenticationTicket(principal, authProps, schemeName));
   }

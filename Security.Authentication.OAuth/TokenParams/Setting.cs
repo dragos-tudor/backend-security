@@ -9,17 +9,17 @@ partial class OAuthFuncs
   internal const string GrantAuthorizationCode = "authorization_code";
 
   public static OAuthParams SetTokenParams(
-    OAuthParams authParams,
+    OAuthParams oauthParams,
     AuthenticationProperties authProps,
-    OAuthOptions authOptions,
+    OAuthOptions oauthOptions,
     string authCode)
   {
-    SetOAuthParam(authParams, OAuthParamNames.ClientId, authOptions.ClientId);
-    SetOAuthParam(authParams, OAuthParamNames.ClientSecret, authOptions.ClientSecret);
-    SetOAuthParam(authParams, OAuthParamNames.GrantType, GrantAuthorizationCode);
-    SetOAuthParam(authParams, OAuthParamNames.AuthorizationCode, authCode);
-    SetOAuthParam(authParams, OAuthParamNames.RedirectUri, GetAuthPropsCallbackUri(authProps)!);
-    if (ShouldUseCodeChallenge(authOptions)) SetOAuthParam(authParams, OAuthParamNames.CodeVerifier, GetAuthPropsCodeVerifier(authProps)!);
-    return authParams;
+    SetOAuthParam(oauthParams, OAuthParamNames.ClientId, oauthOptions.ClientId);
+    SetOAuthParam(oauthParams, OAuthParamNames.ClientSecret, oauthOptions.ClientSecret);
+    SetOAuthParam(oauthParams, OAuthParamNames.GrantType, GrantAuthorizationCode);
+    SetOAuthParam(oauthParams, OAuthParamNames.AuthorizationCode, authCode);
+    SetOAuthParam(oauthParams, OAuthParamNames.RedirectUri, GetAuthPropsCallbackUri(authProps)!);
+    if (ShouldUseCodeChallenge(oauthOptions)) SetOAuthParam(oauthParams, OAuthParamNames.CodeVerifier, GetAuthPropsCodeVerifier(authProps)!);
+    return oauthParams;
   }
 }

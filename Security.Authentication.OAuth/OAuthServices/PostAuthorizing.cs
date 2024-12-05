@@ -8,7 +8,7 @@ partial class OAuthFuncs
 {
   public static PostAuthorizeResult PostAuthorize<TOptions>(
     HttpContext context,
-    TOptions authOptions,
+    TOptions oauthOptions,
     PropertiesDataFormat authPropsProtector)
   where TOptions: OAuthOptions
   {
@@ -23,7 +23,7 @@ partial class OAuthFuncs
     if (correlationError is not null) return correlationError;
 
     var correlationId = GetAuthPropsCorrelationId(authProps);
-    DeleteCorrelationCookie(context, authOptions, correlationId);
+    DeleteCorrelationCookie(context, oauthOptions, correlationId);
     RemoveAuthPropsCorrelationId(authProps);
 
     var code = GetAuthorizationCode(context.Request);

@@ -6,6 +6,6 @@ namespace Security.Authentication.OAuth;
 
 public delegate PostAuthorizeResult PostAuthorizeFunc<TOptions>(
     HttpContext context,
-    TOptions authOptions,
+    TOptions oauthOptions,
     PropertiesDataFormat authPropsProtector)
   where TOptions: OAuthOptions;

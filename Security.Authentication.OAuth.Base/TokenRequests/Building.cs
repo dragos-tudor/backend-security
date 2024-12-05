@@ -8,8 +8,8 @@ namespace Security.Authentication.OAuth;
 partial class OAuthBaseFuncs
 {
   public static HttpRequestMessage BuildTokenRequest(
-    OAuthOptions authOptions,
+    OAuthOptions oauthOptions,
     OAuthParams tokenParams,
     Version requestVersion) =>
-      SetTokenRequest(CreateHttpPostRequest(authOptions.TokenEndpoint), tokenParams, requestVersion);
+      SetTokenRequest(CreateHttpPostRequest(oauthOptions.TokenEndpoint), tokenParams, requestVersion);
 }

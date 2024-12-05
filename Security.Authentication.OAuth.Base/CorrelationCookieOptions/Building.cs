@@ -7,14 +7,14 @@ partial class OAuthBaseFuncs {
 
   static CookieOptions BuildCorrelationCookieOptions(
     HttpContext context,
-    OAuthOptions authOptions,
+    OAuthOptions oauthOptions,
     DateTimeOffset currentUtc)
   {
     var cookieOptions = CreateCorrelationCookieOptions(context);
-    var cookieOptionsExpires = GetCorrelationCookieOptionsExpires(authOptions, currentUtc);
+    var cookieOptionsExpires = GetCorrelationCookieOptionsExpires(oauthOptions, currentUtc);
 
     SetCookieOptionsExpires(cookieOptions, cookieOptionsExpires);
-    SetCookieOptionsPath(cookieOptions, GetCookiePath(context.Request, authOptions.CallbackPath));
+    SetCookieOptionsPath(cookieOptions, GetCookiePath(context.Request, oauthOptions.CallbackPath));
     return cookieOptions;
   }
 

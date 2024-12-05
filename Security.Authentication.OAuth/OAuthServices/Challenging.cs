@@ -9,30 +9,30 @@ partial class OAuthFuncs
   public static string ChallengeOAuth<TOptions>(
     HttpContext context,
     AuthenticationProperties authProps,
-    TOptions authOptions,
+    TOptions oauthOptions,
     DateTimeOffset currentUtc,
     PropertiesDataFormat authPropsProtector,
     ILogger logger)
   where TOptions: OAuthOptions
   {
     var correlationId = GenerateCorrelationId();
-    UseCorrelationCookie(context, authOptions, correlationId, currentUtc);
+    UseCorrelationCookie(context, oauthOptions, correlationId, currentUtc);
     SetAuthPropsCorrelationId(authProps, correlationId);
 
-    var authParams = CreateOAuthParams();
-    if (ShouldUseCodeChallenge(authOptions)) UseCodeChallenge(authParams, authProps, GenerateCodeVerifier());
+    var oauthParams = CreateOAuthParams();
+    if (ShouldUseCodeChallenge(oauthOptions)) UseCodeChallenge(oauthParams, authProps, GenerateCodeVerifier());
 
-    var redirectUri = GetHttpRequestQueryValue(context.Request, authOptions.ReturnUrlParameter)!; // TODO: investigate security risk for absolute url
+    var redirectUri = GetHttpRequestQueryValue(context.Request, oauthOptions.ReturnUrlParameter)!; // TODO: investigate security risk for absolute url
     if (!ExistsAuthPropsRedirectUri(authProps)) SetAuthPropsRedirectUri(authProps, redirectUri);
 
-    var callbackUrl = GetAbsoluteUrl(context.Request, authOptions.CallbackPath);
-    SetAuthorizationOAuthParams(authParams, authOptions, authProps, authPropsProtector, callbackUrl);
-    SetOAuthParams(authParams, authOptions.AdditionalAuthorizationParameters);
+    var callbackUrl = GetAbsoluteUrl(context.Request, oauthOptions.CallbackPath);
+    SetAuthorizationOAuthParams(oauthParams, oauthOptions, authProps, authPropsProtector, callbackUrl);
+    SetOAuthParams(oauthParams, oauthOptions.AdditionalAuthorizationParameters);
 
-    var authUri = BuildHttpRequestUri(authOptions.AuthorizationEndpoint, authParams!);
+    var authUri = BuildHttpRequestUri(oauthOptions.AuthorizationEndpoint, oauthParams!);
     SetHttpResponseRedirect(context.Response, authUri);
 
-    LogAuthorizeChallenge(logger, authOptions.SchemeName, GetHttpResponseLocation(context.Response)!, GetHttpResponseSetCookie(context.Response)!, context.TraceIdentifier);
+    LogAuthorizeChallenge(logger, oauthOptions.SchemeName, GetHttpResponseLocation(context.Response)!, GetHttpResponseSetCookie(context.Response)!, context.TraceIdentifier);
     return authUri;
   }
 }

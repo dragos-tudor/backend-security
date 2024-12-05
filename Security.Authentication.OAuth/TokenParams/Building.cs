@@ -5,6 +5,6 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs
 {
-  public static OAuthParams BuildTokenParams(AuthenticationProperties authProps, OAuthOptions authOptions, string authCode) =>
-    SetTokenParams(CreateOAuthParams(), authProps, authOptions, authCode);
+  public static OAuthParams BuildTokenParams(AuthenticationProperties authProps, OAuthOptions oauthOptions, string authCode) =>
+    SetTokenParams(CreateOAuthParams(), authProps, oauthOptions, authCode);
 }

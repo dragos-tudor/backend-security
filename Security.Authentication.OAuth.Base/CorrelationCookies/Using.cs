@@ -7,12 +7,12 @@ partial class OAuthBaseFuncs
 {
   public static string UseCorrelationCookie(
     HttpContext context,
-    OAuthOptions authOptions,
+    OAuthOptions oauthOptions,
     string correlationId,
     DateTimeOffset currentUtc)
   {
     var cookieName = GetCorrelationCookieName(correlationId);
-    var cookieOptions = BuildCorrelationCookieOptions(context, authOptions, currentUtc);
+    var cookieOptions = BuildCorrelationCookieOptions(context, oauthOptions, currentUtc);
 
     AppendCorrelationCookie(context.Response, cookieName, cookieOptions);
     return cookieName;

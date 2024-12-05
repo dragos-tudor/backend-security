@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.Google;
 
-partial class GoogleFuncs {
-
+partial class GoogleFuncs
+{
   public static GoogleOptions CreateGoogleOptions(
     string clientId,
     string clientSecret,
@@ -26,7 +26,7 @@ partial class GoogleFuncs {
         SchemeName = schemeName,
         Scope = new [] { "openid", "profile", "email" },
         ScopeSeparator = ' ',
-        // UsePkce = true
+        UsePkce = true
       };
 
 }
