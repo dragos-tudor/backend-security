@@ -17,18 +17,20 @@ partial class OpenIdConnectFuncs
     var userInfoError = ValidateUserInfoResponse(response);
     if (userInfoError is not null) return userInfoError;
 
-    var responseContent = await ReadHttpResponseContent(response, cancellationToken);
     var contentType = GetHttpResponseContentType(response);
+    var content = await ReadHttpResponseContent(response, cancellationToken);
 
-    var userToken = ParseUserInfoData(responseContent, contentType);
+    if (!IsSuccessHttpResponse(response)) {
+      using var errorResponse = JsonDocument.Parse(content);
+      var errorDetails = errorResponse.RootElement;
+      return GetOAuthErrorType(errorDetails);
+    }
 
+    var userToken = ParseUserInfoResponse(content, contentType);
     var validationError = ValidateUserInfoResponse(validationOptions, idToken, userToken!);
-    if (!IsSuccessHttpResponse(response)) return GetOAuthErrorType(userToken);
+    if (validationError is not null) return validationError;
 
-    var rawClaims = ToJsonDictionary(userToken);
-    var mappedClaims = ApplyClaimMappers(oidcOptions.ClaimMappers, rawClaims, GetClaimsIssuer(oidcOptions));
-    var claims = ApplyClaimActions(oidcOptions.ClaimActions, mappedClaims);
-
+    var claims = ApplyClaimMappers(oidcOptions.ClaimMappers, userToken!.Claims, GetClaimsIssuer(oidcOptions));
     return claims.ToArray();
   }
 }
