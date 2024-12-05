@@ -30,16 +30,22 @@ partial class OpenIdConnectFuncs
 
     if (ShouldCleanCodeChallenge(oidcOptions)) RemoveAuthPropsCodeVerifier(authProps);
     if (ShouldSaveTokens(oidcOptions)) SetAuthPropsTokens(authProps, tokens!);
+    if (ShouldUseTokenLifetime(oidcOptions)) SetAuthPropsTokenLifetime(authProps, idToken!);
 
+    var userClaims = Array.Empty<Claim>();
     if (ShouldGetUserInfoClaims(oidcOptions)) {
-      var (claims, userInfoError) = await accessUserInfo(tokens!.AccessToken!, oidcOptions, validationOptions, idToken, httpClient, context.RequestAborted);
+      var (_userClaims, userInfoError) = await accessUserInfo(tokens!.AccessToken!, oidcOptions, validationOptions, idToken, httpClient, context.RequestAborted);
       if (userInfoError is not null) return Fail(userInfoError);
 
+      userClaims = _userClaims;
       LogAccessUserInfo(logger, oidcOptions.SchemeName, context.TraceIdentifier);
     }
 
-    var principal = CreatePrincipal(oidcOptions.SchemeName, idToken.Claims);
+    var allClaims = JoinUniqueClaims(idToken.Claims, userClaims);
+    var claims = ApplyClaimActions(oidcOptions.ClaimActions, allClaims);
+    var principal = CreatePrincipal(oidcOptions.SchemeName, claims);
     var ticket = CreateAuthenticationTicket(principal, authProps, oidcOptions.SchemeName);
+
     return Success(ticket);
   }
 }

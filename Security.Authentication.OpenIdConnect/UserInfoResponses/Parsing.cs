@@ -5,18 +5,14 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static JwtPayload ParseJsonUserInfoData(string content) => ReadJsonTokenPayload(content);
+  static JwtPayload ParseJsonUserInfoResponse(string content) => ReadJsonTokenPayload(content);
 
-  static JwtPayload ParseJwtUserInfoData(string content)
-  {
-    var userInfoJwt = new JwtSecurityToken(content);
-    return userInfoJwt.Payload;
-  }
+  static JwtPayload ParseJwtUserInfoResponse(string content) => new JwtSecurityToken(content).Payload;
 
-  static JwtPayload? ParseUserInfoData(string content, string? contentType)
+  static JwtPayload ParseUserInfoResponse(string content, string? contentType)
   {
-    if (IsJsonContentTypeHttpResponse(contentType)) return ParseJsonUserInfoData(content);
-    if (IsJwtContentTypeHttpResponse(contentType)) return ParseJwtUserInfoData(content);
-    return default;
+    if (IsJsonContentTypeHttpResponse(contentType)) return ParseJsonUserInfoResponse(content);
+    if (IsJwtContentTypeHttpResponse(contentType)) return ParseJwtUserInfoResponse(content);
+    return new JwtPayload();
   }
 }

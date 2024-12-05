@@ -13,23 +13,23 @@ partial class OpenIdConnectFuncs
 
   static string? ValidateUserInfoResponse(HttpResponseMessage response)
   {
-    response.EnsureSuccessStatusCode();
     var contentType = GetHttpResponseContentType(response);
     var statusCode = GetHttpResponseStatusCode(response);
 
     if (contentType is null) return FormatString(MissingContentType, statusCode);
     if (!IsJsonContentTypeHttpResponse(contentType) &&
         !IsJwtContentTypeHttpResponse(contentType)) return FormatString(InvalidContentType, contentType, statusCode);
+
     return default;
   }
 
   static string? ValidateUserInfoResponse(
     OpenIdConnectValidationOptions validationOptions,
-    JwtSecurityToken jwtIdToken,
-    JwtPayload jwtUserToken)
+    JwtSecurityToken idToken,
+    JwtPayload userToken)
   {
-    var userTokenSub = GetJwtTokenPayloadSub(jwtUserToken);
-    var idTokenSub = GetJwtTokenPayloadSub(jwtIdToken);
+    var userTokenSub = GetJwtTokenPayloadSub(userToken);
+    var idTokenSub = GetJwtTokenPayloadSub(idToken);
 
     if (IsEmptyString(userTokenSub))
       return MissingUserInfoSubClaim;
