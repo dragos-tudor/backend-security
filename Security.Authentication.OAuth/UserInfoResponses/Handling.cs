@@ -11,14 +11,13 @@ partial class OAuthFuncs
     OAuthOptions oauthOptions,
     CancellationToken cancellationToken = default)
   {
-    using var userResponse = await ReadHttpResponseJsonResponse(response, cancellationToken);
+    using var userResponse = await ReadHttpResponseJsonContent(response, cancellationToken);
     var userData = userResponse.RootElement;
 
     if (!IsSuccessHttpResponse(response)) return GetOAuthErrorType(userData);
 
     var rawClaims = ToJsonDictionary(userData);
-    var mappedClaims = ApplyClaimMappers(oauthOptions.ClaimMappers, rawClaims, GetClaimsIssuer(oauthOptions));
-    var claims = ApplyClaimActions(oauthOptions.ClaimActions, mappedClaims);
+    var claims = ApplyClaimMappers(oauthOptions.ClaimMappers, rawClaims, GetClaimsIssuer(oauthOptions));
 
     return claims.ToArray();
   }

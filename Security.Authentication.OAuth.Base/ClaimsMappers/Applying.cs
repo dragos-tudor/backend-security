@@ -17,5 +17,8 @@ partial class OAuthBaseFuncs
     };
 
   public static IEnumerable<Claim> ApplyClaimMappers(IEnumerable<ClaimMapper> claimMappers, IDictionary<string, string> rawClaims, string issuer) =>
-    rawClaims.Select(claim => ApplyClaimMapper(GetClaimMapper(claimMappers, claim), claim, issuer));
+    rawClaims.Select(claim => ApplyClaimMapper(GetClaimMapper(claimMappers, claim.Key), claim, issuer));
+
+  public static IEnumerable<Claim> ApplyClaimMappers(IEnumerable<ClaimMapper> claimMappers, IEnumerable<Claim> claims, string issuer) =>
+    claims.Select(claim => ApplyClaimMapper(GetClaimMapper(claimMappers, claim.Type), new KeyValuePair<string, string>(claim.Type, claim.Value), issuer));
 }

@@ -15,7 +15,7 @@ partial class OAuthFuncs
     HttpResponseMessage response,
     CancellationToken cancellationToken = default)
   {
-    using var tokenResponse = await ReadHttpResponseJsonResponse(response, cancellationToken);
+    using var tokenResponse = await ReadHttpResponseJsonContent(response, cancellationToken);
     var tokenData = tokenResponse.RootElement;
 
     if (!IsSuccessHttpResponse(response)) return GetOAuthErrorType(tokenData);

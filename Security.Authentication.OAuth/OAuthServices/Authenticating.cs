@@ -39,7 +39,8 @@ partial class OAuthFuncs
     if (userInfoError is not null) return Fail(userInfoError!);
     LogAccessUserInfo(logger, schemeName, requestId);
 
-    var principal = CreatePrincipal(schemeName, userClaims);
+    var claims = ApplyClaimActions(oauthOptions.ClaimActions, userClaims!);
+    var principal = CreatePrincipal(schemeName, claims);
     return Success(CreateAuthenticationTicket(principal, authProps, schemeName));
   }
 }

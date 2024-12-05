@@ -7,6 +7,5 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthBaseFuncs
 {
-  static ClaimMapper? GetClaimMapper(IEnumerable<ClaimMapper> claimMappers, KeyValuePair<string, string> claim) =>
-    claimMappers.FirstOrDefault(claimMapper => EqualsClaimKey(claimMapper, claim.Key));
+  static ClaimMapper? GetClaimMapper(IEnumerable<ClaimMapper> claimMappers, string key) => claimMappers.FirstOrDefault(claimMapper => EqualsClaimKey(claimMapper, key));
 }
