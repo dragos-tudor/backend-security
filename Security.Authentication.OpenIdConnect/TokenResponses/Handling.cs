@@ -32,9 +32,6 @@ partial class OpenIdConnectFuncs
     var validationError = ValidateTokenResponse(oidcValidationOptions, idToken, accessToken!, oidcOptions.ClientId, code);
     if (validationError is not null) return validationError;
 
-    if (ShouldUseTokenLifetime(oidcOptions)) SetAuthPropsTokenLifetime(authProps, idToken!);
-
-    var identity = securityResult.ClaimsIdentity;
     return new (CreateOidcTokens(tokenData), idToken, default);
   }
 }
