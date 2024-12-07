@@ -13,6 +13,7 @@ public record OpenIdConnectOptions : OAuthOptions
 
   public required PathString ChallengeSignOutPath { get; init; }
   public required PathString CallbackSignOutPath { get; init; }
+  public required string? SignOutPath { get; init; }
 
   public string? CheckSessionIframe { get; init; }
   public bool GetClaimsFromUserInfoEndpoint { get; init; }

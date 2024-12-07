@@ -5,7 +5,7 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  public static async Task<PostSignOutResult> PostSignOut<TOptions>(
+  public static PostSignOutResult PostSignOut<TOptions>(
     HttpContext context,
     TOptions oidcOptions,
     PropertiesDataFormat authPropsProtector)
@@ -13,20 +13,12 @@ partial class OpenIdConnectFuncs
   {
     if (IsOAuthError(context.Request)) return GetOAuthErrorType(context.Request);
 
-    var signoutResponse = await GetHttpRequestParams(context.Request, context.RequestAborted);
-    if (signoutResponse is null) return InvalidAuthorizationResponse;
-
+    var signoutResponse = GetHttpRequestQueryParams(context.Request);
     var signoutData = ToOpenIdConnectData(signoutResponse);
+
     var state = GetOidcDataState(signoutData);
-    if (state is null) return InvalidState;
+    if (state is null) return CreateAuthProps();
 
-    var authProps = UnprotectAuthProps(state!, authPropsProtector);
-    if (authProps is null) return UnprotectStateFailed;
-
-    var principal = GetContextUser(context);
-    var validationError = ValidateSignoutResponse(signoutData, principal);
-    if (validationError is not null) return validationError;
-
-    return authProps;
+    return UnprotectAuthProps(state!, authPropsProtector) ?? CreateAuthProps();
   }
 }

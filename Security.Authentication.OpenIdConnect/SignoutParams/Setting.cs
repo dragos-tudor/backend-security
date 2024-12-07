@@ -3,7 +3,7 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static OidcParams SetSignoutChallengeParams(
+  static OidcParams SetChallengeSignoutParams(
     OidcParams oidcParams,
     HttpContext context,
     OpenIdConnectOptions oidcOptions,
@@ -18,7 +18,7 @@ partial class OpenIdConnectFuncs
     return oidcParams;
   }
 
-  static AuthenticationProperties SetSignoutChallengeAuthProps(
+  static AuthenticationProperties SetChallengeSignoutAuthProps(
     AuthenticationProperties authProps,
     string redirectUri)
   {

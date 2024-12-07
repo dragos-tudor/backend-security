@@ -15,8 +15,6 @@ partial class OpenIdConnectFuncs
     ILogger logger)
   where TOptions : OpenIdConnectOptions
   {
-    // TODO: validate OpenIdConnectOptions [request type == authorization code flow, absolute uri == AuthorizationEndpoint, scopes supported, code challenge method supported]
-
     var correlationId = GenerateCorrelationId();
     UseCorrelationCookie(context, oidcOptions, correlationId, currentUtc);
     SetAuthPropsCorrelationId(authProps, correlationId);
@@ -28,10 +26,9 @@ partial class OpenIdConnectFuncs
     var redirectUri = GetHttpRequestQueryValue(context.Request, oidcOptions.ReturnUrlParameter)!;
     SetAuthorizationAuthProps(authProps, redirectUri, callbackUrl);
 
-    SetAuthorizationOidcParams(oidcParams, authProps, oidcOptions, authPropsProtector, callbackUrl);
+    var state = authPropsProtector.Protect(authProps);
+    SetAuthorizationOidcParams(oidcParams, authProps, oidcOptions, state, callbackUrl);
     SetOAuthParams(oidcParams, oidcOptions.AdditionalAuthorizationParameters);
-
-    // TODO: implement PAR support [https://datatracker.ietf.org/doc/html/rfc9126]
 
     if (IsRedirectGetAuthMethod(oidcOptions))
       SetHttpResponseRedirect(context.Response, BuildHttpRequestUri(oidcOptions.AuthorizationEndpoint, oidcParams!));
@@ -45,4 +42,7 @@ partial class OpenIdConnectFuncs
     LogAuthorizeChallenge(logger, oidcOptions.SchemeName, GetHttpResponseLocation(context.Response)!, GetHttpResponseSetCookie(context.Response)!, context.TraceIdentifier);
     return oidcOptions.AuthorizationEndpoint;
   }
+
+  // TODO: validate OpenIdConnectOptions [request type == authorization code flow, absolute uri == AuthorizationEndpoint, scopes supported, code challenge method supported]
+  // TODO: implement PAR support [https://datatracker.ietf.org/doc/html/rfc9126]
 }

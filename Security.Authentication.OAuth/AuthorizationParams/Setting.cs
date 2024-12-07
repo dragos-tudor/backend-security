@@ -8,8 +8,7 @@ partial class OAuthFuncs
   public static OAuthParams SetAuthorizationOAuthParams(
     OAuthParams oauthParams,
     OAuthOptions oauthOptions,
-    AuthenticationProperties authProps,
-    PropertiesDataFormat authPropsProtector,
+    string state,
     string callbackUrl)
   {
     // https://www.ietf.org/rfc/rfc6749.txt [Authorization Request page 25]
@@ -17,7 +16,7 @@ partial class OAuthFuncs
     SetOAuthParam(oauthParams, OAuthParamNames.ResponseType, oauthOptions.ResponseType);
     SetOAuthParam(oauthParams, OAuthParamNames.RedirectUri, callbackUrl);
     SetOAuthParam(oauthParams, OAuthParamNames.Scope, FormatOAuthScopes(oauthOptions));
-    SetOAuthParam(oauthParams, OAuthParamNames.State, ProtectAuthProps(authProps, authPropsProtector));
+    SetOAuthParam(oauthParams, OAuthParamNames.State, state);
     return oauthParams;
   }
 }

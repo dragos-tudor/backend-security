@@ -18,10 +18,10 @@ partial class AuthenticationFuncs
 
   public static string? GetHttpRequestBearerToken(string authorization) => authorization.StartsWith(BearerName, StringComparison.Ordinal)? authorization[BearerName.Length ..]: default;
 
-  public static async Task<IEnumerable<KeyValuePair<string, string[]>>> GetHttpRequestParams(HttpRequest request, CancellationToken cancellationToken = default) =>
+  public static async Task<IEnumerable<KeyValuePair<string, string[]>>?> GetHttpRequestParams(HttpRequest request, CancellationToken cancellationToken = default) =>
     request switch {
       var req when IsGetHttpRequest(req) => GetHttpRequestQueryParams(request),
       var req when IsFormPostHttpRequest(req) => GetHttpRequestFormParams(await ReadHttpRequestForm(request, cancellationToken)),
-      _ => []
+      _ => default
   };
 }

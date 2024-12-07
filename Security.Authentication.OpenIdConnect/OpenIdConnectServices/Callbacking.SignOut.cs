@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
@@ -14,8 +15,7 @@ partial class OpenIdConnectFuncs
     ILogger logger)
   where TOptions : OpenIdConnectOptions
   {
-    var (authProps, signoutError) = await postSignOut(context, oidcOptions, authPropsProtector);
-
+    var (authProps, signoutError) = postSignOut(context, oidcOptions, authPropsProtector);
     if (signoutError is not null) {
       LogSignedOutWithFailure(logger, oidcOptions.SchemeName, signoutError, context.TraceIdentifier);
 

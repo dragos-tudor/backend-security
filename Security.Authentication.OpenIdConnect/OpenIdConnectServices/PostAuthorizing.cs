@@ -10,8 +10,8 @@ partial class OpenIdConnectFuncs
 {
   internal const string AuthorizationCodeNotFound = "oidc authorization code was not found";
   internal const string InvalidAuthorizationResponse = "invaliud oidc authorization response [no params]";
-  internal const string InvalidState = "oidc state was missing or invalid";
-  internal const string UnprotectStateFailed = "unprotect oidc state failed";
+  internal const string InvalidAuthorizationState = "oidc authorization state was missing or invalid";
+  internal const string UnprotectAuthorizationStateFailed = "unprotect oidc authorization state failed";
 
   public static async Task<PostAuthorizeResult> PostAuthorize<TOptions>(
     HttpContext context,
@@ -27,10 +27,10 @@ partial class OpenIdConnectFuncs
 
     var authData = ToOpenIdConnectData(authResponse);
     var state = GetOidcDataState(authData);
-    if (state is null) return InvalidState;
+    if (state is null) return InvalidAuthorizationState;
 
     var authProps = UnprotectAuthProps(state!, authPropsProtector);
-    if (authProps is null) return UnprotectStateFailed;
+    if (authProps is null) return UnprotectAuthorizationStateFailed;
 
     var code = GetOidcDataAuthorizationCode(authData);
     var validationError = ValidateAuthenticationResponse(validationOptions, code, state);

@@ -4,18 +4,17 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Security.Authentication.OpenIdConnect;
 
-// partial class OpenIdConnectFuncs
-// {
-//   public static Task<string?> ChallengeSignoutOidc<TOptions>(
-//     HttpContext context,
-//     AuthenticationProperties authProps,
-//     ILogger logger)
-//   where TOptions : OpenIdConnectOptions =>
-//     ChallengeSignoutOidc(
-//       context,
-//       authProps,
-//       ResolveRequiredService<TOptions>(context),
-//       ResolveRequiredService<OpenIdConnectConfiguration>(context),
-//       ResolvePropertiesDataFormat(context),
-//       logger);
-// }
+partial class OpenIdConnectFuncs
+{
+  public static Task<bool> ChallengeSignOut<TOptions>(
+    HttpContext context,
+    AuthenticationProperties authProps,
+    ILogger logger)
+  where TOptions : OpenIdConnectOptions =>
+    ChallengeSignOut(
+      context,
+      authProps,
+      ResolveRequiredService<TOptions>(context),
+      ResolvePropertiesDataFormat(context),
+      logger);
+}

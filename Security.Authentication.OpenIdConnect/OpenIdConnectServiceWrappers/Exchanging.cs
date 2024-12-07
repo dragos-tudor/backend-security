@@ -14,13 +14,12 @@ partial class OpenIdConnectFuncs
     AuthenticationProperties authProps,
     CancellationToken cancellationToken = default)
   where TOptions: OpenIdConnectOptions =>
-      ExchangeCodeForTokens(
-        code,
-        authProps,
-        ResolveRequiredService<TOptions>(context),
-        ResolveRequiredService<OpenIdConnectValidationOptions>(context),
-        ResolveHttpClient(context),
-        cancellationToken
-      );
-
+    ExchangeCodeForTokens(
+      code,
+      authProps,
+      ResolveRequiredService<TOptions>(context),
+      ResolveRequiredService<OpenIdConnectValidationOptions>(context),
+      ResolveHttpClient(context),
+      cancellationToken
+    );
 }

@@ -11,11 +11,11 @@ partial class OpenIdConnectFuncs
     AuthenticationProperties? authProps,
     ILogger logger)
   where TOptions : OpenIdConnectOptions =>
-      ChallengeOidc(
-        context,
-        authProps ?? CreateAuthProps(),
-        ResolveRequiredService<TOptions>(context),
-        ResolveTimeProvider(context).GetUtcNow(),
-        ResolvePropertiesDataFormat(context),
-        logger);
+    ChallengeOidc(
+      context,
+      authProps ?? CreateAuthProps(),
+      ResolveRequiredService<TOptions>(context),
+      ResolveTimeProvider(context).GetUtcNow(),
+      ResolvePropertiesDataFormat(context),
+      logger);
 }

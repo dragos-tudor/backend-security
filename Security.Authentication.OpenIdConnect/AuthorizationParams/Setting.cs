@@ -10,7 +10,7 @@ partial class OpenIdConnectFuncs
     OidcParams oidcParams,
     AuthenticationProperties authProps,
     OpenIdConnectOptions oidcOptions,
-    PropertiesDataFormat authPropsProtector,
+    string state,
     string callbackUri)
   {
     SetOAuthParam(oidcParams, OAuthParamNames.ClientId, oidcOptions.ClientId);
@@ -22,7 +22,7 @@ partial class OpenIdConnectFuncs
 
     SetOAuthParam(oidcParams, OAuthParamNames.Prompt, GetOidcParamPrompt(authProps, oidcOptions));
     SetOAuthParam(oidcParams, OAuthParamNames.Scope, GetOidcParamScope(authProps, oidcOptions));
-    SetOAuthParam(oidcParams, OAuthParamNames.State, authPropsProtector.Protect(authProps));
+    SetOAuthParam(oidcParams, OAuthParamNames.State, state);
 
     if (GetOidcParamMaxAge(authProps, oidcOptions) is string maxAge) SetOAuthParam(oidcParams, OidcParamNames.MaxAge, maxAge);
     if (!oidcOptions.DisableTelemetry) SetTelemetryOidcParams(oidcParams);

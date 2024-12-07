@@ -26,7 +26,8 @@ partial class OAuthFuncs
     if (!ExistsAuthPropsRedirectUri(authProps)) SetAuthPropsRedirectUri(authProps, redirectUri);
 
     var callbackUrl = GetAbsoluteUrl(context.Request, oauthOptions.CallbackPath);
-    SetAuthorizationOAuthParams(oauthParams, oauthOptions, authProps, authPropsProtector, callbackUrl);
+    var state = ProtectAuthProps(authProps, authPropsProtector);
+    SetAuthorizationOAuthParams(oauthParams, oauthOptions, state, callbackUrl);
     SetOAuthParams(oauthParams, oauthOptions.AdditionalAuthorizationParameters);
 
     var authUri = BuildHttpRequestUri(oauthOptions.AuthorizationEndpoint, oauthParams!);

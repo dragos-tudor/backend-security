@@ -22,9 +22,11 @@ partial class OpenIdConnectFuncs
       ChallengeSignOutPath = new PathString("/challenge-signout-oidc"),
       CallbackPath = new PathString("/callback-oidc"),
       CallbackSignOutPath = new PathString("/callback-signout-oidc"),
+      SignOutPath = oidcConfig.EndSessionEndpoint,
 
       AuthenticationMethod = OpenIdConnectRedirectBehaviour.RedirectGet,
       ClaimActions = GetOpenIdConnectClaimActions(),
+      CheckSessionIframe = oidcConfig.CheckSessionIframe,
       DisableTelemetry = false,
 
       Issuer = oidcConfig.Issuer,

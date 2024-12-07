@@ -13,13 +13,12 @@ partial class OpenIdConnectFuncs
     JwtSecurityToken idToken,
     CancellationToken cancellationToken = default)
   where TOptions: OpenIdConnectOptions =>
-      AccessUserInfo(
-        accessToken,
-        ResolveRequiredService<TOptions>(context),
-        ResolveRequiredService<OpenIdConnectValidationOptions>(context),
-        idToken,
-        ResolveHttpClient(context),
-        cancellationToken
-      );
-
+    AccessUserInfo(
+      accessToken,
+      ResolveRequiredService<TOptions>(context),
+      ResolveRequiredService<OpenIdConnectValidationOptions>(context),
+      idToken,
+      ResolveHttpClient(context),
+      cancellationToken
+    );
 }
