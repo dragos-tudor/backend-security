@@ -30,12 +30,6 @@ partial class OpenIdConnectFuncs
     return oidcParams;
   }
 
-  static void SetTelemetryOidcParams(OidcParams oidcParams)
-  {
-    SetOAuthParam(oidcParams, OidcParamNames.SkuTelemetry, IdentityModelTelemetryUtil.ClientSku);
-    SetOAuthParam(oidcParams, OidcParamNames.VersionTelemetry, IdentityModelTelemetryUtil.ClientVer);
-  }
-
   static AuthenticationProperties SetAuthorizationAuthProps(
     AuthenticationProperties authProps,
     string redirectUri,

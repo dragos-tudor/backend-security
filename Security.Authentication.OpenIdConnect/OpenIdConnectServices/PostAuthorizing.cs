@@ -33,7 +33,7 @@ partial class OpenIdConnectFuncs
     if (authProps is null) return UnprotectAuthorizationStateFailed;
 
     var code = GetOidcDataAuthorizationCode(authData);
-    var validationError = ValidateAuthenticationResponse(validationOptions, code, state);
+    var validationError = ValidateAuthorizationResponse(validationOptions, code, state);
     if (validationError is not null) return validationError;
 
     var correlationError = ValidateCorrelationCookie(context.Request, authProps);

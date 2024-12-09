@@ -13,8 +13,7 @@ partial class OpenIdConnectFuncs
     SetOAuthParam(oidcParams, OidcParamNames.IdTokenHint, idTokenHint);
     SetOAuthParam(oidcParams, OidcParamNames.PostLogoutRedirectUri, GetAbsoluteUrl(context.Request, oidcOptions.CallbackSignOutPath));
     SetOAuthParam(oidcParams, OidcParamNames.State, state);
-    if (!oidcOptions.DisableTelemetry)
-      SetTelemetryOidcParams(oidcParams);
+    if (!oidcOptions.DisableTelemetry) SetTelemetryOidcParams(oidcParams);
     return oidcParams;
   }
 
