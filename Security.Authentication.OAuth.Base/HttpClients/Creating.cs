@@ -1,4 +1,6 @@
 
+#pragma warning disable CA2000
+
 using System.Net.Http;
 
 namespace Security.Authentication.OAuth;

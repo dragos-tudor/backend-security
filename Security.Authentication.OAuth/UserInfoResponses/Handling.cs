@@ -12,7 +12,7 @@ partial class OAuthFuncs
   {
     if (!IsSuccessHttpResponse(response)) return await ReadJsonOAuthError(response, cancellationToken);
 
-    var rawClaims = await ReadHttpResponseJsonProps(response, cancellationToken);
+    var rawClaims = await ReadUserInfoClaims(response, cancellationToken);
     var claims = ApplyClaimMappers(oauthOptions.ClaimMappers, rawClaims, GetClaimsIssuer(oauthOptions));
 
     return CreateUserInfoResult(claims);

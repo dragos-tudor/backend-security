@@ -1,17 +1,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Cryptography;
-using System.Text;
-using Microsoft.IdentityModel.Abstractions;
-using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Tokens;
-
 namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
@@ -33,7 +22,7 @@ partial class OpenIdConnectFuncs
     return default;
   }
 
-  static string? ValidateCode(string? code) => IsEmptyString(code)? MissingAuthorizationCode: default;
+  static string? ValidateCode(string? code) => IsEmptyString(code) ? MissingAuthorizationCode : default;
 
   static string? ValidateState(
     OpenIdConnectValidationOptions validationOptions,
@@ -43,7 +32,7 @@ partial class OpenIdConnectFuncs
       return default;
 
     if (validationOptions.RequireState && IsEmptyString(state))
-      return FormatString(MissingAuthorizationState, validationOptions.RequireState);
+      return MissingAuthorizationState.Format(validationOptions.RequireState);
 
     // TODO: investigate RFC for state validation [request/response state comparison]
     // https://github.com/AzureAD/azure-activedirectory-identitymodel-extensions-for-dotnet/blob/dev/src/Microsoft.IdentityModel.Protocols.OpenIdConnect/OpenIdConnectProtocolValidator.cs#L705

@@ -20,8 +20,8 @@ partial class OpenIdConnectFuncs
     var currentHash = Base64UrlEncoder.Encode(currentBytes, 0, currentBytes.Length / 2);
     hashAlgorithm.Dispose();
 
-    if (!string.Equals(expectedHash, currentHash))
-      return FormatString(DifferentHashes, expectedHash, currentText, algorithm);
+    if (!EqualsStringOrdinal(expectedHash, currentHash))
+      return DifferentHashes.Format(expectedHash, currentText, algorithm);
 
     return default;
   }

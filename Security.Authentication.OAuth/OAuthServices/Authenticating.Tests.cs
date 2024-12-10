@@ -21,7 +21,7 @@ partial class OAuthTests
     postAuthorize(default!, default!, default!).ReturnsForAnyArgs("authorize error");
 
     var result = await AuthenticateOAuth(context, oauthOptions, authPropsProtector, httpClient, postAuthorize, default!, default!, NullLogger.Instance);
-    StringAssert.Contains(result.Failure!.Message, "authorize error");
+    StringAssert.Contains(result.Failure!.Message, "authorize error", StringComparison.Ordinal);
   }
 
   [TestMethod]

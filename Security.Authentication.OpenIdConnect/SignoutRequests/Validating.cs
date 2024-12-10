@@ -1,5 +1,4 @@
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Security.Authentication.OpenIdConnect;
 
@@ -7,10 +6,8 @@ partial class OpenIdConnectFuncs
 {
   const string OidcSignOutSessionIdMissing = "oidc sign out session id is missing";
   const string OidcSignOutSessionIdInvalid = "oidc sign out session id is invalid";
-
   const string OidcSignOutIssuerMissing = "oidc sign out issuer is missing";
   const string OidcSignOutIssuerInvalid = "oidc sign out issuer is invalid";
-
   const string OidcSignOutPathMissing = "oidc sign out path is missing";
 
   static string? ValidateSignoutRequest(OidcData oidcData, OpenIdConnectOptions oidcOptions, ClaimsPrincipal? principal)

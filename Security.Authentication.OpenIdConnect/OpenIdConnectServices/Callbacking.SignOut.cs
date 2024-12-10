@@ -13,6 +13,7 @@ partial class OpenIdConnectFuncs
   where TOptions : OpenIdConnectOptions
   {
     var (authProps, signoutError) = postSignOut(context, oidcOptions, authPropsProtector);
+
     if (signoutError is not null) {
       LogSignedOutWithFailure(logger, oidcOptions.SchemeName, ToOAuthErrorString(signoutError), context.TraceIdentifier);
 

@@ -17,10 +17,7 @@ partial class OpenIdConnectFuncs
     var userInfoError = ValidateUserInfoResponse(response);
     if (userInfoError is not null) return userInfoError;
 
-    var content = await ReadHttpResponseContent(response, cancellationToken);
-    var contentType = GetHttpResponseContentType(response);
-
-    var userToken = ReadUserInfoToken(content, contentType!);
+    var userToken = await ReadUserInfoToken(response, cancellationToken);
     var validationError = ValidateUserInfoToken(idToken, userToken!);
     if (validationError is not null) return validationError;
 

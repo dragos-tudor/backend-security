@@ -18,7 +18,7 @@ partial class OpenIdConnectFuncs
     ExchangeCodeForTokensFunc<TOptions> exchangeCodeForTokens,
     AccessUserInfoFunc<TOptions> accessUserInfo,
     ILogger logger)
-  where TOptions: OpenIdConnectOptions
+  where TOptions : OpenIdConnectOptions
   {
     var (authProps, code, authError) = await postAuthorize(context, oidcOptions, validationOptions, authPropsProtector);
     if (authError is not null) return Fail(ToOAuthErrorQuery(authError));

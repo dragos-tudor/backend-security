@@ -19,7 +19,7 @@ partial class OpenIdConnectFuncs
   const string MissingIdTokenAuthTime = "RequireAuthTime is 'true' (default is 'false') but jwt.PayLoad.AuthTime is 'null or whitespace', jwt: '{0}'.";
   const string MissingIdTokenAzp = "RequireAzp is 'true' (default is 'false') but jwt.PayLoad.Azp is 'null or whitespace', jwt: '{0}'.";
   const string MissingIdToken = "IdToken is null. There is no 'id_token' to validate against.";
-  const string MissingIdTokenAndAccessToken = "Both 'id_token' and 'access_token' should be present in the response received from Token Endpoint";
+  const string MissingAccessToken = "AccessToken is null. There is no 'access_token' to validate against.";
   const string DifferentIdTokenAzpAndClientId = "The 'id_token' contains 'azp' claim but its value is not equal to Client Id. 'azp': '{0}'. clientId: '{1}'.";
   const string CHashValidationFailure = "Validating the 'c_hash' failed, error {0}";
   const string AtHashValidationFailure = "Validating the 'at_hash' failed, error {0}";
@@ -31,10 +31,10 @@ partial class OpenIdConnectFuncs
     var statusCode = GetHttpResponseStatusCode(response);
 
     if (IsEmptyString(contentType))
-      return FormatString(MissingContentTypeHeader, statusCode);
+      return MissingContentTypeHeader.Format(statusCode);
 
     if (!IsJsonContentTypeHttpResponse(contentType!))
-      return FormatString(UnexpectedTokenResponseContentType, contentType!, statusCode);
+      return UnexpectedTokenResponseContentType.Format(contentType!, statusCode);
 
     return default;
   }
@@ -58,6 +58,13 @@ partial class OpenIdConnectFuncs
     return default;
   }
 
+  public static string? ValidateOidcTokens(OidcTokens oidcTokens)
+  {
+    if (IsEmptyString(oidcTokens.IdToken)) return MissingIdToken;
+    if (IsEmptyString(oidcTokens.AccessToken)) return MissingAccessToken;
+    return default;
+  }
+
   public static Task<TokenValidationResult> ValidateSecurityIdToken<TOptions>(TOptions oidcOptions, string? idToken) where TOptions : OpenIdConnectOptions =>
     oidcOptions.TokenHandler.ValidateTokenAsync(idToken, oidcOptions.TokenValidationParameters);
 
@@ -70,45 +77,45 @@ partial class OpenIdConnectFuncs
     if (validationOptions.IdTokenValidator != null)
     {
       if (validationOptions.IdTokenValidator(validationOptions, idToken) is string idTokenError)
-        return FormatString(InvalidIdToken, idToken, idTokenError);
+        return InvalidIdToken.Format(idToken, idTokenError);
 
       return default;
     }
 
     // required claims
     if (idToken.Payload.Aud.Count == 0)
-      return FormatString(MissingIdTokenClaim, JwtRegisteredClaimNames.Aud, idToken);
+      return MissingIdTokenClaim.Format(JwtRegisteredClaimNames.Aud, idToken);
 
     if (!idToken.Payload.Expiration.HasValue)
-      return FormatString(MissingIdTokenClaim, JwtRegisteredClaimNames.Exp, idToken);
+      return MissingIdTokenClaim.Format(JwtRegisteredClaimNames.Exp, idToken);
 
     if (idToken.Payload.IssuedAt.Equals(DateTime.MinValue))
-      return FormatString(MissingIdTokenClaim, JwtRegisteredClaimNames.Iat, idToken);
+      return MissingIdTokenClaim.Format(JwtRegisteredClaimNames.Iat, idToken);
 
     if (idToken.Payload.Iss == null)
-      return FormatString(MissingIdTokenClaim, JwtRegisteredClaimNames.Iss, idToken);
+      return MissingIdTokenClaim.Format(JwtRegisteredClaimNames.Iss, idToken);
 
     if (validationOptions.RequireSub && string.IsNullOrWhiteSpace(idToken.Payload.Sub))
-      return FormatString(MissingIdTokenClaim, JwtRegisteredClaimNames.Sub, idToken);
+      return MissingIdTokenClaim.Format(JwtRegisteredClaimNames.Sub, idToken);
 
     // optional claims
     if (validationOptions.RequireAcr && string.IsNullOrWhiteSpace(idToken.Payload.Acr))
-      return FormatString(MissingIdTokenAcr, idToken);
+      return MissingIdTokenAcr.Format(idToken);
 
     if (validationOptions.RequireAmr && idToken.Payload.Amr.Count == 0)
-      return FormatString(MissingIdTokenAmr, idToken);
+      return MissingIdTokenAmr.Format(idToken);
 
     if (validationOptions.RequireAuthTime && !idToken.Payload.AuthTime.HasValue)
-      return FormatString(MissingIdTokenAuthTime, idToken);
+      return MissingIdTokenAuthTime.Format(idToken);
 
     if (validationOptions.RequireAzp && string.IsNullOrWhiteSpace(idToken.Payload.Azp))
-      return FormatString(MissingIdTokenAzp, idToken);
+      return MissingIdTokenAzp.Format(idToken);
 
     // if 'azp' claim exist, it should be equal to 'client_id' of the application
     if (!string.IsNullOrEmpty(idToken.Payload.Azp))
     {
       if (!EqualsStringOrdinal(idToken.Payload.Azp, clientId))
-        return FormatString(DifferentIdTokenAzpAndClientId, idToken.Payload.Azp, clientId);
+        return DifferentIdTokenAzpAndClientId.Format(idToken.Payload.Azp, clientId);
     }
     return default;
   }
@@ -119,17 +126,17 @@ partial class OpenIdConnectFuncs
     string code)
   {
     if (!idToken.Payload.TryGetValue(JwtRegisteredClaimNames.CHash, out object? cHashClaim))
-      return FormatString(MissingIdTokenCHash, idToken);
+      return MissingIdTokenCHash.Format(idToken);
 
     if (cHashClaim is not string cHash)
-      return FormatString(NotStringIdTokenCHash, idToken);
+      return NotStringIdTokenCHash.Format(idToken);
 
     var algorithm = GetJwtTokenAlgorithm(idToken);
     if (IsEmptyString(algorithm))
       return MissingJwtTokenHeaderAlgorithm;
 
     if (ValidateHash(validationOptions, cHash!, code, algorithm) is string hashError)
-      return FormatString(CHashValidationFailure, hashError);
+      return CHashValidationFailure.Format(hashError);
 
     return default;
   }
@@ -140,17 +147,17 @@ partial class OpenIdConnectFuncs
     string accessToken)
   {
     if (!idToken.Payload.TryGetValue(JwtRegisteredClaimNames.AtHash, out object? atHashClaim))
-      return FormatString(MissingIdTokenAtHash, idToken);
+      return MissingIdTokenAtHash.Format(idToken);
 
     if (atHashClaim is not string atHash)
-      return FormatString(NotStringIdTokenAtHash, idToken);
+      return NotStringIdTokenAtHash.Format(idToken);
 
     var algorithm = GetJwtTokenAlgorithm(idToken);
     if (IsEmptyString(algorithm))
       return MissingJwtTokenHeaderAlgorithm;
 
     if (ValidateHash(validationOptions, atHash!, accessToken, algorithm) is string hashError)
-      return FormatString(AtHashValidationFailure, hashError);
+      return AtHashValidationFailure.Format(hashError);
 
     return default;
   }

@@ -1,6 +1,4 @@
 
-using System.IdentityModel.Tokens.Jwt;
-
 namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnect

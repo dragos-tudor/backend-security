@@ -1,6 +1,4 @@
 
-using System.Net;
-using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
@@ -25,7 +23,6 @@ partial class OAuthBaseFuncs
   static string GetOAuthErrorType(JsonElement data) => data.GetString(ErrorTypeToken)!;
 
   static string? GetOAuthErrorUri(JsonElement data) => data.GetString(ErrorUriToken)!;
-
 
   public static OAuthError GetOAuthError(HttpRequest request) => CreateOAuthError(GetOAuthErrorType(request), GetOAuthErrorDescription(request), GetOAuthErrorUri(request));
 

@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.OAuth;
 
-partial class OAuthBaseFuncs {
-
+partial class OAuthBaseFuncs
+{
   internal const string CorrelationCookieNotFound = "correlation cookie not found";
   internal const string UnexpectedCorrelationCookieContent = "unexpected correlation cookie";
   internal const string CorrelationIdKeyNotFound = "correlation id not found on authentication properties";

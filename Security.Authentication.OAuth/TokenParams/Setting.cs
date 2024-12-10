@@ -1,6 +1,5 @@
 
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.OAuth;
 
 namespace Security.Authentication.OAuth;
 

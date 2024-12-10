@@ -1,7 +1,4 @@
 
-using Microsoft.IdentityModel.Logging;
-using Microsoft.IdentityModel.Tokens;
-
 namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs

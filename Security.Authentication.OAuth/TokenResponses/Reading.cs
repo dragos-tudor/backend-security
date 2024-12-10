@@ -3,7 +3,7 @@ using System.Net.Http;
 
 namespace Security.Authentication.OAuth;
 
-partial class OAuthBaseFuncs
+partial class OAuthFuncs
 {
   public static async Task<OAuthTokens> ReadJsonOAuthTokens(HttpResponseMessage response, CancellationToken cancellationToken)
   {

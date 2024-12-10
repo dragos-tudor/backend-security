@@ -6,29 +6,28 @@ partial class OpenIdConnectFuncs
 {
   static async Task<TokenResult> HandleTokenResponse<TOptions>(
     HttpResponseMessage response,
-    AuthenticationProperties authProps,
     TOptions oidcOptions,
     OpenIdConnectValidationOptions oidcValidationOptions,
     string code,
     CancellationToken cancellationToken = default)
   where TOptions : OpenIdConnectOptions
   {
+    if (!IsSuccessHttpResponse(response)) return await ReadJsonOAuthError(response, cancellationToken);
+
     var tokenError = ValidateTokenResponse(response);
     if (tokenError is not null) return tokenError;
 
-    var tokenResponse = await ReadHttpResponseContent(response, cancellationToken);
-    var tokenData = ToOpenIdConnectData(tokenResponse);
-    var rawIdToken = GetOidcDataIdToken(tokenData);
+    var oidcTokens = await ReadTokenOidcTokens(response, cancellationToken);
+    var oidcTokensError = ValidateOidcTokens(oidcTokens);
+    if (oidcTokensError is not null) return oidcTokensError;
 
-    var secValidation = await ValidateSecurityIdToken(oidcOptions, rawIdToken);
+    var secValidation = await ValidateSecurityIdToken(oidcOptions, oidcTokens.IdToken);
     if (secValidation.Exception is not null) return secValidation.Exception;
 
     var idToken = ToJwtSecurityToken(secValidation.SecurityToken);
-    var accessToken = GetOidcDataAccessToken(tokenData);
-    var validationError = ValidateIdToken(oidcValidationOptions, idToken, accessToken!, oidcOptions.ClientId, code);
+    var validationError = ValidateIdToken(oidcValidationOptions, idToken, oidcTokens.AccessToken!, oidcOptions.ClientId, code);
     if (validationError is not null) return validationError;
 
-    return new(CreateOidcTokens(tokenData), idToken, default);
+    return new(oidcTokens, idToken, default);
   }
-
 }

@@ -1,6 +1,4 @@
 
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Security.Authentication.OpenIdConnect;
@@ -12,7 +10,7 @@ partial class OpenIdConnectFuncs
     OidcTokens tokens)
   {
     if (IsNotEmptyString(tokens.IdToken)) SetAuthPropsItem(authProps, OidcParamNames.IdToken, tokens.IdToken);
-    return OAuthBaseFuncs.SetAuthPropsTokens(authProps, (OAuthTokens)tokens);
+    return OAuthBaseFuncs.SetAuthPropsTokens(authProps, tokens);
   }
 
   static AuthenticationProperties SetAuthPropsTokenLifetime(

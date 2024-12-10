@@ -10,8 +10,8 @@ public class OpenIdConnectValidationOptions
 {
   public const bool RequireSubByDefault = true;
 
-  public readonly Dictionary<string, string> HashAlgorithmMap =
-    new ()
+  public Dictionary<string, string> HashAlgorithmMap { get; init; } =
+    new()
     {
       { SecurityAlgorithms.EcdsaSha256, "SHA256" },
       { SecurityAlgorithms.EcdsaSha256Signature, "SHA256" },

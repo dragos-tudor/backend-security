@@ -23,7 +23,7 @@ partial class OpenIdConnectFuncs
     }
     catch (Exception ex)
     {
-      return (default, FormatString(InvalidAlghoritmMoniker, algorithm, typeof(HashAlgorithm), ex));
+      return (default, InvalidAlghoritmMoniker.Format(algorithm, typeof(HashAlgorithm), ex));
     }
   }
 }

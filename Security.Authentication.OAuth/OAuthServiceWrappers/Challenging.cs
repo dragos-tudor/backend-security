@@ -10,7 +10,7 @@ partial class OAuthFuncs
     HttpContext context,
     AuthenticationProperties? authProps,
     ILogger logger)
-  where TOptions: OAuthOptions =>
+  where TOptions : OAuthOptions =>
     ChallengeOAuth(
       context,
       authProps ?? CreateAuthProps(),

@@ -5,4 +5,4 @@ public delegate PostSignOutResult PostSignoutFunc<TOptions>(
     HttpContext context,
     TOptions oidcOptions,
     PropertiesDataFormat authPropsProtector)
-  where TOptions: OpenIdConnectOptions;
+  where TOptions : OpenIdConnectOptions;

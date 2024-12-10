@@ -8,4 +8,4 @@ public delegate PostAuthorizeResult PostAuthorizeFunc<TOptions>(
     HttpContext context,
     TOptions oauthOptions,
     PropertiesDataFormat authPropsProtector)
-  where TOptions: OAuthOptions;
+  where TOptions : OAuthOptions;

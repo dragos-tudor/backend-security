@@ -1,6 +1,4 @@
 
-using System.Collections.Generic;
-
 namespace Security.Authentication.OAuth;
 
-public class OAuthParams: Dictionary<string, string>;
+public class OAuthParams : Dictionary<string, string>;

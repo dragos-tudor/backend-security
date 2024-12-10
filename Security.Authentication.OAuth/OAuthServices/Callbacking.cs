@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Http;
 #nullable disable
 
@@ -22,6 +23,6 @@ partial class OAuthFuncs
     await signin(context, authResult.Principal!, authResult.Properties);
 
     var redirectUri = GetOAuthRedirectUri(authResult.Properties);
-    return  SetHttpResponseRedirect(context.Response, redirectUri);
+    return SetHttpResponseRedirect(context.Response, redirectUri);
   }
 }

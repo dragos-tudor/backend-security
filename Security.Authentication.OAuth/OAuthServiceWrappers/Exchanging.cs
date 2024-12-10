@@ -1,5 +1,4 @@
 
-using System.Threading;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 
@@ -12,7 +11,7 @@ partial class OAuthFuncs
     string authCode,
     AuthenticationProperties authProps,
     CancellationToken cancellationToken = default)
-  where TOptions: OAuthOptions =>
+  where TOptions : OAuthOptions =>
     ExchangeCodeForTokens(
       authCode,
       authProps,

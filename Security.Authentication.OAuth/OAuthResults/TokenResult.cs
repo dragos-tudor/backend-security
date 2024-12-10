@@ -9,5 +9,5 @@ public record class TokenResult(OAuthTokens? Tokens, OAuthError? Error)
 
   public static implicit operator TokenResult(string error) => new(default, CreateOAuthError(error));
 
-  public void Deconstruct(out OAuthTokens? tokens, out OAuthError? error) { tokens = Tokens; error = Error;  }
+  public void Deconstruct(out OAuthTokens? tokens, out OAuthError? error) { tokens = Tokens; error = Error; }
 }

@@ -16,10 +16,10 @@ partial class OpenIdConnectFuncs
     var contentType = GetHttpResponseContentType(response);
     var statusCode = GetHttpResponseStatusCode(response);
 
-    if (contentType is null) return FormatString(MissingContentType, statusCode);
+    if (contentType is null) return MissingContentType.Format(statusCode);
     if (IsJsonContentTypeHttpResponse(contentType)) return default;
     if (IsJwtContentTypeHttpResponse(contentType)) return default;
-    return FormatString(InvalidContentType, contentType, statusCode);
+    return InvalidContentType.Format(contentType, statusCode);
   }
 
   static string? ValidateUserInfoToken(
@@ -31,7 +31,7 @@ partial class OpenIdConnectFuncs
 
     if (IsEmptyString(userTokenSub)) return MissingUserInfoSubClaim;
     if (IsEmptyString(idTokenSub)) return MissingIdTokenSubClaim;
-    if (!EqualsStringOrdinal(idTokenSub, userTokenSub)) return FormatString(DifferentIdTokenUserTokenSubClaims, idTokenSub, userTokenSub!);
+    if (!EqualsStringOrdinal(idTokenSub, userTokenSub)) return DifferentIdTokenUserTokenSubClaims.Format(idTokenSub, userTokenSub!);
     return default;
   }
 }

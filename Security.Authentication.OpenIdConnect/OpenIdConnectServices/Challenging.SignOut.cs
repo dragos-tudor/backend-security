@@ -14,11 +14,11 @@ partial class OpenIdConnectFuncs
     ILogger logger)
   where TOptions : OpenIdConnectOptions
   {
-    var challangeRequest = await GetHttpRequestParams(context.Request, context.RequestAborted);
-    if (challangeRequest is null) return false;
+    var challengeRequest = await GetHttpRequestParams(context.Request, context.RequestAborted);
+    if (challengeRequest is null) return false;
 
     var principal = GetContextUser(context);
-    var challengeData = ToOpenIdConnectData(challangeRequest);
+    var challengeData = ToOpenIdConnectData(challengeRequest);
     var validationMsg = ValidateSignoutRequest(challengeData, oidcOptions, principal);
     if (validationMsg is not null) {
       LogSkipSignOutChallenge(logger, oidcOptions.SchemeName, validationMsg, context.TraceIdentifier);

@@ -1,5 +1,4 @@
 
-using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.OAuth;
