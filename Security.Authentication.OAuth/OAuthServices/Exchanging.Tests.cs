@@ -9,8 +9,8 @@ using static Security.Testing.Funcs;
 
 namespace Security.Authentication.OAuth;
 
-partial class OAuthTests {
-
+partial class OAuthTests
+{
   [TestMethod]
   public async Task Token_endpoint_request_with_code__exchange_code_for_tokens__endpoint_receive_code()
   {
@@ -88,7 +88,7 @@ partial class OAuthTests {
     var authProps = new AuthenticationProperties();
     var (_, error) = await ExchangeCodeForTokens(string.Empty, authProps, oauthOptions, httpClient);
 
-    Assert.AreEqual(error!, AccessTokenNotFound);
+    Assert.AreEqual(error?.ErrorType!, AccessTokenNotFound);
   }
 
 
@@ -101,7 +101,7 @@ partial class OAuthTests {
     var authProps = new AuthenticationProperties();
     var (_, error) = await ExchangeCodeForTokens(string.Empty, authProps, oauthOptions, httpClient);
 
-    Assert.AreEqual(error, "abc");
+    Assert.AreEqual(error?.ErrorType, "abc");
   }
 
   [TestMethod]

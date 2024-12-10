@@ -1,17 +1,14 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
+
 
 namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  public static PostSignOutResult PostSignOut<TOptions>(
+  public static PostSignOutResult PostSignOut(
     HttpContext context,
-    TOptions oidcOptions,
     PropertiesDataFormat authPropsProtector)
-  where TOptions : OpenIdConnectOptions
   {
-    if (IsOAuthError(context.Request)) return GetOAuthErrorType(context.Request);
+    if (IsOAuthError(context.Request)) return GetOAuthError(context.Request);
 
     var signoutResponse = GetHttpRequestQueryParams(context.Request);
     var signoutData = ToOpenIdConnectData(signoutResponse);

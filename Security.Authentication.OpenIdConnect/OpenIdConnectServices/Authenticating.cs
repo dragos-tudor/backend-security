@@ -21,21 +21,21 @@ partial class OpenIdConnectFuncs
   where TOptions: OpenIdConnectOptions
   {
     var (authProps, code, authError) = await postAuthorize(context, oidcOptions, validationOptions, authPropsProtector);
-    if (authError is not null) return Fail(authError);
+    if (authError is not null) return Fail(ToOAuthErrorQuery(authError));
     LogPostAuthorize(logger, oidcOptions.SchemeName, context.TraceIdentifier);
 
     var (tokens, idToken, tokenError) = await exchangeCodeForTokens(code, authProps, oidcOptions, validationOptions, httpClient, context.RequestAborted);
-    if (tokenError is not null) return Fail(tokenError);
+    if (tokenError is not null) return Fail(ToOAuthErrorQuery(tokenError));
     LogExchangeCodeForTokens(logger, oidcOptions.SchemeName, context.TraceIdentifier);
 
     if (ShouldCleanCodeChallenge(oidcOptions)) RemoveAuthPropsCodeVerifier(authProps);
     if (ShouldSaveTokens(oidcOptions)) SetAuthPropsTokens(authProps, tokens!);
     if (ShouldUseTokenLifetime(oidcOptions)) SetAuthPropsTokenLifetime(authProps, idToken!);
 
-    var userClaims = Array.Empty<Claim>();
+    IEnumerable<Claim> userClaims = Array.Empty<Claim>();
     if (ShouldGetUserInfoClaims(oidcOptions)) {
-      var (_userClaims, userInfoError) = await accessUserInfo(tokens!.AccessToken!, oidcOptions, validationOptions, idToken, httpClient, context.RequestAborted);
-      if (userInfoError is not null) return Fail(userInfoError);
+      var (_userClaims, userInfoError) = await accessUserInfo(tokens!.AccessToken!, oidcOptions, idToken, httpClient, context.RequestAborted);
+      if (userInfoError is not null) return Fail(ToOAuthErrorQuery(userInfoError));
 
       userClaims = _userClaims;
       LogAccessUserInfo(logger, oidcOptions.SchemeName, context.TraceIdentifier);

@@ -7,7 +7,7 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
-  public static IDictionary<string, string> ToJsonDictionary(JsonElement elem)
+  public static IDictionary<string, string> ToJsonPropsDictionary(JsonElement elem)
   {
     var dictionary = new Dictionary<string, string>();
     if (!IsJsonObjectType(elem)) return dictionary;

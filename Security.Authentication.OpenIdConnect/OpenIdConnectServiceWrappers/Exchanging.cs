@@ -1,9 +1,4 @@
 
-using System.Threading;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-
 namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
@@ -13,7 +8,7 @@ partial class OpenIdConnectFuncs
     string code,
     AuthenticationProperties authProps,
     CancellationToken cancellationToken = default)
-  where TOptions: OpenIdConnectOptions =>
+  where TOptions : OpenIdConnectOptions =>
     ExchangeCodeForTokens(
       code,
       authProps,

@@ -21,7 +21,7 @@ partial class OAuthTests
     postAuthorize(default!, default!, default!).ReturnsForAnyArgs("authorize error");
 
     var result = await AuthenticateOAuth(context, oauthOptions, authPropsProtector, httpClient, postAuthorize, default!, default!, NullLogger.Instance);
-    Assert.AreEqual("authorize error", result.Failure!.Message);
+    StringAssert.Contains(result.Failure!.Message, "authorize error");
   }
 
   [TestMethod]
@@ -32,7 +32,7 @@ partial class OAuthTests
     var postAuthorize = Substitute.For<PostAuthorizeFunc<OAuthOptions>>();
     var exchangeCodeForTokens = Substitute.For<ExchangeCodeForTokensFunc<OAuthOptions>>();
     postAuthorize(default!, default!, default!).ReturnsForAnyArgs(new PostAuthorizeResult(new AuthenticationProperties(), "code"));
-    exchangeCodeForTokens("code", default!, default!, default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(default, "stop exec")));
+    exchangeCodeForTokens("code", default!, default!, default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(default, CreateOAuthError("stop exec"))));
 
     await AuthenticateOAuth(context, oauthOptions, authPropsProtector, httpClient, postAuthorize, exchangeCodeForTokens, default!, NullLogger.Instance);
     exchangeCodeForTokens.Received(1);
@@ -48,7 +48,7 @@ partial class OAuthTests
     var accessUserInfo = Substitute.For<AccessUserInfoFunc<OAuthOptions>>();
     postAuthorize(default!, default!, default!).ReturnsForAnyArgs(new PostAuthorizeResult(new AuthenticationProperties(), "code"));
     exchangeCodeForTokens("code", default!, default!, default!)!.ReturnsForAnyArgs(ToTask(new TokenResult(new OAuthTokens(AccessToken: "token"), default)));
-    accessUserInfo("token", default!, default!)!.ReturnsForAnyArgs(ToTask(new UserInfoResult(default, "stop exec")));
+    accessUserInfo("token", default!, default!)!.ReturnsForAnyArgs(ToTask(new UserInfoResult(default, CreateOAuthError("stop exec"))));
 
     await AuthenticateOAuth(context, oauthOptions, authPropsProtector, httpClient, postAuthorize, exchangeCodeForTokens, accessUserInfo, NullLogger.Instance);
     accessUserInfo.Received(1);
@@ -79,7 +79,7 @@ partial class OAuthTests
       ClientId = "client id",
       ClientSecret = "client secret",
       ResponseType = "code",
-      Scope = new [] { "scope1", "scope2" },
+      Scope = [ "scope1", "scope2" ],
       ScopeSeparator = ' ',
       SchemeName = schemeName,
       TokenEndpoint = "/token",

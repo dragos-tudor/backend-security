@@ -1,15 +1,18 @@
 
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Components.Forms;
 
 namespace Security.Authentication.OAuth;
 
-public record class UserInfoResult(Claim[]? Claims, string? Error = default)
+public record class UserInfoResult(IEnumerable<Claim>? Claims, OAuthError? Error = default)
 {
-  public static implicit operator UserInfoResult(string error) => new(default, error);
+  public static implicit operator UserInfoResult(OAuthError error) => new(default, error);
 
-  public static implicit operator UserInfoResult(Claim[] claims) => new(claims);
+  public static implicit operator UserInfoResult(string error) => new(default, CreateOAuthError(error));
 
-  public void Deconstruct(out Claim[]? claims, out string? error) { claims = Claims; error = Error;  }
+  public void Deconstruct(out IEnumerable<Claim>? claims, out OAuthError? error) { claims = Claims; error = Error;  }
+}
+
+partial class OAuthFuncs
+{
+  static UserInfoResult CreateUserInfoResult(IEnumerable<Claim>? claims) => new(claims);
 }

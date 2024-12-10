@@ -1,6 +1,5 @@
 
 using System.Net.Http;
-using System.Threading;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.OAuth;
@@ -13,7 +12,7 @@ partial class OAuthFuncs
     TOptions oauthOptions,
     HttpClient httpClient,
     CancellationToken cancellationToken = default)
-  where TOptions: OAuthOptions
+  where TOptions : OAuthOptions
   {
     var tokenParams = BuildTokenParams(authProps, oauthOptions, code);
     using var request = BuildTokenRequest(oauthOptions, tokenParams, httpClient.DefaultRequestVersion);

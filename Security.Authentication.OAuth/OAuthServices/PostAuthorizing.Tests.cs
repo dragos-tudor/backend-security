@@ -54,7 +54,7 @@ partial class OAuthTests
     SetAuthPropsCorrelationId(authProps, "correlation.id");
 
     var (_, _, error) = PostAuthorize(context, oauthOptions, authPropsProtector);
-    Assert.AreEqual(error, UnprotectStateFailed);
+    Assert.AreEqual(error?.ErrorType, UnprotectStateFailed);
   }
 
   [TestMethod]
@@ -68,7 +68,7 @@ partial class OAuthTests
     SetAuthorizationQueryParams(context, ProtectAuthProps(authProps, authPropsProtector));
 
     var (_, _, error) = PostAuthorize(context, oauthOptions, authPropsProtector);
-    StringAssert.Contains(error, "correlation cookie", StringComparison.Ordinal);
+    StringAssert.Contains(error?.ErrorType, "correlation cookie", StringComparison.Ordinal);
   }
 
   [TestMethod]
@@ -79,7 +79,7 @@ partial class OAuthTests
     var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     var (_, _, error) = PostAuthorize(context, oauthOptions, authPropsProtector);
 
-    StringAssert.Contains(error, AuthorizationCodeNotFound, StringComparison.Ordinal);
+    StringAssert.Contains(error?.ErrorType, AuthorizationCodeNotFound, StringComparison.Ordinal);
   }
 
   static void SetAuthorizationCorrelationCookie(HttpContext context, string correlationId) =>

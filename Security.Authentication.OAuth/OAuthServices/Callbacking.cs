@@ -15,7 +15,7 @@ partial class OAuthFuncs
     var authError = GetAuthenticateResultError(authResult);
 
     if (authError is not null) {
-      var redirectUriWithError = GetOAuthRedirectUriWithError(authResult.Properties, authError);
+      var redirectUriWithError = GetOAuthRedirectUri(authResult.Properties, authError);
       return SetHttpResponseRedirect(context.Response, redirectUriWithError);
     }
 

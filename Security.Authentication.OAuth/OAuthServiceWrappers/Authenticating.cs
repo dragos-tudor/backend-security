@@ -12,7 +12,7 @@ partial class OAuthFuncs
     ExchangeCodeForTokensFunc<TOptions> exchangeCodeForTokens,
     AccessUserInfoFunc<TOptions> accessUserInfo,
     ILogger logger)
-  where TOptions: OAuthOptions =>
+  where TOptions : OAuthOptions =>
     LogAuthentication(
       logger,
       await AuthenticateOAuth(

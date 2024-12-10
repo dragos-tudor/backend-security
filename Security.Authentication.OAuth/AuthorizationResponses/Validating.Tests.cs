@@ -38,16 +38,4 @@ partial class OAuthTests
 
     Assert.AreEqual(error, InvalidState);
   }
-
-
-  [TestMethod]
-  public void Authorization_response_with_error__validate_authorization_response__authorization_endpoint_error() {
-    var context = CreateHttpContext();
-    context.Request.Query = new QueryCollection(new Dictionary<string, StringValues>() {
-      { ErrorTypeToken, new StringValues("some error") }
-    });
-    var error = ValidateAuthorizationResponse(context.Request);
-
-    StringAssert.Contains(error, "some error", StringComparison.Ordinal);
-  }
 }

@@ -13,7 +13,7 @@ partial class OAuthFuncs
     DateTimeOffset currentUtc,
     PropertiesDataFormat authPropsProtector,
     ILogger logger)
-  where TOptions: OAuthOptions
+  where TOptions : OAuthOptions
   {
     var correlationId = GenerateCorrelationId();
     UseCorrelationCookie(context, oauthOptions, correlationId, currentUtc);

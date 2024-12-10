@@ -15,6 +15,8 @@ partial class OpenIdConnectFuncs
 
   static string? GetOidcDataIdToken(OidcData oidcData) => GetOidcDataValue(oidcData, OidcParamNames.IdToken);
 
+  static string? GetOidcDataRefreshToken(OidcData oidcData) => GetOidcDataValue(oidcData, OidcParamNames.RefreshToken);
+
   static string? GetOidcDataIss(OidcData oidcData) => GetOidcDataValue(oidcData, OidcParamNames.Iss);
 
   static string? GetOidcDataTokenType(OidcData oidcData) => GetOidcDataValue(oidcData, OidcParamNames.TokenType);

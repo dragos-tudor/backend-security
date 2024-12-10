@@ -10,8 +10,10 @@ partial class OAuthFuncs
     HttpContext context,
     TOptions oauthOptions,
     PropertiesDataFormat authPropsProtector)
-  where TOptions: OAuthOptions
+  where TOptions : OAuthOptions
   {
+    if (IsOAuthError(context.Request)) return GetOAuthError(context.Request);
+
     var authError = ValidateAuthorizationResponse(context.Request);
     if (authError is not null) return authError;
 
@@ -27,6 +29,6 @@ partial class OAuthFuncs
     RemoveAuthPropsCorrelationId(authProps);
 
     var code = GetAuthorizationCode(context.Request);
-    return new (authProps, code);
+    return new(authProps, code);
   }
 }

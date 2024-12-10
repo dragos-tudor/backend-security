@@ -1,13 +1,17 @@
 
-using Microsoft.AspNetCore.Authentication;
 
 namespace Security.Authentication.OpenIdConnect;
 
-public record class UserInfoResult(Claim[]? Claims, string? Error)
+public record class UserInfoResult(IEnumerable<Claim>? Claims, OAuthError? Error)
 {
-  public static implicit operator UserInfoResult(string error) => new(default, error);
+  public static implicit operator UserInfoResult(OAuthError error) => new(default, error);
 
-  public static implicit operator UserInfoResult(Claim[]? claims) => new(claims, default);
+  public static implicit operator UserInfoResult(string error) => new(default, CreateOAuthError(error));
 
-  public void Deconstruct(out Claim[]? claims, out string? error) { claims = Claims; error = Error;  }
+  public void Deconstruct(out IEnumerable<Claim>? claims, out OAuthError? error) { claims = Claims; error = Error;  }
+}
+
+partial class OpenIdConnectFuncs
+{
+  static UserInfoResult CreateUserInfoResult(IEnumerable<Claim> claims) => new(claims, default);
 }

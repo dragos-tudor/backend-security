@@ -50,7 +50,7 @@ partial class OAuthTests
     var oauthOptions = CreateOAuthOptions();
     var (_, error) = await AccessUserInfo(string.Empty, oauthOptions, httpClient);
 
-    Assert.AreEqual(error, "abc");
+    Assert.AreEqual(error?.ErrorType, "abc");
   }
 
 

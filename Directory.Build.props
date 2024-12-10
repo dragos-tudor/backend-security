@@ -11,7 +11,7 @@
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 
     <!-- analysing -->
-    <AnalysisMode>None</AnalysisMode>
+    <AnalysisMode>All</AnalysisMode>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <!-- <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild> -->

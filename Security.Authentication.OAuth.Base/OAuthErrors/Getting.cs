@@ -14,15 +14,20 @@ partial class OAuthBaseFuncs
   public const string ErrorDescriptionToken = "error_description";
   public const string ErrorUriToken = "error_uri";
 
-  static string GetOAuthErrorQuery(string error) => $"{ErrorTypeToken}={error}";
+  static string? GetOAuthErrorDescription(HttpRequest request) => request.Query[ErrorDescriptionToken];
 
-  public static string? GetOAuthErrorDescription(HttpRequest request) => request.Query[ErrorDescriptionToken];
+  static string GetOAuthErrorType(HttpRequest request) => request.Query[ErrorTypeToken]!;
 
-  public static string GetOAuthErrorType(HttpRequest request) => request.Query[ErrorTypeToken]!;
+  static string? GetOAuthErrorUri(HttpRequest request) => request.Query[ErrorUriToken];
 
-  public static string GetOAuthErrorType(JsonElement data) => data.GetString(ErrorTypeToken)!;
+  static string? GetOAuthErrorDescription(JsonElement data) => data.GetString(ErrorDescriptionToken)!;
 
-  public static string? GetOAuthErrorUri(HttpRequest request) => request.Query[ErrorUriToken];
+  static string GetOAuthErrorType(JsonElement data) => data.GetString(ErrorTypeToken)!;
 
-  public static string GetOAuthRedirectUriWithError(AuthenticationProperties authProps, string error) => $"{GetOAuthRedirectUri(authProps)}?{GetOAuthErrorQuery(error)}";
+  static string? GetOAuthErrorUri(JsonElement data) => data.GetString(ErrorUriToken)!;
+
+
+  public static OAuthError GetOAuthError(HttpRequest request) => CreateOAuthError(GetOAuthErrorType(request), GetOAuthErrorDescription(request), GetOAuthErrorUri(request));
+
+  public static OAuthError GetOAuthError(JsonElement data) => CreateOAuthError(GetOAuthErrorType(data), GetOAuthErrorDescription(data), GetOAuthErrorUri(data));
 }

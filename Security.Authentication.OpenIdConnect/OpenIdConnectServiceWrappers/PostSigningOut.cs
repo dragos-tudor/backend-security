@@ -1,6 +1,4 @@
 
-using Microsoft.AspNetCore.Http;
-
 namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
@@ -10,6 +8,5 @@ partial class OpenIdConnectFuncs
   where TOptions : OpenIdConnectOptions =>
     PostSignOut(
       context,
-      ResolveRequiredService<TOptions>(context),
       ResolvePropertiesDataFormat(context));
 }

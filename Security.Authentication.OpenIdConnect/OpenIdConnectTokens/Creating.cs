@@ -1,7 +1,4 @@
 
-using System.Text.Json;
-using Microsoft.AspNetCore.Authentication;
-
 namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
@@ -10,6 +7,7 @@ partial class OpenIdConnectFuncs
     new(
       GetOidcDataIdToken(oidcData),
       GetOidcDataAccessToken(oidcData),
+      GetOidcDataRefreshToken(oidcData),
       GetOidcDataTokenType(oidcData),
       GetOidcDataExpiresIn(oidcData)
     );

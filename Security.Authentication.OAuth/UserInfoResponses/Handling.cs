@@ -1,6 +1,5 @@
 
 using System.Net.Http;
-using System.Threading;
 
 namespace Security.Authentication.OAuth;
 
@@ -11,14 +10,11 @@ partial class OAuthFuncs
     OAuthOptions oauthOptions,
     CancellationToken cancellationToken = default)
   {
-    using var userResponse = await ReadHttpResponseJsonContent(response, cancellationToken);
-    var userData = userResponse.RootElement;
+    if (!IsSuccessHttpResponse(response)) return await ReadJsonOAuthError(response, cancellationToken);
 
-    if (!IsSuccessHttpResponse(response)) return GetOAuthErrorType(userData);
-
-    var rawClaims = ToJsonDictionary(userData);
+    var rawClaims = await ReadHttpResponseJsonProps(response, cancellationToken);
     var claims = ApplyClaimMappers(oauthOptions.ClaimMappers, rawClaims, GetClaimsIssuer(oauthOptions));
 
-    return claims.ToArray();
+    return CreateUserInfoResult(claims);
   }
 }

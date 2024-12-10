@@ -1,7 +1,4 @@
 
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-
 namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
@@ -17,9 +14,9 @@ partial class OpenIdConnectFuncs
   {
     var (authProps, signoutError) = postSignOut(context, oidcOptions, authPropsProtector);
     if (signoutError is not null) {
-      LogSignedOutWithFailure(logger, oidcOptions.SchemeName, signoutError, context.TraceIdentifier);
+      LogSignedOutWithFailure(logger, oidcOptions.SchemeName, ToOAuthErrorString(signoutError), context.TraceIdentifier);
 
-      var redirectUriWithError = GetOAuthRedirectUriWithError(CreateAuthProps(), signoutError);
+      var redirectUriWithError = GetOAuthRedirectUri(CreateAuthProps(), ToOAuthErrorQuery(signoutError));
       return SetHttpResponseRedirect(context.Response, redirectUriWithError);
     }
 

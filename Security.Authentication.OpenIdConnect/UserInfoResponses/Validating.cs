@@ -17,29 +17,21 @@ partial class OpenIdConnectFuncs
     var statusCode = GetHttpResponseStatusCode(response);
 
     if (contentType is null) return FormatString(MissingContentType, statusCode);
-    if (!IsJsonContentTypeHttpResponse(contentType) &&
-        !IsJwtContentTypeHttpResponse(contentType)) return FormatString(InvalidContentType, contentType, statusCode);
-
-    return default;
+    if (IsJsonContentTypeHttpResponse(contentType)) return default;
+    if (IsJwtContentTypeHttpResponse(contentType)) return default;
+    return FormatString(InvalidContentType, contentType, statusCode);
   }
 
-  static string? ValidateUserInfoResponse(
-    OpenIdConnectValidationOptions validationOptions,
+  static string? ValidateUserInfoToken(
     JwtSecurityToken idToken,
     JwtPayload userToken)
   {
-    var userTokenSub = GetJwtTokenPayloadSub(userToken);
     var idTokenSub = GetJwtTokenPayloadSub(idToken);
+    var userTokenSub = GetJwtTokenPayloadSub(userToken);
 
-    if (IsEmptyString(userTokenSub))
-      return MissingUserInfoSubClaim;
-
-    if (IsEmptyString(idTokenSub))
-      return MissingIdTokenSubClaim;
-
-    if (!string.Equals(idTokenSub, userTokenSub))
-      return FormatString(DifferentIdTokenUserTokenSubClaims, idTokenSub, userTokenSub!);
-
+    if (IsEmptyString(userTokenSub)) return MissingUserInfoSubClaim;
+    if (IsEmptyString(idTokenSub)) return MissingIdTokenSubClaim;
+    if (!EqualsStringOrdinal(idTokenSub, userTokenSub)) return FormatString(DifferentIdTokenUserTokenSubClaims, idTokenSub, userTokenSub!);
     return default;
   }
 }

@@ -8,8 +8,8 @@ using static Security.Testing.Funcs;
 
 namespace Security.Authentication.OAuth;
 
-partial class OAuthTests {
-
+partial class OAuthTests
+{
   [TestMethod]
   public void Authentication_options_with_authorization_endpoint__challenge__authorization_path_is_authorization_endpoint() {
     var context = CreateHttpContext();

@@ -1,9 +1,4 @@
 
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-
 namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
@@ -20,7 +15,7 @@ partial class OpenIdConnectFuncs
     PropertiesDataFormat authPropsProtector)
   where TOptions : OpenIdConnectOptions
   {
-    if (IsOAuthError(context.Request)) return GetOAuthErrorType(context.Request);
+    if (IsOAuthError(context.Request)) return GetOAuthError(context.Request);
 
     var authResponse = await GetHttpRequestParams(context.Request, context.RequestAborted);
     if (authResponse is null) return InvalidAuthorizationResponse;
