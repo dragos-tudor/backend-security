@@ -29,6 +29,6 @@ partial class OAuthFuncs
     RemoveAuthPropsCorrelationId(authProps);
 
     var code = GetAuthorizationCode(context.Request);
-    return new(authProps, code);
+    return (authProps, code);
   }
 }

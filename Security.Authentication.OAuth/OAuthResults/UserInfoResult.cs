@@ -1,6 +1,4 @@
 
-using System.Collections.Generic;
-
 namespace Security.Authentication.OAuth;
 
 public record class UserInfoResult(IEnumerable<Claim>? Claims, OAuthError? Error = default)
@@ -14,5 +12,5 @@ public record class UserInfoResult(IEnumerable<Claim>? Claims, OAuthError? Error
 
 partial class OAuthFuncs
 {
-  static UserInfoResult CreateUserInfoResult(IEnumerable<Claim>? claims) => new(claims);
+  internal static UserInfoResult CreateUserInfoResult(IEnumerable<Claim>? claims) => new(claims);
 }
