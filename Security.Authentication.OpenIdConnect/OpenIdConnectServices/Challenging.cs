@@ -25,7 +25,7 @@ partial class OpenIdConnectFuncs
 
     var state = authPropsProtector.Protect(authProps);
     SetAuthorizationOidcParams(oidcParams, authProps, oidcOptions, state, callbackUrl);
-    SetOAuthParams(oidcParams, oidcOptions.AdditionalAuthorizationParameters);
+    SetAdditionalOAuthParams(oidcParams, oidcOptions.AdditionalAuthorizationParameters);
 
     if (IsRedirectGetAuthMethod(oidcOptions))
       SetHttpResponseRedirect(context.Response, BuildHttpRequestUri(oidcOptions.AuthorizationEndpoint, oidcParams!));

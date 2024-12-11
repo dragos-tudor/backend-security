@@ -35,7 +35,7 @@ partial class OpenIdConnectFuncs
   {
     SetAuthPropsRedirectUri(authProps, redirectUri);
     SetAuthPropsItem(authProps, OidcDefaults.RedirectUriForCodeProperties, callbackUri);
-    SetAuthPropsItem(authProps, OidcDefaults.UserStateProperties, state); //TODO: resolve user state
+    SetAuthPropsItem(authProps, OidcDefaults.UserStateProperties, state!); //TODO: resolve user state
     return authProps;
   }
 }

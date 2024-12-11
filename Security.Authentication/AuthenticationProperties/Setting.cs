@@ -5,7 +5,7 @@ namespace Security.Authentication;
 
 partial class AuthenticationFuncs
 {
-  public static string? SetAuthPropsItem(AuthenticationProperties authProps, string key, string? value) { authProps.SetString(key, value); return value; }
+  public static string SetAuthPropsItem(AuthenticationProperties authProps, string key, string value) { authProps.SetString(key, value); return value; }
 
   public static T SetAuthPropsParam<T>(AuthenticationProperties authProps, string key, T value) { authProps.SetParameter(key, value); return value; }
 

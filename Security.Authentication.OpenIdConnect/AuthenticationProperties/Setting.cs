@@ -9,7 +9,7 @@ partial class OpenIdConnectFuncs
     AuthenticationProperties authProps,
     OidcTokens tokens)
   {
-    if (IsNotEmptyString(tokens.IdToken)) SetAuthPropsItem(authProps, OidcParamNames.IdToken, tokens.IdToken);
+    if (IsNotEmptyString(tokens.IdToken)) SetAuthPropsItem(authProps, OidcParamNames.IdToken, tokens.IdToken!);
     return OAuthBaseFuncs.SetAuthPropsTokens(authProps, tokens);
   }
 
@@ -25,10 +25,10 @@ partial class OpenIdConnectFuncs
   static AuthenticationProperties SetAuthPropsSession(
     AuthenticationProperties authProps,
     OpenIdConnectOptions oidcOptions,
-    OidcData oidcData)
+    string? state)
   {
-    if (GetOidcDataSessionState(oidcData) is string sessionState) SetAuthPropsItem(authProps, OpenIdConnectSessionProperties.SessionState, sessionState);
-    if (IsNotEmptyString(oidcOptions.CheckSessionIframe)) SetAuthPropsItem(authProps, OpenIdConnectSessionProperties.CheckSessionIFrame, oidcOptions.CheckSessionIframe);
+    if (IsNotEmptyString(state)) SetAuthPropsItem(authProps, OpenIdConnectSessionProperties.SessionState, state!);
+    if (IsNotEmptyString(oidcOptions.CheckSessionIframe)) SetAuthPropsItem(authProps, OpenIdConnectSessionProperties.CheckSessionIFrame, oidcOptions.CheckSessionIframe!);
     return authProps;
   }
 }

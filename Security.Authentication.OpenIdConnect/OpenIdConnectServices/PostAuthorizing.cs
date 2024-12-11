@@ -39,9 +39,8 @@ partial class OpenIdConnectFuncs
     RemoveAuthPropsCorrelationId(authProps);
 
     var userState = GetAuthPropsUserState(authProps);
-    SetOidcDataState(authData, userState!);
-    SetAuthPropsSession(authProps, oidcOptions, authData);
+    SetAuthPropsSession(authProps, oidcOptions, userState);
 
-    return new (authProps, code);
+    return new(authProps, code);
   }
 }

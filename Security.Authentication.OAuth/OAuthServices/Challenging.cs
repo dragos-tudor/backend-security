@@ -22,13 +22,13 @@ partial class OAuthFuncs
     var oauthParams = CreateOAuthParams();
     if (ShouldUseCodeChallenge(oauthOptions)) UseCodeChallenge(oauthParams, authProps, GenerateCodeVerifier());
 
-    var redirectUri = GetHttpRequestQueryValue(context.Request, oauthOptions.ReturnUrlParameter)!; // TODO: investigate security risk for absolute url
+    var redirectUri = GetHttpRequestQueryValue(context.Request, oauthOptions.ReturnUrlParameter)!; // TODO: investigate security risk for relative url
     if (!ExistsAuthPropsRedirectUri(authProps)) SetAuthPropsRedirectUri(authProps, redirectUri);
 
-    var callbackUrl = GetAbsoluteUrl(context.Request, oauthOptions.CallbackPath);
     var state = ProtectAuthProps(authProps, authPropsProtector);
+    var callbackUrl = GetAbsoluteUrl(context.Request, oauthOptions.CallbackPath);
     SetAuthorizationOAuthParams(oauthParams, oauthOptions, state, callbackUrl);
-    SetOAuthParams(oauthParams, oauthOptions.AdditionalAuthorizationParameters);
+    SetAdditionalOAuthParams(oauthParams, oauthOptions.AdditionalAuthorizationParameters);
 
     var authUri = BuildHttpRequestUri(oauthOptions.AuthorizationEndpoint, oauthParams!);
     SetHttpResponseRedirect(context.Response, authUri);
