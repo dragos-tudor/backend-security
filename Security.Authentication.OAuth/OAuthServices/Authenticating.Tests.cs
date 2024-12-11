@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Time.Testing;
 using NSubstitute;
+using Security.Testing;
 using System.Net.Http;
 using static Security.Testing.Funcs;
 
@@ -32,6 +33,41 @@ partial class OAuthTests
 
     var result = await AuthenticateOAuth(context, postAuthorize, exchangeCodeForTokens, default!, NullLogger.Instance);
     StringAssert.Contains(result.Failure?.Message, "exchange receive", StringComparison.Ordinal);
+  }
+
+  [TestMethod]
+  public async Task Correlation_cookie__authenticate__correlation_cookie_deleted()
+  {
+    var context = CreateAuthenticationHttpContext();
+    var authProps = new AuthenticationProperties();
+    var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
+    SetAuthPropsCorrelationId(authProps, "correlation.id");
+    SetAuthorizationCorrelationCookie(context, "correlation.id");
+    SetAuthorizationQueryParams(context, ProtectAuthProps(authProps, authPropsProtector));
+
+    PostAuthorizeFunc<OAuthOptions> postAuthorize = (_, _, _) => (authProps, "code");
+    ExchangeCodeForTokensFunc<OAuthOptions> exchangeCodeForTokens = async (_, _, _, _, _) => await ToTask("no go");
+
+    var result = await AuthenticateOAuth(context, postAuthorize, exchangeCodeForTokens, default!, NullLogger.Instance);
+    var correlationCookie = GetResponseCookie(context.Response, GetCorrelationCookieName("correlation.id"));
+    StringAssert.Contains(correlationCookie, "expires=Thu, 01 Jan 1970", StringComparison.Ordinal);
+  }
+
+  [TestMethod]
+  public async Task Correlation_cookie__authenticate__correlation_id_deleted()
+  {
+    var context = CreateAuthenticationHttpContext();
+    var authProps = new AuthenticationProperties();
+    var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
+    SetAuthPropsCorrelationId(authProps, "correlation.id");
+    SetAuthorizationCorrelationCookie(context, "correlation.id");
+    SetAuthorizationQueryParams(context, ProtectAuthProps(authProps, authPropsProtector));
+
+    PostAuthorizeFunc<OAuthOptions> postAuthorize = (_, _, _) => (authProps, "code");
+    ExchangeCodeForTokensFunc<OAuthOptions> exchangeCodeForTokens = async (_, _, _, _, _) => await ToTask("no go");
+
+    var result = await AuthenticateOAuth(context, postAuthorize, exchangeCodeForTokens, default!, NullLogger.Instance);
+    Assert.IsNull(GetAuthPropsCorrelationId(authProps));
   }
 
   [TestMethod]
@@ -87,6 +123,9 @@ partial class OAuthTests
       .BuildServiceProvider();
     return new DefaultHttpContext() { RequestServices = services };
   }
+
+  static void SetAuthorizationCorrelationCookie(HttpContext context, string correlationId) =>
+    SetRequestCookies(context.Request, new RequestCookieCollection().AddCookie(GetCorrelationCookieName(correlationId), "N"));
 
   static Task<T> ToTask<T>(T value) => Task.FromResult(value);
 

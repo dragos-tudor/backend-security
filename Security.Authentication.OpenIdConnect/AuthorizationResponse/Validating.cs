@@ -5,8 +5,8 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  internal const string MissingAuthorizationCode = "Code received from Authorization Endpoint is null, there is no 'code' to validate.";
-  internal const string MissingAuthorizationState = "RequireState is '{0}' but the Authorization Endpoint response state is null.";
+  internal const string MissingAuthorizationCode = "Missing authorization code from Authorization Endpoint.";
+  internal const string MissingAuthorizationState = "Missing state from Authorization Endpoint [RequireState is '{0}'].";
 
   public static string? ValidateAuthorizationResponse(
     OpenIdConnectValidationOptions validationOptions,

@@ -1,6 +1,4 @@
 using System.Net.Http;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
 using static Microsoft.AspNetCore.Authentication.AuthenticateResult;
 #nullable disable
 
@@ -23,6 +21,10 @@ partial class OpenIdConnectFuncs
     var (authProps, code, authError) = await postAuthorize(context, oidcOptions, validationOptions, authPropsProtector);
     if (authError is not null) return Fail(ToOAuthErrorQuery(authError));
     LogPostAuthorize(logger, oidcOptions.SchemeName, context.TraceIdentifier);
+
+    var correlationId = GetAuthPropsCorrelationId(authProps);
+    DeleteCorrelationCookie(context, oidcOptions, correlationId);
+    RemoveAuthPropsCorrelationId(authProps);
 
     var (tokens, idToken, tokenError) = await exchangeCodeForTokens(code, authProps, oidcOptions, validationOptions, httpClient, context.RequestAborted);
     if (tokenError is not null) return Fail(ToOAuthErrorQuery(tokenError));

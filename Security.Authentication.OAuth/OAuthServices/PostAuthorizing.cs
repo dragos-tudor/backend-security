@@ -24,10 +24,6 @@ partial class OAuthFuncs
     var correlationError = ValidateCorrelationCookie(context.Request, authProps);
     if (correlationError is not null) return correlationError;
 
-    var correlationId = GetAuthPropsCorrelationId(authProps);
-    DeleteCorrelationCookie(context, oauthOptions, correlationId);
-    RemoveAuthPropsCorrelationId(authProps);
-
     var code = GetAuthorizationCode(context.Request);
     return (authProps, code);
   }

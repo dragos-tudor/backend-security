@@ -3,9 +3,7 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  internal const string AuthorizationCodeNotFound = "oidc authorization code was not found";
   internal const string InvalidAuthorizationResponse = "invaliud oidc authorization response [no params]";
-  internal const string InvalidAuthorizationState = "oidc authorization state was missing or invalid";
   internal const string UnprotectAuthorizationStateFailed = "unprotect oidc authorization state failed";
 
   public static async Task<PostAuthorizeResult> PostAuthorize<TOptions>(
@@ -21,22 +19,16 @@ partial class OpenIdConnectFuncs
     if (authResponse is null) return InvalidAuthorizationResponse;
 
     var authData = ToOpenIdConnectData(authResponse);
+    var code = GetOidcDataAuthorizationCode(authData);
     var state = GetOidcDataState(authData);
-    if (state is null) return InvalidAuthorizationState;
+    var validationError = ValidateAuthorizationResponse(validationOptions, code, state);
+    if (validationError is not null) return validationError;
 
     var authProps = UnprotectAuthProps(state!, authPropsProtector);
     if (authProps is null) return UnprotectAuthorizationStateFailed;
 
-    var code = GetOidcDataAuthorizationCode(authData);
-    var validationError = ValidateAuthorizationResponse(validationOptions, code, state);
-    if (validationError is not null) return validationError;
-
     var correlationError = ValidateCorrelationCookie(context.Request, authProps);
     if (correlationError is not null) return correlationError;
-
-    var correlationId = GetAuthPropsCorrelationId(authProps);
-    DeleteCorrelationCookie(context, oidcOptions, correlationId);
-    RemoveAuthPropsCorrelationId(authProps);
 
     var userState = GetAuthPropsUserState(authProps);
     SetAuthPropsSession(authProps, oidcOptions, userState);

@@ -27,6 +27,10 @@ partial class OAuthFuncs
     if (authError is not null) return Fail(ToOAuthErrorQuery(authError));
     LogPostAuthorize(logger, schemeName, requestId);
 
+    var correlationId = GetAuthPropsCorrelationId(authProps!);
+    DeleteCorrelationCookie(context, oauthOptions, correlationId);
+    RemoveAuthPropsCorrelationId(authProps!);
+
     var (tokens, tokenError) = await exchangeCodeForTokens(code!, authProps!, oauthOptions, httpClient, cancellationToken);
     if (tokenError is not null) return Fail(ToOAuthErrorQuery(tokenError));
     LogExchangeCodeForTokens(logger, schemeName, requestId);
