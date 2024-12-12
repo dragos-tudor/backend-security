@@ -18,7 +18,7 @@ partial class OAuthFuncs
     var correlationId = GenerateCorrelationId();
     UseCorrelationCookie(context, oauthOptions, correlationId, currentUtc);
 
-    var codeVerifier = ShouldUseCodeChallenge(oauthOptions) ? GenerateCodeVerifier() : default;
+    var codeVerifier = ResolveCodeVerifier(oauthOptions);
     var redirectUri = GetAuthPropsRedirectUri(authProps) ?? GetHttpRequestQueryValue(context.Request, oauthOptions.ReturnUrlParameter);
     SetAuthorizationAuthProps(authProps, correlationId, codeVerifier, redirectUri);
 

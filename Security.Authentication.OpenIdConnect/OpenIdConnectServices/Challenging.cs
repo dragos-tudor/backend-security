@@ -16,7 +16,7 @@ partial class OpenIdConnectFuncs
     UseCorrelationCookie(context, oidcOptions, correlationId, currentUtc);
 
     var callbackUrl = GetAbsoluteUrl(context.Request, oidcOptions.CallbackPath);
-    var codeVerifier = ShouldUseCodeChallenge(oidcOptions) ? GenerateCodeVerifier() : default;
+    var codeVerifier = ResolveCodeVerifier(oidcOptions);
     var redirectUri = GetAuthPropsRedirectUri(authProps) ?? GetHttpRequestQueryValue(context.Request, oidcOptions.ReturnUrlParameter);
     SetAuthorizationAuthProps(authProps, callbackUrl, correlationId, codeVerifier, redirectUri);
 

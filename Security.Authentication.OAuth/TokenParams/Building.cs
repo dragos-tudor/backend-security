@@ -9,7 +9,8 @@ partial class OAuthFuncs
   {
     var oauthParams = CreateOAuthParams();
     var callbackUrl = GetAuthPropsCallbackUri(authProps);
-    var codeVerifier = ShouldUseCodeChallenge(oauthOptions) ? GetAuthPropsCodeVerifier(authProps) : default;
+    var codeVerifier = ResolveCodeVerifier(oauthOptions, authProps);
+
     return SetTokenParams(oauthParams, oauthOptions, authCode, callbackUrl!, codeVerifier);
   }
 }

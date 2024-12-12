@@ -7,7 +7,7 @@ partial class OpenIdConnectFuncs
   {
     var oidcParams = CreateOidcParams();
     var redirectUri = GetAuthPropsRedirectUriForCode(authProps);
-    var codeVerifier = ShouldUseCodeChallenge(oidcOptions) ? GetAuthPropsCodeVerifier(authProps) : default;
+    var codeVerifier = ResolveCodeVerifier(oidcOptions, authProps);
 
     return SetTokenParams(oidcParams, oidcOptions, authCode, codeVerifier, redirectUri!);
   }
