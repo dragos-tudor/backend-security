@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Security.Authentication.OpenIdConnect;
 
@@ -24,11 +21,13 @@ partial class OpenIdConnectFuncs
       LogSkipSignOutChallenge(logger, oidcOptions.SchemeName, validationMsg, context.TraceIdentifier);
       return false;
     }
-
     SetChallengeSignoutAuthProps(authProps, oidcOptions.CallbackSignOutPath);
+
+    var oidcParams = CreateOidcParams();
+    var idTokenHint = await GetOidcParamIdTokenHint(context, oidcOptions); // TODO: validate required id token hint
+    var redirectUri = GetAbsoluteUrl(context.Request, oidcOptions.CallbackSignOutPath);
     var state = ProtectAuthProps(authProps, authPropsProtector);
-    var idTokenHint = await GetOidcParamIdTokenHint(context, oidcOptions);
-    var oidcParams = SetChallengeSignoutParams(CreateOidcParams(), context, oidcOptions, state, idTokenHint!);
+    SetChallengeSignoutParams(oidcParams, oidcOptions, idTokenHint!, redirectUri, state);
 
     if (IsRedirectGetAuthMethod(oidcOptions))
       SetHttpResponseRedirect(context.Response, BuildHttpRequestUri(oidcOptions.SignOutPath!, oidcParams!));

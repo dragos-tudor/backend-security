@@ -14,18 +14,16 @@ partial class OpenIdConnectFuncs
   {
     var correlationId = GenerateCorrelationId();
     UseCorrelationCookie(context, oidcOptions, correlationId, currentUtc);
-    SetAuthPropsCorrelationId(authProps, correlationId);
-
-    var oidcParams = CreateOidcParams();
-    if (ShouldUseCodeChallenge(oidcOptions)) UseCodeChallenge(oidcParams, authProps, GenerateCodeVerifier());
 
     var callbackUrl = GetAbsoluteUrl(context.Request, oidcOptions.CallbackPath);
-    var redirectUri = GetHttpRequestQueryValue(context.Request, oidcOptions.ReturnUrlParameter)!;
-    SetAuthorizationAuthProps(authProps, redirectUri, callbackUrl);
+    var codeVerifier = ShouldUseCodeChallenge(oidcOptions) ? GenerateCodeVerifier() : default;
+    var redirectUri = GetAuthPropsRedirectUri(authProps) ?? GetHttpRequestQueryValue(context.Request, oidcOptions.ReturnUrlParameter);
+    SetAuthorizationAuthProps(authProps, callbackUrl, correlationId, codeVerifier, redirectUri);
 
-    var state = authPropsProtector.Protect(authProps);
-    SetAuthorizationOidcParams(oidcParams, authProps, oidcOptions, state, callbackUrl);
-    SetAdditionalOAuthParams(oidcParams, oidcOptions.AdditionalAuthorizationParameters);
+    var oidcParams = CreateOidcParams();
+    var maxAge = GetOidcParamMaxAge(authProps, oidcOptions);
+    var state = ProtectAuthProps(authProps, authPropsProtector);
+    SetAuthorizationOidcParams(oidcParams, oidcOptions, authProps, callbackUrl, codeVerifier, maxAge, state);
 
     if (IsRedirectGetAuthMethod(oidcOptions))
       SetHttpResponseRedirect(context.Response, BuildHttpRequestUri(oidcOptions.AuthorizationEndpoint, oidcParams!));

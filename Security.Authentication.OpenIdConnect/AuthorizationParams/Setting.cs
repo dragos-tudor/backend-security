@@ -5,37 +5,42 @@ partial class OpenIdConnectFuncs
 {
   static OidcParams SetAuthorizationOidcParams(
     OidcParams oidcParams,
-    AuthenticationProperties authProps,
     OpenIdConnectOptions oidcOptions,
-    string state,
-    string callbackUri)
+    AuthenticationProperties authProps,
+    string callbackUrl,
+    string? codeVerifier,
+    string? maxAge,
+    string state)
   {
     SetOAuthParam(oidcParams, OAuthParamNames.ClientId, oidcOptions.ClientId);
-    SetOAuthParam(oidcParams, OAuthParamNames.RedirectUri, callbackUri);
-
+    SetOAuthParam(oidcParams, OAuthParamNames.RedirectUri, callbackUrl);
     SetOAuthParam(oidcParams, OAuthParamNames.ResponseType, oidcOptions.ResponseType);
     SetOAuthParam(oidcParams, OidcParamNames.Resource, oidcOptions.Resource!);
     SetOAuthParam(oidcParams, OidcParamNames.ResponseMode, oidcOptions.ResponseMode);
-
     SetOAuthParam(oidcParams, OAuthParamNames.Prompt, GetOidcParamPrompt(authProps, oidcOptions));
     SetOAuthParam(oidcParams, OAuthParamNames.Scope, GetOidcParamScope(authProps, oidcOptions));
     SetOAuthParam(oidcParams, OAuthParamNames.State, state);
 
-    if (GetOidcParamMaxAge(authProps, oidcOptions) is string maxAge) SetOAuthParam(oidcParams, OidcParamNames.MaxAge, maxAge);
+    if (IsNotEmptyString(codeVerifier)) SetOAuthParamsCodeChallenge(oidcParams, codeVerifier!);
+    if (IsNotEmptyString(maxAge)) SetOAuthParam(oidcParams, OidcParamNames.MaxAge, maxAge!);
     if (!oidcOptions.DisableTelemetry) SetTelemetryOidcParams(oidcParams);
-
+    SetOAuthParams(oidcParams, oidcOptions.AdditionalAuthorizationParameters);
     return oidcParams;
   }
 
   static AuthenticationProperties SetAuthorizationAuthProps(
     AuthenticationProperties authProps,
-    string redirectUri,
-    string callbackUri,
+    string callbackUrl,
+    string correlationId,
+    string? codeVerifier,
+    string? redirectUri,
     string? state = default)
   {
-    SetAuthPropsRedirectUri(authProps, redirectUri);
-    SetAuthPropsItem(authProps, OidcDefaults.RedirectUriForCodeProperties, callbackUri);
-    SetAuthPropsItem(authProps, OidcDefaults.UserStateProperties, state!); //TODO: resolve user state
+    SetAuthPropsCorrelationId(authProps, correlationId);
+    SetAuthPropsItem(authProps, OidcDefaults.RedirectUriForCodeProperties, callbackUrl);
+    if (IsNotEmptyString(codeVerifier)) SetAuthPropsCodeVerifier(authProps, codeVerifier!);
+    if (IsNotEmptyString(redirectUri)) SetAuthPropsRedirectUri(authProps, redirectUri!);
+    if (IsNotEmptyString(state)) SetAuthPropsItem(authProps, OidcDefaults.UserStateProperties, state!); //TODO: resolve user state
     return authProps;
   }
 }

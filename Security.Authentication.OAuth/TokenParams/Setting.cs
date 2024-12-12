@@ -1,6 +1,4 @@
 
-using Microsoft.AspNetCore.Authentication;
-
 namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs
@@ -9,16 +7,17 @@ partial class OAuthFuncs
 
   public static OAuthParams SetTokenParams(
     OAuthParams oauthParams,
-    AuthenticationProperties authProps,
     OAuthOptions oauthOptions,
-    string authCode)
+    string authCode,
+    string callbackUrl,
+    string? codeVerifier)
   {
     SetOAuthParam(oauthParams, OAuthParamNames.ClientId, oauthOptions.ClientId);
     SetOAuthParam(oauthParams, OAuthParamNames.ClientSecret, oauthOptions.ClientSecret);
     SetOAuthParam(oauthParams, OAuthParamNames.GrantType, GrantAuthorizationCode);
     SetOAuthParam(oauthParams, OAuthParamNames.AuthorizationCode, authCode);
-    SetOAuthParam(oauthParams, OAuthParamNames.RedirectUri, GetAuthPropsCallbackUri(authProps)!);
-    if (ShouldUseCodeChallenge(oauthOptions)) SetOAuthParam(oauthParams, OAuthParamNames.CodeVerifier, GetAuthPropsCodeVerifier(authProps)!);
+    SetOAuthParam(oauthParams, OAuthParamNames.RedirectUri, callbackUrl);
+    if (IsNotEmptyString(codeVerifier)) SetOAuthParam(oauthParams, OAuthParamNames.CodeVerifier, codeVerifier!);
     return oauthParams;
   }
 }

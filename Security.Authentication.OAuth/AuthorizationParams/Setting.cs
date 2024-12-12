@@ -1,4 +1,6 @@
 
+using Microsoft.AspNetCore.Authentication;
+
 namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs
@@ -6,8 +8,9 @@ partial class OAuthFuncs
   public static OAuthParams SetAuthorizationOAuthParams(
     OAuthParams oauthParams,
     OAuthOptions oauthOptions,
-    string state,
-    string callbackUrl)
+    string callbackUrl,
+    string? codeVerifier,
+    string state)
   {
     // https://www.ietf.org/rfc/rfc6749.txt [Authorization Request page 25]
     SetOAuthParam(oauthParams, OAuthParamNames.ClientId, oauthOptions.ClientId);
@@ -15,6 +18,21 @@ partial class OAuthFuncs
     SetOAuthParam(oauthParams, OAuthParamNames.RedirectUri, callbackUrl);
     SetOAuthParam(oauthParams, OAuthParamNames.Scope, FormatOAuthScopes(oauthOptions));
     SetOAuthParam(oauthParams, OAuthParamNames.State, state);
+
+    if (IsNotEmptyString(codeVerifier)) SetOAuthParamsCodeChallenge(oauthParams, codeVerifier!);
+    SetOAuthParams(oauthParams, oauthOptions.AdditionalAuthorizationParameters);
     return oauthParams;
+  }
+
+  static AuthenticationProperties SetAuthorizationAuthProps(
+    AuthenticationProperties authProps,
+    string correlationId,
+    string? codeVerifier,
+    string? redirectUri)
+  {
+    SetAuthPropsCorrelationId(authProps, correlationId);
+    if (IsNotEmptyString(codeVerifier)) SetAuthPropsCodeVerifier(authProps, codeVerifier!);
+    if (IsNotEmptyString(redirectUri)) SetAuthPropsRedirectUri(authProps, redirectUri!);
+    return authProps;
   }
 }

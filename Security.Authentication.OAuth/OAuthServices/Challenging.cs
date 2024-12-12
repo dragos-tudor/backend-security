@@ -17,18 +17,15 @@ partial class OAuthFuncs
   {
     var correlationId = GenerateCorrelationId();
     UseCorrelationCookie(context, oauthOptions, correlationId, currentUtc);
-    SetAuthPropsCorrelationId(authProps, correlationId);
+
+    var codeVerifier = ShouldUseCodeChallenge(oauthOptions) ? GenerateCodeVerifier() : default;
+    var redirectUri = GetAuthPropsRedirectUri(authProps) ?? GetHttpRequestQueryValue(context.Request, oauthOptions.ReturnUrlParameter);
+    SetAuthorizationAuthProps(authProps, correlationId, codeVerifier, redirectUri);
 
     var oauthParams = CreateOAuthParams();
-    if (ShouldUseCodeChallenge(oauthOptions)) UseCodeChallenge(oauthParams, authProps, GenerateCodeVerifier());
-
-    var redirectUri = GetHttpRequestQueryValue(context.Request, oauthOptions.ReturnUrlParameter)!; // TODO: investigate security risk for relative url
-    if (!ExistsAuthPropsRedirectUri(authProps)) SetAuthPropsRedirectUri(authProps, redirectUri);
-
-    var state = ProtectAuthProps(authProps, authPropsProtector);
     var callbackUrl = GetAbsoluteUrl(context.Request, oauthOptions.CallbackPath);
-    SetAuthorizationOAuthParams(oauthParams, oauthOptions, state, callbackUrl);
-    SetAdditionalOAuthParams(oauthParams, oauthOptions.AdditionalAuthorizationParameters);
+    var state = ProtectAuthProps(authProps, authPropsProtector);
+    SetAuthorizationOAuthParams(oauthParams, oauthOptions, callbackUrl, codeVerifier, state);
 
     var authUri = BuildHttpRequestUri(oauthOptions.AuthorizationEndpoint, oauthParams!);
     SetHttpResponseRedirect(context.Response, authUri);

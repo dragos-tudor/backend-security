@@ -5,13 +5,13 @@ partial class OpenIdConnectFuncs
 {
   static OidcParams SetChallengeSignoutParams(
     OidcParams oidcParams,
-    HttpContext context,
     OpenIdConnectOptions oidcOptions,
-    string state,
-    string idTokenHint)
+    string idTokenHint,
+    string redirectUri,
+    string state)
   {
     SetOAuthParam(oidcParams, OidcParamNames.IdTokenHint, idTokenHint);
-    SetOAuthParam(oidcParams, OidcParamNames.PostLogoutRedirectUri, GetAbsoluteUrl(context.Request, oidcOptions.CallbackSignOutPath));
+    SetOAuthParam(oidcParams, OidcParamNames.PostLogoutRedirectUri, redirectUri);
     SetOAuthParam(oidcParams, OidcParamNames.State, state);
     if (!oidcOptions.DisableTelemetry) SetTelemetryOidcParams(oidcParams);
     return oidcParams;
