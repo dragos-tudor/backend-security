@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <MSTest>
+    <CaptureTraceOutput>false</CaptureTraceOutput>
+  </MSTest>
+</RunSettings>
+<!--
+  Replace with .testconfig.json Microsoft.Testing.Platform 1.5
+  https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-platform-config#testconfigjson
+-->

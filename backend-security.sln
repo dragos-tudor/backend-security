@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.Authentication.Ope
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.Authentication.Twitter", "Security.Authentication.Twitter\Security.Authentication.Twitter.csproj", "{888D768B-73A4-4507-87CB-E16BFC67F41F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.Conformance.OpenIdConnect", "Security.Conformance.OpenIdConnect\Security.Conformance.OpenIdConnect.csproj", "{260705B6-5AE0-4083-9DB1-8986A4746D20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,5 +92,9 @@ Global
 		{888D768B-73A4-4507-87CB-E16BFC67F41F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{888D768B-73A4-4507-87CB-E16BFC67F41F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{888D768B-73A4-4507-87CB-E16BFC67F41F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{260705B6-5AE0-4083-9DB1-8986A4746D20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{260705B6-5AE0-4083-9DB1-8986A4746D20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{260705B6-5AE0-4083-9DB1-8986A4746D20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{260705B6-5AE0-4083-9DB1-8986A4746D20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

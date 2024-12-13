@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="../Directory.Testing.props" />
+
+  <PropertyGroup>
+    <Description>Security OpenIdConnect/OAuth2 conformance tests.</Description>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App"></FrameworkReference>
+    <ProjectReference Include="../Security.Authentication.OAuth/Security.Authentication.OAuth.csproj" />
+    <ProjectReference Include="../Security.Authentication.OpenIdConnect/Security.Authentication.OpenIdConnect.csproj" />
+  </ItemGroup>
+
+  <!-- ItemGroup>
+    <PackageReference Include="NSwag.ApiDescription.Client" PrivateAssets="all">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <None Include="OpenIdApi/openid.api.json" CopyToOutputDirectory="PreserveNewest"></None>
+    <OpenApiReference Include="OpenIdApi/openid.api.json"
+      CodeGenerator="NSwagCSharp"
+      Namespace="Security.Conformances.OpenIdConnect"
+      Options="/JsonLibrary:SystemTextJson"
+      ClassName="OpenIdApiClient"
+      Link="OpenIdApi/openid.api.json" />
+  </ItemGroup -->
+
+</Project>
