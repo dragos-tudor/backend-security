@@ -1,7 +1,5 @@
 
 using System.Net.Http;
-using System.Net.Mime;
-using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication.OAuth;
 

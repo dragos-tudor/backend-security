@@ -12,7 +12,6 @@ partial class OAuthFuncs
     string? codeVerifier,
     string state)
   {
-    // https://www.ietf.org/rfc/rfc6749.txt [Authorization Request page 25]
     SetOAuthParam(oauthParams, OAuthParamNames.ClientId, oauthOptions.ClientId);
     SetOAuthParam(oauthParams, OAuthParamNames.ResponseType, oauthOptions.ResponseType);
     SetOAuthParam(oauthParams, OAuthParamNames.RedirectUri, callbackUrl);

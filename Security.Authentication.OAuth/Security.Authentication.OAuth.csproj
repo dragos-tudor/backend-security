@@ -11,8 +11,9 @@
     <ProjectReference Include="../Security.Authentication.OAuth.Base/Security.Authentication.OAuth.Base.csproj" />
   </ItemGroup>
 
+
   <ItemGroup Condition="'$(Configuration)'=='Debug'">
-    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="NSubstitute" PrivateAssets="all"/>
   </ItemGroup>
 
 </Project>

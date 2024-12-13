@@ -12,7 +12,7 @@ partial class BearerTokenFuncs
     DateTimeOffset currentUtc,
     BearerTokenDataFormat bearerTokenProtector)
   {
-    var(authTicket, error) = ExtractAuthenticationTicket(context, bearerTokenProtector);
+    var (authTicket, error) = ExtractAuthenticationTicket(context, bearerTokenProtector);
     if (error == NoToken) return NoResult();
     if (error is not null) return Fail(error);
 
