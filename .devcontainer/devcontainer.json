@@ -12,7 +12,8 @@
   ],
   "containerEnv": {
 		"DATA_PROTECTION_KEY": "HFm8fYbLyEarjjlGBj5r9Q==",
-		"SHELL": "/bin/bash"
+		"SHELL": "/bin/bash",
+    "OPENID_TOKEN": "${localEnv:OPENID_TOKEN}"
 	},
 	"runArgs": [
 		"--name=backend-security",
