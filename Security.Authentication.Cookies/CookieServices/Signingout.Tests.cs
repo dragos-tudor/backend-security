@@ -19,7 +19,7 @@ partial class CookiesTests
     using var server = CreateHttpServer(services => services.AddCookiesServices(cookieOptions, ticketStore));
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/api/account/signin", (HttpContext context) => SignInCookie(context, CreateNamedClaimsPrincipal("CookiesScheme", "user")).ToString());
-    server.MapPost("/api/account/signout", async(HttpContext context) => await SignOutCookie(context));
+    server.MapPost("/api/account/signout", async (HttpContext context) => await SignOutCookie(context));
     await server.StartAsync();
 
     using var client = server.GetTestClient();
@@ -53,7 +53,7 @@ partial class CookiesTests
   [TestMethod]
   public async Task Signout_request_without_auth_cookie__signout__no_signout()
   {
-    using var server = CreateHttpServer(services => services.AddCookiesServices() );
+    using var server = CreateHttpServer(services => services.AddCookiesServices());
     server.UseAuthentication(AuthenticateCookie);
     server.MapPost("/api/account/signout", (HttpContext context) => SignOutCookie(context));
     await server.StartAsync();
@@ -70,7 +70,7 @@ partial class CookiesTests
   {
     using var server = CreateHttpServer(services => services.AddAuthentication().AddCookie());
     server.UseAuthentication();
-    server.MapPost("/api/account/signin", (HttpContext context) => context.SignInAsync(CreatePrincipal("Cookies", new [] { CreateNameClaim("user") })));
+    server.MapPost("/api/account/signin", (HttpContext context) => context.SignInAsync(CreatePrincipal("Cookies", [CreateNameClaim("user")])));
     server.MapPost("/api/account/signout", (HttpContext context) => context.SignOutAsync());
     await server.StartAsync();
 

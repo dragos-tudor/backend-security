@@ -7,6 +7,8 @@ partial class AuthenticationFuncs
 
   public static string GetRelativeUri(HttpRequest request) => $"{request.PathBase}{request.Path}{request.QueryString}";
 
+  public static string GetHttpRequestFullPath(HttpRequest request) => $"{request.PathBase}{request.Path}{request.QueryString}";
+
   public static string GetHttpRequestPathBase(HttpRequest request) => request.PathBase;
 
   public static string? GetHttpRequestQueryValue(HttpRequest request, string paramName) => request.Query[paramName];

@@ -28,6 +28,6 @@ partial class CookiesFuncs
     ResetHttpResponseCacheHeaders(context.Response);
 
     LogSignedInCookie(logger, authOptions.SchemeName, GetPrincipalNameId(principal)!, context.TraceIdentifier);
-    return sessionTicketId;
+    return sessionTicket;
   }
 }

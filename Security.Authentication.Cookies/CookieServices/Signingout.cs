@@ -16,7 +16,9 @@ partial class CookiesFuncs
     ITicketStore ticketStore,
     ILogger logger)
   {
-    var(authTicket, error) = ExtractAuthenticationCookieTicket(context, authOptions, cookieManager, authTicketProtector);
+    // var authTicket = GetAuthenticationFeature<AuthenticateResult>(context)?.Ticket; // TODO: add ticket id identity claim on authentication ticket when sign in
+
+    var (authTicket, error) = ExtractAuthenticationCookieTicket(context, authOptions, cookieManager, authTicketProtector);
     if (error is not null) return false;
 
     if (IsSessionBasedTicket(ticketStore))

@@ -20,6 +20,8 @@ partial class CookiesFuncs
     TicketDataFormat authTicketProtector,
     ITicketStore ticketStore)
   {
+    if (IsSignInHttpRequest(context.Request, authOptions)) return NoResult();
+
     var (authTicket, error) = ExtractAuthenticationCookieTicket(context, authOptions, cookieManager, authTicketProtector);
     if (error == NoCookie) return NoResult();
     if (error is not null) return Fail(error);
