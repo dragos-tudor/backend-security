@@ -26,21 +26,6 @@ sealed class TestPlan
   public TestModule[] TestModules { get; init; } = [];
 }
 
-sealed class TestPlanVariant
-{
-  [JsonPropertyName("request_type")]
-  public required string RequestType { get; init; }
-  [JsonPropertyName("client_registration")]
-  public required string ClientRegistration { get; init; }
-}
-
-sealed class TestPlanConfig
-{
-  public string? Description { get; init; }
-  public string? Alias { get; init; }
-  public required OpenIdClient Client { get; init; }
-}
-
 sealed class TestPlans
 {
   [JsonPropertyName("data")]
