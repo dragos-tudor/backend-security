@@ -1,10 +1,10 @@
 set -e
 
-WORKSPACE_DIR=/workspaces/backend-security/
+WORKSPACE_DIR=.
 PROJECTS=(
   "Security.Authentication.BearerToken"
   "Security.Authentication.Cookies"
-  "Security.Authentication.Oauth.Base"
+  "Security.Authentication.OAuth.Base"
   "Security.Authentication.OAuth"
   "Security.Authentication.OpenIdConnect"
   "Security.Authentication.Facebook"
@@ -17,5 +17,5 @@ PROJECTS=(
 ./building.sh Debug
 for PROJECT in ${PROJECTS[@]}; do
   echo "testing project $PROJECT ..."
-  cd $WORKSPACE_DIR/$PROJECT && dotnet run --no-build --no-restore -- --settings ../.runsettings
+  cd $WORKSPACE_DIR/$PROJECT && dotnet run --no-build --no-restore -- --settings ../.runsettings && cd ..
 done
