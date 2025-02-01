@@ -9,8 +9,8 @@ partial class OAuthFuncs
     OAuthParams oauthParams,
     OAuthOptions oauthOptions,
     string authCode,
-    string callbackUrl,
-    string? codeVerifier)
+    string? codeVerifier,
+    string callbackUrl)
   {
     SetOAuthParam(oauthParams, OAuthParamNames.ClientId, oauthOptions.ClientId);
     SetOAuthParam(oauthParams, OAuthParamNames.ClientSecret, oauthOptions.ClientSecret);

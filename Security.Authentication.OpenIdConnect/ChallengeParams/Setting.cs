@@ -7,13 +7,13 @@ partial class OpenIdConnectFuncs
     OidcParams oidcParams,
     OpenIdConnectOptions oidcOptions,
     AuthenticationProperties authProps,
-    string callbackUrl,
+    string callbackUri,
     string? codeVerifier,
     string? maxAge,
     string state)
   {
     SetOAuthParam(oidcParams, OAuthParamNames.ClientId, oidcOptions.ClientId);
-    SetOAuthParam(oidcParams, OAuthParamNames.RedirectUri, callbackUrl);
+    SetOAuthParam(oidcParams, OAuthParamNames.RedirectUri, callbackUri);
     SetOAuthParam(oidcParams, OAuthParamNames.ResponseType, oidcOptions.ResponseType);
     SetOAuthParam(oidcParams, OidcParamNames.Resource, oidcOptions.Resource!);
     SetOAuthParam(oidcParams, OidcParamNames.ResponseMode, oidcOptions.ResponseMode);
@@ -30,14 +30,14 @@ partial class OpenIdConnectFuncs
 
   static AuthenticationProperties SetChallengeAuthProps(
     AuthenticationProperties authProps,
-    string callbackUrl,
     string correlationId,
     string? codeVerifier,
     string? redirectUri,
+    string callbackUri,
     string? state = default)
   {
     SetAuthPropsCorrelationId(authProps, correlationId);
-    SetAuthPropsItem(authProps, OidcDefaults.RedirectUriForCodeProperties, callbackUrl);
+    SetAuthPropsRedirectUriForCode(authProps, callbackUri);
     if (IsNotEmptyString(codeVerifier)) SetAuthPropsCodeVerifier(authProps, codeVerifier!);
     if (IsNotEmptyString(redirectUri)) SetAuthPropsRedirectUri(authProps, redirectUri!);
     if (IsNotEmptyString(state)) SetAuthPropsItem(authProps, OidcDefaults.UserStateProperties, state!); //TODO: resolve user state

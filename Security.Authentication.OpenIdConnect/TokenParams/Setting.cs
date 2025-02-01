@@ -8,13 +8,13 @@ partial class OpenIdConnectFuncs
     OpenIdConnectOptions oidcOptions,
     string authCode,
     string? codeVerifier,
-    string redirectUri)
+    string callbackUrl)
   {
     SetOAuthParam(oidcParams, OidcParamNames.ClientId, oidcOptions.ClientId);
     SetOAuthParam(oidcParams, OidcParamNames.ClientSecret, oidcOptions.ClientSecret);
     SetOAuthParam(oidcParams, OidcParamNames.Code, authCode);
     SetOAuthParam(oidcParams, OidcParamNames.GrantType, OpenIdConnectGrantTypes.AuthorizationCode);
-    SetOAuthParam(oidcParams, OidcParamNames.RedirectUri, redirectUri);
+    SetOAuthParam(oidcParams, OidcParamNames.RedirectUri, callbackUrl);
 
     if (IsNotEmptyString(codeVerifier)) SetOAuthParam(oidcParams, OAuthParamNames.CodeVerifier, codeVerifier!);
     if (!oidcOptions.DisableTelemetry) SetTelemetryOidcParams(oidcParams);

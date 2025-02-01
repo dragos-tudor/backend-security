@@ -27,9 +27,11 @@ partial class OAuthFuncs
     AuthenticationProperties authProps,
     string correlationId,
     string? codeVerifier,
+    string callbackUri,
     string? redirectUri)
   {
     SetAuthPropsCorrelationId(authProps, correlationId);
+    SetAuthPropsRedirectUriForCode(authProps, callbackUri);
     if (IsNotEmptyString(codeVerifier)) SetAuthPropsCodeVerifier(authProps, codeVerifier!);
     if (IsNotEmptyString(redirectUri)) SetAuthPropsRedirectUri(authProps, redirectUri!);
     return authProps;

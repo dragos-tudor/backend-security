@@ -18,7 +18,7 @@ partial class OpenIdConnectFuncs
     var callbackUrl = GetAbsoluteUrl(context.Request, oidcOptions.CallbackPath);
     var codeVerifier = ResolveCodeVerifier(oidcOptions);
     var redirectUri = GetAuthPropsRedirectUri(authProps) ?? GetHttpRequestQueryValue(context.Request, oidcOptions.ReturnUrlParameter);
-    SetChallengeAuthProps(authProps, callbackUrl, correlationId, codeVerifier, redirectUri);
+    SetChallengeAuthProps(authProps, correlationId, codeVerifier, redirectUri!, callbackUrl);
 
     var oidcParams = CreateOidcParams();
     var maxAge = GetOidcParamMaxAge(authProps, oidcOptions);

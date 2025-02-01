@@ -1,5 +1,4 @@
 
-using System.Collections.Generic;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
@@ -16,7 +15,7 @@ partial class OAuthTests
   {
     using var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a"}));
     var oauthOptions = CreateOAuthOptions();
-    var authProps = new AuthenticationProperties();
+    var authProps = CreateAuthProps();
     var (tokens, _) = await ExchangeCodeForTokens("abc", authProps, oauthOptions, httpClient);
 
     StringAssert.Contains(GetTokenType(tokens!), "code=abc", StringComparison.Ordinal);
@@ -27,7 +26,8 @@ partial class OAuthTests
   {
     using var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a", }));
     var oauthOptions = CreateOAuthOptions();
-    var authProps = new AuthenticationProperties(new Dictionary<string, string?>() { {CallbackUri, "http://localhost/callback"} });
+    var authProps = CreateAuthProps();
+    SetAuthPropsRedirectUriForCode(authProps, "http://localhost/callback");
     var (tokens, _) = await ExchangeCodeForTokens(string.Empty, authProps, oauthOptions, httpClient);
 
     StringAssert.Contains(GetTokenType(tokens!), "redirect_uri=" + Uri.EscapeDataString("http://localhost/callback"), StringComparison.Ordinal);
@@ -38,7 +38,7 @@ partial class OAuthTests
   {
     using var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a"}));
     var oauthOptions = CreateOAuthOptions();
-    var authProps = new AuthenticationProperties();
+    var authProps = CreateAuthProps();
     var (tokens, _) = await ExchangeCodeForTokens("abc", authProps, oauthOptions, httpClient);
 
     StringAssert.Contains(GetTokenType(tokens!), "client_id=client+id", StringComparison.Ordinal);
@@ -49,7 +49,7 @@ partial class OAuthTests
   {
     using var httpClient = CreateHttpClient("http://oauth", "/token", (request) => JsonContent.Create(new {token_type = GetRequestMessageContent(request), access_token = "a"}));
     var oauthOptions = CreateOAuthOptions();
-    var authProps = new AuthenticationProperties();
+    var authProps = CreateAuthProps();
     var (tokens, _) = await ExchangeCodeForTokens("abc", authProps, oauthOptions, httpClient);
 
     StringAssert.Contains(GetTokenType(tokens!), "client_secret=client+secret", StringComparison.Ordinal);
@@ -61,7 +61,7 @@ partial class OAuthTests
     using var endpointResponse = JsonContent.Create(new {access_token = "access token"});
     using var httpClient = CreateHttpClient("http://oauth", "/token", endpointResponse);
     var oauthOptions = CreateOAuthOptions();
-    var authProps = new AuthenticationProperties();
+    var authProps = CreateAuthProps();
     var (tokens, _) = await ExchangeCodeForTokens(string.Empty, authProps, oauthOptions, httpClient);
 
     Assert.AreEqual(GetAccessToken(tokens!), "access token");
@@ -73,7 +73,7 @@ partial class OAuthTests
     using var endpointResponse = JsonContent.Create(new {expires_in = 3600, access_token = "a" });
     using var httpClient = CreateHttpClient("http://oauth", "/token", endpointResponse);
     var oauthOptions = CreateOAuthOptions();
-    var authProps = new AuthenticationProperties();
+    var authProps = CreateAuthProps();
     var (tokens, _) = await ExchangeCodeForTokens(string.Empty, authProps, oauthOptions, httpClient);
 
     Assert.AreEqual(GetExpiresIn(tokens!), "3600");
@@ -85,7 +85,7 @@ partial class OAuthTests
     using var endpointResponse = JsonContent.Create(new {});
     using var httpClient = CreateHttpClient("http://oauth", "/token", endpointResponse);
     var oauthOptions = CreateOAuthOptions();
-    var authProps = new AuthenticationProperties();
+    var authProps = CreateAuthProps();
     var (_, error) = await ExchangeCodeForTokens(string.Empty, authProps, oauthOptions, httpClient);
 
     Assert.AreEqual(error?.ErrorType!, AccessTokenNotFound);
@@ -98,7 +98,7 @@ partial class OAuthTests
     using var endpointResponse = JsonContent.Create(new {error = "abc"});
     using var httpClient = CreateHttpClient("http://oauth", "/token", endpointResponse, 400);
     var oauthOptions = CreateOAuthOptions();
-    var authProps = new AuthenticationProperties();
+    var authProps = CreateAuthProps();
     var (_, error) = await ExchangeCodeForTokens(string.Empty, authProps, oauthOptions, httpClient);
 
     Assert.AreEqual(error?.ErrorType, "abc");

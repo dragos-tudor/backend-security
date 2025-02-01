@@ -7,8 +7,6 @@ partial class OpenIdConnectFuncs
 
   static string? GetAuthPropsPrompt(AuthenticationProperties authProps) => GetAuthPropsParam<string>(authProps, OidcParamNames.Prompt);
 
-  static string? GetAuthPropsRedirectUriForCode(AuthenticationProperties authProps) => GetAuthPropsItem(authProps, OidcDefaults.RedirectUriForCodeProperties);
-
   static string? GetAuthPropsUserState(AuthenticationProperties authProps) => GetAuthPropsItem(authProps, OidcDefaults.UserStateProperties);
 
   static ICollection<string>? GetAuthPropsScope(AuthenticationProperties authProps) => GetAuthPropsParam<ICollection<string>>(authProps, OidcParamNames.Scope);

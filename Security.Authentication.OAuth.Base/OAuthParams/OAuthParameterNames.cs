@@ -24,6 +24,7 @@ public static class OAuthParameterNames
   public const string LoginHint = "login_hint";
   public const string OnlineAccessType = "online";
   public const string Prompt = "prompt";
+  public const string RedirectUriForCodeProperties = "OAuth.Code.RedirectUri";
 
   public const string CodeVerifier = "code_verifier";
   public const string CodeChallenge = "code_challenge";

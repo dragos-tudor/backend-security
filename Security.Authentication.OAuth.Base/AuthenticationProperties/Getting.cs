@@ -5,7 +5,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthBaseFuncs
 {
-  public static string? GetAuthPropsCallbackUri(AuthenticationProperties authProps) => GetAuthPropsItem(authProps, CallbackUri);
+  public static string? GetAuthPropsRedirectUriForCode(AuthenticationProperties authProps) => GetAuthPropsItem(authProps, OAuthParamNames.RedirectUriForCodeProperties);
 
   public static string? GetAuthPropsCodeVerifier(AuthenticationProperties authProps) => GetAuthPropsItem(authProps, OAuthParamNames.CodeVerifier);
 

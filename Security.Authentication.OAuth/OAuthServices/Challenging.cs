@@ -18,12 +18,12 @@ partial class OAuthFuncs
     var correlationId = GenerateCorrelationId();
     UseCorrelationCookie(context, oauthOptions, correlationId, currentUtc);
 
+    var callbackUrl = GetAbsoluteUrl(context.Request, oauthOptions.CallbackPath);
     var codeVerifier = ResolveCodeVerifier(oauthOptions);
     var redirectUri = GetAuthPropsRedirectUri(authProps) ?? GetHttpRequestQueryValue(context.Request, oauthOptions.ReturnUrlParameter);
-    SetChallengeAuthProps(authProps, correlationId, codeVerifier, redirectUri);
+    SetChallengeAuthProps(authProps, correlationId, codeVerifier, callbackUrl, redirectUri);
 
     var oauthParams = CreateOAuthParams();
-    var callbackUrl = GetAbsoluteUrl(context.Request, oauthOptions.CallbackPath);
     var state = ProtectAuthProps(authProps, authPropsProtector);
     SetChallengeOAuthParams(oauthParams, oauthOptions, callbackUrl, codeVerifier, state);
 
