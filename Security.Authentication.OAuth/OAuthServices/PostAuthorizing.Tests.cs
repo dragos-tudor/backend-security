@@ -45,7 +45,7 @@ partial class OAuthTests
     var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     var (_, _, error) = PostAuthorize(context, oauthOptions, authPropsProtector);
 
-    StringAssert.Contains(error?.ErrorType, AuthorizationCodeNotFound, StringComparison.Ordinal);
+    StringAssert.Contains(error?.ErrorType, MissingAuthorizationCode, StringComparison.Ordinal);
   }
 
   static IQueryCollection SetAuthorizationQueryParams(HttpContext context, string? state = "state", string? code = "code") =>
