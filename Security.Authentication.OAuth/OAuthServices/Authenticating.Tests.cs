@@ -15,7 +15,7 @@ namespace Security.Authentication.OAuth;
 partial class OAuthTests
 {
   [TestMethod]
-  public async Task Post_authorize_fail__authenticate__result_authorization_error()
+  public async Task Post_authorize_fail__authenticate__result_challenge_error()
   {
     var context = CreateAuthenticationHttpContext();
     PostAuthorizeFunc<OAuthOptions> postAuthorize = (_, _, _) => "authorize error";
@@ -42,8 +42,8 @@ partial class OAuthTests
     var authProps = new AuthenticationProperties();
     var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     SetAuthPropsCorrelationId(authProps, "correlation.id");
-    SetAuthorizationCorrelationCookie(context, "correlation.id");
-    SetAuthorizationQueryParams(context, ProtectAuthProps(authProps, authPropsProtector));
+    SetChallengeCorrelationCookie(context, "correlation.id");
+    SetChallengeQueryParams(context, ProtectAuthProps(authProps, authPropsProtector));
 
     PostAuthorizeFunc<OAuthOptions> postAuthorize = (_, _, _) => (authProps, "code");
     ExchangeCodeForTokensFunc<OAuthOptions> exchangeCodeForTokens = async (_, _, _, _, _) => await ToTask("no go");
@@ -60,8 +60,8 @@ partial class OAuthTests
     var authProps = new AuthenticationProperties();
     var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     SetAuthPropsCorrelationId(authProps, "correlation.id");
-    SetAuthorizationCorrelationCookie(context, "correlation.id");
-    SetAuthorizationQueryParams(context, ProtectAuthProps(authProps, authPropsProtector));
+    SetChallengeCorrelationCookie(context, "correlation.id");
+    SetChallengeQueryParams(context, ProtectAuthProps(authProps, authPropsProtector));
 
     PostAuthorizeFunc<OAuthOptions> postAuthorize = (_, _, _) => (authProps, "code");
     ExchangeCodeForTokensFunc<OAuthOptions> exchangeCodeForTokens = async (_, _, _, _, _) => await ToTask("no go");
@@ -124,7 +124,7 @@ partial class OAuthTests
     return new DefaultHttpContext() { RequestServices = services };
   }
 
-  static void SetAuthorizationCorrelationCookie(HttpContext context, string correlationId) =>
+  static void SetChallengeCorrelationCookie(HttpContext context, string correlationId) =>
     SetRequestCookies(context.Request, new RequestCookieCollection().AddCookie(GetCorrelationCookieName(correlationId), "N"));
 
   static Task<T> ToTask<T>(T value) => Task.FromResult(value);

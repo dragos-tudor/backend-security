@@ -20,12 +20,12 @@ partial class OAuthFuncs
 
     var codeVerifier = ResolveCodeVerifier(oauthOptions);
     var redirectUri = GetAuthPropsRedirectUri(authProps) ?? GetHttpRequestQueryValue(context.Request, oauthOptions.ReturnUrlParameter);
-    SetAuthorizationAuthProps(authProps, correlationId, codeVerifier, redirectUri);
+    SetChallengeAuthProps(authProps, correlationId, codeVerifier, redirectUri);
 
     var oauthParams = CreateOAuthParams();
     var callbackUrl = GetAbsoluteUrl(context.Request, oauthOptions.CallbackPath);
     var state = ProtectAuthProps(authProps, authPropsProtector);
-    SetAuthorizationOAuthParams(oauthParams, oauthOptions, callbackUrl, codeVerifier, state);
+    SetChallengeOAuthParams(oauthParams, oauthOptions, callbackUrl, codeVerifier, state);
 
     var authUri = BuildHttpRequestUri(oauthOptions.AuthorizationEndpoint, oauthParams!);
     SetHttpResponseRedirect(context.Response, authUri);

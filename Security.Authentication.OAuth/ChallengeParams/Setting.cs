@@ -5,7 +5,7 @@ namespace Security.Authentication.OAuth;
 
 partial class OAuthFuncs
 {
-  public static OAuthParams SetAuthorizationOAuthParams(
+  public static OAuthParams SetChallengeOAuthParams(
     OAuthParams oauthParams,
     OAuthOptions oauthOptions,
     string callbackUrl,
@@ -19,11 +19,11 @@ partial class OAuthFuncs
     SetOAuthParam(oauthParams, OAuthParamNames.State, state);
 
     if (IsNotEmptyString(codeVerifier)) SetOAuthParamsCodeChallenge(oauthParams, codeVerifier!);
-    SetOAuthParams(oauthParams, oauthOptions.AdditionalAuthorizationParameters);
+    SetOAuthParams(oauthParams, oauthOptions.AdditionalChallengeParameters);
     return oauthParams;
   }
 
-  static AuthenticationProperties SetAuthorizationAuthProps(
+  static AuthenticationProperties SetChallengeAuthProps(
     AuthenticationProperties authProps,
     string correlationId,
     string? codeVerifier,

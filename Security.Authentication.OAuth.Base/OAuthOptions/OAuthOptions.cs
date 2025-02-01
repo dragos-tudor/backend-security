@@ -24,7 +24,7 @@ public record OAuthOptions : AuthenticationOptions
   public IEnumerable<ClaimMapper> ClaimMappers { get; init; } = [];
 
   public TimeSpan AuthenticationTimeout { get; init; } = DefaultAuthenticationTimeout;
-  public OAuthParams AdditionalAuthorizationParameters { get; } = [];
+  public OAuthParams AdditionalChallengeParameters { get; } = [];
   public required string ResponseType { get; init; }
 
   public bool SaveTokens { get; init; }

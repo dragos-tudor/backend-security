@@ -16,7 +16,7 @@ partial class OAuthTests
     var oauthOptions = CreateOAuthOptions();
     var authProps = new AuthenticationProperties();
     var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
-    SetAuthorizationQueryParams(context);
+    SetChallengeQueryParams(context);
     SetAuthPropsCorrelationId(authProps, "correlation.id");
 
     var (_, _, error) = PostAuthorize(context, oauthOptions, authPropsProtector);
@@ -31,7 +31,7 @@ partial class OAuthTests
     var authProps = new AuthenticationProperties();
     var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(context));
     SetAuthPropsCorrelationId(authProps, "correlation.id");
-    SetAuthorizationQueryParams(context, ProtectAuthProps(authProps, authPropsProtector));
+    SetChallengeQueryParams(context, ProtectAuthProps(authProps, authPropsProtector));
 
     var (_, _, error) = PostAuthorize(context, oauthOptions, authPropsProtector);
     StringAssert.Contains(error?.ErrorType, "correlation cookie", StringComparison.Ordinal);
@@ -48,7 +48,7 @@ partial class OAuthTests
     StringAssert.Contains(error?.ErrorType, MissingAuthorizationCode, StringComparison.Ordinal);
   }
 
-  static IQueryCollection SetAuthorizationQueryParams(HttpContext context, string? state = "state", string? code = "code") =>
+  static IQueryCollection SetChallengeQueryParams(HttpContext context, string? state = "state", string? code = "code") =>
     context.Request.Query = new QueryCollection(new Dictionary<string, StringValues>() {
       { "code", new StringValues(code) },
       { "state", new StringValues(state) }

@@ -28,7 +28,7 @@ partial class OAuthTests
   }
 
   [TestMethod]
-  public void Callback_response_without_state__validate_authorization_response__invalid_state_error() {
+  public void Callback_response_without_state__validate_callback_response__invalid_state_error() {
     var context = CreateHttpContext();
     context.Request.Query = new QueryCollection(new Dictionary<string, StringValues>() {
       { "code", new StringValues("abc") }

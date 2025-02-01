@@ -24,7 +24,7 @@ partial class OpenIdConnectFuncs
     if (IsNotEmptyString(codeVerifier)) SetOAuthParamsCodeChallenge(oidcParams, codeVerifier!);
     if (IsNotEmptyString(maxAge)) SetOAuthParam(oidcParams, OidcParamNames.MaxAge, maxAge!);
     if (!oidcOptions.DisableTelemetry) SetTelemetryOidcParams(oidcParams);
-    SetOAuthParams(oidcParams, oidcOptions.AdditionalAuthorizationParameters);
+    SetOAuthParams(oidcParams, oidcOptions.AdditionalChallengeParameters);
     return oidcParams;
   }
 
