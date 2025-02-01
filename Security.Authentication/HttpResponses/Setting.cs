@@ -1,6 +1,5 @@
 
 using System.Net;
-using Microsoft.AspNetCore.Http;
 
 namespace Security.Authentication;
 
@@ -20,5 +19,5 @@ partial class AuthenticationFuncs
 
   public static string SetHttpResponseRedirect(HttpResponse response, string redirectUri) { response.Redirect(redirectUri); return redirectUri; }
 
-  public static int SetHttpResponseStatus(HttpContext context, HttpStatusCode statusCode) => context.Response.StatusCode =(int)statusCode;
+  public static int SetHttpResponseStatus(HttpResponse response, HttpStatusCode statusCode) => response.StatusCode =(int)statusCode;
 }

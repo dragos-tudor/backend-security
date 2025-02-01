@@ -14,11 +14,10 @@ partial class OpenIdConnectFuncs
     var challengeRequest = await GetHttpRequestParams(context.Request, context.RequestAborted);
     if (challengeRequest is null) return false;
 
-    var principal = GetContextUser(context);
     var challengeData = ToOpenIdConnectData(challengeRequest);
-    var validationMsg = ValidateSignoutRequest(challengeData, oidcOptions, principal);
-    if (validationMsg is not null) {
-      LogSkipSignOutChallenge(logger, oidcOptions.SchemeName, validationMsg, context.TraceIdentifier);
+    var validationError = ValidateSignoutRequest(challengeData, oidcOptions, GetContextUser(context));
+    if (validationError is not null) {
+      LogChallengeSignOutWithFailure(logger, oidcOptions.SchemeName, validationError, context.TraceIdentifier);
       return false;
     }
     SetChallengeSignoutAuthProps(authProps, oidcOptions.CallbackSignOutPath);
@@ -38,7 +37,7 @@ partial class OpenIdConnectFuncs
       await WriteHttpResponseTextContent(context.Response, BuildHttpRequestFormPost(oidcOptions.SignOutPath!, oidcParams!), context.RequestAborted);
     }
 
-    LogSignOutChallenge(logger, oidcOptions.SchemeName, GetHttpResponseLocation(context.Response)!, context.TraceIdentifier);
+    LogChallengeSignOut(logger, oidcOptions.SchemeName, GetHttpResponseLocation(context.Response)!, GetHttpResponseSetCookie(context.Response)!, context.TraceIdentifier);
     return true;
   }
 }

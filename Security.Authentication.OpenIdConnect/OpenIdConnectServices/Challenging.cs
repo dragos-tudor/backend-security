@@ -34,7 +34,7 @@ partial class OpenIdConnectFuncs
       await WriteHttpResponseTextContent(context.Response, BuildHttpRequestFormPost(oidcOptions.AuthorizationEndpoint, oidcParams), context.RequestAborted);
     }
 
-    LogAuthorizeChallenge(logger, oidcOptions.SchemeName, GetHttpResponseLocation(context.Response)!, GetHttpResponseSetCookie(context.Response)!, context.TraceIdentifier);
+    LogChallengeOAuth(logger, oidcOptions.SchemeName, GetHttpResponseLocation(context.Response)!, GetHttpResponseSetCookie(context.Response)!, context.TraceIdentifier);
     return oidcOptions.AuthorizationEndpoint;
   }
 

@@ -5,7 +5,7 @@ namespace Security.Authentication.Google;
 
 partial class GoogleFuncs
 {
-  const string GoogleLogger = nameof(Google);
+  readonly static string GoogleLogger = typeof(GoogleFuncs).FullName!;
 
   static ILogger ResolveGoogleLogger(HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, GoogleLogger);
 }

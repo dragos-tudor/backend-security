@@ -29,10 +29,10 @@ partial class OAuthTests
   {
     var context = CreateAuthenticationHttpContext();
     PostAuthorizeFunc<OAuthOptions> postAuthorize = (_, _, _) => (new AuthenticationProperties(), "code");
-    ExchangeCodeForTokensFunc<OAuthOptions> exchangeCodeForTokens = async (code, _, _, _, _) => { Assert.AreEqual("code", code); return await ToTask("exchange receive"); };
+    ExchangeCodeForTokensFunc<OAuthOptions> exchangeCodeForTokens = async (code, _, _, _, _) => { Assert.AreEqual("code", code); return await ToTask("exchange received"); };
 
     var result = await AuthenticateOAuth(context, postAuthorize, exchangeCodeForTokens, default!, NullLogger.Instance);
-    StringAssert.Contains(result.Failure?.Message, "exchange receive", StringComparison.Ordinal);
+    StringAssert.Contains(result.Failure?.Message, "exchange received", StringComparison.Ordinal);
   }
 
   [TestMethod]
@@ -76,10 +76,10 @@ partial class OAuthTests
     var context = CreateAuthenticationHttpContext();
     PostAuthorizeFunc<OAuthOptions> postAuthorize = (_, _, _) => (new AuthenticationProperties(), "code");
     ExchangeCodeForTokensFunc<OAuthOptions> exchangeCodeForTokens = async (_, _, _, _, _) => await ToTask(new OAuthTokens("access_token"));
-    AccessUserInfoFunc<OAuthOptions> accessUserInfo = async (accessToken, _, _, _) => { Assert.AreEqual("access_token", accessToken); return await ToTask("user info receive"); };
+    AccessUserInfoFunc<OAuthOptions> accessUserInfo = async (accessToken, _, _, _) => { Assert.AreEqual("access_token", accessToken); return await ToTask("user info received"); };
 
     var result = await AuthenticateOAuth(context, postAuthorize, exchangeCodeForTokens, accessUserInfo, NullLogger.Instance);
-    StringAssert.Contains(result.Failure?.Message, "user info receive", StringComparison.Ordinal);
+    StringAssert.Contains(result.Failure?.Message, "user info received", StringComparison.Ordinal);
   }
 
   [TestMethod]

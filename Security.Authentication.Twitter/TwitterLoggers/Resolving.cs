@@ -5,7 +5,7 @@ namespace Security.Authentication.Twitter;
 
 partial class TwitterFuncs
 {
-  const string TwitterLogger = nameof(Twitter);
+  readonly static string TwitterLogger = typeof(TwitterFuncs).FullName!;
 
   static ILogger ResolveTwitterLogger(HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, TwitterLogger);
 }

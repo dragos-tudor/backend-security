@@ -5,7 +5,7 @@ namespace Security.Authentication.Cookies;
 
 partial class CookiesFuncs
 {
-  const string CookiesLogger = nameof(Cookies);
+  readonly static string CookiesLogger = typeof(CookiesFuncs).FullName!;
 
   static ILogger ResolveCookiesLogger(HttpContext context) => ResolveLogger(context.RequestServices, CookiesLogger);
 }

@@ -13,7 +13,7 @@ partial class AuthenticationFuncs
     ILogger logger)
   where TOptions: AuthenticationOptions
   {
-    SetHttpResponseStatus(context, HttpStatusCode.Forbidden);
+    SetHttpResponseStatus(context.Response, HttpStatusCode.Forbidden);
     LogForbidden(logger, authOptions.SchemeName, GetRelativeUri(context.Request), context.TraceIdentifier);
   }
 }

@@ -30,7 +30,7 @@ partial class OAuthFuncs
     var authUri = BuildHttpRequestUri(oauthOptions.AuthorizationEndpoint, oauthParams!);
     SetHttpResponseRedirect(context.Response, authUri);
 
-    LogAuthorizeChallenge(logger, oauthOptions.SchemeName, GetHttpResponseLocation(context.Response)!, GetHttpResponseSetCookie(context.Response)!, context.TraceIdentifier);
+    LogChallengeOAuth(logger, oauthOptions.SchemeName, GetHttpResponseLocation(context.Response)!, GetHttpResponseSetCookie(context.Response)!, context.TraceIdentifier);
     return authUri;
   }
 }

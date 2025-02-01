@@ -5,7 +5,7 @@ namespace Security.Authentication.BearerToken;
 
 partial class BearerTokenFuncs
 {
-  const string BearerTokenLogger = nameof(BearerToken);
+  readonly static string BearerTokenLogger = typeof(BearerTokenFuncs).FullName!;
 
   static ILogger ResolveBearerTokenLogger(HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, BearerTokenLogger);
 }

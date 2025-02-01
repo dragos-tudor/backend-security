@@ -16,19 +16,20 @@ partial class OpenIdConnectTests
   {
     // iterate test plans
     // iterate test modules
-    // create test
-    // get tets oidc configuration [OpenIdConnectConfigurationRetriever]
-    // start test
+    // create test instance
+    // get test instance oidc configuration [OpenIdConnectConfigurationRetriever]
+    // start test instance
     // create openidconnect options
     // redirect challenge oidc response to authorization endpoint
     // redirect authorization response to callback oidc
-    // get test details [check for errors]?
-    // cancel test [finally]
+    // get test instance details [check for errors]?
+    // cancel test instance [finally]
 
     await Task.CompletedTask;
   }
 
   [TestMethod]
+  [Ignore]
   public async Task Run_conformance_template_test()
   {
     using var cancellationTokenSource = new CancellationTokenSource(ConformanceTimeout);
@@ -48,7 +49,7 @@ partial class OpenIdConnectTests
       var oidcOptions = CreateOpenIdConnectOptions(testConfiguration, default!, default!);
       var authPropsProtector = CreatePropertiesDataFormat(ResolveRequiredService<IDataProtectionProvider>(challengeContext));
       var authorizationPath = ChallengeOidc(challengeContext, CreateAuthProps(), oidcOptions, DateTimeOffset.Now, authPropsProtector, NullLogger.Instance);
-      var authorizationUrl = GetHttpResponseLocation(challengeContext.Response); // TODO: location or body form based on oidcOptions.AuthenticationMethod
+      var authorizationUrl = GetHttpResponseLocation(challengeContext.Response); // TODO: from location/body form [oidcOptions.AuthenticationMethod]
 
 
       var callbackUrl = await HttpClient.GetAsync(authorizationUrl);

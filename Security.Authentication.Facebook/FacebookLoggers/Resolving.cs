@@ -5,7 +5,7 @@ namespace Security.Authentication.Facebook;
 
 partial class FacebookFuncs
 {
-  const string FacebookLogger = nameof(Facebook);
+  readonly static string FacebookLogger = typeof(FacebookFuncs).FullName!;
 
   static ILogger ResolveFacebookLogger(HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, FacebookLogger);
 }

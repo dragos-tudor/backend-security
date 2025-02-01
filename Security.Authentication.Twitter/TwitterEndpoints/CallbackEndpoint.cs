@@ -6,5 +6,6 @@ namespace Security.Authentication.Twitter;
 
 partial class TwitterFuncs
 {
-  public static Task<string> CallbackTwitterEndpoint(HttpContext context, SignInFunc signIn) => CallbackOAuth<TwitterOptions>(context, AuthenticateTwitter, signIn);
+  public static Task<string> CallbackTwitterEndpoint(HttpContext context, SignInFunc signIn) =>
+    CallbackOAuth<TwitterOptions>(context, AuthenticateTwitter, signIn, ResolveTwitterLogger(context));
 }

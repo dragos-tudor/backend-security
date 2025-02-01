@@ -6,5 +6,6 @@ namespace Security.Authentication.Facebook;
 
 partial class FacebookFuncs
 {
-  public static Task<string> CallbackFacebookEndpoint(HttpContext context, SignInFunc signin) => CallbackOAuth<FacebookOptions>(context, AuthenticateFacebook, signin);
+  public static Task<string> CallbackFacebookEndpoint(HttpContext context, SignInFunc signin) =>
+    CallbackOAuth<FacebookOptions>(context, AuthenticateFacebook, signin, ResolveFacebookLogger(context));
 }

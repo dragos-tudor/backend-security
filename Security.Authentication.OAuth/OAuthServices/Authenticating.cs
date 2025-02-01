@@ -24,7 +24,7 @@ partial class OAuthFuncs
     var schemeName = oauthOptions.SchemeName;
 
     var (authProps, code, authError) = postAuthorize(context, oauthOptions, authPropsProtector);
-    if (authError is not null) return Fail(ToOAuthErrorQuery(authError));
+    if (authError is not null) return Fail(ToOAuthErrorString(authError));
     LogPostAuthorize(logger, schemeName, requestId);
 
     var correlationId = GetAuthPropsCorrelationId(authProps!);
@@ -32,7 +32,7 @@ partial class OAuthFuncs
     RemoveAuthPropsCorrelationId(authProps!);
 
     var (tokens, tokenError) = await exchangeCodeForTokens(code!, authProps!, oauthOptions, httpClient, cancellationToken);
-    if (tokenError is not null) return Fail(ToOAuthErrorQuery(tokenError));
+    if (tokenError is not null) return Fail(ToOAuthErrorString(tokenError));
     LogExchangeCodeForTokens(logger, schemeName, requestId);
 
     if (ShouldCleanCodeChallenge(oauthOptions)) RemoveAuthPropsCodeVerifier(authProps!);
@@ -40,7 +40,7 @@ partial class OAuthFuncs
 
     var accessToken = GetAccessToken(tokens!);
     var (userClaims, userInfoError) = await accessUserInfo(accessToken!, oauthOptions, httpClient, cancellationToken);
-    if (userInfoError is not null) return Fail(ToOAuthErrorQuery(userInfoError!));
+    if (userInfoError is not null) return Fail(ToOAuthErrorString(userInfoError!));
     LogAccessUserInfo(logger, schemeName, requestId);
 
     var claims = ApplyClaimActions(oauthOptions.ClaimActions, userClaims!);

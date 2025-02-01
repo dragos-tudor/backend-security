@@ -6,7 +6,7 @@ namespace Security.Authorization;
 
 partial class AuthorizationFuncs
 {
-  const string CategoryNameLogger = nameof(AuthorizationFuncs);
+  readonly static string AuthorizationLogger = typeof(AuthorizationFuncs).FullName!;
 
-  static ILogger ResolveAuthorizationLogger(HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, CategoryNameLogger);
+  static ILogger ResolveAuthorizationLogger(HttpContext httpContext) => ResolveLogger(httpContext.RequestServices, AuthorizationLogger);
 }
