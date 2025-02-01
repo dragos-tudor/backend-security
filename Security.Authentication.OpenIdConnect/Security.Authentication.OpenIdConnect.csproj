@@ -4,7 +4,7 @@
 
   <PropertyGroup>
     <Description>Security openid connect authentication package.</Description>
-    <IsPackable>false</IsPackable>
+    <IsPackable>true</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
