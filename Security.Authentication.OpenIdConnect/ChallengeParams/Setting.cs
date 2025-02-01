@@ -3,7 +3,7 @@ namespace Security.Authentication.OpenIdConnect;
 
 partial class OpenIdConnectFuncs
 {
-  static OidcParams SetAuthorizationOidcParams(
+  static OidcParams SetChallengeOidcParams(
     OidcParams oidcParams,
     OpenIdConnectOptions oidcOptions,
     AuthenticationProperties authProps,
@@ -28,7 +28,7 @@ partial class OpenIdConnectFuncs
     return oidcParams;
   }
 
-  static AuthenticationProperties SetAuthorizationAuthProps(
+  static AuthenticationProperties SetChallengeAuthProps(
     AuthenticationProperties authProps,
     string callbackUrl,
     string correlationId,

@@ -21,7 +21,7 @@ partial class OpenIdConnectFuncs
     var authData = ToOpenIdConnectData(authResponse);
     var code = GetOidcDataAuthorizationCode(authData);
     var state = GetOidcDataState(authData);
-    var validationError = ValidateAuthorizationResponse(validationOptions, code, state);
+    var validationError = ValidateCallbackResponse(validationOptions, code, state);
     if (validationError is not null) return validationError;
 
     var authProps = UnprotectAuthProps(state!, authPropsProtector);
