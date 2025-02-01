@@ -1,6 +1,4 @@
 
-#nullable disable
-
 using System.Net;
 
 namespace Security.Authentication.OpenIdConnect;
@@ -20,12 +18,13 @@ partial class OpenIdConnectFuncs
 
     if (authError is not null) {
       LogCallbackOAuthWithFailure(logger, oidcOptions.SchemeName, authError, context.TraceIdentifier);
+
       SetHttpResponseStatus(context.Response, HttpStatusCode.InternalServerError);
-      return default;
+      return NoCallbackRedirect;
     }
 
     LogCallbackOAuth(logger, oidcOptions.SchemeName, context.TraceIdentifier);
-    await signin(context, authResult.Principal, authResult.Properties);
+    await signin(context, authResult.Principal!, authResult.Properties!);
 
     var redirectUri = GetOAuthRedirectUri(authResult.Properties!);
     return SetHttpResponseRedirect(context.Response, redirectUri);

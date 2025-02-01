@@ -1,7 +1,6 @@
 
 using System.Net;
 using Microsoft.AspNetCore.Http;
-#nullable disable
 
 namespace Security.Authentication.OAuth;
 
@@ -20,12 +19,13 @@ partial class OAuthFuncs
 
     if (authError is not null) {
       LogCallbackOAuthWithFailure(logger, oauthOptions.SchemeName, authError, context.TraceIdentifier);
+
       SetHttpResponseStatus(context.Response, HttpStatusCode.InternalServerError);
-      return default;
+      return NoCallbackRedirect;
     }
 
     LogCallbackOAuth(logger, oauthOptions.SchemeName, context.TraceIdentifier);
-    await signin(context, authResult.Principal!, authResult.Properties);
+    await signin(context, authResult.Principal!, authResult.Properties!);
 
     var redirectUri = GetOAuthRedirectUri(authResult.Properties);
     return SetHttpResponseRedirect(context.Response, redirectUri);

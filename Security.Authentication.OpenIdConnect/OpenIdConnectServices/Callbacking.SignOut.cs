@@ -18,8 +18,9 @@ partial class OpenIdConnectFuncs
 
     if (signoutError is not null) {
       LogCallbackSignOutWithFailure(logger, oidcOptions.SchemeName, ToOAuthErrorString(signoutError), context.TraceIdentifier);
+
       SetHttpResponseStatus(context.Response, HttpStatusCode.InternalServerError);
-      return default;
+      return NoCallbackRedirect;
     }
 
     LogCallbackSignOut(logger, oidcOptions.SchemeName, context.TraceIdentifier);
