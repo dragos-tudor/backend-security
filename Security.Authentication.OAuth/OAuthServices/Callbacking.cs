@@ -27,7 +27,7 @@ partial class OAuthFuncs
     LogCallbackOAuth(logger, oauthOptions.SchemeName, context.TraceIdentifier);
     await signin(context, authResult.Principal!, authResult.Properties!);
 
-    var redirectUri = GetOAuthRedirectUri(authResult.Properties);
+    var redirectUri = GetOAuthRedirectUri(authResult.Properties!);
     return SetHttpResponseRedirect(context.Response, redirectUri);
   }
 }
