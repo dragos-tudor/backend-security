@@ -14,8 +14,6 @@ partial class OpenIdConnectFuncs
     var signoutData = ToOpenIdConnectData(signoutResponse);
 
     var state = GetOidcDataState(signoutData);
-    if (state is null) return CreateAuthProps();
-
     return UnprotectAuthProps(state!, authPropsProtector) ?? CreateAuthProps();
   }
 }
