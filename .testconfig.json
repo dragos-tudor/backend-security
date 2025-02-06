@@ -1,0 +1,12 @@
+{
+  "platformOptions": { },
+  "mstest": {
+    "parallelism" : {
+        "enabled": true,
+        "scope": "method"
+    },
+    "output": {
+        "captureTrace": false
+    }
+  }
+}

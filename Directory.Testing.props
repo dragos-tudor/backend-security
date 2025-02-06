@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" PrivateAssets="all"/>
     <PackageReference Include="Microsoft.CodeCoverage.MSBuild" PrivateAssets="all"/>
     <ProjectReference Include="../Security.Testing/Security.Testing.csproj" PrivateAssets="all"/>
+    <None Include="$(MSBuildProjectName).testconfig.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)'=='Release'">

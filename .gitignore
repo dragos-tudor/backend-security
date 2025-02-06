@@ -26,5 +26,8 @@
 # Benchmark artifacts
 Security.Benchmarks/BenchmarkDotNet.Artifacts
 
+# Test config files
+Security.*/*.testconfig.json
+
 # Deno
 deno.lock
