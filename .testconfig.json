@@ -3,7 +3,8 @@
   "mstest": {
     "parallelism" : {
         "enabled": true,
-        "scope": "method"
+        "scope": "method",
+        "workers": 4
     },
     "output": {
         "captureTrace": false
