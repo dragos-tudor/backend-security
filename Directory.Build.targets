@@ -30,16 +30,4 @@
     />
   </Target>
 
-  <ItemGroup>
-    <TestConfigFile Include="$(MSBuildProjectDirectory)/../.testconfig.json"/>
-  </ItemGroup>
-
-  <Target Name="Copy testconfig" BeforeTargets="Compile" Condition="$(Configuration)=='Debug'">
-    <Copy
-      SourceFiles="@(TestConfigFile)"
-      DestinationFiles="@(TestConfigFile->Replace('$(MSBuildProjectDirectory)/../.testconfig.json', '$(MSBuildProjectDirectory)/$(MSBuildProjectName).testconfig.json'))"
-      SkipUnchangedFiles="true"
-    />
-  </Target>
-
 </Project>
